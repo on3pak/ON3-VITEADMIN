@@ -1,3 +1,5 @@
+import { User, UserRole } from './user';
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -26,4 +28,22 @@ export interface AuthSession {
   expires_at: number;
   refresh_token: string;
   user: AuthUser;
+}
+
+export interface JwtPayload {
+  sub: string;
+  username: string;
+  role: UserRole;
+  fullName: string;
+  iat: number;
+  exp: number;
+  iss: string;
+}
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
 }

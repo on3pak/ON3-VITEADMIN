@@ -1,5 +1,5 @@
 export * from './user';
-export * from './auth';
+export * from './authUser';
 export * from './test';
 export * from './view';
 export * from './employee';
