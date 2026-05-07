@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthState, AuthUser, UserRole } from '../types';
-import { TEST_ACCOUNTS } from '../data/mockUsers';
-import { signMockToken, decodeMockToken, verifyMockToken } from '../utils/jwt';
+import { mockAuthUsers, createMockAuthSession } from '../data/mockAuth';
 
 interface AuthContextProps extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
@@ -13,6 +12,8 @@ interface AuthContextProps extends AuthState {
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
+const STORAGE_KEY = 'mock_auth_session';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
@@ -36,27 +37,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [toast]);
 
-  // Check token on startup
   useEffect(() => {
     const initializeAuth = () => {
       try {
-        const storedToken = localStorage.getItem('context7_jwt_token');
-        if (storedToken && verifyMockToken(storedToken)) {
-          const payload = decodeMockToken(storedToken);
-          if (payload) {
+        const storedSession = localStorage.getItem(STORAGE_KEY);
+        if (storedSession) {
+          const session = JSON.parse(storedSession);
+          const mockUser = mockAuthUsers.find(u => u.id === session.user.id);
+          if (mockUser) {
             const authUser: AuthUser = {
-              id: payload.sub,
-              username: payload.username,
-              email: TEST_ACCOUNTS.find(u => u.username === payload.username)?.email || `${payload.username}@empresa.com`,
-              fullName: payload.fullName,
-              role: payload.role,
-              avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${payload.username}`,
+              id: mockUser.id,
+              username: mockUser.user_metadata.user_name,
+              email: mockUser.email,
+              fullName: mockUser.user_metadata.full_name,
+              role: mockUser.app_metadata.role as UserRole,
+              avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockUser.user_metadata.user_name}`,
             };
 
             setState({
               isAuthenticated: true,
               user: authUser,
-              token: storedToken,
+              token: session.access_token,
               loading: false,
               error: null,
             });
@@ -70,7 +71,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setState(prev => ({ ...prev, loading: false }));
     };
 
-    // Simulate small network delay for realistic feel
     const timer = setTimeout(initializeAuth, 600);
     return () => clearTimeout(timer);
   }, []);
@@ -78,59 +78,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<boolean> => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     
-    // Simulate real API latency
     await new Promise(resolve => setTimeout(resolve, 800));
 
     const lowercaseEmail = email.trim().toLowerCase();
-    const matchedAccount = TEST_ACCOUNTS.find(
-      acc => acc.email.toLowerCase() === lowercaseEmail && acc.password === password
+    const mockUser = mockAuthUsers.find(
+      u => u.email.toLowerCase() === lowercaseEmail && u.password === password
     );
 
-    if (matchedAccount) {
-      // Create mock JWT token
-      const token = signMockToken({
-        sub: `usr-${Math.random().toString(36).substring(2, 7)}`,
-        username: matchedAccount.username,
-        role: matchedAccount.role,
-        fullName: matchedAccount.fullName,
-      });
-
-      localStorage.setItem('context7_jwt_token', token);
-
-      const authUser: AuthUser = {
-        id: `usr-${matchedAccount.username}`,
-        username: matchedAccount.username,
-        email: matchedAccount.email,
-        fullName: matchedAccount.fullName,
-        role: matchedAccount.role,
-        avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${matchedAccount.username}`,
-      };
-
-      setState({
-        isAuthenticated: true,
-        user: authUser,
-        token: token,
-        loading: false,
-        error: null,
-      });
-
-      triggerToast(`¡Bienvenido de nuevo, ${matchedAccount.fullName}! Rol: ${matchedAccount.role}`, 'success');
-      return true;
-    } else {
+    if (!mockUser) {
       setState({
         isAuthenticated: false,
         user: null,
         token: null,
         loading: false,
-        error: 'Credenciales inválidas. Compruebe el usuario y la contraseña de prueba.',
+        error: 'Credenciales inválidas. Compruebe el email y la contraseña de prueba.',
       });
       triggerToast('Error de autenticación. Credenciales incorrectas.', 'error');
       return false;
     }
+
+    const session = createMockAuthSession(mockUser);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+
+    const authUser: AuthUser = {
+      id: mockUser.id,
+      username: mockUser.user_metadata.user_name,
+      email: mockUser.email,
+      fullName: mockUser.user_metadata.full_name,
+      role: mockUser.app_metadata.role as UserRole,
+      avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockUser.user_metadata.user_name}`,
+    };
+
+    setState({
+      isAuthenticated: true,
+      user: authUser,
+      token: session.access_token,
+      loading: false,
+      error: null,
+    });
+
+    triggerToast(`¡Bienvenido de nuevo, ${authUser.fullName}! Rol: ${authUser.role}`, 'success');
+    return true;
   };
 
   const logout = () => {
-    localStorage.removeItem('context7_jwt_token');
+    localStorage.removeItem(STORAGE_KEY);
     setState({
       isAuthenticated: false,
       user: null,
@@ -141,7 +133,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     triggerToast('Sesión cerrada correctamente.', 'info');
   };
 
-  // Role-Based Access Control check (RBAC)
   const hasRole = (roles: UserRole[]): boolean => {
     if (!state.isAuthenticated || !state.user) return false;
     return roles.includes(state.user.role);
