@@ -6,20 +6,20 @@ import { ShieldCheck, Lock, User, Eye, EyeOff, ShieldAlert } from 'lucide-react'
 export const LoginView: React.FC = () => {
   const { login, error, loading, clearError } = useAuth();
   
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim() || !password) return;
-    await login(username, password);
+    if (!email.trim() || !password) return;
+    await login(email, password);
   };
 
   const handleQuickFill = (acc: typeof TEST_ACCOUNTS[0]) => {
     clearError();
-    setUsername(acc.username);
+    setEmail(acc.email);
     setPassword(acc.password);
     setSelectedBadge(acc.role);
   };
@@ -89,7 +89,7 @@ export const LoginView: React.FC = () => {
 
           <div className="space-y-3">
             <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Usuarios de Pruebas Preconfigurados (Haz Clic para cargar):
+              Cuentas de Prueba (Haz Clic para cargar):
             </label>
             <div className="grid grid-cols-2 gap-2.5">
               {TEST_ACCOUNTS.map((acc) => {
@@ -111,7 +111,7 @@ export const LoginView: React.FC = () => {
                         {acc.role}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-500 block truncate">User: {acc.username}</span>
+                    <span className="text-[10px] font-mono text-slate-500 block truncate">{acc.email}</span>
                     <span className="text-[9px] text-slate-400 mt-1 line-clamp-1 group-hover:text-slate-300">Pass: {acc.password}</span>
                   </button>
                 );
@@ -135,21 +135,21 @@ export const LoginView: React.FC = () => {
 
             <div>
               <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-1.5">
-                Nombre de Usuario
+                Correo Electrónico
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
                   <User className="h-4 w-4" />
                 </div>
                 <input
-                  type="text"
+                  type="email"
                   required
-                  value={username}
+                  value={email}
                   onChange={(e) => {
-                    setUsername(e.target.value);
+                    setEmail(e.target.value);
                     setSelectedBadge(null);
                   }}
-                  placeholder="Introduce usuario (ej: root, admin, manager, user)"
+                  placeholder="Introduce email (ej: m.torres@empresa.com)"
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all"
                 />
               </div>

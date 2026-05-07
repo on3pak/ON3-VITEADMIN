@@ -2,11 +2,11 @@ import { User } from '../types';
 
 export const TEST_ACCOUNTS = [
   {
-    username: 'root',
+    username: 'm.torres',
     password: 'root123',
     role: 'ROOT' as const,
-    fullName: 'Super Root Administrator',
-    email: 'root@empresa.com',
+    fullName: 'Miguel Ángel Torres',
+    email: 'm.torres@empresa.com',
     description: 'Acceso total sin restricciones al sistema, configuraciones globales y pruebas.'
   },
   {
@@ -38,9 +38,9 @@ export const TEST_ACCOUNTS = [
 export const INITIAL_USERS: User[] = [
   {
     id: 'a1b2c3d4e5f6g7h8i9j0k1l2',
-    username: 'root',
-    email: 'root@empresa.com',
-    fullName: 'Super Root Administrator',
+    username: 'm.torres',
+    email: 'm.torres@empresa.com',
+    fullName: 'Miguel Ángel Torres',
     role: 'ROOT',
     status: 'ACTIVE',
     createdAt: '2025-01-10T08:30:00Z'

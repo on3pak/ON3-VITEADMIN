@@ -17,19 +17,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [users, setUsers] = useState<User[]>([]);
   const { user, triggerToast } = useAuth();
 
-  // Load initial mock users on mount or from localStorage to retain CRUD edits during testing
+  // Always load fresh INITIAL_USERS on mount (ignore stale localStorage)
   useEffect(() => {
-    const savedUsers = localStorage.getItem('context7_mock_users');
-    if (savedUsers) {
-      try {
-        setUsers(JSON.parse(savedUsers));
-      } catch (e) {
-        setUsers(INITIAL_USERS);
-      }
-    } else {
-      setUsers(INITIAL_USERS);
-      localStorage.setItem('context7_mock_users', JSON.stringify(INITIAL_USERS));
-    }
+    setUsers(INITIAL_USERS);
+    localStorage.setItem('context7_mock_users', JSON.stringify(INITIAL_USERS));
   }, []);
 
   const saveUsersToStorage = (updatedUsers: User[]) => {

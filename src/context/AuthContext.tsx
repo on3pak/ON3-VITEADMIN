@@ -4,7 +4,7 @@ import { TEST_ACCOUNTS } from '../data/mockUsers';
 import { signMockToken, decodeMockToken, verifyMockToken } from '../utils/jwt';
 
 interface AuthContextProps extends AuthState {
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   hasRole: (roles: UserRole[]) => boolean;
   clearError: () => void;
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const authUser: AuthUser = {
               id: payload.sub,
               username: payload.username,
-              email: TEST_ACCOUNTS.find(u => u.username === payload.username)?.email || `${payload.username}@context7.io`,
+              email: TEST_ACCOUNTS.find(u => u.username === payload.username)?.email || `${payload.username}@empresa.com`,
               fullName: payload.fullName,
               role: payload.role,
               avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${payload.username}`,
@@ -75,15 +75,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => clearTimeout(timer);
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     
     // Simulate real API latency
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    const lowercaseUsername = username.trim().toLowerCase();
+    const lowercaseEmail = email.trim().toLowerCase();
     const matchedAccount = TEST_ACCOUNTS.find(
-      acc => acc.username === lowercaseUsername && acc.password === password
+      acc => acc.email.toLowerCase() === lowercaseEmail && acc.password === password
     );
 
     if (matchedAccount) {
