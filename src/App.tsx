@@ -8,8 +8,9 @@ import { Header } from './components/Header';
 import { Toast } from './components/Toast';
 import { LoginView } from './views/login/LoginView';
 import { DashboardUsersView } from './views/dashboard/DashboardUsersView';
-import { UsersView } from './views/admin/UsersView';
-import { EmployeesView } from './views/admin/EmployeesView';
+import { UsersView } from './views/admin/users/UsersView';
+import { EmployeesView } from './views/admin/employees/EmployeesView';
+import { EmployeesDetailView } from './views/admin/employees/EmployeesDetailView';
 import { BestPracticesView } from './views/utils/BestPracticesView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
@@ -18,10 +19,24 @@ import { CrudTestsView } from './views/utils/tests/CrudTestsView';
 import { RbacTestsView } from './views/utils/tests/RbacTestsView';
 import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 
+const VIEW_ROUTES: Record<DashboardViewType, string> = {
+  OVERVIEW: '/',
+  USERS_CRUD: '/admin/users',
+  EMPLOYEES_CRUD: '/admin/employees',
+  EMPLOYEE_DETAIL: '/admin/employees/:id',
+  TESTS_AUTH: '/tests/auth',
+  TESTS_JWT: '/tests/jwt',
+  TESTS_CRUD: '/tests/crud',
+  TESTS_RBAC: '/tests/rbac',
+  TESTS_ROLES: '/tests/roles',
+  BEST_PRACTICES: '/utils/best-practices',
+};
+
 const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   OVERVIEW: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
   USERS_CRUD: ['ROOT', 'ADMIN'],
   EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
+  EMPLOYEE_DETAIL: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -41,6 +56,7 @@ const MainLayout: React.FC = () => {
     const saved = localStorage.getItem('context7_current_view');
     return (saved as DashboardViewType) || 'OVERVIEW';
   });
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem('context7_current_view', currentView);
@@ -66,8 +82,11 @@ const MainLayout: React.FC = () => {
 
   const hasAccess = canAccessView(currentView, user?.role);
 
-  const handleViewChange = (view: DashboardViewType) => {
+  const handleViewChange = (view: DashboardViewType, employeeId?: string) => {
     if (canAccessView(view, user?.role)) {
+      if (view === 'EMPLOYEE_DETAIL' && employeeId) {
+        setSelectedEmployeeId(employeeId);
+      }
       setCurrentView(view);
     }
   };
@@ -88,7 +107,13 @@ const MainLayout: React.FC = () => {
       case 'USERS_CRUD':
         return <UsersView />;
       case 'EMPLOYEES_CRUD':
-        return <EmployeesView />;
+        return <EmployeesView onViewEmployee={(id) => handleViewChange('EMPLOYEE_DETAIL', id)} />;
+      case 'EMPLOYEE_DETAIL':
+        return selectedEmployeeId ? (
+          <EmployeesDetailView employeeId={selectedEmployeeId} onBack={() => setCurrentView('EMPLOYEES_CRUD')} />
+        ) : (
+          <EmployeesView onViewEmployee={(id) => handleViewChange('EMPLOYEE_DETAIL', id)} />
+        );
       case 'TESTS_AUTH':
         return <AuthTestsView />;
       case 'TESTS_JWT':

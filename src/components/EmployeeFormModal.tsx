@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Employee } from '../types';
-import { INITIAL_CITIES, INITIAL_WORK_CENTERS, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS } from '../data/mockEmployees';
-import { X, ShieldAlert, UserPlus, Save } from 'lucide-react';
+import { INITIAL_CITIES, INITIAL_WORK_CENTERS, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS, INITIAL_CONTRACT_TYPES } from '../data/mockEmployees';
+import { X, ShieldAlert, UserPlus, Save, CreditCard, Calendar, Clock, Phone, Mail, Award } from 'lucide-react';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
@@ -16,11 +16,27 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [lastName2, setLastName2] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [personal_email, setPersonal_email] = useState('');
+  const [phone_fixed, setPhone_fixed] = useState('');
   const [category_id, setCategory_id] = useState('ec-1');
   const [status_id, setStatus_id] = useState('es-1');
   const [work_center_id, setWork_center_id] = useState('wc-1');
   const [work_day, setWork_day] = useState('wd-1');
-  const [shift, setShift] = useState('s-1');
+  const [start_time, setStart_time] = useState('');
+  const [end_time, setEnd_time] = useState('');
+  const [vacation_days, setVacation_days] = useState(22);
+  const [own_days, setOwn_days] = useState(0);
+  const [accumulated_days, setAccumulated_days] = useState(0);
+  const [excess_days, setExcess_days] = useState(0);
+  const [irpf, setIrpf] = useState(0);
+  const [iban, setIban] = useState('');
+  const [locker, setLocker] = useState('');
+  const [medical_check, setMedical_check] = useState(true);
+  const [works_holidays, setWorks_holidays] = useState(true);
+  const [active, setActive] = useState(true);
+  const [contract_type, setContract_type] = useState('');
+  const [contract_start_date, setContract_start_date] = useState('');
+  const [contract_end_date, setContract_end_date] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,22 +46,54 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setLastName2(editingEmployee.lastName2 || '');
       setEmail(editingEmployee.email);
       setPhone(editingEmployee.phone);
+      setPersonal_email(editingEmployee.personal_email || '');
+      setPhone_fixed(editingEmployee.phone_fixed || '');
       setCategory_id(editingEmployee.category_id);
       setStatus_id(editingEmployee.status_id);
       setWork_center_id(editingEmployee.work_center_id);
       setWork_day(editingEmployee.work_day);
-      setShift(editingEmployee.shift);
+      setStart_time(editingEmployee.start_time || '');
+      setEnd_time(editingEmployee.end_time || '');
+      setVacation_days(editingEmployee.vacation_days);
+      setOwn_days(editingEmployee.own_days);
+      setAccumulated_days(editingEmployee.accumulated_days);
+      setExcess_days(editingEmployee.excess_days);
+      setIrpf(editingEmployee.irpf);
+      setIban(editingEmployee.iban || '');
+      setLocker(editingEmployee.locker || '');
+      setMedical_check(editingEmployee.medical_check);
+      setWorks_holidays(editingEmployee.works_holidays);
+      setActive(editingEmployee.active);
+      setContract_type(editingEmployee.contract_type || '');
+      setContract_start_date(editingEmployee.contract_start_date || '');
+      setContract_end_date(editingEmployee.contract_end_date || '');
     } else {
       setName('');
       setLastName1('');
       setLastName2('');
       setEmail('');
       setPhone('');
+      setPersonal_email('');
+      setPhone_fixed('');
       setCategory_id('ec-1');
       setStatus_id('es-1');
       setWork_center_id('wc-1');
       setWork_day('wd-1');
-      setShift('s-1');
+      setStart_time('');
+      setEnd_time('');
+      setVacation_days(22);
+      setOwn_days(0);
+      setAccumulated_days(0);
+      setExcess_days(0);
+      setIrpf(0);
+      setIban('');
+      setLocker('');
+      setMedical_check(true);
+      setWorks_holidays(true);
+      setActive(true);
+      setContract_type('');
+      setContract_start_date('');
+      setContract_end_date('');
     }
     setFormError(null);
   }, [editingEmployee, isOpen]);
@@ -57,13 +105,13 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     setFormError(null);
 
     if (!name.trim() || !lastName1.trim() || !email.trim()) {
-      setFormError('Todos los campos con (*) son obligatorios.');
+      setFormError('Los campos Nombre, Apellido y Email son obligatorios.');
       return;
     }
 
     const success = onSubmit({
-      user_id: null,
-      city_id: null,
+      user_id: editingEmployee?.user_id ?? null,
+      city_id: editingEmployee?.city_id ?? null,
       name: name.trim(),
       lastName1: lastName1.trim(),
       lastName2: lastName2.trim(),
@@ -72,28 +120,28 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       category_id,
       status_id,
       work_center_id,
-      active: true,
-      shift,
+      active,
+      shift: editingEmployee?.shift ?? '',
       schedule: '',
-      start_time: '',
-      end_time: '',
+      start_time,
+      end_time,
       employee_category: INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === category_id)?.name ?? '',
-      own_days: 0,
-      accumulated_days: 0,
-      vacation_days: 22,
-      personal_email: '',
-      phone_fixed: '',
+      own_days,
+      accumulated_days,
+      vacation_days,
+      personal_email: personal_email.trim(),
+      phone_fixed: phone_fixed.trim(),
       work_day,
       work_center: INITIAL_WORK_CENTERS.find((w) => w.id === work_center_id)?.name ?? '',
-      iban: '',
-      locker: '',
-      medical_check: true,
-      works_holidays: true,
-      contract_type: '',
-      contract_start_date: '',
-      contract_end_date: null,
-      irpf: 0,
-      excess_days: 0,
+      iban: iban.trim(),
+      locker: locker.trim(),
+      medical_check,
+      works_holidays,
+      contract_type,
+      contract_start_date,
+      contract_end_date: contract_end_date || null,
+      irpf,
+      excess_days,
     });
 
     if (success) {
@@ -103,17 +151,17 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 overflow-hidden animate-scale-in">
-        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl border border-slate-200 overflow-hidden max-h-[90vh] overflow-y-auto">
+        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between sticky top-0">
           <div className="flex items-center gap-2.5">
             <div className={`p-2 rounded-lg ${editingEmployee ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
               {editingEmployee ? <Save className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
             </div>
             <div>
               <h3 className="font-bold text-slate-800">
-                {editingEmployee ? `Editar Empleado: ${editingEmployee.name}` : 'Registrar Nuevo Empleado'}
+                {editingEmployee ? `Editar: ${editingEmployee.name} ${editingEmployee.lastName1}` : 'Nuevo Empleado'}
               </h3>
-              <p className="text-xs text-slate-400">Completa los datos del empleado</p>
+              <p className="text-xs text-slate-400">Complete todos los datos</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded-lg">
@@ -131,55 +179,155 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Nombre *</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800" />
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Mail className="h-3 w-3"/> Datos Personales</h4>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre *</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Apellido 1 *</label>
+              <input type="text" value={lastName1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Apellido 1 *</label>
-              <input type="text" value={lastName1} onChange={(e) => setLastName1(e.target.value)} placeholder="Primer apellido" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800" />
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Apellido 2</label>
+              <input type="text" value={lastName2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Apellido 2</label>
-              <input type="text" value={lastName2} onChange={(e) => setLastName2(e.target.value)} placeholder="Segundo apellido" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800" />
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Empresa *</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Email *</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@empresa.com" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800" />
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono Móvil</label>
+              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Teléfono</label>
-              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="6XXXXXXXX" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800" />
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Personal</label>
+              <input type="email" value={personal_email} onChange={(e) => setPersonal_email(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Categoría</label>
-              <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono Fijo</label>
+              <input type="text" value={phone_fixed} onChange={(e) => setPhone_fixed(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+
+            <div className="col-span-2">
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría</label>
+              <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
                 {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Estado</label>
-              <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Estado</label>
+              <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
                 {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Centro de Trabajo</label>
-              <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Centro de Trabajo</label>
+              <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
                 {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Jornada</label>
-              <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 text-slate-800">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Jornada</label>
+              <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
                 {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
               </select>
             </div>
+
+            <div className="col-span-2">
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Clock className="h-3 w-3"/> Horario</h4>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Hora Entrada</label>
+              <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Hora Salida</label>
+              <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+
+            <div className="col-span-2">
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones y Días</h4>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Vacaciones</label>
+              <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Propios</label>
+              <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Acumulados</label>
+              <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Extras</label>
+              <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+
+            <div className="col-span-2">
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
+            </div>
+            <div className="col-span-2">
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">IBAN</label>
+              <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm font-mono" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">IRPF %</label>
+              <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Taquilla</label>
+              <input type="text" value={locker} onChange={(e) => setLocker(e.target.value)} placeholder="L-001" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+
+            <div className="col-span-2">
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Contrato</h4>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo Contrato</label>
+              <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
+                <option value="">Seleccionar...</option>
+                {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Fecha Inicio</label>
+              <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Fecha Fin</label>
+              <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+            </div>
+
+            <div className="col-span-2">
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Extras</h4>
+            </div>
+            <div className="col-span-2 flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="rounded" />
+                <span>Activo</span>
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={medical_check} onChange={(e) => setMedical_check(e.target.checked)} className="rounded" />
+                <span>Revisión Médica</span>
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={works_holidays} onChange={(e) => setWorks_holidays(e.target.checked)} className="rounded" />
+                <span>Trabaja Festivos</span>
+              </label>
+            </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-200 hover:bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl">Cancelar</button>
             <button type="submit" className={`px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs ${editingEmployee ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
-              {editingEmployee ? 'Guardar' : 'Registrar'}
+              {editingEmployee ? 'Guardar Cambios' : 'Registrar'}
             </button>
           </div>
         </form>
