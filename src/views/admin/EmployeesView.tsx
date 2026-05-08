@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useEmployees } from '../../context/EmployeeContext';
 import { useAuth } from '../../context/AuthContext';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES } from '../../data/mockEmployees';
+import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_CENTERS } from '../../data/mockEmployees';
 import { EmployeeFormModal } from '../../components/EmployeeFormModal';
 import {
   Search, UserPlus, Edit3, Trash2, Filter, ShieldAlert, Mail,
@@ -41,6 +41,7 @@ export const EmployeesView: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [workCenterFilter, setWorkCenterFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -75,11 +76,12 @@ export const EmployeesView: React.FC = () => {
       const name = `${emp.name} ${emp.lastName1} ${emp.lastName2}`.toLowerCase();
       const matchesSearch = !q || name.includes(q) || emp.name.toLowerCase().includes(q) || emp.lastName1.toLowerCase().includes(q);
       const matchesStatus = statusFilter === 'ALL' || emp.status_id === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesWorkCenter = workCenterFilter === 'ALL' || emp.work_center_id === workCenterFilter;
+      return matchesSearch && matchesStatus && matchesWorkCenter;
     });
-  }, [employeeOverviews, searchQuery, statusFilter]);
+  }, [employeeOverviews, searchQuery, statusFilter, workCenterFilter]);
 
-  useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, itemsPerPage]);
+  useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, workCenterFilter, itemsPerPage]);
 
   const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
   const paginatedEmployees = filteredEmployees.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -142,100 +144,134 @@ export const EmployeesView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
-                <th className="py-3 px-6">Identidad / Empleado</th>
-                <th className="py-3 px-4 w-28 text-center">Categoría</th>
-                <th className="py-3 px-4 w-20 text-center">Estado</th>
-                <th className="py-3 px-4 w-24 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
-              {paginatedEmployees.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="py-12 text-center text-slate-400 font-medium">
-                    No se encontraron empleados.
-                  </td>
-                </tr>
-              ) : (
-                paginatedEmployees.map((emp) => (
-                  <tr key={emp.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3.5 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-sm shadow-indigo-500/20 relative overflow-hidden">
-                          <User className="w-8 h-8 text-black/50 absolute" />
-                          <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.lastName1)}</span>
-                        </div>
-                        <div>
-                          <div className="font-bold text-slate-900 leading-tight">{emp.name} {emp.lastName1} {emp.lastName2}</div>
-                          <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                            <span className="font-mono text-indigo-600 font-semibold">ID: {emp.id}</span>
-                            <span>•</span>
-                            <Mail className="h-3 w-3 text-slate-300 inline" />
-                            <span className="truncate max-w-[140px]">{emp.email || 'sin email'}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div className="flex justify-center">
-                        <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${getCategoryBadgeStyle(emp.category_id)}`}>
-                          {resolveCategory(emp.category_id)}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div className="flex justify-center">
-                        <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border text-center ${getBadgeStyle(emp.status_id)}`}>
-                          {resolveStatus(emp.status_id)}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div className="flex justify-end gap-1.5">
-                        {!isReadOnly && (
-                          <>
-                            <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                            <button onClick={() => handleDelete(emp.id)} className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
-                          </>
-                        )}
-                      </div>
-                    </td>
+      <div className="flex gap-5">
+        <div className="flex-1">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
+                    <th className="py-3 px-6">Identidad / Empleado</th>
+                    <th className="py-3 px-4 w-28 text-center">Categoría</th>
+                    <th className="py-3 px-4 w-20 text-center">Estado</th>
+                    <th className="py-3 px-4 w-24 text-right">Acciones</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
+                  {paginatedEmployees.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="py-12 text-center text-slate-400 font-medium">
+                        No se encontraron empleados.
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedEmployees.map((emp) => (
+                      <tr key={emp.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3.5 px-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-sm shadow-indigo-500/20 relative overflow-hidden">
+                              <User className="w-8 h-8 text-black/50 absolute" />
+                              <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.lastName1)}</span>
+                            </div>
+                            <div>
+                              <div className="font-bold text-slate-900 leading-tight">{emp.name} {emp.lastName1} {emp.lastName2}</div>
+                              <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                                <span className="font-mono text-indigo-600 font-semibold">ID: {emp.id}</span>
+                                <span>•</span>
+                                <Mail className="h-3 w-3 text-slate-300 inline" />
+                                <span className="truncate max-w-[140px]">{emp.email || 'sin email'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
 
-      <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs text-slate-500">
-          <span>Mostrar</span>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-            className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
-          >
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-          </select>
-          <span>por página</span>
+                        <td className="py-3.5 px-4">
+                          <div className="flex justify-center">
+                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${getCategoryBadgeStyle(emp.category_id)}`}>
+                              {resolveCategory(emp.category_id)}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex justify-center">
+                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border text-center ${getBadgeStyle(emp.status_id)}`}>
+                              {resolveStatus(emp.status_id)}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex justify-end gap-1.5">
+                            {!isReadOnly && (
+                              <>
+                                <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                                <button onClick={() => handleDelete(emp.id)} className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <span>Mostrar</span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                  className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>por página</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-slate-500 mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1">
-          <span className="text-xs text-slate-500 mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-          <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-          <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-          <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-          <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+        <div className="w-64 flex-shrink-0">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 sticky top-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Centros de Trabajo</h3>
+            <div className="space-y-1">
+              <button
+                onClick={() => setWorkCenterFilter('ALL')}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                  workCenterFilter === 'ALL'
+                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Todos los Centros
+              </button>
+              {INITIAL_WORK_CENTERS.map((wc) => (
+                <button
+                  key={wc.id}
+                  onClick={() => setWorkCenterFilter(wc.id)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    workCenterFilter === wc.id
+                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {wc.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
