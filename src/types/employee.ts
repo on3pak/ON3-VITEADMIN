@@ -38,6 +38,7 @@ export interface Employee {
 
 export interface EmployeeOverview {
   id: string;
+  email: string;
   name: string;
   lastName1: string;
   lastName2: string;

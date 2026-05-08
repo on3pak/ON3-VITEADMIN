@@ -19,6 +19,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   const getEmployeeOverviews = useCallback(() => {
     return employees.map((emp) => ({
       id: emp.id,
+      email: emp.email,
       name: emp.name,
       lastName1: emp.lastName1,
       lastName2: emp.lastName2,
