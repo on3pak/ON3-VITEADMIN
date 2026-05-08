@@ -4,6 +4,7 @@ import { DashboardViewType } from '../types';
 import { 
   LayoutDashboard, 
   Users, 
+  UserCog,
   ShieldCheck, 
   LogOut, 
   KeyRound, 
@@ -13,7 +14,7 @@ import {
   Key,
   Database,
   Fingerprint,
-  UserCog
+  UserSquare
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -47,6 +48,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         label: 'Usuarios',
         icon: <Users className="h-5 w-5" />,
         description: 'Gestión de cuentas',
+        disabled: !canAccessUserCrud(user?.role),
+      },
+      {
+        id: 'EMPLOYEES_CRUD' as DashboardViewType,
+        label: 'Empleados',
+        icon: <UserSquare className="h-5 w-5" />,
+        description: 'Gestión de empleados',
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],

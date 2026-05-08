@@ -392,7 +392,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-10',
+    id: '000011',
     user_id: null,
     city_id: 'city-1',
     name: 'Sofia',
@@ -429,7 +429,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-11',
+    id: '000012',
     user_id: null,
     city_id: 'city-2',
     name: 'Antonio',
@@ -466,7 +466,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-12',
+    id: '000013',
     user_id: null,
     city_id: 'city-1',
     name: 'Isabel',
@@ -503,7 +503,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-13',
+    id: '000014',
     user_id: null,
     city_id: 'city-2',
     name: 'David',
@@ -540,7 +540,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-14',
+    id: '000015',
     user_id: null,
     city_id: 'city-1',
     name: 'Elena',
@@ -577,7 +577,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-15',
+    id: '000016',
     user_id: null,
     city_id: 'city-2',
     name: 'Francisco',
@@ -614,7 +614,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 1
   },
   {
-    id: 'emp-16',
+    id: '000017',
     user_id: null,
     city_id: 'city-1',
     name: 'Patricia',
@@ -651,7 +651,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-17',
+    id: '000018',
     user_id: null,
     city_id: 'city-2',
     name: 'Roberto',
@@ -688,7 +688,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-18',
+    id: '000019',
     user_id: null,
     city_id: 'city-1',
     name: 'Sandra',
@@ -725,7 +725,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-19',
+    id: '000020',
     user_id: null,
     city_id: 'city-2',
     name: 'Alberto',
@@ -762,7 +762,7 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     excess_days: 0
   },
   {
-    id: 'emp-20',
+    id: '000021',
     user_id: null,
     city_id: 'city-1',
     name: 'Natalia',

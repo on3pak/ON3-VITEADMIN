@@ -1,0 +1,70 @@
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { Employee, EmployeeOverview } from '../types';
+import { INITIAL_EMPLOYEES } from '../data/mockEmployees';
+
+interface EmployeeContextType {
+  employees: Employee[];
+  getEmployeeOverviews: () => EmployeeOverview[];
+  createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
+  updateEmployee: (id: string, data: Partial<Employee>) => { success: boolean };
+  deleteEmployee: (id: string) => void;
+}
+
+const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined);
+
+export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
+
+  const getEmployeeOverviews = useCallback(() => {
+    return employees.map((emp) => ({
+      id: emp.id,
+      name: emp.name,
+      lastName1: emp.lastName1,
+      lastName2: emp.lastName2,
+      category: emp.employee_category,
+      work_day: emp.work_day,
+      work_center: emp.work_center,
+      status: emp.active ? 'Activo' : 'Inactivo',
+    }));
+  }, [employees]);
+
+  const createEmployee = useCallback((data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
+    const newEmployee: Employee = {
+      ...data,
+      id: `emp-${Date.now()}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    setEmployees((prev) => [newEmployee, ...prev]);
+    return { success: true };
+  }, []);
+
+  const updateEmployee = useCallback((id: string, data: Partial<Employee>) => {
+    setEmployees((prev) =>
+      prev.map((emp) =>
+        emp.id === id ? { ...emp, ...data, updated_at: new Date().toISOString() } : emp
+      )
+    );
+    return { success: true };
+  }, []);
+
+  const deleteEmployee = useCallback((id: string) => {
+    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+  }, []);
+
+  return (
+    <EmployeeContext.Provider
+      value={{ employees, getEmployeeOverviews, createEmployee, updateEmployee, deleteEmployee }}
+    >
+      {children}
+    </EmployeeContext.Provider>
+  );
+};
+
+export const useEmployees = (): EmployeeContextType => {
+  const context = useContext(EmployeeContext);
+  if (!context) {
+    throw new Error('useEmployees must be used within an EmployeeProvider');
+  }
+  return context;
+};

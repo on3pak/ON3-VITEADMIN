@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { UserProvider } from './context/UserContext';
+import { EmployeeProvider } from './context/EmployeeContext';
 import { DashboardViewType } from './types';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -8,6 +9,7 @@ import { Toast } from './components/Toast';
 import { LoginView } from './views/login/LoginView';
 import { DashboardUsersView } from './views/dashboard/DashboardUsersView';
 import { UsersView } from './views/admin/UsersView';
+import { EmployeesView } from './views/admin/EmployeesView';
 import { BestPracticesView } from './views/utils/BestPracticesView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
@@ -19,6 +21,7 @@ import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   OVERVIEW: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
   USERS_CRUD: ['ROOT', 'ADMIN'],
+  EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -84,6 +87,8 @@ const MainLayout: React.FC = () => {
         return <DashboardUsersView />;
       case 'USERS_CRUD':
         return <UsersView />;
+      case 'EMPLOYEES_CRUD':
+        return <EmployeesView />;
       case 'TESTS_AUTH':
         return <AuthTestsView />;
       case 'TESTS_JWT':
@@ -120,10 +125,10 @@ export default function App() {
   return (
     <AuthProvider>
       <UserProvider>
-        {/* Context-aware core layout wrapper */}
-        <MainLayout />
-        {/* Floating reactive status toast banner */}
-        <Toast />
+        <EmployeeProvider>
+          <MainLayout />
+          <Toast />
+        </EmployeeProvider>
       </UserProvider>
     </AuthProvider>
   );

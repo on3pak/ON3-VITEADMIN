@@ -43,6 +43,7 @@ export interface EmployeeOverview {
   lastName2: string;
   category: string;
   work_day: string;
+  work_center: string;
   status: string;
 }
 
