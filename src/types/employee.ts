@@ -41,10 +41,10 @@ export interface EmployeeOverview {
   name: string;
   lastName1: string;
   lastName2: string;
-  category: string;
-  work_day: string;
-  work_center: string;
-  status: string;
+  category_id: string;
+  work_day_id: string;
+  work_center_id: string;
+  status_id: string;
 }
 
 export interface EmployeeCategory {

@@ -5,6 +5,7 @@ import { INITIAL_EMPLOYEES } from '../data/mockEmployees';
 interface EmployeeContextType {
   employees: Employee[];
   getEmployeeOverviews: () => EmployeeOverview[];
+  getEmployeeById: (id: string) => Employee | undefined;
   createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
   updateEmployee: (id: string, data: Partial<Employee>) => { success: boolean };
   deleteEmployee: (id: string) => void;
@@ -21,11 +22,15 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
       name: emp.name,
       lastName1: emp.lastName1,
       lastName2: emp.lastName2,
-      category: emp.employee_category,
-      work_day: emp.work_day,
-      work_center: emp.work_center,
-      status: emp.active ? 'Activo' : 'Inactivo',
+      category_id: emp.category_id,
+      work_day_id: emp.work_day,
+      work_center_id: emp.work_center_id,
+      status_id: emp.status_id,
     }));
+  }, [employees]);
+
+  const getEmployeeById = useCallback((id: string) => {
+    return employees.find((emp) => emp.id === id);
   }, [employees]);
 
   const createEmployee = useCallback((data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
@@ -54,7 +59,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   return (
     <EmployeeContext.Provider
-      value={{ employees, getEmployeeOverviews, createEmployee, updateEmployee, deleteEmployee }}
+      value={{ employees, getEmployeeOverviews, getEmployeeById, createEmployee, updateEmployee, deleteEmployee }}
     >
       {children}
     </EmployeeContext.Provider>
