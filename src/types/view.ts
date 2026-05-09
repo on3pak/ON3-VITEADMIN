@@ -5,6 +5,7 @@ export type DashboardViewType =
   | 'EMPLOYEE_DASHBOARD'
   | 'EMPLOYEE_DETAIL'
   | 'VEHICLES_CRUD'
+  | 'VEHICLE_DASHBOARD'
   | 'VEHICLE_DETAIL'
   | 'TESTS_AUTH' 
   | 'TESTS_JWT' 

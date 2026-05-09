@@ -50,6 +50,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         icon: <Briefcase className="h-5 w-5" />,
         description: 'Panel de empleados',
       },
+      {
+        id: 'VEHICLE_DASHBOARD' as DashboardViewType,
+        label: 'Vehículos',
+        icon: <Truck className="h-5 w-5" />,
+        description: 'Panel de vehículos',
+      },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [
       {

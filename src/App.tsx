@@ -9,6 +9,7 @@ import { Toast } from './components/Toast';
 import { LoginView } from './views/login/LoginView';
 import { DashboardUsersView } from './views/dashboard/DashboardUsersView';
 import { DashboardEmployeesView } from './views/dashboard/DashboardEmployeesView';
+import { DashboardVehiclesView } from './views/dashboard/DashboardVehiclesView';
 import { UsersView } from './views/admin/users/UsersView';
 import { EmployeesView } from './views/admin/employees/EmployeesView';
 import { EmployeesDetailView } from './views/admin/employees/EmployeesDetailView';
@@ -31,6 +32,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   EMPLOYEE_DASHBOARD: '/dashboard/employees',
   EMPLOYEE_DETAIL: '/admin/employees/:id',
   VEHICLES_CRUD: '/admin/vehicles',
+  VEHICLE_DASHBOARD: '/dashboard/vehicles',
   VEHICLE_DETAIL: '/admin/vehicles/:id',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
@@ -51,6 +53,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   EMPLOYEE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   EMPLOYEE_DETAIL: ['ROOT', 'ADMIN'],
   VEHICLES_CRUD: ['ROOT', 'ADMIN'],
+  VEHICLE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   VEHICLE_DETAIL: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -141,6 +144,8 @@ const MainLayout: React.FC = () => {
         );
       case 'VEHICLES_CRUD':
         return <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />;
+      case 'VEHICLE_DASHBOARD':
+        return <DashboardVehiclesView />;
       case 'VEHICLE_DETAIL':
         return selectedVehicleId ? (
           <VehiclesDetailView vehicleId={selectedVehicleId} onBack={() => setCurrentView('VEHICLES_CRUD')} />
