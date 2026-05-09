@@ -108,7 +108,6 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
           </div>
 
           <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
             <select
               value={workCenterFilter}
               onChange={(e) => setWorkCenterFilter(e.target.value)}
@@ -120,12 +119,34 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               ))}
             </select>
           </div>
+
+          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-indigo-600 hover:bg-indigo-700">
+            <Plus className="h-4 w-4" />
+            <span>Crear</span>
+          </button>
         </div>
 
-        <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-indigo-600 hover:bg-indigo-700">
-          <Plus className="h-4 w-4" />
-          <span>Crear Vehículo</span>
-        </button>
+        <div className="hidden lg:flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+            <Filter className="h-3.5 w-3.5 text-slate-400" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+            >
+              <option value="ALL">Todos los Estados</option>
+              <option value="ACTIVE">Activo</option>
+              <option value="MAINTENANCE">Taller</option>
+              <option value="AVERIADO">Averiado</option>
+              <option value="BAJA">Baja</option>
+            </select>
+          </div>
+
+          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-indigo-600 hover:bg-indigo-700">
+            <Plus className="h-4 w-4" />
+            <span>Crear Vehículo</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-5">
@@ -225,7 +246,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
           </div>
         </div>
 
-        <div className="w-64 flex-shrink-0">
+        <div className="hidden lg:flex lg:w-64 flex-shrink-0">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 sticky top-4">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Centros de Trabajo</h3>
             <div className="space-y-1">
