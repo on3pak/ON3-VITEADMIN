@@ -1,167 +1,251 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useUsers } from '../../context/UserContext';
-import { 
-  Users, 
-  ShieldCheck, 
-  KeyRound, 
-  CheckCircle2, 
-  UserCheck, 
-  AlertCircle,
-  Activity,
-  Server
+import {
+  Users,
+  UserCheck,
+  UserX,
+  Shield,
+  TrendingUp,
+  Clock,
+  Mail,
+  Calendar,
+  Activity
 } from 'lucide-react';
 
 export const DashboardUsersView: React.FC = () => {
   const { user } = useAuth();
   const { users } = useUsers();
 
-  const countByRole = (r: string) => users.filter(u => u.role === r).length;
-  const activeUsersCount = users.filter(u => u.status === 'ACTIVE').length;
-  const suspendedUsersCount = users.filter(u => u.status === 'SUSPENDED').length;
+  const activeUsers = users.filter(u => u.status === 'ACTIVE');
+  const inactiveUsers = users.filter(u => u.status === 'INACTIVE');
+  const totalUsers = users.length;
+  const activeRate = totalUsers > 0 ? (activeUsers.length / totalUsers) * 100 : 0;
 
-  const cardsData = [
+  const countByRole = (role: string) => users.filter(u => u.role === role).length;
+
+  const stats = [
     {
-      title: 'Usuarios Totales',
-      value: users.length,
-      subtitle: `${activeUsersCount} activos en DB`,
-      icon: <Users className="h-5 w-5 text-indigo-600" />,
-      bg: 'bg-indigo-50/70 text-indigo-700 border-indigo-100',
+      title: 'Total Usuarios',
+      value: totalUsers,
+      icon: <Users className="h-5 w-5" />,
+      color: 'indigo',
     },
     {
-      title: 'Sesión Actual Operator',
-      value: user?.role || 'USER',
-      subtitle: user?.fullName || 'N/A',
-      icon: <KeyRound className="h-5 w-5 text-purple-600" />,
-      bg: 'bg-purple-50/70 text-purple-700 border-purple-100',
+      title: 'Activos',
+      value: activeUsers.length,
+      icon: <UserCheck className="h-5 w-5" />,
+      color: 'emerald',
     },
     {
-      title: 'Estado de Integridad JWT',
-      value: '100% OK',
-      subtitle: 'Firma HMAC validada',
-      icon: <ShieldCheck className="h-5 w-5 text-emerald-600" />,
-      bg: 'bg-emerald-50/70 text-emerald-700 border-emerald-100',
+      title: 'Inactivos',
+      value: inactiveUsers.length,
+      icon: <UserX className="h-5 w-5" />,
+      color: 'rose',
     },
     {
-      title: 'Incidentes de Privilegio',
-      value: '0',
-      subtitle: 'Bloqueos RBAC activos',
-      icon: <AlertCircle className="h-5 w-5 text-amber-600" />,
-      bg: 'bg-amber-50/70 text-amber-700 border-amber-100',
+      title: 'Tasa de Actividad',
+      value: `${activeRate.toFixed(0)}%`,
+      icon: <TrendingUp className="h-5 w-5" />,
+      color: 'blue',
     },
   ];
 
+  const roleStats = [
+    { role: 'ROOT', label: 'Root', count: countByRole('ROOT'), color: 'bg-purple-600' },
+    { role: 'ADMIN', label: 'Admin', count: countByRole('ADMIN'), color: 'bg-blue-600' },
+    { role: 'MANAGER', label: 'Manager', count: countByRole('MANAGER'), color: 'bg-amber-500' },
+    { role: 'USER', label: 'Usuario', count: countByRole('USER'), color: 'bg-slate-500' },
+  ];
+
+  const recentUsers = [...users]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
+
+  const getStatusBadge = (status: string) => {
+    const styles = status === 'ACTIVE'
+      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      : 'bg-rose-50 text-rose-700 border-rose-200';
+    return (
+      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${styles}`}>
+        {status}
+      </span>
+    );
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
   return (
     <div className="space-y-6">
-      
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white shadow-xs relative overflow-hidden">
-        <div className="absolute right-0 top-0 h-full w-1/3 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px] hidden md:block" />
-        <div className="relative z-10 max-w-2xl">
-          <h3 className="text-xl font-bold tracking-tight">¡Bienvenido al Panel, {user?.fullName}!</h3>
-          <p className="text-slate-300 text-xs mt-1 leading-relaxed">
-            Estás conectado bajo el privilegio de rol <span className="text-indigo-300 font-bold underline font-mono">{user?.role}</span>. El sistema ha decodificado el JSON Web Token almacenado y aplicado políticas estrictas de seguridad jerárquica en los módulos de persistencia local.
-          </p>
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-slate-800">Panel de Usuarios</h2>
+            <p className="text-sm text-slate-500">Resumen y estadísticas del sistema</p>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Activity className="h-4 w-4" />
+            <span>Última actualización: ahora</span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {cardsData.map((card, i) => (
-          <div key={i} className="p-5 bg-white border border-slate-200 rounded-2xl shadow-xs flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">{card.title}</span>
-              <p className="text-2xl font-extrabold text-slate-800 tracking-tight">{card.value}</p>
-              <span className="text-xs font-medium text-slate-500 block truncate">{card.subtitle}</span>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat, i) => (
+          <div
+            key={i}
+            className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs"
+          >
+            <div className={`p-2.5 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-3`}>
+              <div className={`text-${stat.color}-600`}>{stat.icon}</div>
             </div>
-            <div className={`p-3 rounded-xl border ${card.bg}`}>
-              {card.icon}
-            </div>
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              {stat.title}
+            </p>
+            <p className="text-2xl font-bold text-slate-800 mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs lg:col-span-2 space-y-4">
-          <div>
-            <h3 className="font-bold text-slate-800 text-sm tracking-tight">Distribución de Jerarquías de Cuentas (RBAC)</h3>
-            <p className="text-xs text-slate-400">Total de registros cargados en memoria clasificados por nivel de autoridad</p>
-          </div>
-
-          <div className="space-y-3.5 pt-2">
-            {[
-              { label: 'ROOT (Super Acceso Global)', count: countByRole('ROOT'), pct: (countByRole('ROOT') / users.length) * 100, color: 'bg-purple-600' },
-              { label: 'ADMIN (Administración Operativa)', count: countByRole('ADMIN'), pct: (countByRole('ADMIN') / users.length) * 100, color: 'bg-blue-600' },
-              { label: 'MANAGER (Supervisión Intermedia)', count: countByRole('MANAGER'), pct: (countByRole('MANAGER') / users.length) * 100, color: 'bg-amber-500' },
-              { label: 'USER (Consulta / Solo Lectura)', count: countByRole('USER'), pct: (countByRole('USER') / users.length) * 100, color: 'bg-slate-500' },
-            ].map((bar, index) => (
-              <div key={index} className="space-y-1">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span className="text-slate-700">{bar.label}</span>
-                  <span className="text-slate-900 font-bold">{bar.count} usuarios ({Math.round(bar.pct)}%)</span>
-                </div>
-                <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                  <div 
-                    className={`${bar.color} h-full rounded-full transition-all duration-500`} 
-                    style={{ width: `${bar.pct}%` }} 
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-2 leading-relaxed">
-            <Activity className="h-4 w-4 text-indigo-500 flex-shrink-0 mt-0.5" />
-            <p>
-              <span className="font-bold text-slate-700">Simulación React Context:</span> Al añadir, editar o eliminar usuarios en el módulo de <span className="italic font-medium">Control de Usuarios</span>, estos gráficos estadísticos y porcentajes se actualizarán inmediatamente de forma reactiva a través del <span className="font-mono">UserProvider</span>.
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4 flex flex-col justify-between">
-          <div className="space-y-3">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs lg:col-span-2">
+          <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-bold text-slate-800 text-sm tracking-tight">Estado Técnico Mock API</h3>
-              <p className="text-xs text-slate-400">Verificaciones de seguridad en vivo</p>
+              <h3 className="font-semibold text-slate-800">Distribución por Rol</h3>
+              <p className="text-xs text-slate-500">Usuarios por nivel de acceso</p>
             </div>
-
-            <div className="space-y-2.5 pt-1">
-              <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <Server className="h-3.5 w-3.5 text-slate-400" /> Endpoint Autenticación
-                </span>
-                <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">MOCK_200_OK</span>
-              </div>
-              <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-slate-400" /> Algoritmo de Firma
-                </span>
-                <span className="font-mono text-slate-700 font-semibold text-[11px]">HMAC-SHA256 (Salted)</span>
-              </div>
-              <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <UserCheck className="h-3.5 w-3.5 text-slate-400" /> Sesiones Activas
-                </span>
-                <span className="font-mono font-bold text-indigo-600">1 Online</span>
-              </div>
-              <div className="flex items-center justify-between text-xs pb-1">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <AlertCircle className="h-3.5 w-3.5 text-slate-400" /> Cuentas Suspendidas
-                </span>
-                <span className={`font-mono font-bold ${suspendedUsersCount > 0 ? 'text-amber-600' : 'text-slate-600'}`}>
-                  {suspendedUsersCount}
-                </span>
-              </div>
-            </div>
+            <Shield className="h-5 w-5 text-slate-400" />
           </div>
 
-          <div className="p-3 bg-indigo-900 text-white rounded-xl text-center space-y-1">
-            <span className="text-[10px] font-mono tracking-widest text-indigo-300 block font-bold">ESTADO DEL SIMULADOR</span>
-            <p className="text-xs font-bold">Modo Demo Operativo</p>
+          <div className="space-y-4">
+            {roleStats.map((stat, i) => {
+              const percentage = totalUsers > 0 ? (stat.count / totalUsers) * 100 : 0;
+              return (
+                <div key={i}>
+                  <div className="flex items-center justify-between text-sm mb-1.5">
+                    <span className="font-medium text-slate-700">{stat.label}</span>
+                    <span className="text-slate-600 font-semibold">
+                      {stat.count} ({percentage.toFixed(0)}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div
+                      className={`${stat.color} h-full rounded-full transition-all duration-500`}
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="font-semibold text-slate-800">Información de Sesión</h3>
+              <p className="text-xs text-slate-500">Tu cuenta actual</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+              <div className="p-2 bg-indigo-100 rounded-lg">
+                <Users className="h-4 w-4 text-indigo-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-slate-500">Usuario</p>
+                <p className="text-sm font-semibold text-slate-800 truncate">
+                  {user?.fullName}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Mail className="h-4 w-4 text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-slate-500">Email</p>
+                <p className="text-sm font-semibold text-slate-800 truncate">
+                  {user?.email}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Shield className="h-4 w-4 text-purple-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-slate-500">Rol</p>
+                <p className="text-sm font-semibold text-slate-800">{user?.role}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="font-semibold text-slate-800">Usuarios Recientes</h3>
+            <p className="text-xs text-slate-500">Últimos registros en el sistema</p>
+          </div>
+          <Clock className="h-5 w-5 text-slate-400" />
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-slate-200">
+                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                  Usuario
+                </th>
+                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                  Email
+                </th>
+                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                  Rol
+                </th>
+                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                  Estado
+                </th>
+                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                  <Calendar className="h-4 w-4 inline mr-1" />
+                  Fecha de Creación
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentUsers.map((u, i) => (
+                <tr
+                  key={u.id}
+                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                >
+                  <td className="py-3 px-4">
+                    <p className="text-sm font-semibold text-slate-800">{u.fullName}</p>
+                    <p className="text-xs text-slate-500">@{u.username}</p>
+                  </td>
+                  <td className="py-3 px-4 text-sm text-slate-600">{u.email}</td>
+                  <td className="py-3 px-4">
+                    <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
+                      {u.role}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">{getStatusBadge(u.status)}</td>
+                  <td className="py-3 px-4 text-sm text-slate-600">
+                    {formatDate(u.createdAt)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

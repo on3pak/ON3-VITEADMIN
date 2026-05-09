@@ -8,6 +8,7 @@ import { Header } from './components/Header';
 import { Toast } from './components/Toast';
 import { LoginView } from './views/login/LoginView';
 import { DashboardUsersView } from './views/dashboard/DashboardUsersView';
+import { DashboardEmployeesView } from './views/dashboard/DashboardEmployeesView';
 import { UsersView } from './views/admin/users/UsersView';
 import { EmployeesView } from './views/admin/employees/EmployeesView';
 import { EmployeesDetailView } from './views/admin/employees/EmployeesDetailView';
@@ -23,6 +24,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   OVERVIEW: '/',
   USERS_CRUD: '/admin/users',
   EMPLOYEES_CRUD: '/admin/employees',
+  EMPLOYEE_DASHBOARD: '/dashboard/employees',
   EMPLOYEE_DETAIL: '/admin/employees/:id',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
@@ -36,6 +38,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   OVERVIEW: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
   USERS_CRUD: ['ROOT', 'ADMIN'],
   EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
+  EMPLOYEE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   EMPLOYEE_DETAIL: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -104,6 +107,8 @@ const MainLayout: React.FC = () => {
     switch (currentView) {
       case 'OVERVIEW':
         return <DashboardUsersView />;
+      case 'EMPLOYEE_DASHBOARD':
+        return <DashboardEmployeesView />;
       case 'USERS_CRUD':
         return <UsersView />;
       case 'EMPLOYEES_CRUD':

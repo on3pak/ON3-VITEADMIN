@@ -14,7 +14,8 @@ import {
   Key,
   Database,
   Fingerprint,
-  UserSquare
+  UserSquare,
+  Briefcase
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -41,20 +42,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         icon: <LayoutDashboard className="h-5 w-5" />,
         description: 'Estadísticas y métricas',
       },
+      {
+        id: 'EMPLOYEE_DASHBOARD' as DashboardViewType,
+        label: 'Empleados',
+        icon: <Briefcase className="h-5 w-5" />,
+        description: 'Panel de empleados',
+      },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [
       {
         id: 'USERS_CRUD' as DashboardViewType,
-        label: 'Usuarios',
+        label: 'Gestión Usuarios',
         icon: <Users className="h-5 w-5" />,
-        description: 'Gestión de cuentas',
+        description: 'CRUD de cuentas',
         disabled: !canAccessUserCrud(user?.role),
       },
       {
         id: 'EMPLOYEES_CRUD' as DashboardViewType,
-        label: 'Empleados',
+        label: 'Gestión Empleados',
         icon: <UserSquare className="h-5 w-5" />,
-        description: 'Gestión de empleados',
+        description: 'CRUD de empleados',
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],
