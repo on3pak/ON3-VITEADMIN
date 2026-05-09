@@ -1,8 +1,9 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useUsers } from '../context/UserContext';
+import { useEmployees } from '../context/EmployeeContext';
 import { DashboardViewType } from '../types';
-import { RefreshCw, Database, Shield, Lock, Wrench } from 'lucide-react';
+import { RefreshCw, Shield, Lock, Wrench, Clock } from 'lucide-react';
 
 interface HeaderProps {
   currentView: DashboardViewType;
@@ -12,44 +13,47 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) => {
   const { user, token } = useAuth();
   const { resetMockData, users } = useUsers();
+  const { employees } = useEmployees();
 
-  const getViewTitle = (view: DashboardViewType) => {
+  const getViewInfo = (view: DashboardViewType) => {
     switch (view) {
       case 'OVERVIEW':
-        return 'Resumen del Sistema';
+        return { title: 'Dashboard de Usuarios', subtitle: 'Resumen y estadísticas del sistema' };
       case 'EMPLOYEE_DASHBOARD':
-        return 'Panel de Empleados';
+        return { title: 'Dashboard de Empleados', subtitle: 'Estadísticas y métricas de personal' };
       case 'USERS_CRUD':
-        return 'Administración de Usuarios';
+        return { title: 'Gestión de Usuarios', subtitle: 'Crear, editar y eliminar cuentas' };
       case 'EMPLOYEES_CRUD':
-        return 'Gestión de Empleados';
+        return { title: 'Gestión de Empleados', subtitle: 'Alta, modificación y listado de empleados' };
       case 'EMPLOYEE_DETAIL':
-        return 'Detalle de Empleado';
+        return { title: 'Detalle de Empleado', subtitle: 'Información completa del empleado' };
       case 'LOGS_AUTH':
-        return 'Logs de Auth';
+        return { title: 'Logs de Auth', subtitle: 'Registro de autenticaciones' };
       case 'LOGS_LOGOUT':
-        return 'Logs de Logout';
+        return { title: 'Logs de Logout', subtitle: 'Registro de cierres de sesión' };
       case 'LOGS_USERS':
-        return 'Logs de Usuarios';
+        return { title: 'Logs de Usuarios', subtitle: 'Registro de usuarios' };
       case 'LOGS_EMPLOYEES':
-        return 'Logs de Empleados';
+        return { title: 'Logs de Empleados', subtitle: 'Registro de empleados' };
       case 'UTILS':
-        return 'Utilidades';
+        return { title: 'Utilidades', subtitle: 'Logs y herramientas de desarrollo' };
       default:
-        return 'Panel de Control';
+        return { title: 'Panel de Control', subtitle: 'Resumen del sistema' };
     }
   };
+
+  const viewInfo = getViewInfo(currentView);
+  const now = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
   return (
     <header className="bg-white border-b border-slate-200 h-16 px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
       <div className="flex items-center gap-3">
-        <h2 className="text-lg font-bold text-slate-800 tracking-tight">
-          {getViewTitle(currentView)}
-        </h2>
-        <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">
-          <Database className="h-3 w-3 text-slate-400" />
-          {users.length} Registros
-        </span>
+        <div>
+          <h2 className="text-lg font-bold text-slate-800 tracking-tight">
+            {viewInfo.title}
+          </h2>
+          <p className="text-xs text-slate-500">{viewInfo.subtitle}</p>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
@@ -59,6 +63,11 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) =
             JWT: <span className="text-indigo-700 font-bold">{token ? `${token.substring(0, 10)}...${token.substring(token.length - 10)}` : 'Inactivo'}</span>
           </span>
           <Lock className="h-3 w-3 text-indigo-400 ml-1" />
+        </div>
+
+        <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+          <Clock className="h-3 w-3 text-slate-400" />
+          <span>Actualizado: {now}</span>
         </div>
 
         <div className="relative">

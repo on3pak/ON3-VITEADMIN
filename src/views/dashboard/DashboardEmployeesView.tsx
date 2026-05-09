@@ -9,7 +9,6 @@ import {
   Clock,
   Calendar,
   MapPin,
-  Activity,
   Wrench
 } from 'lucide-react';
 
@@ -138,19 +137,6 @@ export const DashboardEmployeesView: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-slate-800">Panel de Empleados</h2>
-            <p className="text-sm text-slate-500">Resumen y estadísticas de personal</p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <Activity className="h-4 w-4" />
-            <span>Última actualización: ahora</span>
-          </div>
-        </div>
-      </div>
-
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, i) => (
           <div
