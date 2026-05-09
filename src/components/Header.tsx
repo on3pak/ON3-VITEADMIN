@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useUsers } from '../context/UserContext';
 import { useEmployees } from '../context/EmployeeContext';
 import { DashboardViewType } from '../types';
-import { RefreshCw, Shield, Lock, Wrench, Clock } from 'lucide-react';
+import { RefreshCw, Shield, Lock, Wrench } from 'lucide-react';
 
 interface HeaderProps {
   currentView: DashboardViewType;
@@ -43,7 +43,6 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) =
   };
 
   const viewInfo = getViewInfo(currentView);
-  const now = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
   return (
     <header className="bg-white border-b border-slate-200 h-16 px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
@@ -57,19 +56,6 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView }) =
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50/70 border border-indigo-100">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-xs font-mono font-medium text-slate-600">
-            JWT: <span className="text-indigo-700 font-bold">{token ? `${token.substring(0, 10)}...${token.substring(token.length - 10)}` : 'Inactivo'}</span>
-          </span>
-          <Lock className="h-3 w-3 text-indigo-400 ml-1" />
-        </div>
-
-        <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
-          <Clock className="h-3 w-3 text-slate-400" />
-          <span>Actualizado: {now}</span>
-        </div>
-
         <div className="relative">
           <button
             onClick={() => setCurrentView('UTILS')}
