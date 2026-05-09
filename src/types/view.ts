@@ -8,5 +8,4 @@ export type DashboardViewType =
   | 'TESTS_JWT' 
   | 'TESTS_CRUD' 
   | 'TESTS_RBAC' 
-  | 'TESTS_ROLES' 
-  | 'BEST_PRACTICES';
+  | 'TESTS_ROLES';

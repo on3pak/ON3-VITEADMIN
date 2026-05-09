@@ -12,7 +12,6 @@ import { DashboardEmployeesView } from './views/dashboard/DashboardEmployeesView
 import { UsersView } from './views/admin/users/UsersView';
 import { EmployeesView } from './views/admin/employees/EmployeesView';
 import { EmployeesDetailView } from './views/admin/employees/EmployeesDetailView';
-import { BestPracticesView } from './views/utils/BestPracticesView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
 import { JwtTestsView } from './views/utils/tests/JwtTestsView';
@@ -31,7 +30,6 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   TESTS_CRUD: '/tests/crud',
   TESTS_RBAC: '/tests/rbac',
   TESTS_ROLES: '/tests/roles',
-  BEST_PRACTICES: '/utils/best-practices',
 };
 
 const VIEW_ROLES: Record<DashboardViewType, string[]> = {
@@ -45,7 +43,6 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_RBAC: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_ROLES: ['ROOT', 'ADMIN', 'MANAGER'],
-  BEST_PRACTICES: ['ROOT', 'ADMIN'],
 };
 
 const canAccessView = (view: DashboardViewType, role?: string): boolean => {
@@ -129,8 +126,6 @@ const MainLayout: React.FC = () => {
         return <RbacTestsView />;
       case 'TESTS_ROLES':
         return <RolesTestsView />;
-      case 'BEST_PRACTICES':
-        return <BestPracticesView />;
       default:
         return <DashboardUsersView />;
     }
@@ -141,7 +136,7 @@ const MainLayout: React.FC = () => {
       <Sidebar currentView={currentView} setView={handleViewChange} />
 
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <Header currentView={currentView} />
+        <Header currentView={currentView} setCurrentView={setCurrentView} />
 
         <main className="p-8 flex-1 overflow-y-auto max-w-7xl w-full mx-auto">
           {renderContent()}

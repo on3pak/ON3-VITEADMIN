@@ -15,7 +15,8 @@ import {
   Database,
   Fingerprint,
   UserSquare,
-  Briefcase
+  Briefcase,
+  BookOpen
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -65,38 +66,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],
-    UTILS: [
-      {
-        id: 'TESTS_AUTH' as DashboardViewType,
-        label: 'Auth',
-        icon: <Shield className="h-5 w-5" />,
-        description: 'Credenciales y login',
-      },
-      {
-        id: 'TESTS_JWT' as DashboardViewType,
-        label: 'JWT',
-        icon: <Key className="h-5 w-5" />,
-        description: 'Tokens y validación',
-      },
-      {
-        id: 'TESTS_CRUD' as DashboardViewType,
-        label: 'CRUD',
-        icon: <Database className="h-5 w-5" />,
-        description: 'Operaciones de datos',
-      },
-      {
-        id: 'TESTS_RBAC' as DashboardViewType,
-        label: 'RBAC',
-        icon: <Fingerprint className="h-5 w-5" />,
-        description: 'Controles de acceso',
-      },
-      {
-        id: 'TESTS_ROLES' as DashboardViewType,
-        label: 'Roles',
-        icon: <UserCog className="h-5 w-5" />,
-        description: 'Permisos por rol',
-      },
-    ],
   };
 
   const getRoleBadgeStyle = (role: string) => {
