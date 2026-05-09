@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Employee } from '../types';
-import { INITIAL_CITIES, INITIAL_WORK_CENTERS, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS, INITIAL_CONTRACT_TYPES } from '../data/mockEmployees';
+import { Employee } from '../../types';
+import { INITIAL_CITIES, INITIAL_WORK_CENTERS, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
 import { X, ShieldAlert, UserPlus, Save, CreditCard, Calendar, Clock, Phone, Mail, Award } from 'lucide-react';
 
 interface EmployeeFormModalProps {

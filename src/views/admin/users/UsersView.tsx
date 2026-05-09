@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useUsers } from '../../../context/UserContext';
 import { useAuth } from '../../../context/AuthContext';
 import { User, UserRole } from '../../types';
-import { UserFormModal } from '../../../components/UserFormModal';
+import { UserFormModal } from '../../../components/modals/UserFormModal';
 import { 
   Search, 
   UserPlus, 

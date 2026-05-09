@@ -12,6 +12,9 @@ import { DashboardEmployeesView } from './views/dashboard/DashboardEmployeesView
 import { UsersView } from './views/admin/users/UsersView';
 import { EmployeesView } from './views/admin/employees/EmployeesView';
 import { EmployeesDetailView } from './views/admin/employees/EmployeesDetailView';
+import { VehiclesView } from './views/admin/vehicles/VehiclesView';
+import { VehiclesDetailView } from './views/admin/vehicles/VehiclesDetailView';
+import { VehicleProvider } from './context/VehicleContext';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
 import { JwtTestsView } from './views/utils/tests/JwtTestsView';
@@ -27,6 +30,8 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   EMPLOYEES_CRUD: '/admin/employees',
   EMPLOYEE_DASHBOARD: '/dashboard/employees',
   EMPLOYEE_DETAIL: '/admin/employees/:id',
+  VEHICLES_CRUD: '/admin/vehicles',
+  VEHICLE_DETAIL: '/admin/vehicles/:id',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -45,6 +50,8 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
   EMPLOYEE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   EMPLOYEE_DETAIL: ['ROOT', 'ADMIN'],
+  VEHICLES_CRUD: ['ROOT', 'ADMIN'],
+  VEHICLE_DETAIL: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -69,6 +76,7 @@ const MainLayout: React.FC = () => {
     return (saved as DashboardViewType) || 'OVERVIEW';
   });
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem('context7_current_view', currentView);
@@ -94,10 +102,13 @@ const MainLayout: React.FC = () => {
 
   const hasAccess = canAccessView(currentView, user?.role);
 
-  const handleViewChange = (view: DashboardViewType, employeeId?: string) => {
+  const handleViewChange = (view: DashboardViewType, id?: string) => {
     if (canAccessView(view, user?.role)) {
-      if (view === 'EMPLOYEE_DETAIL' && employeeId) {
-        setSelectedEmployeeId(employeeId);
+      if (view === 'EMPLOYEE_DETAIL' && id) {
+        setSelectedEmployeeId(id);
+      }
+      if (view === 'VEHICLE_DETAIL' && id) {
+        setSelectedVehicleId(id);
       }
       setCurrentView(view);
     }
@@ -127,6 +138,14 @@ const MainLayout: React.FC = () => {
           <EmployeesDetailView employeeId={selectedEmployeeId} onBack={() => setCurrentView('EMPLOYEES_CRUD')} />
         ) : (
           <EmployeesView onViewEmployee={(id) => handleViewChange('EMPLOYEE_DETAIL', id)} />
+        );
+      case 'VEHICLES_CRUD':
+        return <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />;
+      case 'VEHICLE_DETAIL':
+        return selectedVehicleId ? (
+          <VehiclesDetailView vehicleId={selectedVehicleId} onBack={() => setCurrentView('VEHICLES_CRUD')} />
+        ) : (
+          <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />
         );
       case 'TESTS_AUTH':
         return <AuthTestsView />;
@@ -170,8 +189,10 @@ export default function App() {
     <AuthProvider>
       <UserProvider>
         <EmployeeProvider>
-          <MainLayout />
-          <Toast />
+          <VehicleProvider>
+            <MainLayout />
+            <Toast />
+          </VehicleProvider>
         </EmployeeProvider>
       </UserProvider>
     </AuthProvider>

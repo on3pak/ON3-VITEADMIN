@@ -16,7 +16,8 @@ import {
   Fingerprint,
   UserSquare,
   Briefcase,
-  BookOpen
+  BookOpen,
+  Truck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -63,6 +64,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         label: 'Gestión Empleados',
         icon: <UserSquare className="h-5 w-5" />,
         description: 'CRUD de empleados',
+        disabled: !canAccessUserCrud(user?.role),
+      },
+      {
+        id: 'VEHICLES_CRUD' as DashboardViewType,
+        label: 'Gestión Vehículos',
+        icon: <Truck className="h-5 w-5" />,
+        description: 'CRUD de vehículos',
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],

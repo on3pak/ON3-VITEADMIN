@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { User, UserRole } from '../types';
-import { useAuth } from '../context/AuthContext';
+import { User, UserRole } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 import { X, ShieldAlert, UserPlus, Save } from 'lucide-react';
 
 interface UserFormModalProps {

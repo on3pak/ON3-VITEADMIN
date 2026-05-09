@@ -5,3 +5,4 @@ export * from './view';
 export * from './employee';
 export * from './city';
 export * from './workCenter';
+export * from './vehicle';

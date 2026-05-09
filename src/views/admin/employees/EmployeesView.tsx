@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_CENTERS } from '../../../data/mockEmployees';
-import { EmployeeFormModal } from '../../../components/EmployeeFormModal';
+import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
+import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import {
   Search, UserPlus, Edit3, Trash2, Filter, ShieldAlert, Mail, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, User,
@@ -48,14 +49,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingEmployeeId, setDeletingEmployeeId] = useState<string | null>(null);
 
   const handleCreate = () => { setModalMode('create'); setSelectedEmployeeId(null); setModalOpen(true); };
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedEmployeeId(id); setModalOpen(true); };
-  const handleDelete = (id: string) => {
-    if (confirm('¿Eliminar empleado?')) {
-      deleteEmployee(id);
-    }
-  };
+  const handleDelete = (id: string) => { setDeletingEmployeeId(id); setDeleteDialogOpen(true); };
+  const handleConfirmDelete = () => { if (deletingEmployeeId) { deleteEmployee(deletingEmployeeId); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
 
   const handleModalSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedEmployeeId) {
@@ -281,6 +281,14 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         onClose={() => setModalOpen(false)}
         onSubmit={handleModalSubmit}
         editingEmployee={selectedEmployee}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        title="Eliminar Empleado"
+        message="¿Estás seguro de eliminar este empleado? Esta acción no se puede deshacer."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => { setDeleteDialogOpen(false); setDeletingEmployeeId(null); }}
       />
     </div>
   );

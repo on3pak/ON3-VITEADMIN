@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_CENTERS, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../../data/mockEmployees';
-import { EmployeeFormModal } from '../../../components/EmployeeFormModal';
+import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
+import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, CreditCard, Award, Clock, Edit3, Trash2, ShieldAlert, Building2, Wallet, FileCheck, Activity } from 'lucide-react';
 
 interface EmployeesDetailViewProps {
@@ -58,14 +59,11 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode] = useState<'edit'>('edit');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleEdit = () => { setModalOpen(true); };
-  const handleDelete = () => {
-    if (confirm('¿Eliminar empleado?')) {
-      deleteEmployee(employeeId);
-      onBack();
-    }
-  };
+  const handleDelete = () => { setDeleteDialogOpen(true); };
+  const handleConfirmDelete = () => { deleteEmployee(employeeId); onBack(); };
 
   const handleModalSubmit = (data: Omit<import('../../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
     updateEmployee(employeeId, data);
@@ -198,6 +196,14 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
         onClose={() => setModalOpen(false)}
         onSubmit={handleModalSubmit}
         editingEmployee={employee}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        title="Eliminar Empleado"
+        message={`¿Estás seguro de eliminar al empleado ${employee.name} ${employee.lastName1}? Esta acción no se puede deshacer.`}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteDialogOpen(false)}
       />
     </div>
   );
