@@ -18,6 +18,8 @@ import { JwtTestsView } from './views/utils/tests/JwtTestsView';
 import { CrudTestsView } from './views/utils/tests/CrudTestsView';
 import { RbacTestsView } from './views/utils/tests/RbacTestsView';
 import { RolesTestsView } from './views/utils/tests/RolesTestsView';
+import { LogsView } from './views/utils/logs/LogsView';
+import { UtilsView } from './views/utils/UtilsView';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
   OVERVIEW: '/',
@@ -30,6 +32,11 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   TESTS_CRUD: '/tests/crud',
   TESTS_RBAC: '/tests/rbac',
   TESTS_ROLES: '/tests/roles',
+  LOGS_AUTH: '/logs/auth',
+  LOGS_LOGOUT: '/logs/logout',
+  LOGS_USERS: '/logs/users',
+  LOGS_EMPLOYEES: '/logs/employees',
+  UTILS: '/utils',
 };
 
 const VIEW_ROLES: Record<DashboardViewType, string[]> = {
@@ -43,6 +50,11 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_RBAC: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_ROLES: ['ROOT', 'ADMIN', 'MANAGER'],
+  LOGS_AUTH: ['ROOT', 'ADMIN'],
+  LOGS_LOGOUT: ['ROOT', 'ADMIN'],
+  LOGS_USERS: ['ROOT', 'ADMIN'],
+  LOGS_EMPLOYEES: ['ROOT', 'ADMIN'],
+  UTILS: ['ROOT', 'ADMIN', 'MANAGER'],
 };
 
 const canAccessView = (view: DashboardViewType, role?: string): boolean => {
@@ -126,6 +138,13 @@ const MainLayout: React.FC = () => {
         return <RbacTestsView />;
       case 'TESTS_ROLES':
         return <RolesTestsView />;
+      case 'LOGS_AUTH':
+      case 'LOGS_LOGOUT':
+      case 'LOGS_USERS':
+      case 'LOGS_EMPLOYEES':
+        return <LogsView logType={currentView} />;
+      case 'UTILS':
+        return <UtilsView />;
       default:
         return <DashboardUsersView />;
     }
