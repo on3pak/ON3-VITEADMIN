@@ -77,8 +77,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
   return (
     <div className="space-y-5">
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
             <Search className="h-4 w-4" />
           </div>
@@ -127,21 +127,6 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
         </div>
 
         <div className="hidden lg:flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
-            >
-              <option value="ALL">Todos los Estados</option>
-              <option value="ACTIVE">Activo</option>
-              <option value="MAINTENANCE">Taller</option>
-              <option value="AVERIADO">Averiado</option>
-              <option value="BAJA">Baja</option>
-            </select>
-          </div>
-
           <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-indigo-600 hover:bg-indigo-700">
             <Plus className="h-4 w-4" />
             <span>Crear Vehículo</span>
@@ -246,8 +231,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
           </div>
         </div>
 
-        <div className="hidden lg:flex lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 sticky top-4">
+        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Centros de Trabajo</h3>
             <div className="space-y-1">
               <button
@@ -271,6 +256,35 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                   }`}
                 >
                   {wc.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado</h3>
+            <div className="space-y-1">
+              <button
+                onClick={() => setStatusFilter('ALL')}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                  statusFilter === 'ALL'
+                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Todos los Estados
+              </button>
+              {['ACTIVE', 'MAINTENANCE', 'AVERIADO', 'BAJA'].map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setStatusFilter(s)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    statusFilter === s
+                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {s === 'ACTIVE' ? 'Activo' : s === 'MAINTENANCE' ? 'En Taller' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}
                 </button>
               ))}
             </div>

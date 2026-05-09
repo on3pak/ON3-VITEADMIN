@@ -105,7 +105,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       )}
 
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
             <Search className="h-4 w-4" />
           </div>
@@ -157,20 +157,6 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         </div>
 
         <div className="hidden lg:flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
-            >
-              <option value="ALL">Todos los Estados</option>
-              {INITIAL_EMPLOYEE_STATUSES.map((s) => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
-            </select>
-          </div>
-
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
@@ -282,8 +268,8 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           </div>
         </div>
 
-        <div className="hidden lg:flex lg:w-64 flex-shrink-0 lg:space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 sticky top-4">
+        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Centros de Trabajo</h3>
             <div className="space-y-1">
               <button
@@ -307,6 +293,35 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                   }`}
                 >
                   {wc.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado</h3>
+            <div className="space-y-1">
+              <button
+                onClick={() => setStatusFilter('ALL')}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                  statusFilter === 'ALL'
+                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Todos los Estados
+              </button>
+              {INITIAL_EMPLOYEE_STATUSES.map((es) => (
+                <button
+                  key={es.id}
+                  onClick={() => setStatusFilter(es.id)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    statusFilter === es.id
+                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {es.name}
                 </button>
               ))}
             </div>
