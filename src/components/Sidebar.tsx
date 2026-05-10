@@ -23,6 +23,8 @@ import {
 interface SidebarProps {
   currentView: DashboardViewType;
   setView: (view: DashboardViewType) => void;
+  sidebarOpen?: boolean;
+  setSidebarOpen?: (open: boolean) => void;
 }
 
 const canAccessUserCrud = (role?: string): boolean => {
@@ -33,7 +35,7 @@ const canSeeUserCrud = (role?: string): boolean => {
   return role === 'ROOT' || role === 'ADMIN' || role === 'MANAGER';
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
   const { user, logout } = useAuth();
 
   const menuItems = {
@@ -96,7 +98,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
   };
 
   return (
-    <aside className="w-72 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 h-screen sticky top-0">
+    <>
+      {/* Mobile overlay backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen?.(false)}
+        />
+      )}
+      
+      <aside className={`
+        w-64 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 h-screen sticky top-0 
+        fixed lg:relative z-30 transition-transform duration-300
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        lg:w-16 lg:block xl:w-56
+      `}>
       {/* Brand Logo Header */}
       <div className="p-6 border-b border-slate-800 flex items-center gap-3 bg-slate-950/40">
         <div className="p-2 rounded-lg bg-indigo-600 text-white shadow-md shadow-indigo-600/20">
@@ -188,5 +204,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         </button>
       </div>
     </aside>
+    </>
   );
 };

@@ -80,6 +80,7 @@ const MainLayout: React.FC = () => {
   });
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('context7_current_view', currentView);
@@ -176,12 +177,12 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex font-sans antialiased">
-      <Sidebar currentView={currentView} setView={handleViewChange} />
+      <Sidebar currentView={currentView} setView={handleViewChange} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <Header currentView={currentView} setCurrentView={setCurrentView} />
+        <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-        <main className="p-8 flex-1 overflow-y-auto max-w-7xl w-full mx-auto">
+        <main className="flex-1 overflow-y-auto w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {renderContent()}
         </main>
       </div>
