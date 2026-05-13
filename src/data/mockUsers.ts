@@ -6,7 +6,7 @@ export const TEST_ACCOUNTS = [
     password: 'root123',
     role: 'ROOT' as const,
     fullName: 'Miguel Ángel Torres',
-    email: 'm.torres@empresa.com',
+    email: 'm.torres@on3.com',
     description: 'Acceso total sin restricciones al sistema, configuraciones globales y pruebas.'
   },
   {
@@ -14,7 +14,7 @@ export const TEST_ACCOUNTS = [
     password: 'admin123',
     role: 'ADMIN' as const,
     fullName: 'Alejandro Mendoza',
-    email: 'a.mendoza@empresa.com',
+    email: 'a.mendoza@on3.com',
     description: 'Gestor de usuarios, reportes y supervisión de managers y operarios.'
   },
   {
@@ -22,7 +22,7 @@ export const TEST_ACCOUNTS = [
     password: 'manager123',
     role: 'MANAGER' as const,
     fullName: 'Beatriz Salazar',
-    email: 'b.salazar@empresa.com',
+    email: 'b.salazar@on3.com',
     description: 'Gestión intermedio de personal, creación de usuarios y visualización.'
   },
   {
@@ -30,7 +30,7 @@ export const TEST_ACCOUNTS = [
     password: 'user123',
     role: 'USER' as const,
     fullName: 'Carlos Fuentes',
-    email: 'c.fuentes@empresa.com',
+    email: 'c.fuentes@on3.com',
     description: 'Rol de lectura y consulta básica. No posee permisos de modificación.'
   }
 ];
@@ -39,7 +39,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'a1b2c3d4e5f6g7h8i9j0k1l2',
     username: 'm.torres',
-    email: 'm.torres@empresa.com',
+    email: 'm.torres@on3.com',
     fullName: 'Miguel Ángel Torres',
     role: 'ROOT',
     status: 'ACTIVE',
@@ -49,7 +49,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'b2c3d4e5f6g7h8i9j0k1l2m3',
     username: 'admin',
-    email: 'a.mendoza@empresa.com',
+    email: 'a.mendoza@on3.com',
     fullName: 'Alejandro Mendoza',
     role: 'ADMIN',
     status: 'ACTIVE',
@@ -59,7 +59,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'c3d4e5f6g7h8i9j0k1l2m3n4',
     username: 'manager',
-    email: 'b.salazar@empresa.com',
+    email: 'b.salazar@on3.com',
     fullName: 'Beatriz Salazar',
     role: 'MANAGER',
     status: 'ACTIVE',
@@ -69,7 +69,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'd4e5f6g7h8i9j0k1l2m3n4o5',
     username: 'user',
-    email: 'c.fuentes@empresa.com',
+    email: 'c.fuentes@on3.com',
     fullName: 'Carlos Fuentes',
     role: 'USER',
     status: 'ACTIVE',
@@ -79,7 +79,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'e5f6g7h8i9j0k1l2m3n4o5p6',
     username: 'diana_reyes',
-    email: 'd.reyes@empresa.com',
+    email: 'd.reyes@on3.com',
     fullName: 'Diana Reyes',
     role: 'MANAGER',
     status: 'ACTIVE',
@@ -89,7 +89,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'f6g7h8i9j0k1l2m3n4o5p6q7',
     username: 'eduardo_gomez',
-    email: 'e.gomez@empresa.com',
+    email: 'e.gomez@on3.com',
     fullName: 'Eduardo Gómez',
     role: 'USER',
     status: 'INACTIVE',
@@ -99,7 +99,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'g7h8i9j0k1l2m3n4o5p6q7r8',
     username: 'gabriela_vaca',
-    email: 'g.vaca@empresa.com',
+    email: 'g.vaca@on3.com',
     fullName: 'Gabriela Vaca',
     role: 'ADMIN',
     status: 'INACTIVE',
@@ -109,7 +109,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'h8i9j0k1l2m3n4o5p6q7r8s9',
     username: 'hugo_perez',
-    email: 'h.perez@empresa.com',
+    email: 'h.perez@on3.com',
     fullName: 'Hugo Pérez',
     role: 'USER',
     status: 'ACTIVE',

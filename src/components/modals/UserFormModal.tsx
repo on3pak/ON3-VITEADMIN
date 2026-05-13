@@ -172,7 +172,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="correo@empresa.com"
+                placeholder="correo@on3.com"
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800"
               />
             </div>
