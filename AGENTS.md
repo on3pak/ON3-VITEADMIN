@@ -118,9 +118,9 @@ See [`list.md`](./list.md) for 3 reusable prompts to clone existing CRUD pattern
 ### Git Workflow
 
 - **Branch naming**: `feature/<nombre>` para nuevas funcionalidades, `fix/<nombre>` para bugs, `refactor/<nombre>` para reestructuraciones
-- **Commits**: mensajes en español o inglés (elegir uno y mantener), presente imperativo, máximo 72 caracteres en el título. Ej: `"feat: add supplier CRUD view"` o `"fix: pagination reset on filter change"`
+- **Commits**: mensajes siempre en español, presente imperativo, máximo 72 caracteres en el título. Ej: `"feat: agregar vista CRUD de proveedores"` o `"fix: resetear paginación al cambiar filtro"`
 - **Commits atómicos**: un commit por cambio lógico. No mezclar formateo con lógica, ni funcionalidades no relacionadas
-- **No commits directos a main/master**: siempre usar ramas + PR (pull request)
+- **No commits directos a main/master**: siempre usar ramas + PR (pull request). Las interacciones con IA también deben crear un branch nuevo para los cambios. Solo se permite commit directo a main si el usuario lo solicita explícitamente.
 - **PRs**: título descriptivo, cuerpo con qué y por qué, referenciar issues si aplica
 
 ### Code Hygiene
