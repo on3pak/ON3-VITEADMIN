@@ -1,13 +1,14 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useId } from 'react';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES } from '../../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
+import { EmployeeCategory } from '../../../types';
 import {
   Search, UserPlus, Edit3, Trash2, Filter, ShieldAlert, Mail, Eye,
-  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, User,
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, User, Tags, X,
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
@@ -53,10 +54,51 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingEmployeeId, setDeletingEmployeeId] = useState<string | null>(null);
 
+  const [activeTab, setActiveTab] = useState<'employees' | 'categories'>('employees');
+
+  const [categories, setCategories] = useState<EmployeeCategory[]>(INITIAL_EMPLOYEE_CATEGORIES);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<EmployeeCategory | null>(null);
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryPage, setCategoryPage] = useState(1);
+  const [categoryItemsPerPage, setCategoryItemsPerPage] = useState(10);
+  const [categoryDeleteTarget, setCategoryDeleteTarget] = useState<EmployeeCategory | null>(null);
+  const catDialogId = useId();
+
   const handleCreate = () => { setModalMode('create'); setSelectedEmployeeId(null); setModalOpen(true); };
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedEmployeeId(id); setModalOpen(true); };
   const handleDelete = (id: string) => { setDeletingEmployeeId(id); setDeleteDialogOpen(true); };
   const handleConfirmDelete = () => { if (deletingEmployeeId) { deleteEmployee(deletingEmployeeId); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
+
+  const openCategoryModal = (cat?: EmployeeCategory) => {
+    setEditingCategory(cat ?? null);
+    setCategoryName(cat?.name ?? '');
+    setCategoryModalOpen(true);
+  };
+  const saveCategory = () => {
+    const name = categoryName.trim();
+    if (!name) return;
+    if (editingCategory) {
+      setCategories((prev) => prev.map((c) => c.id === editingCategory.id ? { ...c, name } : c));
+    } else {
+      const newId = `ec-${Date.now()}`;
+      setCategories((prev) => [...prev, { id: newId, name }]);
+    }
+    setCategoryModalOpen(false);
+    setEditingCategory(null);
+    setCategoryName('');
+  };
+  const filteredCategories = useMemo(() => {
+    const q = categorySearch.toLowerCase();
+    return q ? categories.filter((c) => c.name.toLowerCase().includes(q)) : categories;
+  }, [categories, categorySearch]);
+  const catTotalPages = Math.ceil(filteredCategories.length / categoryItemsPerPage);
+  const paginatedCategories = useMemo(
+    () => filteredCategories.slice((categoryPage - 1) * categoryItemsPerPage, categoryPage * categoryItemsPerPage),
+    [filteredCategories, categoryPage, categoryItemsPerPage]
+  );
+  useEffect(() => setCategoryPage(1), [categorySearch, categoryItemsPerPage]);
 
   const handleModalSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedEmployeeId) {
@@ -115,6 +157,33 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         </div>
       )}
 
+      <div className="flex gap-1.5 bg-slate-100 rounded-xl p-1">
+        <button
+          onClick={() => setActiveTab('employees')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            activeTab === 'employees'
+              ? 'bg-white text-indigo-700 shadow-xs'
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <User className="h-4 w-4" />
+          Empleados
+        </button>
+        <button
+          onClick={() => setActiveTab('categories')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+            activeTab === 'categories'
+              ? 'bg-white text-indigo-700 shadow-xs'
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <Tags className="h-4 w-4" />
+          Categorías
+        </button>
+      </div>
+
+      {activeTab === 'employees' && (
+        <>
       <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -354,6 +423,165 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         onConfirm={handleConfirmDelete}
         onCancel={() => { setDeleteDialogOpen(false); setDeletingEmployeeId(null); }}
       />
+      </>
+      )}
+
+      {activeTab === 'categories' && (
+        <div className="space-y-5">
+          <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <Search className="h-4 w-4" />
+              </div>
+              <input
+                type="text"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                placeholder="Buscar categorías..."
+                className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+            </div>
+            <button
+              onClick={() => openCategoryModal()}
+              disabled={isReadOnly}
+              className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            >
+              <Tags className="h-4 w-4" />
+              <span>Crear Categoría</span>
+            </button>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
+                    <th className="py-3 px-6">Nombre</th>
+                    <th className="py-3 px-4 w-24 text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
+                  {paginatedCategories.length === 0 ? (
+                    <tr>
+                      <td colSpan={2} className="py-12 text-center text-slate-400 font-medium">
+                        No se encontraron categorías.
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedCategories.map((cat) => (
+                      <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3.5 px-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0">
+                              <Tags className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <div className="font-bold text-slate-900 leading-tight">{cat.name}</div>
+                              <div className="text-xs text-slate-400 font-mono">{cat.id}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex justify-center gap-1.5">
+                            <button
+                              onClick={() => openCategoryModal(cat)}
+                              disabled={isReadOnly}
+                              className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg"
+                              title="Editar categoría"
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => setCategoryDeleteTarget(cat)}
+                              disabled={isReadOnly}
+                              className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
+                              title="Eliminar categoría"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <span>Mostrar</span>
+                <select
+                  value={categoryItemsPerPage}
+                  onChange={(e) => { setCategoryItemsPerPage(Number(e.target.value)); setCategoryPage(1); }}
+                  className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                </select>
+                <span>por página</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-slate-500 mr-2">Página {catTotalPages > 0 ? categoryPage : 0} de {catTotalPages}</span>
+                <button onClick={() => setCategoryPage(1)} disabled={categoryPage === 1 || catTotalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCategoryPage((p) => Math.max(1, p - 1))} disabled={categoryPage === 1 || catTotalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCategoryPage((p) => Math.min(catTotalPages, p + 1))} disabled={categoryPage === catTotalPages || catTotalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCategoryPage(catTotalPages)} disabled={categoryPage === catTotalPages || catTotalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {categoryModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setCategoryModalOpen(false)}>
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-slate-900">
+                {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
+              </h2>
+              <button onClick={() => setCategoryModalOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nombre</label>
+                <input
+                  type="text"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                  placeholder="Nombre de la categoría"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-slate-800"
+                  autoFocus
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button onClick={() => setCategoryModalOpen(false)} className="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                  Cancelar
+                </button>
+                <button onClick={saveCategory} className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">
+                  {editingCategory ? 'Guardar' : 'Crear'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {categoryDeleteTarget && (
+        <ConfirmDialog
+          key={catDialogId}
+          isOpen={true}
+          title="Eliminar Categoría"
+          message={`¿Estás seguro de eliminar la categoría "${categoryDeleteTarget.name}"? Esta acción no se puede deshacer.`}
+          onConfirm={() => {
+            setCategories((prev) => prev.filter((c) => c.id !== categoryDeleteTarget.id));
+            setCategoryDeleteTarget(null);
+          }}
+          onCancel={() => setCategoryDeleteTarget(null)}
+        />
+      )}
     </div>
   );
 };
