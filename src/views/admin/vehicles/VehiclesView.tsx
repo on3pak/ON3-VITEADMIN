@@ -101,7 +101,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             >
               <option value="ALL">Todos</option>
               <option value="ACTIVO">Activo</option>
-              <option value="MANTENIMIENTO">Taller</option>
+              <option value="MANTENIMIENTO">Mantenimiento</option>
               <option value="AVERIADO">Averiado</option>
               <option value="BAJA">Baja</option>
             </select>
@@ -183,7 +183,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
                             <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border text-center ${getBadgeStyle(v.status)}`}>
-                              {v.status === 'ACTIVO' ? 'Activo' : v.status === 'MANTENIMIENTO' ? 'Taller' : v.status === 'AVERIADO' ? 'Averiado' : 'Baja'}
+                              {v.status === 'ACTIVO' ? 'Activo' : v.status === 'MANTENIMIENTO' ? 'Mantenimiento' : v.status === 'AVERIADO' ? 'Averiado' : 'Baja'}
                             </span>
                           </div>
                         </td>
@@ -284,7 +284,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
-                  {s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'En Taller' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}
+                  {s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}
                 </button>
               ))}
             </div>
