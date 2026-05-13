@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_CENTERS } from '../../../data/mockEmployees';
+import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES } from '../../../data/mockEmployees';
+import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import {

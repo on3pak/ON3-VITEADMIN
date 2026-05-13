@@ -1,19 +1,8 @@
-import { Employee, EmployeeCategory, EmployeeStatus, WorkDay, Shift, ContractType, City, WorkCenter } from '../types';
+import { Employee, EmployeeCategory, EmployeeStatus, WorkDay, Shift, ContractType, City } from '../types';
 
 export const INITIAL_CITIES: City[] = [
   { id: 'city-1', name: 'Alcalá de Henares' },
   { id: 'city-2', name: 'Guadalajara' },
-];
-
-export const INITIAL_WORK_CENTERS: WorkCenter[] = [
-  { id: 'wc-1', name: 'Nave' },
-  { id: 'wc-2', name: 'Puerta Madrid' },
-  { id: 'wc-3', name: 'Gilitos' },
-  { id: 'wc-4', name: 'Moreras' },
-  { id: 'wc-5', name: 'Garena' },
-  { id: 'wc-6', name: 'Divino Valles' },
-  { id: 'wc-7', name: 'Taller' },
-  { id: 'wc-8', name: 'Oficinas' },
 ];
 
 export const INITIAL_EMPLOYEE_CATEGORIES: EmployeeCategory[] = [

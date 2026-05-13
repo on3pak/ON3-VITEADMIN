@@ -10,7 +10,8 @@ import {
   KeyRound, 
   Lock,
   Truck,
-  Briefcase
+  Briefcase,
+  Building2
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -72,6 +73,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         label: 'Gestión Vehículos',
         icon: <Truck className="h-5 w-5" />,
         description: 'CRUD de vehículos',
+        disabled: !canAccessUserCrud(user?.role),
+      },
+      {
+        id: 'WORK_CENTERS_CRUD' as DashboardViewType,
+        label: 'Centros Trabajo',
+        icon: <Building2 className="h-5 w-5" />,
+        description: 'CRUD de centros',
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],

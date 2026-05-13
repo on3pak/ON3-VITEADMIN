@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Vehicle, VehicleType, VehicleStatus, FuelType } from '../../types';
 import { INITIAL_VEHICLE_TYPES } from '../../data/mockVehicles';
-import { INITIAL_WORK_CENTERS } from '../../data/mockEmployees';
+import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, Truck, Save } from 'lucide-react';
 
 interface VehicleFormModalProps {

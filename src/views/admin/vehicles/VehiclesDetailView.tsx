@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useVehicles } from '../../../context/VehicleContext';
-import { INITIAL_WORK_CENTERS } from '../../../data/mockEmployees';
+import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Vehicle } from '../../types';

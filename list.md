@@ -40,6 +40,9 @@ Clona UsersView.tsx y modifica:
 - Añadir roles en VIEW_ROLES (ej. ['ROOT', 'ADMIN'])
 - Añadir case en switch renderContent()
 - Añadir en Sidebar.tsx item de menú ADMIN
+
+### Integración con Header.tsx (modificar)
+- Añadir case en getViewInfo() con title y subtitle para la nueva vista
 ```
 
 ---
@@ -97,6 +100,9 @@ Clona EmployeesDetailView.tsx y modifica:
 - VIEW_ROLES: ambas
 - renderContent: caso list (con onView{EntityName}) y caso detail
 - Sidebar.tsx: item menú ADMIN
+
+**Integración con Header.tsx (modificar)**:
+- Añadir cases en getViewInfo() para '{ENTITY_NAME}S_CRUD' y '{ENTITY_NAME}_DETAIL' con title y subtitle
 
 **Integración con Sidebar.tsx**:
 - Añadir icono (elige uno de lucide-react)

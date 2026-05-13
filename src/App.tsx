@@ -16,6 +16,8 @@ import { EmployeesDetailView } from './views/admin/employees/EmployeesDetailView
 import { VehiclesView } from './views/admin/vehicles/VehiclesView';
 import { VehiclesDetailView } from './views/admin/vehicles/VehiclesDetailView';
 import { VehicleProvider } from './context/VehicleContext';
+import { WorkCenterProvider } from './context/WorkCenterContext';
+import { WorkCentersView } from './views/admin/workCenters/WorkCentersView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
 import { JwtTestsView } from './views/utils/tests/JwtTestsView';
@@ -34,6 +36,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   VEHICLES_CRUD: '/admin/vehicles',
   VEHICLE_DASHBOARD: '/dashboard/vehicles',
   VEHICLE_DETAIL: '/admin/vehicles/:id',
+  WORK_CENTERS_CRUD: '/admin/work-centers',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -55,6 +58,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   VEHICLES_CRUD: ['ROOT', 'ADMIN'],
   VEHICLE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   VEHICLE_DETAIL: ['ROOT', 'ADMIN'],
+  WORK_CENTERS_CRUD: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -143,6 +147,8 @@ const MainLayout: React.FC = () => {
         ) : (
           <EmployeesView onViewEmployee={(id) => handleViewChange('EMPLOYEE_DETAIL', id)} />
         );
+      case 'WORK_CENTERS_CRUD':
+        return <WorkCentersView />;
       case 'VEHICLES_CRUD':
         return <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />;
       case 'VEHICLE_DASHBOARD':
@@ -201,8 +207,10 @@ export default function App() {
       <UserProvider>
         <EmployeeProvider>
           <VehicleProvider>
-            <MainLayout />
+            <WorkCenterProvider>
+              <MainLayout />
             <Toast />
+            </WorkCenterProvider>
           </VehicleProvider>
         </EmployeeProvider>
       </UserProvider>
