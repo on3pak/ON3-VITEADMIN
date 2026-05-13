@@ -9,8 +9,8 @@ export const INITIAL_WORK_CENTERS: WorkCenter[] = [
   { id: 'wc-6', name: 'Divino Valles', address: 'Calle Divino Valles 7', cityId: 'city-1', status: 'ACTIVE' },
   { id: 'wc-7', name: 'Taller', address: 'Polígono Industrial 12', cityId: 'city-1', status: 'ACTIVE' },
   { id: 'wc-8', name: 'Oficinas', address: 'Calle Administración 1', cityId: 'city-1', status: 'ACTIVE' },
-  { id: 'wc-9', name: 'Almacén Central', address: 'Av. Logística 55', cityId: 'city-1', status: 'INACTIVE' },
-  { id: 'wc-10', name: 'Base Operativa', address: 'Calle Operaciones 9', cityId: 'city-1', status: 'ACTIVE' },
+  { id: 'wc-9', name: 'Almacén', address: 'Av. Logística 55', cityId: 'city-1', status: 'INACTIVE' },
+
   { id: 'wc-11', name: 'Centro01', address: 'Av. Henares 100', cityId: 'city-2', status: 'ACTIVE' },
   { id: 'wc-12', name: 'Centro02', address: 'Calle Innovación 5', cityId: 'city-2', status: 'ACTIVE' },
   { id: 'wc-13', name: 'Centro03', address: 'Polígono Industrial 3', cityId: 'city-2', status: 'ACTIVE' },

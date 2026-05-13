@@ -52,6 +52,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         icon: <Truck className="h-5 w-5" />,
         description: 'Panel de vehículos',
       },
+      {
+        id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType,
+        label: 'Centros Trabajo',
+        icon: <Building2 className="h-5 w-5" />,
+        description: 'Panel de centros',
+      },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [
       {

@@ -8,6 +8,7 @@ export type DashboardViewType =
   | 'VEHICLE_DASHBOARD'
   | 'VEHICLE_DETAIL'
   | 'WORK_CENTERS_CRUD'
+  | 'WORK_CENTERS_DASHBOARD'
   | 'TESTS_AUTH' 
   | 'TESTS_JWT' 
   | 'TESTS_CRUD' 

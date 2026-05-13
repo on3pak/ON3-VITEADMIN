@@ -18,6 +18,7 @@ import { VehiclesDetailView } from './views/admin/vehicles/VehiclesDetailView';
 import { VehicleProvider } from './context/VehicleContext';
 import { WorkCenterProvider } from './context/WorkCenterContext';
 import { WorkCentersView } from './views/admin/workCenters/WorkCentersView';
+import { DashboardWorkCentersView } from './views/dashboard/DashboardWorkCentersView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
 import { JwtTestsView } from './views/utils/tests/JwtTestsView';
@@ -37,6 +38,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   VEHICLE_DASHBOARD: '/dashboard/vehicles',
   VEHICLE_DETAIL: '/admin/vehicles/:id',
   WORK_CENTERS_CRUD: '/admin/work-centers',
+  WORK_CENTERS_DASHBOARD: '/dashboard/work-centers',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -59,6 +61,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   VEHICLE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   VEHICLE_DETAIL: ['ROOT', 'ADMIN'],
   WORK_CENTERS_CRUD: ['ROOT', 'ADMIN'],
+  WORK_CENTERS_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -149,6 +152,8 @@ const MainLayout: React.FC = () => {
         );
       case 'WORK_CENTERS_CRUD':
         return <WorkCentersView />;
+      case 'WORK_CENTERS_DASHBOARD':
+        return <DashboardWorkCentersView />;
       case 'VEHICLES_CRUD':
         return <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />;
       case 'VEHICLE_DASHBOARD':

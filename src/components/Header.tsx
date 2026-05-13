@@ -37,6 +37,8 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
         return { title: 'Detalle de Vehículo', subtitle: 'Información completa del vehículo' };
       case 'WORK_CENTERS_CRUD':
         return { title: 'Gestión de Centros de Trabajo', subtitle: 'Alta, modificación y listado de centros' };
+      case 'WORK_CENTERS_DASHBOARD':
+        return { title: 'Dashboard de Centros de Trabajo', subtitle: 'Resumen y estadísticas de centros' };
       case 'LOGS_AUTH':
         return { title: 'Logs de Auth', subtitle: 'Registro de autenticaciones' };
       case 'LOGS_LOGOUT':
