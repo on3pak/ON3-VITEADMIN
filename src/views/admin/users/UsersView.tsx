@@ -112,9 +112,8 @@ export const UsersView: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3 md:space-y-0 md:flex md:items-center md:justify-between gap-4">
-        
-        <div className="relative flex-1 max-w-md">
+      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
             <Search className="h-4 w-4" />
           </div>
@@ -123,12 +122,11 @@ export const UsersView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, @username o correo..."
-            className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+            className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          
+        <div className="flex flex-wrap items-center gap-2.5 lg:hidden">
           <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
             <Filter className="h-3.5 w-3.5 text-slate-400" />
             <select
@@ -136,7 +134,7 @@ export const UsersView: React.FC = () => {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
             >
-              <option value="ALL">Todos los Roles</option>
+              <option value="ALL">Roles</option>
               <option value="ROOT">ROOT</option>
               <option value="ADMIN">ADMIN</option>
               <option value="MANAGER">MANAGER</option>
@@ -150,7 +148,7 @@ export const UsersView: React.FC = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
             >
-              <option value="ALL">Todos los Estados</option>
+              <option value="ALL">Estados</option>
               <option value="ACTIVE">Activos</option>
               <option value="INACTIVE">Inactivos</option>
             </select>
@@ -158,16 +156,29 @@ export const UsersView: React.FC = () => {
 
           <button
             onClick={handleOpenCreateModal}
-            className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white font-semibold text-xs rounded-xl shadow-xs hover:bg-indigo-700 active:scale-98 transition-all ml-2 cursor-pointer"
+            disabled={isReadOnlyOperator}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+          >
+            <UserPlus className="h-4 w-4" />
+            <span>Crear</span>
+          </button>
+        </div>
+
+        <div className="hidden lg:flex items-center gap-2.5">
+          <button
+            onClick={handleOpenCreateModal}
+            disabled={isReadOnlyOperator}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear Usuario</span>
           </button>
         </div>
-
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="flex gap-5">
+        <div className="flex-1">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -351,6 +362,68 @@ export const UsersView: React.FC = () => {
             >
               <ChevronsRight className="h-4 w-4" />
             </button>
+          </div>
+        </div>
+      </div>
+        </div>
+
+        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Rol</h3>
+            <div className="space-y-1">
+              <button
+                onClick={() => setRoleFilter('ALL')}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                  roleFilter === 'ALL'
+                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Todos los Roles
+              </button>
+              {(['ROOT', 'ADMIN', 'MANAGER', 'USER'] as const).map((role) => (
+                <button
+                  key={role}
+                  onClick={() => setRoleFilter(role)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    roleFilter === role
+                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado</h3>
+            <div className="space-y-1">
+              <button
+                onClick={() => setStatusFilter('ALL')}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                  statusFilter === 'ALL'
+                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Todos los Estados
+              </button>
+              {(['ACTIVE', 'INACTIVE'] as const).map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    statusFilter === status
+                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {status === 'ACTIVE' ? 'Activos' : 'Inactivos'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
