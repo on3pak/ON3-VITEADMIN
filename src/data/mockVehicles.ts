@@ -187,7 +187,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     kilometers: 3500,
     lastReviewDate: '2024-04-15',
     nextReviewKilometers: 15000,
-    workCenter: 'wc-7',
+    workCenter: 'wc-3',
     assignedEmployee: 'emp-008',
     observations: '',
     createdAt: '2024-02-10T08:00:00Z',
