@@ -10,8 +10,8 @@ import {
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
-  'ACTIVE': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'MAINTENANCE': 'bg-amber-100 text-amber-800 border-amber-200',
+  'ACTIVO': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'MANTENIMIENTO': 'bg-amber-100 text-amber-800 border-amber-200',
   'AVERIADO': 'bg-rose-100 text-rose-800 border-rose-200',
   'BAJA': 'bg-slate-100 text-slate-800 border-slate-200',
 };
@@ -100,8 +100,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
-              <option value="ACTIVE">Activo</option>
-              <option value="MAINTENANCE">Taller</option>
+              <option value="ACTIVO">Activo</option>
+              <option value="MANTENIMIENTO">Taller</option>
               <option value="AVERIADO">Averiado</option>
               <option value="BAJA">Baja</option>
             </select>
@@ -183,7 +183,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
                             <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border text-center ${getBadgeStyle(v.status)}`}>
-                              {v.status === 'ACTIVE' ? 'Activo' : v.status === 'MAINTENANCE' ? 'Taller' : v.status === 'AVERIADO' ? 'Averiado' : 'Baja'}
+                              {v.status === 'ACTIVO' ? 'Activo' : v.status === 'MANTENIMIENTO' ? 'Taller' : v.status === 'AVERIADO' ? 'Averiado' : 'Baja'}
                             </span>
                           </div>
                         </td>
@@ -274,7 +274,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               >
                 Todos los Estados
               </button>
-              {['ACTIVE', 'MAINTENANCE', 'AVERIADO', 'BAJA'].map((s) => (
+              {['ACTIVO', 'MANTENIMIENTO', 'AVERIADO', 'BAJA'].map((s) => (
                 <button
                   key={s}
                   onClick={() => setStatusFilter(s)}
@@ -284,7 +284,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
-                  {s === 'ACTIVE' ? 'Activo' : s === 'MAINTENANCE' ? 'En Taller' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}
+                  {s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'En Taller' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}
                 </button>
               ))}
             </div>
