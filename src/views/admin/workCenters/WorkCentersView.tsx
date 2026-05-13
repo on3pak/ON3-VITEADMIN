@@ -10,8 +10,10 @@ export const WorkCentersView: React.FC = () => {
   const { workCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter } = useWorkCenters();
   const { user: loggedInUser } = useAuth();
 
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
   const [searchQuery, setSearchQuery] = useState('');
-  const [cityFilter, setCityFilter] = useState<string>('ALL');
+  const [cityFilter, setCityFilter] = useState<string>(userCityId || 'ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,6 +36,10 @@ export const WorkCentersView: React.FC = () => {
   };
 
   const resolveCity = (cityId: string) => INITIAL_CITIES.find((c) => c.id === cityId)?.name ?? cityId;
+
+  const scopeCities = userCityId
+    ? INITIAL_CITIES.filter((c) => c.id === userCityId)
+    : INITIAL_CITIES;
 
   const filtered = workCenters.filter((wc) => {
     const matchesSearch =
@@ -98,7 +104,7 @@ export const WorkCentersView: React.FC = () => {
               className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Ciudades</option>
-              {INITIAL_CITIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+              {scopeCities.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
             </select>
           </div>
 
@@ -283,7 +289,7 @@ export const WorkCentersView: React.FC = () => {
               >
                 Todas las Ciudades
               </button>
-              {INITIAL_CITIES.map((city) => (
+              {scopeCities.map((city) => (
                 <button
                   key={city.id}
                   onClick={() => setCityFilter(city.id)}

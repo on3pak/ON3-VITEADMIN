@@ -9,4 +9,5 @@ export interface User {
   status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   avatarUrl?: string;
+  cityId?: string;
 }

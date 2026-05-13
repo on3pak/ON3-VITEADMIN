@@ -71,16 +71,26 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const selectedEmployee = modalMode === 'edit' && selectedEmployeeId ? getEmployeeById(selectedEmployeeId) : undefined;
   const employeeOverviews = getEmployeeOverviews();
 
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+  const scopeWorkCenters = useMemo(
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId) : INITIAL_WORK_CENTERS,
+    [userCityId]
+  );
+
   const filteredEmployees = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return employeeOverviews.filter((emp) => {
+      const matchesCityScope = !userCityId || emp.city_id === userCityId;
+      if (!matchesCityScope) return false;
+
       const name = `${emp.name} ${emp.lastName1} ${emp.lastName2}`.toLowerCase();
       const matchesSearch = !q || name.includes(q) || emp.name.toLowerCase().includes(q) || emp.lastName1.toLowerCase().includes(q);
       const matchesStatus = statusFilter === 'ALL' || emp.status_id === statusFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || emp.work_center_id === workCenterFilter;
       return matchesSearch && matchesStatus && matchesWorkCenter;
     });
-  }, [employeeOverviews, searchQuery, statusFilter, workCenterFilter]);
+  }, [employeeOverviews, searchQuery, statusFilter, workCenterFilter, userCityId]);
 
   useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, workCenterFilter, itemsPerPage]);
 
@@ -141,7 +151,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
-              {INITIAL_WORK_CENTERS.map((w) => (
+              {scopeWorkCenters.map((w) => (
                 <option key={w.id} value={w.id}>{w.name}</option>
               ))}
             </select>
@@ -283,7 +293,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               >
                 Todos los Centros
               </button>
-              {INITIAL_WORK_CENTERS.map((wc) => (
+              {scopeWorkCenters.map((wc) => (
                 <button
                   key={wc.id}
                   onClick={() => setWorkCenterFilter(wc.id)}

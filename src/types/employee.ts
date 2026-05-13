@@ -46,6 +46,7 @@ export interface EmployeeOverview {
   work_day_id: string;
   work_center_id: string;
   status_id: string;
+  city_id: string | null;
 }
 
 export interface EmployeeCategory {

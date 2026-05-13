@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useVehicles } from '../../../context/VehicleContext';
+import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
@@ -24,8 +25,13 @@ const TYPE_COLORS: Record<VehicleType, string> = {
   'PORTER': 'bg-amber-100 text-amber-700 border-amber-200',
 };
 
+const wcCityMap = Object.fromEntries(
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
+);
+
 export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = ({ onViewVehicle }) => {
   const { getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle } = useVehicles();
+  const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -57,16 +63,26 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const selectedVehicle = modalMode === 'edit' && selectedVehicleId ? getVehicleById(selectedVehicleId) : undefined;
   const vehicleOverviews = getVehicleOverviews();
 
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+  const scopeWorkCenters = useMemo(
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId) : INITIAL_WORK_CENTERS,
+    [userCityId]
+  );
+
   const filteredVehicles = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return vehicleOverviews.filter((v) => {
+      const matchesCityScope = !userCityId || wcCityMap[v.workCenter] === userCityId;
+      if (!matchesCityScope) return false;
+
       const searchable = `${v.licensePlate} ${v.model} ${v.brand}`.toLowerCase();
       const matchesSearch = !q || searchable.includes(q);
       const matchesStatus = statusFilter === 'ALL' || v.status === statusFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || v.workCenter === workCenterFilter;
       return matchesSearch && matchesStatus && matchesWorkCenter;
     });
-  }, [vehicleOverviews, searchQuery, statusFilter, workCenterFilter]);
+  }, [vehicleOverviews, searchQuery, statusFilter, workCenterFilter, userCityId]);
 
   useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, workCenterFilter, itemsPerPage]);
 
@@ -114,7 +130,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
-              {INITIAL_WORK_CENTERS.map((w) => (
+              {scopeWorkCenters.map((w) => (
                 <option key={w.id} value={w.id}>{w.name}</option>
               ))}
             </select>
@@ -245,7 +261,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               >
                 Todos los Centros
               </button>
-              {INITIAL_WORK_CENTERS.map((wc) => (
+              {scopeWorkCenters.map((wc) => (
                 <button
                   key={wc.id}
                   onClick={() => setWorkCenterFilter(wc.id)}

@@ -27,6 +27,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
       work_day_id: emp.work_day,
       work_center_id: emp.work_center_id,
       status_id: emp.status_id,
+      city_id: emp.city_id,
     }));
   }, [employees]);
 

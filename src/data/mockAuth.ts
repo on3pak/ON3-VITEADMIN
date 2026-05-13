@@ -10,7 +10,8 @@ export const mockAuthUsers: AuthUser[] = [
     updated_at: '2026-01-01T00:00:00Z',
     app_metadata: {
       provider: 'email',
-      role: 'ROOT'
+      role: 'ROOT',
+      city_id: 'city-1'
     },
     user_metadata: {
       email: 'm.torres@empresa.com',
@@ -30,7 +31,8 @@ export const mockAuthUsers: AuthUser[] = [
     updated_at: '2026-01-01T00:00:00Z',
     app_metadata: {
       provider: 'email',
-      role: 'ADMIN'
+      role: 'ADMIN',
+      city_id: 'city-1'
     },
     user_metadata: {
       email: 'a.mendoza@empresa.com',
@@ -50,7 +52,8 @@ export const mockAuthUsers: AuthUser[] = [
     updated_at: '2026-01-01T00:00:00Z',
     app_metadata: {
       provider: 'email',
-      role: 'MANAGER'
+      role: 'MANAGER',
+      city_id: 'city-1'
     },
     user_metadata: {
       email: 'b.salazar@empresa.com',
@@ -70,7 +73,8 @@ export const mockAuthUsers: AuthUser[] = [
     updated_at: '2026-01-01T00:00:00Z',
     app_metadata: {
       provider: 'email',
-      role: 'USER'
+      role: 'USER',
+      city_id: 'city-1'
     },
     user_metadata: {
       email: 'c.fuentes@empresa.com',

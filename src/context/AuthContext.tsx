@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               email: mockUser.email,
               fullName: mockUser.user_metadata.full_name,
               role: mockUser.app_metadata.role as UserRole,
+              cityId: mockUser.app_metadata.city_id as string | undefined,
               avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockUser.user_metadata.user_name}`,
             };
 
@@ -106,6 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: mockUser.email,
       fullName: mockUser.user_metadata.full_name,
       role: mockUser.app_metadata.role as UserRole,
+      cityId: mockUser.app_metadata.city_id as string | undefined,
       avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockUser.user_metadata.user_name}`,
     };
 
