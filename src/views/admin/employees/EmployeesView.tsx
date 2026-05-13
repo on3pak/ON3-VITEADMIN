@@ -178,7 +178,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                     <th className="py-3 px-6">Identidad / Empleado</th>
                     <th className="py-3 px-4 w-28 text-center">Categoría</th>
                     <th className="py-3 px-4 w-20 text-center">Estado</th>
-                    <th className="py-3 px-4 w-24 text-right">Acciones</th>
+                    <th className="py-3 px-4 w-24 text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
