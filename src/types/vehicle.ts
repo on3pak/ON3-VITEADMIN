@@ -6,7 +6,7 @@ export interface VehicleTypeOption {
   type: VehicleType;
 }
 
-export type VehicleStatus = 'ACTIVE' | 'MAINTENANCE' | 'AVERIADO' | 'BAJA';
+export type VehicleStatus = 'ACTIVO' | 'MANTENIMIENTO' | 'AVERIADO' | 'BAJA';
 
 export type FuelType = 'DIESEL' | 'GASOLINA' | 'ELECTRICO' | 'GAS';
 

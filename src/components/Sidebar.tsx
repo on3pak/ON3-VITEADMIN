@@ -4,20 +4,13 @@ import { DashboardViewType } from '../types';
 import { 
   LayoutDashboard, 
   Users, 
-  UserCog,
+  UserSquare,
   ShieldCheck, 
   LogOut, 
   KeyRound, 
-  Terminal,
   Lock,
-  Shield,
-  Key,
-  Database,
-  Fingerprint,
-  UserSquare,
-  Briefcase,
-  BookOpen,
-  Truck
+  Truck,
+  Briefcase
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -97,54 +90,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
     }
   };
 
-  const NavItem = ({ item, isActive, isDisabled }: { item: typeof menuItems.DASHBOARD[0]; isActive: boolean; isDisabled: boolean }) => (
-    <button
-      onClick={() => !isDisabled && (setView(item.id), setSidebarOpen?.(false))}
-      disabled={isDisabled}
-      className={`w-full flex items-center gap-3.5 px-3 py-3 rounded-xl text-left transition-all group ${
-        isActive 
-          ? 'bg-indigo-600 text-white font-medium shadow-md shadow-indigo-600/10' 
-          : isDisabled
-            ? 'opacity-50 cursor-not-allowed text-slate-500'
-            : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
-      }`}
-    >
-      <div className={`p-1.5 rounded-lg transition-colors shrink-0 ${
-        isActive ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
-      }`}>
-        {item.icon}
-      </div>
-      <div className="flex-1 min-w-0 lg:hidden xl:block">
-        <div className="flex items-center gap-2">
-          <p className="text-sm leading-tight">{item.label}</p>
-          {isDisabled && <Lock className="h-3 w-3 text-amber-500" />}
-        </div>
-        <p className={`text-[11px] font-normal truncate mt-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-500'} lg:hidden xl:block`}>
-          {item.description}
-        </p>
-      </div>
-    </button>
-  );
-
   return (
     <>
-      {/* Mobile overlay backdrop with blur */}
+      {/* Mobile overlay backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden animate-fade-in"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden"
           onClick={() => setSidebarOpen?.(false)}
         />
       )}
       
+      {/* Sidebar */}
       <aside className={`
-        w-64 bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800 min-h-dvh sticky top-0 
-        fixed lg:relative z-40 transition-all duration-300 ease-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        lg:w-20 xl:w-56
-        ${sidebarOpen ? 'shadow-2xl shadow-black/30 lg:shadow-none' : ''}
+        fixed inset-y-0 left-0 z-30
+        bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800
+        w-64 transform transition-transform duration-300 ease-in-out
+        lg:translate-x-0 lg:w-20 xl:w-56
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Brand Logo Header */}
-        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-950/40">
+        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-950/40 shrink-0">
           <div className="p-2.5 rounded-lg bg-indigo-600 text-white shadow-md shadow-indigo-600/20 shrink-0">
             <ShieldCheck className="h-6 w-6" />
           </div>
@@ -154,9 +119,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           </div>
         </div>
 
-        {/* Authenticated Persona Widget */}
+        {/* User Widget */}
         {user && (
-          <div className="p-4 border-b border-slate-800/60 bg-slate-950/20 flex items-center gap-3">
+          <div className="p-4 border-b border-slate-800/60 bg-slate-950/20 flex items-center gap-3 shrink-0">
             <img 
               src={user.avatarUrl} 
               alt={user.fullName} 
@@ -180,22 +145,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
               <div key={category}>
                 <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 lg:hidden xl:block">{category}</p>
                 <div className="space-y-1">
-                  {items.map((item) => (
-                    <NavItem 
-                      key={item.id} 
-                      item={item}
-                      isActive={currentView === item.id}
-                      isDisabled={(item as { disabled?: boolean }).disabled}
-                    />
-                  ))}
+                  {items.map((item) => {
+                    const isActive = currentView === item.id;
+                    const isDisabled = (item as { disabled?: boolean }).disabled;
+                    
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => !isDisabled && (setView(item.id), setSidebarOpen?.(false))}
+                        disabled={isDisabled}
+                        className={`w-full flex items-center gap-3.5 px-3 py-3 rounded-xl text-left transition-all group ${
+                          isActive 
+                            ? 'bg-indigo-600 text-white font-medium shadow-md shadow-indigo-600/10' 
+                            : isDisabled
+                              ? 'opacity-50 cursor-not-allowed text-slate-500'
+                              : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
+                        }`}
+                      >
+                        <div className={`p-1.5 rounded-lg transition-colors shrink-0 ${
+                          isActive ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
+                        }`}>
+                          {item.icon}
+                        </div>
+                        <div className="flex-1 min-w-0 lg:hidden xl:block">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm leading-tight">{item.label}</p>
+                            {isDisabled && <Lock className="h-3 w-3 text-amber-500" />}
+                          </div>
+                          <p className={`text-[11px] font-normal truncate mt-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-500'} lg:hidden xl:block`}>
+                            {item.description}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )
           ))}
         </nav>
 
-        {/* Footer Logout Option */}
-        <div className="p-3 border-t border-slate-800 bg-slate-950/30">
+        {/* Footer Logout */}
+        <div className="p-3 border-t border-slate-800 bg-slate-950/30 shrink-0">
           <button
             onClick={logout}
             className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all group"
