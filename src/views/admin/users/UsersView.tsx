@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useUsers } from '../../../context/UserContext';
 import { useAuth } from '../../../context/AuthContext';
 import { User, UserRole } from '../../types';
@@ -10,7 +10,11 @@ import {
   Trash2, 
   Filter, 
   ShieldAlert, 
-  Mail
+  Mail,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight
 } from 'lucide-react';
 
 export const UsersView: React.FC = () => {
@@ -23,6 +27,12 @@ export const UsersView: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<User | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, roleFilter, statusFilter, itemsPerPage]);
 
   const handleFormSubmit = (formData: Omit<User, 'id' | 'createdAt'>) => {
     if (selectedUserForEdit) {
@@ -59,6 +69,12 @@ export const UsersView: React.FC = () => {
 
     return matchesSearch && matchesRole && matchesStatus;
   });
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = useMemo(
+    () => filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredUsers, currentPage, itemsPerPage]
+  );
 
   const getRoleBadgeStyle = (role: UserRole) => {
     switch (role) {
@@ -163,14 +179,14 @@ export const UsersView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
-              {filteredUsers.length === 0 ? (
+              {paginatedUsers.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="py-12 text-center text-slate-400 font-medium">
                     No se encontraron usuarios que coincidan con los criterios de búsqueda o filtros seleccionados.
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((u) => (
+                paginatedUsers.map((u) => (
                   <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
                     <td className="py-3.5 px-6">
                       <div className="flex items-center gap-3">
@@ -284,6 +300,58 @@ export const UsersView: React.FC = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span>Mostrar</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+              className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+            <span>por página</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <span className="text-xs text-slate-500 mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+            <button 
+              onClick={() => setCurrentPage(1)} 
+              disabled={currentPage === 1 || totalPages === 0} 
+              className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"
+              title="Primera página"
+            >
+              <ChevronsLeft className="h-4 w-4" />
+            </button>
+            <button 
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} 
+              disabled={currentPage === 1 || totalPages === 0} 
+              className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"
+              title="Página anterior"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button 
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} 
+              disabled={currentPage === totalPages || totalPages === 0} 
+              className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"
+              title="Página siguiente"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <button 
+              onClick={() => setCurrentPage(totalPages)} 
+              disabled={currentPage === totalPages || totalPages === 0} 
+              className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"
+              title="Última página"
+            >
+              <ChevronsRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
