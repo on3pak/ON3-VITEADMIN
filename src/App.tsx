@@ -17,8 +17,11 @@ import { VehiclesView } from './views/admin/vehicles/VehiclesView';
 import { VehiclesDetailView } from './views/admin/vehicles/VehiclesDetailView';
 import { VehicleProvider } from './context/VehicleContext';
 import { WorkCenterProvider } from './context/WorkCenterContext';
+import { ServiceProvider } from './context/ServiceContext';
 import { WorkCentersView } from './views/admin/workCenters/WorkCentersView';
 import { DashboardWorkCentersView } from './views/dashboard/DashboardWorkCentersView';
+import { ServicesView } from './views/admin/services/ServicesView';
+import { ServicesDetailView } from './views/admin/services/ServicesDetailView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
 import { AuthTestsView } from './views/utils/tests/AuthTestsView';
 import { JwtTestsView } from './views/utils/tests/JwtTestsView';
@@ -39,6 +42,9 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   VEHICLE_DETAIL: '/admin/vehicles/:id',
   WORK_CENTERS_CRUD: '/admin/work-centers',
   WORK_CENTERS_DASHBOARD: '/dashboard/work-centers',
+  SERVICES_CRUD: '/admin/services',
+  SERVICES_DASHBOARD: '/dashboard/services',
+  SERVICE_DETAIL: '/admin/services/:id',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -62,6 +68,9 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   VEHICLE_DETAIL: ['ROOT', 'ADMIN'],
   WORK_CENTERS_CRUD: ['ROOT', 'ADMIN'],
   WORK_CENTERS_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
+  SERVICES_CRUD: ['ROOT', 'ADMIN'],
+  SERVICES_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
+  SERVICE_DETAIL: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -87,6 +96,7 @@ const MainLayout: React.FC = () => {
   });
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -121,6 +131,9 @@ const MainLayout: React.FC = () => {
       if (view === 'VEHICLE_DETAIL' && id) {
         setSelectedVehicleId(id);
       }
+      if (view === 'SERVICE_DETAIL' && id) {
+        setSelectedServiceId(id);
+      }
       setCurrentView(view);
     }
   };
@@ -154,6 +167,16 @@ const MainLayout: React.FC = () => {
         return <WorkCentersView />;
       case 'WORK_CENTERS_DASHBOARD':
         return <DashboardWorkCentersView />;
+      case 'SERVICES_CRUD':
+        return <ServicesView onViewService={(id) => handleViewChange('SERVICE_DETAIL', id)} />;
+      case 'SERVICES_DASHBOARD':
+        return <DashboardWorkCentersView />;
+      case 'SERVICE_DETAIL':
+        return selectedServiceId ? (
+          <ServicesDetailView serviceId={selectedServiceId} onBack={() => setCurrentView('SERVICES_CRUD')} />
+        ) : (
+          <ServicesView onViewService={(id) => handleViewChange('SERVICE_DETAIL', id)} />
+        );
       case 'VEHICLES_CRUD':
         return <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />;
       case 'VEHICLE_DASHBOARD':
@@ -213,8 +236,10 @@ export default function App() {
         <EmployeeProvider>
           <VehicleProvider>
             <WorkCenterProvider>
+            <ServiceProvider>
               <MainLayout />
             <Toast />
+            </ServiceProvider>
             </WorkCenterProvider>
           </VehicleProvider>
         </EmployeeProvider>

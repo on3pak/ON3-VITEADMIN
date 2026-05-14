@@ -39,6 +39,12 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
         return { title: 'Gestión de Centros de Trabajo', subtitle: 'Alta, modificación y listado de centros' };
       case 'WORK_CENTERS_DASHBOARD':
         return { title: 'Dashboard de Centros de Trabajo', subtitle: 'Resumen y estadísticas de centros' };
+      case 'SERVICES_CRUD':
+        return { title: 'Gestión de Servicios', subtitle: 'Alta, modificación y listado de servicios' };
+      case 'SERVICES_DASHBOARD':
+        return { title: 'Dashboard de Servicios', subtitle: 'Resumen y estadísticas de servicios' };
+      case 'SERVICE_DETAIL':
+        return { title: 'Detalle de Servicio', subtitle: 'Tareas semanales del servicio' };
       case 'LOGS_AUTH':
         return { title: 'Logs de Auth', subtitle: 'Registro de autenticaciones' };
       case 'LOGS_LOGOUT':

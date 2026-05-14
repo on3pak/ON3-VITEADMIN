@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
-import { 
+import {
   LayoutDashboard, 
   Users, 
   UserSquare,
@@ -11,7 +11,8 @@ import {
   Lock,
   Truck,
   Briefcase,
-  Building2
+  Building2,
+  ClipboardList,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -58,6 +59,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         icon: <Building2 className="h-5 w-5" />,
         description: 'Panel de centros',
       },
+      {
+        id: 'SERVICES_DASHBOARD' as DashboardViewType,
+        label: 'Servicios',
+        icon: <ClipboardList className="h-5 w-5" />,
+        description: 'Panel de servicios',
+      },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [
       {
@@ -86,6 +93,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         label: 'Centros Trabajo',
         icon: <Building2 className="h-5 w-5" />,
         description: 'CRUD de centros',
+        disabled: !canAccessUserCrud(user?.role),
+      },
+      {
+        id: 'SERVICES_CRUD' as DashboardViewType,
+        label: 'Gestión Servicios',
+        icon: <ClipboardList className="h-5 w-5" />,
+        description: 'CRUD de servicios',
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],

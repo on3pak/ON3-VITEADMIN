@@ -115,6 +115,9 @@ Clona EmployeesDetailView.tsx y modifica:
 **Integración con Header.tsx (modificar)**:
 - Añadir cases en getViewInfo() para '{ENTITY_NAME}S_CRUD' y '{ENTITY_NAME}_DETAIL' con title y subtitle
 
+**Integración con Header.tsx** (IMPORTANTE):
+- Añadir casos en `getViewInfo()` para '{ENTITY_NAME}S_CRUD' y '{ENTITY_NAME}_DETAIL' (y '{ENTITY_NAME}_DASHBOARD' si aplica) con `title` y `subtitle`
+
 **Integración con Sidebar.tsx**:
 - Icono de lucide-react (a elegir)
 - label: 'Gestión {EntityName}s'
@@ -254,4 +257,79 @@ No se crea un archivo nuevo. En lugar de eso:
 ## ¿Qué hacer después?
 1. Ejecuta `pnpm build` y confirma que no hay errores.
 2. Verifica que la navegación desde sidebar funciona y los datos se renderizan correctamente.
+```
+
+---
+
+# City Scoping — Patrón obligatorio
+
+Todas las vistas CRUD deben filtrar datos por ámbito de ciudad del usuario logueado.
+
+## Regla
+
+- **ROOT** (`role === 'ROOT'`): ve TODAS las ciudades y todos los datos sin filtro.
+- **Otros roles** (ADMIN, MANAGER, USER): tienen `cityId` asignado y solo ven datos de su ciudad.
+
+## Implementación en cada vista
+
+```typescript
+// 1. Obtener el userCityId
+const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+// 2. Escopar listas de work centers (para filtros y modales)
+const scopeWorkCenters = useMemo(
+  () => userCityId
+    ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId)
+    : INITIAL_WORK_CENTERS,
+  [userCityId]
+);
+
+// 3. Escopar ciudades disponibles (para ciudad-filtros)
+const scopeCities = userCityId
+  ? INITIAL_CITIES.filter((c) => c.id === userCityId)
+  : INITIAL_CITIES;
+
+// 4. Filtrar datos según el tipo de entidad:
+
+// Entidad con cityId directo (Employee, WorkCenter):
+const matchesCityScope = !userCityId || entity.cityId === userCityId;
+
+// Entidad con workCenterId indirecto (Vehicle, Service) — requiere mapa:
+const wcCityMap = Object.fromEntries(
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
+);
+const matchesCityScope = !userCityId || wcCityMap[entity.workCenterId] === userCityId;
+```
+
+## Dónde aplicar
+
+| Archivo | Qué hacer |
+|---------|-----------|
+| `*View.tsx` (CRUD list) | Filtrar lista + sidebar de work centers scoped |
+| `*FormModal.tsx` | Pasar `workCenters={scopeWorkCenters}` como prop para el dropdown |
+| `*DetailView.tsx` | Pasar `workCenters={scopeWorkCenters}` como prop al modal |
+| `Dashboard*View.tsx` | Crear `scoped{Entity}s` con useMemo, usar para todos los cálculos de stats, distribuciones y recientes |
+| `Header.tsx` | Añadir casos en `getViewInfo()` para cada nueva vista |
+
+## Implementación en dashboards
+
+```typescript
+// Pattern exacto para cada dashboard:
+
+const { user: loggedInUser } = useAuth();
+const { /* data */ } = use/* Entity */();
+
+const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+const scopedData = useMemo(
+  () => userCityId
+    ? data.filter(/* según tipo de entity */)
+    : data,
+  [data, userCityId]
+);
+
+// Para Employee -> filter(e => e.city_id === userCityId)
+// Para Vehicle  -> filter(v => wcCityMap[v.workCenter] === userCityId)  (necesita wcCityMap)
+// Para WorkCenter -> filter(w => w.cityId === userCityId)
+// Para User     -> filter(u => u.cityId === userCityId)
 ```
