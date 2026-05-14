@@ -28,28 +28,6 @@ import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 import { LogsView } from './views/utils/logs/LogsView';
 import { UtilsView } from './views/utils/UtilsView';
 
-const VIEW_ROUTES: Record<DashboardViewType, string> = {
-  OVERVIEW: '/',
-  USERS_CRUD: '/admin/users',
-  EMPLOYEES_CRUD: '/admin/employees',
-  EMPLOYEE_DASHBOARD: '/dashboard/employees',
-  EMPLOYEE_DETAIL: '/admin/employees/:id',
-  VEHICLES_CRUD: '/admin/vehicles',
-  VEHICLE_DASHBOARD: '/dashboard/vehicles',
-  VEHICLE_DETAIL: '/admin/vehicles/:id',
-  WORK_CENTERS_CRUD: '/admin/work-centers',
-  WORK_CENTERS_DASHBOARD: '/dashboard/work-centers',
-  TESTS_AUTH: '/tests/auth',
-  TESTS_JWT: '/tests/jwt',
-  TESTS_CRUD: '/tests/crud',
-  TESTS_RBAC: '/tests/rbac',
-  TESTS_ROLES: '/tests/roles',
-  LOGS_AUTH: '/logs/auth',
-  LOGS_LOGOUT: '/logs/logout',
-  LOGS_USERS: '/logs/users',
-  LOGS_EMPLOYEES: '/logs/employees',
-  UTILS: '/utils',
-};
 
 const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   OVERVIEW: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
