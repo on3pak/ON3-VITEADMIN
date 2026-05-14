@@ -129,6 +129,7 @@ See [`list.md`](./list.md) for 3 reusable prompts to clone existing CRUD pattern
 - **No comentarios en código**: el código debe ser auto-documentado. Excepciones: JSDoc en APIs públicas, comentarios `eslint-disable` justificados
 - **Importar sólo lo necesario**: no imports de `lucide-react` completos, solo los iconos específicos
 - **Tailwind**: usar `clsx`/`tailwind-merge` para clases condicionales. No duplicar estilos entre componentes
+- **Idioma**: el código (variables, funciones, tipos, props, archivos) se escribe en **inglés**. Los textos de UI, nombres de entidades, placeholders, notificaciones y cualquier string visible al usuario van en **castellano**
 
 ### File Organization
 

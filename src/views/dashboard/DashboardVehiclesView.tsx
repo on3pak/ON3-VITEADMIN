@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { useVehicles } from '../../context/VehicleContext';
+import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
   Truck,
   Truck as TruckIcon,
@@ -10,25 +12,37 @@ import {
   MapPin
 } from 'lucide-react';
 
+const wcCityMap = Object.fromEntries(
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
+);
+
 export const DashboardVehiclesView: React.FC = () => {
+  const { user: loggedInUser } = useAuth();
   const { vehicles } = useVehicles();
 
-  const activeVehicles = vehicles.filter(v => v.status === 'ACTIVE');
-  const maintenanceVehicles = vehicles.filter(v => v.status === 'MAINTENANCE');
-  const brokenVehicles = vehicles.filter(v => v.status === 'AVERIADO');
-  const inactiveVehicles = vehicles.filter(v => v.status === 'BAJA');
-  const totalVehicles = vehicles.length;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+  const scopedVehicles = useMemo(
+    () => userCityId ? vehicles.filter(v => wcCityMap[v.workCenter] === userCityId) : vehicles,
+    [vehicles, userCityId]
+  );
+
+  const activeVehicles = scopedVehicles.filter(v => v.status === 'ACTIVE');
+  const maintenanceVehicles = scopedVehicles.filter(v => v.status === 'MAINTENANCE');
+  const brokenVehicles = scopedVehicles.filter(v => v.status === 'AVERIADO');
+  const inactiveVehicles = scopedVehicles.filter(v => v.status === 'BAJA');
+  const totalVehicles = scopedVehicles.length;
   const activeRate = totalVehicles > 0 ? (activeVehicles.length / totalVehicles) * 100 : 0;
 
-  const countByType = (type: string) => vehicles.filter(v => v.vehicleType === type).length;
-  const countByWorkCenter = (center: string) => vehicles.filter(v => v.workCenter === center).length;
-  const countByStatus = (status: string) => vehicles.filter(v => v.status === status).length;
+  const countByType = (type: string) => scopedVehicles.filter(v => v.vehicleType === type).length;
+  const countByWorkCenter = (center: string) => scopedVehicles.filter(v => v.workCenter === center).length;
+  const countByStatus = (status: string) => scopedVehicles.filter(v => v.status === status).length;
 
-  const totalKilometers = vehicles.reduce((acc, v) => acc + v.kilometers, 0);
+  const totalKilometers = scopedVehicles.reduce((acc, v) => acc + v.kilometers, 0);
   const avgKilometers = totalVehicles > 0 ? totalKilometers / totalVehicles : 0;
 
-  const vehicleTypes = [...new Set(vehicles.map(v => v.vehicleType))];
-  const workCenters = [...new Set(vehicles.map(v => v.workCenter))];
+  const vehicleTypes = [...new Set(scopedVehicles.map(v => v.vehicleType))];
+  const workCenters = [...new Set(scopedVehicles.map(v => v.workCenter))];
 
   const typeStats = vehicleTypes.map(type => ({
     type,

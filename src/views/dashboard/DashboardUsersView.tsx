@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useUsers } from '../../context/UserContext';
 import {
@@ -13,51 +13,24 @@ import {
 } from 'lucide-react';
 
 export const DashboardUsersView: React.FC = () => {
-  const { user } = useAuth();
+  const { user: loggedInUser } = useAuth();
   const { users } = useUsers();
 
-  const activeUsers = users.filter(u => u.status === 'ACTIVE');
-  const inactiveUsers = users.filter(u => u.status === 'INACTIVE');
-  const totalUsers = users.length;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+  const scopedUsers = useMemo(
+    () => userCityId ? users.filter(u => u.cityId === userCityId) : users,
+    [users, userCityId]
+  );
+
+  const activeUsers = scopedUsers.filter(u => u.status === 'ACTIVE');
+  const inactiveUsers = scopedUsers.filter(u => u.status === 'INACTIVE');
+  const totalUsers = scopedUsers.length;
   const activeRate = totalUsers > 0 ? (activeUsers.length / totalUsers) * 100 : 0;
 
-  const countByRole = (role: string) => users.filter(u => u.role === role).length;
+  const countByRole = (role: string) => scopedUsers.filter(u => u.role === role).length;
 
-  const stats = [
-    {
-      title: 'Total Usuarios',
-      value: totalUsers,
-      icon: <Users className="h-5 w-5" />,
-      color: 'indigo',
-    },
-    {
-      title: 'Activos',
-      value: activeUsers.length,
-      icon: <UserCheck className="h-5 w-5" />,
-      color: 'emerald',
-    },
-    {
-      title: 'Inactivos',
-      value: inactiveUsers.length,
-      icon: <UserX className="h-5 w-5" />,
-      color: 'rose',
-    },
-    {
-      title: 'Tasa de Actividad',
-      value: `${activeRate.toFixed(0)}%`,
-      icon: <TrendingUp className="h-5 w-5" />,
-      color: 'blue',
-    },
-  ];
-
-  const roleStats = [
-    { role: 'ROOT', label: 'Root', count: countByRole('ROOT'), color: 'bg-purple-600' },
-    { role: 'ADMIN', label: 'Admin', count: countByRole('ADMIN'), color: 'bg-blue-600' },
-    { role: 'MANAGER', label: 'Manager', count: countByRole('MANAGER'), color: 'bg-amber-500' },
-    { role: 'USER', label: 'Usuario', count: countByRole('USER'), color: 'bg-slate-500' },
-  ];
-
-  const recentUsers = [...users]
+  const recentUsers = [...scopedUsers]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 

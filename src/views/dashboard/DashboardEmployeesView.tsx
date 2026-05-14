@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
 import {
   Users,
@@ -13,16 +14,24 @@ import {
 } from 'lucide-react';
 
 export const DashboardEmployeesView: React.FC = () => {
+  const { user: loggedInUser } = useAuth();
   const { employees } = useEmployees();
 
-  const activeEmployees = employees.filter(e => e.active);
-  const inactiveEmployees = employees.filter(e => !e.active);
-  const totalEmployees = employees.length;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+  const scopedEmployees = useMemo(
+    () => userCityId ? employees.filter(e => e.city_id === userCityId) : employees,
+    [employees, userCityId]
+  );
+
+  const activeEmployees = scopedEmployees.filter(e => e.active);
+  const inactiveEmployees = scopedEmployees.filter(e => !e.active);
+  const totalEmployees = scopedEmployees.length;
   const activeRate = totalEmployees > 0 ? (activeEmployees.length / totalEmployees) * 100 : 0;
 
-  const countByCategory = (category: string) => employees.filter(e => e.employee_category === category).length;
-  const countByWorkCenter = (center: string) => employees.filter(e => e.work_center === center).length;
-  const countByStatus = (statusId: string) => employees.filter(e => e.status_id === statusId).length;
+  const countByCategory = (category: string) => scopedEmployees.filter(e => e.employee_category === category).length;
+  const countByWorkCenter = (center: string) => scopedEmployees.filter(e => e.work_center === center).length;
+  const countByStatus = (statusId: string) => scopedEmployees.filter(e => e.status_id === statusId).length;
 
   const getCategoryName = (id: string) => {
     const names: Record<string, string> = {
@@ -40,8 +49,8 @@ export const DashboardEmployeesView: React.FC = () => {
     return names[id] || id;
   };
 
-  const uniqueCategories = [...new Set(employees.map(e => e.employee_category))];
-  const uniqueWorkCenters = [...new Set(employees.map(e => e.work_center))];
+  const uniqueCategories = [...new Set(scopedEmployees.map(e => e.employee_category))];
+  const uniqueWorkCenters = [...new Set(scopedEmployees.map(e => e.work_center))];
 
   const categoryStats = uniqueCategories.slice(0, 6).map(cat => ({
     category: cat,
@@ -66,12 +75,12 @@ export const DashboardEmployeesView: React.FC = () => {
   ];
 
   const shiftStats = [
-    { shift: 's-1', label: 'Mañana', count: employees.filter(e => e.shift === 's-1').length },
-    { shift: 's-2', label: 'Tarde', count: employees.filter(e => e.shift === 's-2').length },
-    { shift: 's-3', label: 'Noche', count: employees.filter(e => e.shift === 's-3').length },
+    { shift: 's-1', label: 'Mañana', count: scopedEmployees.filter(e => e.shift === 's-1').length },
+    { shift: 's-2', label: 'Tarde', count: scopedEmployees.filter(e => e.shift === 's-2').length },
+    { shift: 's-3', label: 'Noche', count: scopedEmployees.filter(e => e.shift === 's-3').length },
   ];
 
-  const recentEmployees = [...employees]
+  const recentEmployees = [...scopedEmployees]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { useWorkCenters } from '../../context/WorkCenterContext';
 import { INITIAL_CITIES } from '../../data/mockEmployees';
 import {
@@ -11,19 +12,27 @@ import {
 } from 'lucide-react';
 
 export const DashboardWorkCentersView: React.FC = () => {
+  const { user: loggedInUser } = useAuth();
   const { workCenters } = useWorkCenters();
 
-  const activeCenters = workCenters.filter(w => w.status === 'ACTIVE');
-  const inactiveCenters = workCenters.filter(w => w.status === 'INACTIVE');
-  const totalCenters = workCenters.length;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+
+  const scopedWorkCenters = useMemo(
+    () => userCityId ? workCenters.filter(w => w.cityId === userCityId) : workCenters,
+    [workCenters, userCityId]
+  );
+
+  const activeCenters = scopedWorkCenters.filter(w => w.status === 'ACTIVE');
+  const inactiveCenters = scopedWorkCenters.filter(w => w.status === 'INACTIVE');
+  const totalCenters = scopedWorkCenters.length;
   const activeRate = totalCenters > 0 ? (activeCenters.length / totalCenters) * 100 : 0;
 
-  const countByCity = (cityId: string) => workCenters.filter(w => w.cityId === cityId).length;
-  const countByStatus = (status: string) => workCenters.filter(w => w.status === status).length;
+  const countByCity = (cityId: string) => scopedWorkCenters.filter(w => w.cityId === cityId).length;
+  const countByStatus = (status: string) => scopedWorkCenters.filter(w => w.status === status).length;
 
   const resolveCity = (cityId: string) => INITIAL_CITIES.find(c => c.id === cityId)?.name ?? cityId;
 
-  const uniqueCities = [...new Set(workCenters.map(w => w.cityId))];
+  const uniqueCities = [...new Set(scopedWorkCenters.map(w => w.cityId))];
 
   const cityStats = uniqueCities.map(cityId => ({
     cityId,
