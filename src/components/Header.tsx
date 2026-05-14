@@ -101,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
 
         <div className="flex items-center gap-2 border-l border-slate-200 pl-2 sm:pl-4">
           <div className="text-right hidden lg:block">
-            <p className="text-xs font-bold text-slate-800 leading-tight">{user?.fullName}</p>
+            <p className="text-xs font-bold text-slate-800 leading-tight">{user?.full_name}</p>
             <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold font-mono text-right">{user?.role}</p>
           </div>
           <div className="p-0.5 rounded-lg bg-slate-100 border border-slate-200">

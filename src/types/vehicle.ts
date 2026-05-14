@@ -15,27 +15,26 @@ export interface Vehicle {
   licensePlate: string;
   model: string;
   brand: string;
-  vehicleTypeId: string;
-  vehicleType: VehicleType;
+  vehicle_type_id: string;
   status: VehicleStatus;
   
   vin: string;
-  registrationDate: string;
-  itvExpiration: string;
-  insuranceExpiration: string;
-  taxExpiration: string;
+  registration_date: string;
+  itv_expiration: string;
+  insurance_expiration: string;
+  tax_expiration: string;
   
-  fuelType: FuelType;
+  fuel_type: FuelType;
   kilometers: number;
-  lastReviewDate: string;
-  nextReviewKilometers: number;
+  last_review_date: string;
+  next_review_kilometers: number;
   
-  workCenter: string;
-  assignedEmployee: string;
+  work_center_id: string;
+  assigned_employee_id: string;
   
   observations: string;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface VehicleOverview {
@@ -43,9 +42,8 @@ export interface VehicleOverview {
   licensePlate: string;
   model: string;
   brand: string;
-  vehicleTypeId: string;
-  vehicleType: VehicleType;
+  vehicle_type_id: string;
   status: VehicleStatus;
-  workCenter: string;
+  work_center_id: string;
   kilometers: number;
 }

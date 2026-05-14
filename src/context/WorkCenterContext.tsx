@@ -2,10 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { WorkCenter } from '../types';
 import { INITIAL_WORK_CENTERS } from '../data/mockWorkCenters';
 import { useAuth } from './AuthContext';
+import { generateId } from '../utils/id';
 
 interface WorkCenterContextProps {
   workCenters: WorkCenter[];
-  createWorkCenter: (data: Omit<WorkCenter, 'id'>) => { success: boolean; message: string };
+  createWorkCenter: (data: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => { success: boolean; message: string };
   updateWorkCenter: (id: string, data: Partial<WorkCenter>) => { success: boolean; message: string };
   deleteWorkCenter: (id: string) => { success: boolean; message: string };
   resetMockData: () => void;
@@ -40,7 +41,7 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return { allowed: false, reason: 'Tu rol es de solo lectura.' };
   };
 
-  const createWorkCenter = (data: Omit<WorkCenter, 'id'>) => {
+  const createWorkCenter = (data: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => {
     const check = checkPermission('CREATE');
     if (!check.allowed) {
       triggerToast(check.reason || 'Permiso denegado.', 'error');
@@ -53,10 +54,13 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       return { success: false, message: msg };
     }
 
+    const now = new Date().toISOString();
     const newItem: WorkCenter = {
       ...data,
-      id: `wc-${Math.random().toString(36).substring(2, 7)}`,
+      id: generateId('wc'),
       name: data.name.trim(),
+      created_at: now,
+      updated_at: now,
     };
 
     saveToStorage([newItem, ...workCenters]);
@@ -74,7 +78,7 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       return { success: false, message: check.reason || 'Permiso denegado.' };
     }
 
-    const updated = workCenters.map(w => w.id === id ? { ...w, ...data } : w);
+    const updated = workCenters.map(w => w.id === id ? { ...w, ...data, updated_at: new Date().toISOString() } : w);
     saveToStorage(updated);
     triggerToast(`Centro ${target.name} actualizado.`, 'success');
     return { success: true, message: 'Centro actualizado.' };

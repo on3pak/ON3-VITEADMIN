@@ -16,10 +16,10 @@ export const DashboardUsersView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { users } = useUsers();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopedUsers = useMemo(
-    () => userCityId ? users.filter(u => u.cityId === userCityId) : users,
+    () => userCityId ? users.filter(u => u.city_id === userCityId) : users,
     [users, userCityId]
   );
 
@@ -31,7 +31,7 @@ export const DashboardUsersView: React.FC = () => {
   const countByRole = (role: string) => scopedUsers.filter(u => u.role === role).length;
 
   const recentUsers = [...scopedUsers]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
   const stats = [
@@ -142,7 +142,7 @@ export const DashboardUsersView: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-slate-500">Usuario</p>
                 <p className="text-sm font-semibold text-slate-800 truncate">
-                  {loggedInUser?.fullName}
+                  {loggedInUser?.full_name}
                 </p>
               </div>
             </div>
@@ -210,7 +210,7 @@ export const DashboardUsersView: React.FC = () => {
                   className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
                 >
                   <td className="py-3 px-4">
-                    <p className="text-sm font-semibold text-slate-800">{u.fullName}</p>
+                    <p className="text-sm font-semibold text-slate-800">{u.full_name}</p>
                     <p className="text-xs text-slate-500">@{u.username}</p>
                   </td>
                   <td className="py-3 px-4 text-sm text-slate-600">{u.email}</td>
@@ -221,7 +221,7 @@ export const DashboardUsersView: React.FC = () => {
                   </td>
                   <td className="py-3 px-4">{getStatusBadge(u.status)}</td>
                   <td className="py-3 px-4 text-sm text-slate-600">
-                    {formatDate(u.createdAt)}
+                    {formatDate(u.created_at)}
                   </td>
                 </tr>
               ))}

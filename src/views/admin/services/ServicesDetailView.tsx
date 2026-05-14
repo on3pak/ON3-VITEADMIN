@@ -41,10 +41,10 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
   const { user: loggedInUser } = useAuth();
   const service = getServiceById(serviceId);
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
-    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId) : INITIAL_WORK_CENTERS,
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
     [userCityId]
   );
 
@@ -80,7 +80,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
     onBack();
   };
 
-  const handleModalSubmit = (data: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleModalSubmit = (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
     updateService(serviceId, data);
     setModalOpen(false);
     return true;
@@ -121,7 +121,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
 
         <div className="p-6 space-y-5">
           <SectionCard icon={<ClipboardList className="h-4 w-4" />} title="Información">
-            <InfoRow label="Centro de Trabajo" value={resolveWorkCenter(service.workCenterId)} highlight />
+            <InfoRow label="Centro de Trabajo" value={resolveWorkCenter(service.work_center_id)} highlight />
             <InfoRow label="Tipo" value={service.type} highlight />
           </SectionCard>
         </div>

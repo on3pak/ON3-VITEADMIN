@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
+import { INITIAL_EMPLOYEE_CATEGORIES } from '../../data/mockEmployees';
+import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
   Users,
   UserCheck,
@@ -13,11 +15,14 @@ import {
   Wrench
 } from 'lucide-react';
 
+const categoryMap = Object.fromEntries(INITIAL_EMPLOYEE_CATEGORIES.map(c => [c.id, c.name]));
+const wcNameMap = Object.fromEntries(INITIAL_WORK_CENTERS.map(w => [w.id, w.name]));
+
 export const DashboardEmployeesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { employees } = useEmployees();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopedEmployees = useMemo(
     () => userCityId ? employees.filter(e => e.city_id === userCityId) : employees,
@@ -29,40 +34,29 @@ export const DashboardEmployeesView: React.FC = () => {
   const totalEmployees = scopedEmployees.length;
   const activeRate = totalEmployees > 0 ? (activeEmployees.length / totalEmployees) * 100 : 0;
 
-  const countByCategory = (category: string) => scopedEmployees.filter(e => e.employee_category === category).length;
-  const countByWorkCenter = (center: string) => scopedEmployees.filter(e => e.work_center === center).length;
+  const countByCategory = (categoryId: string) => scopedEmployees.filter(e => e.category_id === categoryId).length;
+  const countByWorkCenter = (centerId: string) => scopedEmployees.filter(e => e.work_center_id === centerId).length;
   const countByStatus = (statusId: string) => scopedEmployees.filter(e => e.status_id === statusId).length;
 
-  const getCategoryName = (id: string) => {
-    const names: Record<string, string> = {
-      'ec-1': 'Peón Limpieza',
-      'ec-2': 'Peón Recogida',
-      'ec-3': 'Oficial',
-      'ec-4': 'Oficial 2ª',
-      'ec-5': 'Mantenimiento',
-      'ec-6': 'Mecánico',
-      'ec-7': 'Encargado',
-      'ec-8': 'Encargado General',
-      'ec-9': 'Jefe de Servicio',
-      'ec-10': 'Administrativo',
+  const uniqueCategoryIds = [...new Set(scopedEmployees.map(e => e.category_id))];
+  const uniqueWorkCenterIds = [...new Set(scopedEmployees.map(e => e.work_center_id))];
+
+  const categoryStats = uniqueCategoryIds.slice(0, 6).map(catId => {
+    const name = categoryMap[catId] || catId;
+    return {
+      categoryId: catId,
+      category: name,
+      count: countByCategory(catId),
+      color: name.includes('Encargado') || name.includes('Jefe') ? 'bg-purple-600'
+        : name.includes('Mecánico') || name.includes('Mantenimiento') ? 'bg-blue-600'
+        : 'bg-slate-500'
     };
-    return names[id] || id;
-  };
+  });
 
-  const uniqueCategories = [...new Set(scopedEmployees.map(e => e.employee_category))];
-  const uniqueWorkCenters = [...new Set(scopedEmployees.map(e => e.work_center))];
-
-  const categoryStats = uniqueCategories.slice(0, 6).map(cat => ({
-    category: cat,
-    count: countByCategory(cat),
-    color: cat.includes('Encargado') || cat.includes('Jefe') ? 'bg-purple-600'
-      : cat.includes('Mecánico') || cat.includes('Mantenimiento') ? 'bg-blue-600'
-      : 'bg-slate-500'
-  }));
-
-  const workCenterStats = uniqueWorkCenters.slice(0, 5).map(center => ({
-    center,
-    count: countByWorkCenter(center)
+  const workCenterStats = uniqueWorkCenterIds.slice(0, 5).map(centerId => ({
+    centerId,
+    center: wcNameMap[centerId] || centerId,
+    count: countByWorkCenter(centerId)
   }));
 
   const statusStats = [
@@ -304,7 +298,7 @@ export const DashboardEmployeesView: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {recentEmployees.map((emp, i) => (
+              {recentEmployees.map((emp) => (
                 <tr
                   key={emp.id}
                   className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
@@ -317,10 +311,10 @@ export const DashboardEmployeesView: React.FC = () => {
                   </td>
                   <td className="py-3 px-4">
                     <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
-                      {emp.employee_category}
+                      {categoryMap[emp.category_id] || emp.category_id}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-sm text-slate-600">{emp.work_center}</td>
+                  <td className="py-3 px-4 text-sm text-slate-600">{wcNameMap[emp.work_center_id] || emp.work_center_id}</td>
                   <td className="py-3 px-4">
                     <span className="text-xs text-slate-600">
                       {emp.start_time}-{emp.end_time}

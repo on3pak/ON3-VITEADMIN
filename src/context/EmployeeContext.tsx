@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Employee, EmployeeOverview } from '../types';
 import { INITIAL_EMPLOYEES } from '../data/mockEmployees';
+import { generateId } from '../utils/id';
 
 interface EmployeeContextType {
   employees: Employee[];
@@ -36,11 +37,12 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   }, [employees]);
 
   const createEmployee = useCallback((data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
+    const now = new Date().toISOString();
     const newEmployee: Employee = {
       ...data,
-      id: `emp-${Date.now()}`,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      id: generateId('emp'),
+      created_at: now,
+      updated_at: now,
     };
     setEmployees((prev) => [newEmployee, ...prev]);
     return { success: true };

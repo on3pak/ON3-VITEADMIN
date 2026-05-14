@@ -151,12 +151,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         {user && (
           <div className="p-4 border-b border-slate-800/60 bg-slate-950/20 flex items-center gap-3 shrink-0">
             <img 
-              src={user.avatarUrl} 
-              alt={user.fullName} 
+              src={user.avatar_url} 
+              alt={user.full_name} 
               className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 p-0.5 shadow-sm shrink-0"
             />
             <div className="flex-1 min-w-0 lg:hidden xl:block">
-              <h3 className="text-sm font-semibold text-white truncate">{user.fullName}</h3>
+              <h3 className="text-sm font-semibold text-white truncate">{user.full_name}</h3>
               <p className="text-xs text-slate-400 truncate">@{user.username}</p>
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border mt-1 ${getRoleBadgeStyle(user.role)}`}>
                 <KeyRound className="h-2.5 w-2.5 mr-1 inline" />

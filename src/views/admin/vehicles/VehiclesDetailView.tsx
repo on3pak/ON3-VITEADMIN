@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useVehicles } from '../../../context/VehicleContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
+import { INITIAL_VEHICLE_TYPES } from '../../../data/mockVehicles';
 import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Vehicle } from '../../types';
@@ -47,6 +48,7 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[status] || 'bg-slate-100'}`}>{labels[status] || status}</span>;
 };
 
+const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.type]));
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find(w => w.id === id)?.name ?? id;
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {
@@ -96,7 +98,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
     onBack();
   };
 
-  const handleModalSubmit = (data: Omit<Vehicle, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleModalSubmit = (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
     updateVehicle(vehicleId, data);
     setModalOpen(false);
     return true;
@@ -127,38 +129,38 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
 
         <div className="p-6 space-y-5">
           <SectionCard icon={<Truck className="h-4 w-4" />} title="Datos del Vehículo">
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Tipo" value={vehicle.vehicleType} highlight />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Tipo" value={vehicleTypeMap[vehicle.vehicle_type_id]} highlight />
             <InfoRow icon={<FileCheck className="h-4 w-4" />} label="VIN" value={vehicle.vin || '-'} />
             <InfoRow icon={<Truck className="h-4 w-4" />} label="Kilómetros" value={`${vehicle.kilometers.toLocaleString()} km`} highlight />
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Combustible" value={vehicle.fuelType} />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Combustible" value={vehicle.fuel_type} />
           </SectionCard>
 
           <SectionCard icon={<FileCheck className="h-4 w-4" />} title="Documentación">
             <InfoRow 
               icon={<FileCheck className="h-4 w-4" />} 
               label="ITV" 
-              value={`${formatDate(vehicle.itvExpiration)} (${checkExpiration(vehicle.itvExpiration).text})`} 
+              value={`${formatDate(vehicle.itv_expiration)} (${checkExpiration(vehicle.itv_expiration).text})`} 
             />
             <InfoRow 
               icon={<FileCheck className="h-4 w-4" />} 
               label="Seguro" 
-              value={`${formatDate(vehicle.insuranceExpiration)} (${checkExpiration(vehicle.insuranceExpiration).text})`} 
+              value={`${formatDate(vehicle.insurance_expiration)} (${checkExpiration(vehicle.insurance_expiration).text})`} 
             />
             <InfoRow 
               icon={<FileCheck className="h-4 w-4" />} 
               label="Impuesto" 
-              value={`${formatDate(vehicle.taxExpiration)} (${checkExpiration(vehicle.taxExpiration).text})`} 
+              value={`${formatDate(vehicle.tax_expiration)} (${checkExpiration(vehicle.tax_expiration).text})`} 
             />
           </SectionCard>
 
           <SectionCard icon={<Truck className="h-4 w-4" />} title="Mantenimiento">
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Última Revisión" value={formatDate(vehicle.lastReviewDate)} />
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Próxima Revisión" value={`${vehicle.nextReviewKilometers.toLocaleString()} km`} highlight />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Última Revisión" value={formatDate(vehicle.last_review_date)} />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Próxima Revisión" value={`${vehicle.next_review_kilometers.toLocaleString()} km`} highlight />
           </SectionCard>
 
           <SectionCard icon={<Truck className="h-4 w-4" />} title="Asignación">
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Centro de Trabajo" value={resolveWorkCenter(vehicle.workCenter)} />
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Empleado Asignado" value={vehicle.assignedEmployee || 'Sin asignar'} />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Centro de Trabajo" value={resolveWorkCenter(vehicle.work_center_id)} />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Empleado Asignado" value={vehicle.assigned_employee_id || 'Sin asignar'} />
           </SectionCard>
 
           {vehicle.observations && (

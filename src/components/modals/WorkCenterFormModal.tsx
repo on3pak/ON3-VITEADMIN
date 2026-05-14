@@ -7,7 +7,7 @@ import { X, ShieldAlert, Save, Building2 } from 'lucide-react';
 interface WorkCenterFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<WorkCenter, 'id'>) => boolean;
+  onSubmit: (data: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => boolean;
   editingWorkCenter?: WorkCenter;
 }
 
@@ -24,7 +24,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
     if (editingWorkCenter) {
       setName(editingWorkCenter.name);
       setAddress(editingWorkCenter.address);
-      setCityId(editingWorkCenter.cityId);
+      setCityId(editingWorkCenter.city_id);
       setStatus(editingWorkCenter.status);
     } else {
       setName('');
@@ -49,7 +49,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
     const success = onSubmit({
       name: name.trim(),
       address: address.trim(),
-      cityId,
+      city_id: cityId,
       status,
     });
 

@@ -2,7 +2,8 @@ import { AuthUser, AuthSession } from '../types/authUser';
 
 export const mockAuthUsers: AuthUser[] = [
   {
-    id: 'a1b2c3d4e5f6g7h8i9j0k1l2',
+    id: 'auth_001',
+    user_id: 'usr_a1b2c3d4',
     email: 'm.torres@on3.com',
     password: 'root123',
     email_confirmed_at: '2025-01-01T00:00:00Z',
@@ -11,7 +12,6 @@ export const mockAuthUsers: AuthUser[] = [
     app_metadata: {
       provider: 'email',
       role: 'ROOT',
-      city_id: 'city-1'
     },
     user_metadata: {
       email: 'm.torres@on3.com',
@@ -23,7 +23,8 @@ export const mockAuthUsers: AuthUser[] = [
     confirmed_at: '2025-01-01T00:00:00Z'
   },
   {
-    id: 'b2c3d4e5f6g7h8i9j0k1l2m3',
+    id: 'auth_002',
+    user_id: 'usr_b2c3d4e5',
     email: 'a.mendoza@on3.com',
     password: 'admin123',
     email_confirmed_at: '2025-01-01T00:00:00Z',
@@ -32,7 +33,6 @@ export const mockAuthUsers: AuthUser[] = [
     app_metadata: {
       provider: 'email',
       role: 'ADMIN',
-      city_id: 'city-1'
     },
     user_metadata: {
       email: 'a.mendoza@on3.com',
@@ -44,7 +44,8 @@ export const mockAuthUsers: AuthUser[] = [
     confirmed_at: '2025-01-01T00:00:00Z'
   },
   {
-    id: 'c3d4e5f6g7h8i9j0k1l2m3n4',
+    id: 'auth_003',
+    user_id: 'usr_c3d4e5f6',
     email: 'b.salazar@on3.com',
     password: 'manager123',
     email_confirmed_at: '2025-01-01T00:00:00Z',
@@ -53,7 +54,6 @@ export const mockAuthUsers: AuthUser[] = [
     app_metadata: {
       provider: 'email',
       role: 'MANAGER',
-      city_id: 'city-1'
     },
     user_metadata: {
       email: 'b.salazar@on3.com',
@@ -65,7 +65,8 @@ export const mockAuthUsers: AuthUser[] = [
     confirmed_at: '2025-01-01T00:00:00Z'
   },
   {
-    id: 'd4e5f6g7h8i9j0k1l2m3n4o5',
+    id: 'auth_004',
+    user_id: 'usr_d4e5f6g7',
     email: 'c.fuentes@on3.com',
     password: 'user123',
     email_confirmed_at: '2025-01-01T00:00:00Z',
@@ -74,7 +75,6 @@ export const mockAuthUsers: AuthUser[] = [
     app_metadata: {
       provider: 'email',
       role: 'USER',
-      city_id: 'city-1'
     },
     user_metadata: {
       email: 'c.fuentes@on3.com',

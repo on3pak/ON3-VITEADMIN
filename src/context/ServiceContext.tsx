@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Service, ServiceOverview, ServiceTask } from '../types';
 import { INITIAL_SERVICES } from '../data/mockServices';
+import { generateId } from '../utils/id';
 
 interface ServiceContextType {
   services: Service[];
   getServiceOverviews: () => ServiceOverview[];
   getServiceById: (id: string) => Service | undefined;
-  createService: (data: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => { success: boolean };
+  createService: (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
   updateService: (id: string, data: Partial<Service>) => { success: boolean };
   deleteService: (id: string) => void;
   updateServiceTask: (serviceId: string, taskId: string, status: ServiceTask['status']) => void;
@@ -20,7 +21,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
   const getServiceOverviews = useCallback(() => {
     return services.map((s) => ({
       id: s.id,
-      workCenterId: s.workCenterId,
+      work_center_id: s.work_center_id,
       name: s.name,
       type: s.type,
       totalTasks: s.tasks.length,
@@ -32,12 +33,13 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
     return services.find((s) => s.id === id);
   }, [services]);
 
-  const createService = useCallback((data: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const createService = useCallback((data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
+    const now = new Date().toISOString();
     const newService: Service = {
       ...data,
-      id: `svc-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      id: generateId('svc'),
+      created_at: now,
+      updated_at: now,
     };
     setServices((prev) => [newService, ...prev]);
     return { success: true };
@@ -46,7 +48,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
   const updateService = useCallback((id: string, data: Partial<Service>) => {
     setServices((prev) =>
       prev.map((s) =>
-        s.id === id ? { ...s, ...data, updatedAt: new Date().toISOString() } : s
+        s.id === id ? { ...s, ...data, updated_at: new Date().toISOString() } : s
       )
     );
     return { success: true };
@@ -62,7 +64,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
         s.id === serviceId
           ? {
               ...s,
-              updatedAt: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
               tasks: s.tasks.map((t) =>
                 t.id === taskId ? { ...t, status } : t
               ),

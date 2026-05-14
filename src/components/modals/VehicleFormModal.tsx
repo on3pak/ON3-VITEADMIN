@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Vehicle, VehicleType, VehicleStatus, FuelType } from '../../types';
+import { Vehicle, VehicleStatus, FuelType } from '../../types';
 import { INITIAL_VEHICLE_TYPES } from '../../data/mockVehicles';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, Truck, Save } from 'lucide-react';
@@ -7,7 +7,7 @@ import { X, Truck, Save } from 'lucide-react';
 interface VehicleFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Vehicle, 'id' | 'createdAt' | 'updatedAt'>) => boolean;
+  onSubmit: (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => boolean;
   editingVehicle?: Vehicle;
 }
 
@@ -36,19 +36,19 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setLicensePlate(editingVehicle.licensePlate);
       setModel(editingVehicle.model);
       setBrand(editingVehicle.brand);
-      setVehicleTypeId(editingVehicle.vehicleTypeId);
+      setVehicleTypeId(editingVehicle.vehicle_type_id);
       setStatus(editingVehicle.status);
       setVin(editingVehicle.vin || '');
-      setRegistrationDate(editingVehicle.registrationDate || '');
-      setItvExpiration(editingVehicle.itvExpiration || '');
-      setInsuranceExpiration(editingVehicle.insuranceExpiration || '');
-      setTaxExpiration(editingVehicle.taxExpiration || '');
-      setFuelType(editingVehicle.fuelType);
+      setRegistrationDate(editingVehicle.registration_date || '');
+      setItvExpiration(editingVehicle.itv_expiration || '');
+      setInsuranceExpiration(editingVehicle.insurance_expiration || '');
+      setTaxExpiration(editingVehicle.tax_expiration || '');
+      setFuelType(editingVehicle.fuel_type);
       setKilometers(editingVehicle.kilometers);
-      setLastReviewDate(editingVehicle.lastReviewDate || '');
-      setNextReviewKilometers(editingVehicle.nextReviewKilometers);
-      setWorkCenter(editingVehicle.workCenter);
-      setAssignedEmployee(editingVehicle.assignedEmployee || '');
+      setLastReviewDate(editingVehicle.last_review_date || '');
+      setNextReviewKilometers(editingVehicle.next_review_kilometers);
+      setWorkCenter(editingVehicle.work_center_id);
+      setAssignedEmployee(editingVehicle.assigned_employee_id || '');
       setObservations(editingVehicle.observations || '');
     } else {
       setLicensePlate('');
@@ -77,25 +77,23 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setFormError('Por favor, completa los campos obligatorios');
       return;
     }
-    const vehicleType = INITIAL_VEHICLE_TYPES.find(v => v.id === vehicleTypeId)?.type || 'TURISMO' as VehicleType;
     const success = onSubmit({
       licensePlate,
       model,
       brand,
-      vehicleTypeId,
-      vehicleType,
+      vehicle_type_id: vehicleTypeId,
       status,
       vin,
-      registrationDate,
-      itvExpiration,
-      insuranceExpiration,
-      taxExpiration,
-      fuelType,
+      registration_date: registrationDate,
+      itv_expiration: itvExpiration,
+      insurance_expiration: insuranceExpiration,
+      tax_expiration: taxExpiration,
+      fuel_type: fuelType,
       kilometers,
-      lastReviewDate,
-      nextReviewKilometers,
-      workCenter,
-      assignedEmployee,
+      last_review_date: lastReviewDate,
+      next_review_kilometers: nextReviewKilometers,
+      work_center_id: workCenter,
+      assigned_employee_id: assignedEmployee,
       observations,
     });
     if (success) onClose();

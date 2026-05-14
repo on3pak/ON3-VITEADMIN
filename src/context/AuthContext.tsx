@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthState, AuthUser, UserRole } from '../types';
+import { AuthState, User, UserRole } from '../types';
 import { mockAuthUsers, createMockAuthSession } from '../data/mockAuth';
+import { INITIAL_USERS } from '../data/mockUsers';
 
 interface AuthContextProps extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
@@ -14,6 +15,15 @@ interface AuthContextProps extends AuthState {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 const STORAGE_KEY = 'mock_auth_session';
+
+const buildUserFromAuth = (authUser: typeof mockAuthUsers[number]): User | null => {
+  const matchedUser = INITIAL_USERS.find(u => u.id === authUser.user_id);
+  if (!matchedUser) return null;
+  return {
+    ...matchedUser,
+    avatar_url: `https://api.dicebear.com/7.x/bottts/svg?seed=${authUser.user_metadata.user_name}`,
+  };
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
@@ -45,30 +55,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const session = JSON.parse(storedSession);
           const mockUser = mockAuthUsers.find(u => u.id === session.user.id);
           if (mockUser) {
-            const authUser: AuthUser = {
-              id: mockUser.id,
-              username: mockUser.user_metadata.user_name,
-              email: mockUser.email,
-              fullName: mockUser.user_metadata.full_name,
-              role: mockUser.app_metadata.role as UserRole,
-              cityId: mockUser.app_metadata.city_id as string | undefined,
-              avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockUser.user_metadata.user_name}`,
-            };
-
-            setState({
-              isAuthenticated: true,
-              user: authUser,
-              token: session.access_token,
-              loading: false,
-              error: null,
-            });
-            return;
+            const appUser = buildUserFromAuth(mockUser);
+            if (appUser) {
+              setState({
+                isAuthenticated: true,
+                user: appUser,
+                token: session.access_token,
+                loading: false,
+                error: null,
+              });
+              return;
+            }
           }
         }
       } catch (err) {
         console.error('Error auto-authenticating:', err);
       }
-      
+
       setState(prev => ({ ...prev, loading: false }));
     };
 
@@ -78,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setState(prev => ({ ...prev, loading: true, error: null }));
-    
+
     await new Promise(resolve => setTimeout(resolve, 800));
 
     const lowercaseEmail = email.trim().toLowerCase();
@@ -101,25 +104,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const session = createMockAuthSession(mockUser);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
-    const authUser: AuthUser = {
-      id: mockUser.id,
-      username: mockUser.user_metadata.user_name,
-      email: mockUser.email,
-      fullName: mockUser.user_metadata.full_name,
-      role: mockUser.app_metadata.role as UserRole,
-      cityId: mockUser.app_metadata.city_id as string | undefined,
-      avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockUser.user_metadata.user_name}`,
-    };
+    const appUser = buildUserFromAuth(mockUser);
+
+    if (!appUser) {
+      setState({
+        isAuthenticated: false,
+        user: null,
+        token: null,
+        loading: false,
+        error: 'Error al cargar datos del usuario.',
+      });
+      return false;
+    }
 
     setState({
       isAuthenticated: true,
-      user: authUser,
+      user: appUser,
       token: session.access_token,
       loading: false,
       error: null,
     });
 
-    triggerToast(`¡Bienvenido de nuevo, ${authUser.fullName}! Rol: ${authUser.role}`, 'success');
+    triggerToast(`¡Bienvenido de nuevo, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
     return true;
   };
 

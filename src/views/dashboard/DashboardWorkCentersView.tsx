@@ -15,10 +15,10 @@ export const DashboardWorkCentersView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { workCenters } = useWorkCenters();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopedWorkCenters = useMemo(
-    () => userCityId ? workCenters.filter(w => w.cityId === userCityId) : workCenters,
+    () => userCityId ? workCenters.filter(w => w.city_id === userCityId) : workCenters,
     [workCenters, userCityId]
   );
 
@@ -27,12 +27,12 @@ export const DashboardWorkCentersView: React.FC = () => {
   const totalCenters = scopedWorkCenters.length;
   const activeRate = totalCenters > 0 ? (activeCenters.length / totalCenters) * 100 : 0;
 
-  const countByCity = (cityId: string) => scopedWorkCenters.filter(w => w.cityId === cityId).length;
+  const countByCity = (cityId: string) => scopedWorkCenters.filter(w => w.city_id === cityId).length;
   const countByStatus = (status: string) => scopedWorkCenters.filter(w => w.status === status).length;
 
   const resolveCity = (cityId: string) => INITIAL_CITIES.find(c => c.id === cityId)?.name ?? cityId;
 
-  const uniqueCities = [...new Set(scopedWorkCenters.map(w => w.cityId))];
+  const uniqueCities = [...new Set(scopedWorkCenters.map(w => w.city_id))];
 
   const cityStats = uniqueCities.map(cityId => ({
     cityId,
@@ -196,7 +196,7 @@ export const DashboardWorkCentersView: React.FC = () => {
                   <td className="py-3 px-4 text-sm text-slate-600">{wc.address}</td>
                   <td className="py-3 px-4">
                     <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
-                      {resolveCity(wc.cityId)}
+                      {resolveCity(wc.city_id)}
                     </span>
                   </td>
                   <td className="py-3 px-4">{getStatusBadge(wc.status)}</td>

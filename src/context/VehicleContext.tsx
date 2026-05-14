@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Vehicle, VehicleOverview } from '../types';
 import { INITIAL_VEHICLES } from '../data/mockVehicles';
+import { generateId } from '../utils/id';
 
 interface VehicleContextType {
   vehicles: Vehicle[];
   getVehicleOverviews: () => VehicleOverview[];
   getVehicleById: (id: string) => Vehicle | undefined;
-  createVehicle: (data: Omit<Vehicle, 'id' | 'createdAt' | 'updatedAt'>) => { success: boolean };
+  createVehicle: (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
   updateVehicle: (id: string, data: Partial<Vehicle>) => { success: boolean };
   deleteVehicle: (id: string) => void;
 }
@@ -22,10 +23,9 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
       licensePlate: v.licensePlate,
       model: v.model,
       brand: v.brand,
-      vehicleTypeId: v.vehicleTypeId,
-      vehicleType: v.vehicleType,
+      vehicle_type_id: v.vehicle_type_id,
       status: v.status,
-      workCenter: v.workCenter,
+      work_center_id: v.work_center_id,
       kilometers: v.kilometers,
     }));
   }, [vehicles]);
@@ -34,12 +34,13 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
     return vehicles.find((v) => v.id === id);
   }, [vehicles]);
 
-  const createVehicle = useCallback((data: Omit<Vehicle, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const createVehicle = useCallback((data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
+    const now = new Date().toISOString();
     const newVehicle: Vehicle = {
       ...data,
-      id: `v${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      id: generateId('veh'),
+      created_at: now,
+      updated_at: now,
     };
     setVehicles((prev) => [newVehicle, ...prev]);
     return { success: true };
@@ -48,7 +49,7 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   const updateVehicle = useCallback((id: string, data: Partial<Vehicle>) => {
     setVehicles((prev) =>
       prev.map((v) =>
-        v.id === id ? { ...v, ...data, updatedAt: new Date().toISOString() } : v
+        v.id === id ? { ...v, ...data, updated_at: new Date().toISOString() } : v
       )
     );
     return { success: true };

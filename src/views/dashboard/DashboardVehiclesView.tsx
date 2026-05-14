@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useVehicles } from '../../context/VehicleContext';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
+import { INITIAL_VEHICLE_TYPES } from '../../data/mockVehicles';
 import {
   Truck,
   Truck as TruckIcon,
@@ -13,59 +14,69 @@ import {
 } from 'lucide-react';
 
 const wcCityMap = Object.fromEntries(
-  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
 );
 
 const wcNameMap = Object.fromEntries(
   INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.name])
 );
 
+const vehicleTypeMap = Object.fromEntries(
+  INITIAL_VEHICLE_TYPES.map((vt) => [vt.id, vt.type])
+);
+
 export const DashboardVehiclesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { vehicles } = useVehicles();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopedVehicles = useMemo(
-    () => userCityId ? vehicles.filter(v => wcCityMap[v.workCenter] === userCityId) : vehicles,
+    () => userCityId ? vehicles.filter(v => wcCityMap[v.work_center_id] === userCityId) : vehicles,
     [vehicles, userCityId]
   );
 
   const activeVehicles = scopedVehicles.filter(v => v.status === 'ACTIVE');
-  const maintenanceVehicles = scopedVehicles.filter(v => v.status === 'MAINTENANCE');
+  const maintenanceVehicles = scopedVehicles.filter(v => v.status === 'MANTENIMIENTO');
   const brokenVehicles = scopedVehicles.filter(v => v.status === 'AVERIADO');
   const inactiveVehicles = scopedVehicles.filter(v => v.status === 'BAJA');
   const totalVehicles = scopedVehicles.length;
   const activeRate = totalVehicles > 0 ? (activeVehicles.length / totalVehicles) * 100 : 0;
 
-  const countByType = (type: string) => scopedVehicles.filter(v => v.vehicleType === type).length;
-  const countByWorkCenter = (center: string) => scopedVehicles.filter(v => v.workCenter === center).length;
+  const getVehicleType = (typeId: string) => vehicleTypeMap[typeId] || typeId;
+  const countByType = (typeId: string) => scopedVehicles.filter(v => v.vehicle_type_id === typeId).length;
+  const countByWorkCenter = (centerId: string) => scopedVehicles.filter(v => v.work_center_id === centerId).length;
   const countByStatus = (status: string) => scopedVehicles.filter(v => v.status === status).length;
 
   const totalKilometers = scopedVehicles.reduce((acc, v) => acc + v.kilometers, 0);
   const avgKilometers = totalVehicles > 0 ? totalKilometers / totalVehicles : 0;
 
-  const vehicleTypes = [...new Set(scopedVehicles.map(v => v.vehicleType))];
-  const workCenters = [...new Set(scopedVehicles.map(v => v.workCenter))];
+  const uniqueTypeIds = [...new Set(scopedVehicles.map(v => v.vehicle_type_id))];
 
-  const typeStats = vehicleTypes.map(type => ({
+  const typeStats = uniqueTypeIds.map(typeId => {
+    const type = getVehicleType(typeId);
+    return {
+    typeId,
     type,
-    count: countByType(type),
+    count: countByType(typeId),
     color: type === 'BARREDORA' ? 'bg-violet-600'
       : type === 'CAMION' ? 'bg-blue-600'
       : type === 'FURGONETA' ? 'bg-cyan-600'
       : type === 'TURISMO' ? 'bg-emerald-600'
       : 'bg-amber-600'
-  }));
+    };
+  });
 
-  const workCenterStats = workCenters.slice(0, 5).map(center => ({
-    center,
-    count: countByWorkCenter(center)
+  const uniqueWorkCenterIds = [...new Set(scopedVehicles.map(v => v.work_center_id))];
+  const workCenterStats = uniqueWorkCenterIds.slice(0, 5).map(centerId => ({
+    centerId,
+    center: wcNameMap[centerId] || centerId,
+    count: countByWorkCenter(centerId)
   }));
 
   const statusStats = [
     { status: 'ACTIVE', label: 'Activos', count: countByStatus('ACTIVE'), color: 'emerald' },
-    { status: 'MAINTENANCE', label: 'En Taller', count: countByStatus('MAINTENANCE'), color: 'amber' },
+    { status: 'MANTENIMIENTO', label: 'En Taller', count: countByStatus('MANTENIMIENTO'), color: 'amber' },
     { status: 'AVERIADO', label: 'Averiados', count: countByStatus('AVERIADO'), color: 'rose' },
     { status: 'BAJA', label: 'Baja', count: countByStatus('BAJA'), color: 'slate' },
   ];

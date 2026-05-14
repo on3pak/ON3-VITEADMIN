@@ -126,10 +126,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const selectedEmployee = modalMode === 'edit' && selectedEmployeeId ? getEmployeeById(selectedEmployeeId) : undefined;
   const employeeOverviews = getEmployeeOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
-    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId) : INITIAL_WORK_CENTERS,
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
     [userCityId]
   );
 

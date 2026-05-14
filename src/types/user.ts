@@ -4,10 +4,11 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  fullName: string;
+  full_name: string;
   role: UserRole;
   status: 'ACTIVE' | 'INACTIVE';
-  createdAt: string;
-  avatarUrl?: string;
-  cityId?: string;
+  created_at: string;
+  updated_at: string;
+  avatar_url?: string;
+  city_id?: string;
 }

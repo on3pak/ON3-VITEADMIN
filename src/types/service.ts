@@ -10,17 +10,17 @@ export interface ServiceTask {
 
 export interface Service {
   id: string;
-  workCenterId: string;
+  work_center_id: string;
   name: string;
   type: string;
   tasks: ServiceTask[];
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ServiceOverview {
   id: string;
-  workCenterId: string;
+  work_center_id: string;
   name: string;
   type: string;
   totalTasks: number;

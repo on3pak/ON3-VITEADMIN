@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useVehicles } from '../../../context/VehicleContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
+import { INITIAL_VEHICLE_TYPES } from '../../../data/mockVehicles';
 import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Vehicle, VehicleOverview, VehicleType } from '../../types';
@@ -25,8 +26,10 @@ const TYPE_COLORS: Record<VehicleType, string> = {
   'PORTER': 'bg-amber-100 text-amber-700 border-amber-200',
 };
 
+const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.type]));
+
 const wcCityMap = Object.fromEntries(
-  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
 );
 
 export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = ({ onViewVehicle }) => {
@@ -50,7 +53,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const handleDelete = (id: string) => { setDeletingVehicleId(id); setDeleteDialogOpen(true); };
   const handleConfirmDelete = () => { if (deletingVehicleId) { deleteVehicle(deletingVehicleId); } setDeleteDialogOpen(false); setDeletingVehicleId(null); };
 
-  const handleModalSubmit = (data: Omit<Vehicle, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleModalSubmit = (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedVehicleId) {
       updateVehicle(selectedVehicleId, data);
     } else {
@@ -63,23 +66,23 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const selectedVehicle = modalMode === 'edit' && selectedVehicleId ? getVehicleById(selectedVehicleId) : undefined;
   const vehicleOverviews = getVehicleOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
-    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId) : INITIAL_WORK_CENTERS,
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
     [userCityId]
   );
 
   const filteredVehicles = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return vehicleOverviews.filter((v) => {
-      const matchesCityScope = !userCityId || wcCityMap[v.workCenter] === userCityId;
+      const matchesCityScope = !userCityId || wcCityMap[v.work_center_id] === userCityId;
       if (!matchesCityScope) return false;
 
       const searchable = `${v.licensePlate} ${v.model} ${v.brand}`.toLowerCase();
       const matchesSearch = !q || searchable.includes(q);
       const matchesStatus = statusFilter === 'ALL' || v.status === statusFilter;
-      const matchesWorkCenter = workCenterFilter === 'ALL' || v.workCenter === workCenterFilter;
+      const matchesWorkCenter = workCenterFilter === 'ALL' || v.work_center_id === workCenterFilter;
       return matchesSearch && matchesStatus && matchesWorkCenter;
     });
   }, [vehicleOverviews, searchQuery, statusFilter, workCenterFilter, userCityId]);
@@ -190,8 +193,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
-                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[v.vehicleType]}`}>
-                              {v.vehicleType}
+                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[vehicleTypeMap[v.vehicle_type_id]] || 'bg-slate-100'}`}>
+                              {vehicleTypeMap[v.vehicle_type_id]}
                             </span>
                           </div>
                         </td>

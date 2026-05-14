@@ -6,7 +6,7 @@ import { X, ShieldAlert, UserPlus, Save } from 'lucide-react';
 interface UserFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<User, 'id' | 'createdAt'>) => boolean;
+  onSubmit: (data: Omit<User, 'id' | 'created_at' | 'updated_at'>) => boolean;
   editingUser?: User;
 }
 
@@ -22,7 +22,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
 
   useEffect(() => {
     if (editingUser) {
-      setFullName(editingUser.fullName);
+      setFullName(editingUser.full_name);
       setUsername(editingUser.username);
       setEmail(editingUser.email);
       setRole(editingUser.role);
@@ -65,7 +65,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
     }
 
     const success = onSubmit({
-      fullName: fullName.trim(),
+      full_name: fullName.trim(),
       username: username.trim(),
       email: email.trim(),
       role,

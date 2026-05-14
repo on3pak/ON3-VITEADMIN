@@ -37,83 +37,91 @@ export const TEST_ACCOUNTS = [
 
 export const INITIAL_USERS: User[] = [
   {
-    id: 'a1b2c3d4e5f6g7h8i9j0k1l2',
+    id: 'usr_a1b2c3d4',
     username: 'm.torres',
     email: 'm.torres@on3.com',
-    fullName: 'Miguel Ángel Torres',
+    full_name: 'Miguel Ángel Torres',
     role: 'ROOT',
     status: 'ACTIVE',
-    createdAt: '2025-01-10T08:30:00Z',
-    cityId: 'city-1'
+    created_at: '2025-01-10T08:30:00Z',
+    updated_at: '2025-01-10T08:30:00Z',
+    city_id: 'city-1'
   },
   {
-    id: 'b2c3d4e5f6g7h8i9j0k1l2m3',
+    id: 'usr_b2c3d4e5',
     username: 'admin',
     email: 'a.mendoza@on3.com',
-    fullName: 'Alejandro Mendoza',
+    full_name: 'Alejandro Mendoza',
     role: 'ADMIN',
     status: 'ACTIVE',
-    createdAt: '2025-01-15T10:15:00Z',
-    cityId: 'city-1'
+    created_at: '2025-01-15T10:15:00Z',
+    updated_at: '2025-01-15T10:15:00Z',
+    city_id: 'city-1'
   },
   {
-    id: 'c3d4e5f6g7h8i9j0k1l2m3n4',
+    id: 'usr_c3d4e5f6',
     username: 'manager',
     email: 'b.salazar@on3.com',
-    fullName: 'Beatriz Salazar',
+    full_name: 'Beatriz Salazar',
     role: 'MANAGER',
     status: 'ACTIVE',
-    createdAt: '2025-02-01T14:22:00Z',
-    cityId: 'city-1'
+    created_at: '2025-02-01T14:22:00Z',
+    updated_at: '2025-02-01T14:22:00Z',
+    city_id: 'city-1'
   },
   {
-    id: 'd4e5f6g7h8i9j0k1l2m3n4o5',
+    id: 'usr_d4e5f6g7',
     username: 'user',
     email: 'c.fuentes@on3.com',
-    fullName: 'Carlos Fuentes',
+    full_name: 'Carlos Fuentes',
     role: 'USER',
     status: 'ACTIVE',
-    createdAt: '2025-02-12T09:05:00Z',
-    cityId: 'city-1'
+    created_at: '2025-02-12T09:05:00Z',
+    updated_at: '2025-02-12T09:05:00Z',
+    city_id: 'city-1'
   },
   {
-    id: 'e5f6g7h8i9j0k1l2m3n4o5p6',
+    id: 'usr_e5f6g7h8',
     username: 'diana_reyes',
     email: 'd.reyes@on3.com',
-    fullName: 'Diana Reyes',
+    full_name: 'Diana Reyes',
     role: 'MANAGER',
     status: 'ACTIVE',
-    createdAt: '2025-02-14T11:40:00Z',
-    cityId: 'city-2'
+    created_at: '2025-02-14T11:40:00Z',
+    updated_at: '2025-02-14T11:40:00Z',
+    city_id: 'city-2'
   },
   {
-    id: 'f6g7h8i9j0k1l2m3n4o5p6q7',
+    id: 'usr_f6g7h8i9',
     username: 'eduardo_gomez',
     email: 'e.gomez@on3.com',
-    fullName: 'Eduardo Gómez',
+    full_name: 'Eduardo Gómez',
     role: 'USER',
     status: 'INACTIVE',
-    createdAt: '2025-02-18T16:50:00Z',
-    cityId: 'city-2'
+    created_at: '2025-02-18T16:50:00Z',
+    updated_at: '2025-02-18T16:50:00Z',
+    city_id: 'city-2'
   },
   {
-    id: 'g7h8i9j0k1l2m3n4o5p6q7r8',
+    id: 'usr_g7h8i9j0',
     username: 'gabriela_vaca',
     email: 'g.vaca@on3.com',
-    fullName: 'Gabriela Vaca',
+    full_name: 'Gabriela Vaca',
     role: 'ADMIN',
     status: 'INACTIVE',
-    createdAt: '2025-01-20T13:12:00Z',
-    cityId: 'city-2'
+    created_at: '2025-01-20T13:12:00Z',
+    updated_at: '2025-01-20T13:12:00Z',
+    city_id: 'city-2'
   },
   {
-    id: 'h8i9j0k1l2m3n4o5p6q7r8s9',
+    id: 'usr_h8i9j0k1',
     username: 'hugo_perez',
     email: 'h.perez@on3.com',
-    fullName: 'Hugo Pérez',
+    full_name: 'Hugo Pérez',
     role: 'USER',
     status: 'ACTIVE',
-    createdAt: '2025-02-20T10:00:00Z',
-    cityId: 'city-1'
+    created_at: '2025-02-20T10:00:00Z',
+    updated_at: '2025-02-20T10:00:00Z',
+    city_id: 'city-1'
   }
 ];

@@ -15,7 +15,6 @@ export interface Employee {
   schedule: string;
   start_time: string;
   end_time: string;
-  employee_category: string;
   own_days: number;
   accumulated_days: number;
   vacation_days: number;
@@ -24,7 +23,6 @@ export interface Employee {
   personal_email: string;
   phone_fixed: string;
   work_day: string;
-  work_center: string;
   iban: string;
   locker: string;
   medical_check: boolean;

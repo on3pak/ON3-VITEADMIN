@@ -2,6 +2,7 @@ import { User, UserRole } from './user';
 
 export interface AuthUser {
   id: string;
+  user_id: string;
   email: string;
   password: string;
   email_confirmed_at: string;
@@ -34,7 +35,7 @@ export interface JwtPayload {
   sub: string;
   username: string;
   role: UserRole;
-  fullName: string;
+  full_name: string;
   iat: number;
   exp: number;
   iss: string;

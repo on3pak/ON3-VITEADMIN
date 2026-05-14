@@ -21,7 +21,7 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const wcCityMap = Object.fromEntries(
-  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
 );
 
 export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = ({ onViewService }) => {
@@ -45,7 +45,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const handleDelete = (id: string) => { setDeletingServiceId(id); setDeleteDialogOpen(true); };
   const handleConfirmDelete = () => { if (deletingServiceId) { deleteService(deletingServiceId); } setDeleteDialogOpen(false); setDeletingServiceId(null); };
 
-  const handleModalSubmit = (data: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleModalSubmit = (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedServiceId) {
       updateService(selectedServiceId, data);
     } else {
@@ -58,23 +58,23 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const selectedService = modalMode === 'edit' && selectedServiceId ? getServiceById(selectedServiceId) : undefined;
   const serviceOverviews = getServiceOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
-    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.cityId === userCityId) : INITIAL_WORK_CENTERS,
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
     [userCityId]
   );
 
   const filteredServices = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return serviceOverviews.filter((s) => {
-      const matchesCityScope = !userCityId || wcCityMap[s.workCenterId] === userCityId;
+      const matchesCityScope = !userCityId || wcCityMap[s.work_center_id] === userCityId;
       if (!matchesCityScope) return false;
 
       const searchable = `${s.name} ${s.type}`.toLowerCase();
       const matchesSearch = !q || searchable.includes(q);
       const matchesType = typeFilter === 'ALL' || s.type === typeFilter;
-      const matchesWorkCenter = workCenterFilter === 'ALL' || s.workCenterId === workCenterFilter;
+      const matchesWorkCenter = workCenterFilter === 'ALL' || s.work_center_id === workCenterFilter;
       return matchesSearch && matchesType && matchesWorkCenter;
     });
   }, [serviceOverviews, searchQuery, typeFilter, workCenterFilter, userCityId]);

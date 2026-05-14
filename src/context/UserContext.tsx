@@ -2,10 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
 import { INITIAL_USERS } from '../data/mockUsers';
 import { useAuth } from './AuthContext';
+import { generateId } from '../utils/id';
 
 interface UserContextProps {
   users: User[];
-  createUser: (userData: Omit<User, 'id' | 'createdAt'>) => { success: boolean; message: string };
+  createUser: (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => { success: boolean; message: string };
   updateUser: (id: string, userData: Partial<User>) => { success: boolean; message: string };
   deleteUser: (id: string) => { success: boolean; message: string };
   resetMockData: () => void;
@@ -17,7 +18,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [users, setUsers] = useState<User[]>([]);
   const { user, triggerToast } = useAuth();
 
-  // Always load fresh INITIAL_USERS on mount (ignore stale localStorage)
   useEffect(() => {
     setUsers(INITIAL_USERS);
     localStorage.setItem('on3_mock_users', JSON.stringify(INITIAL_USERS));
@@ -33,21 +33,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     triggerToast('Base de datos simulada restablecida a los valores iniciales.', 'info');
   };
 
-  // Helper to check hierarchy rule enforcement
   const checkPermissionForRoleAction = (action: 'CREATE' | 'UPDATE' | 'DELETE', targetRole?: UserRole, originalTarget?: User): { allowed: boolean; reason?: string } => {
     if (!user) return { allowed: false, reason: 'No autenticado' };
 
     const currentRole = user.role;
 
-    // ROOT can always do everything
     if (currentRole === 'ROOT') return { allowed: true };
 
-    // USER role can NEVER write
     if (currentRole === 'USER') {
       return { allowed: false, reason: 'Tu rol USER es de SÓLO LECTURA. Requieres permisos elevados.' };
     }
 
-    // MANAGER restrictions
     if (currentRole === 'MANAGER') {
       if (action === 'DELETE') {
         return { allowed: false, reason: 'El rol MANAGER no tiene permitido eliminar registros. Acción exclusiva de ADMIN y ROOT.' };
@@ -58,7 +54,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { allowed: true };
     }
 
-    // ADMIN restrictions
     if (currentRole === 'ADMIN') {
       if (originalTarget?.role === 'ROOT' || targetRole === 'ROOT') {
         return { allowed: false, reason: 'El rol ADMIN no puede manipular ni alterar la cuenta del ROOT principal.' };
@@ -69,7 +64,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { allowed: false, reason: 'Permiso denegado' };
   };
 
-  const createUser = (userData: Omit<User, 'id' | 'createdAt'>) => {
+  const createUser = (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
     const check = checkPermissionForRoleAction('CREATE', userData.role);
     if (!check.allowed) {
       const msg = check.reason || 'Permiso denegado.';
@@ -77,23 +72,24 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, message: msg };
     }
 
-    // Check if username already exists
     if (users.some(u => u.username.toLowerCase() === userData.username.toLowerCase().trim())) {
       const msg = `El nombre de usuario '${userData.username}' ya está en uso.`;
       triggerToast(msg, 'error');
       return { success: false, message: msg };
     }
 
+    const now = new Date().toISOString();
     const newUser: User = {
       ...userData,
-      id: `usr-${Math.random().toString(36).substring(2, 7)}`,
+      id: generateId('usr'),
       username: userData.username.trim(),
-      createdAt: new Date().toISOString(),
+      created_at: now,
+      updated_at: now,
     };
 
     const updated = [newUser, ...users];
     saveUsersToStorage(updated);
-    triggerToast(`Usuario ${newUser.fullName} creado con éxito.`, 'success');
+    triggerToast(`Usuario ${newUser.full_name} creado con éxito.`, 'success');
     return { success: true, message: 'Usuario creado correctamente.' };
   };
 
@@ -112,13 +108,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const updated = users.map(u => {
       if (u.id === id) {
-        return { ...u, ...userData };
+        return { ...u, ...userData, updated_at: new Date().toISOString() };
       }
       return u;
     });
 
     saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.fullName} actualizado correctamente.`, 'success');
+    triggerToast(`Usuario ${targetUser.full_name} actualizado correctamente.`, 'success');
     return { success: true, message: 'Usuario actualizado.' };
   };
 
@@ -135,7 +131,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, message: msg };
     }
 
-    // Prevent self-deletion
     if (user && user.username === targetUser.username) {
       const msg = 'No puedes eliminar tu propio usuario activo actual.';
       triggerToast(msg, 'error');
@@ -144,7 +139,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const updated = users.filter(u => u.id !== id);
     saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.fullName} eliminado del sistema.`, 'success');
+    triggerToast(`Usuario ${targetUser.full_name} eliminado del sistema.`, 'success');
     return { success: true, message: 'Usuario eliminado.' };
   };
 

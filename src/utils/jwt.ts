@@ -28,7 +28,7 @@ const base64Decode = (str: string): string => {
   }
 };
 
-export const signMockToken = (data: { sub: string; username: string; role: UserRole; fullName: string }): string => {
+export const signMockToken = (data: { sub: string; username: string; role: UserRole; full_name: string }): string => {
   const header = { alg: 'HS256', typ: 'JWT' };
   
   const iat = Math.floor(Date.now() / 1000);

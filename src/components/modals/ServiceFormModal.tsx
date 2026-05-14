@@ -8,7 +8,7 @@ import { X, ClipboardList, Save } from 'lucide-react';
 interface ServiceFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => boolean;
+  onSubmit: (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => boolean;
   editingService?: Service;
   workCenters?: WorkCenter[];
 }
@@ -66,18 +66,18 @@ function generateTasks(serviceId: string): ServiceTask[] {
 export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('BARRIDO MIXTO');
-  const [workCenterId, setWorkCenterId] = useState('wc-1');
+  const [work_center_id, setWork_center_id] = useState('wc-1');
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingService) {
       setName(editingService.name);
       setType(editingService.type);
-      setWorkCenterId(editingService.workCenterId);
+      setWork_center_id(editingService.work_center_id);
     } else {
       setName('');
       setType('BARRIDO MIXTO');
-      setWorkCenterId('wc-1');
+      setWork_center_id('wc-1');
     }
   }, [editingService, isOpen]);
 
@@ -92,7 +92,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       const success = onSubmit({
         name,
         type,
-        workCenterId,
+        work_center_id,
         tasks: editingService.tasks,
       });
       if (success) onClose();
@@ -101,7 +101,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       const success = onSubmit({
         name,
         type,
-        workCenterId,
+        work_center_id,
         tasks: generateTasks(tempId),
       });
       if (success) onClose();
@@ -159,7 +159,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
           <div>
             <label className="block text-xs font-semibold text-slate-600 mb-1">Centro de Trabajo *</label>
             <select
-              value={workCenterId}
+              value={work_center_id}
               onChange={(e) => setWorkCenterId(e.target.value)}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
             >

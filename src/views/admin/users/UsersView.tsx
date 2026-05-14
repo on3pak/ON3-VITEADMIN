@@ -34,7 +34,7 @@ export const UsersView: React.FC = () => {
     setCurrentPage(1);
   }, [searchQuery, roleFilter, statusFilter, itemsPerPage]);
 
-  const handleFormSubmit = (formData: Omit<User, 'id' | 'createdAt'>) => {
+  const handleFormSubmit = (formData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
     if (selectedUserForEdit) {
       if (selectedUserForEdit.role === 'ROOT' && loggedInUser?.role !== 'ROOT') {
         alert('⚠️ No se puede modificar la cuenta ROOT. Esta cuenta está protegida por el sistema.');
@@ -60,7 +60,7 @@ export const UsersView: React.FC = () => {
 
   const filteredUsers = users.filter((u) => {
     const matchesSearch = 
-      u.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.email.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -203,11 +203,11 @@ export const UsersView: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <img 
                           src={`https://api.dicebear.com/7.x/bottts/svg?seed=${u.username}`} 
-                          alt={u.fullName} 
+                          alt={u.full_name} 
                           className="w-9 h-9 rounded-lg bg-slate-100 border p-0.5"
                         />
                         <div>
-                          <div className="font-bold text-slate-900 leading-tight">{u.fullName}</div>
+                          <div className="font-bold text-slate-900 leading-tight">{u.full_name}</div>
                           <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                             <span className="font-mono text-indigo-600 font-semibold">@{u.username}</span>
                             <span>•</span>
@@ -268,7 +268,7 @@ export const UsersView: React.FC = () => {
                             {u.id !== loggedInUser?.id && (
                               <button
                                 onClick={() => {
-                                  if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.fullName}" del sistema?`)) {
+                                  if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
                                     deleteUser(u.id);
                                   }
                                 }}
@@ -292,7 +292,7 @@ export const UsersView: React.FC = () => {
 
                             <button
                               onClick={() => {
-                                if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.fullName}" del sistema?`)) {
+                                if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
                                   deleteUser(u.id);
                                 }
                               }}

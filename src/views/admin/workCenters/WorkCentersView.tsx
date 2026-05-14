@@ -10,7 +10,7 @@ export const WorkCentersView: React.FC = () => {
   const { workCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter } = useWorkCenters();
   const { user: loggedInUser } = useAuth();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.cityId;
+  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [cityFilter, setCityFilter] = useState<string>(userCityId || 'ALL');
@@ -45,9 +45,9 @@ export const WorkCentersView: React.FC = () => {
     const matchesSearch =
       wc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       wc.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      resolveCity(wc.cityId).toLowerCase().includes(searchQuery.toLowerCase());
+      resolveCity(wc.city_id).toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCity = cityFilter === 'ALL' || wc.cityId === cityFilter;
+    const matchesCity = cityFilter === 'ALL' || wc.city_id === cityFilter;
     const matchesStatus = statusFilter === 'ALL' || wc.status === statusFilter;
 
     return matchesSearch && matchesCity && matchesStatus;
@@ -183,7 +183,7 @@ export const WorkCentersView: React.FC = () => {
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
                             <span className="inline-flex px-2 py-0.5 text-[10px] font-extrabold rounded-md border bg-sky-100 text-sky-800 border-sky-200">
-                              {resolveCity(wc.cityId)}
+                              {resolveCity(wc.city_id)}
                             </span>
                           </div>
                         </td>
