@@ -60,7 +60,7 @@ export const RolesTestsView: React.FC = () => {
       description: 'Comprueba la matriz de acceso entre roles y vistas permitidas en el sistema.',
       status: 'IDLE',
       assertions: [
-        'OVERVIEW accesible para ROOT, ADMIN, MANAGER, USER',
+        'USER_DASHBOARD accesible para ROOT, ADMIN, MANAGER, USER',
         'USERS_CRUD accesible solo para ROOT y ADMIN',
         'TESTS_PANEL accesible para ROOT, ADMIN, MANAGER'
       ]

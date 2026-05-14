@@ -32,7 +32,7 @@ import { LogsView } from './views/utils/logs/LogsView';
 import { UtilsView } from './views/utils/UtilsView';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
-  OVERVIEW: '/',
+  USER_DASHBOARD: '/',
   USERS_CRUD: '/admin/users',
   EMPLOYEES_CRUD: '/admin/employees',
   EMPLOYEE_DASHBOARD: '/dashboard/employees',
@@ -58,7 +58,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
 };
 
 const VIEW_ROLES: Record<DashboardViewType, string[]> = {
-  OVERVIEW: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
+  USER_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
   USERS_CRUD: ['ROOT', 'ADMIN'],
   EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
   EMPLOYEE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -92,7 +92,7 @@ const MainLayout: React.FC = () => {
   const { isAuthenticated, loading, user } = useAuth();
   const [currentView, setCurrentView] = useState<DashboardViewType>(() => {
     const saved = localStorage.getItem('on3_current_view');
-    return (saved as DashboardViewType) || 'OVERVIEW';
+    return (saved as DashboardViewType) || 'USER_DASHBOARD';
   });
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
@@ -142,14 +142,14 @@ const MainLayout: React.FC = () => {
     if (!hasAccess) {
       return (
         <AccessDeniedView 
-          onBack={() => setCurrentView('OVERVIEW')}
+          onBack={() => setCurrentView('USER_DASHBOARD')}
           message={`Tu rol (${user?.role}) no tiene permiso para acceder a esta sección. Contacta a un administrador.`}
         />
       );
     }
 
     switch (currentView) {
-      case 'OVERVIEW':
+      case 'USER_DASHBOARD':
         return <DashboardUsersView />;
       case 'EMPLOYEE_DASHBOARD':
         return <DashboardEmployeesView />;

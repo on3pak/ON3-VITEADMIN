@@ -1,5 +1,5 @@
 export type DashboardViewType = 
-  | 'OVERVIEW' 
+  | 'USER_DASHBOARD' 
   | 'USERS_CRUD' 
   | 'EMPLOYEES_CRUD'
   | 'EMPLOYEE_DASHBOARD'

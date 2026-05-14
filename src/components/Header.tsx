@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
 
   const getViewInfo = (view: DashboardViewType) => {
     switch (view) {
-      case 'OVERVIEW':
+      case 'USER_DASHBOARD':
         return { title: 'Dashboard de Usuarios', subtitle: 'Resumen y estadísticas del sistema' };
       case 'EMPLOYEE_DASHBOARD':
         return { title: 'Dashboard de Empleados', subtitle: 'Estadísticas y métricas de personal' };

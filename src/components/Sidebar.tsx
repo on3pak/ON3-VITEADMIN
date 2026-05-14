@@ -36,7 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
   const menuItems = {
     DASHBOARD: [
       {
-        id: 'OVERVIEW' as DashboardViewType,
+        id: 'USER_DASHBOARD' as DashboardViewType,
         label: 'Usuarios',
         icon: <LayoutDashboard className="h-5 w-5" />,
         description: 'Estadísticas y métricas',
