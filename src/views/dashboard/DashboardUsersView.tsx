@@ -34,6 +34,30 @@ export const DashboardUsersView: React.FC = () => {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 
+  const stats = [
+    { title: 'Total Usuarios', value: totalUsers, icon: <Users className="h-5 w-5" />, color: 'indigo' },
+    { title: 'Usuarios Activos', value: activeUsers.length, icon: <UserCheck className="h-5 w-5" />, color: 'emerald' },
+    { title: 'Usuarios Inactivos', value: inactiveUsers.length, icon: <UserX className="h-5 w-5" />, color: 'rose' },
+    { title: 'Tasa de Actividad', value: `${activeRate.toFixed(0)}%`, icon: <TrendingUp className="h-5 w-5" />, color: 'amber' },
+  ];
+
+  const roleStats = [
+    { label: 'ROOT', count: countByRole('ROOT'), color: 'bg-purple-500' },
+    { label: 'ADMIN', count: countByRole('ADMIN'), color: 'bg-blue-500' },
+    { label: 'MANAGER', count: countByRole('MANAGER'), color: 'bg-amber-500' },
+    { label: 'USER', count: countByRole('USER'), color: 'bg-slate-500' },
+  ];
+
+  const statColor = (color: string) => {
+    const map: Record<string, { bg: string, border: string, text: string }> = {
+      indigo: { bg: 'bg-indigo-50', border: 'border-indigo-100', text: 'text-indigo-600' },
+      emerald: { bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-600' },
+      rose: { bg: 'bg-rose-50', border: 'border-rose-100', text: 'text-rose-600' },
+      amber: { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-600' },
+    };
+    return map[color] || map.indigo;
+  };
+
   const getStatusBadge = (status: string) => {
     const styles = status === 'ACTIVE'
       ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
@@ -58,8 +82,8 @@ export const DashboardUsersView: React.FC = () => {
             key={i}
             className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs"
           >
-            <div className={`p-2.5 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-3`}>
-              <div className={`text-${stat.color}-600`}>{stat.icon}</div>
+            <div className={`p-2.5 rounded-xl ${statColor(stat.color).bg} border ${statColor(stat.color).border} w-fit mb-3`}>
+              <div className={`${statColor(stat.color).text}`}>{stat.icon}</div>
             </div>
             <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
               {stat.title}
@@ -118,7 +142,7 @@ export const DashboardUsersView: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-slate-500">Usuario</p>
                 <p className="text-sm font-semibold text-slate-800 truncate">
-                  {user?.fullName}
+                  {loggedInUser?.fullName}
                 </p>
               </div>
             </div>
@@ -130,7 +154,7 @@ export const DashboardUsersView: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-slate-500">Email</p>
                 <p className="text-sm font-semibold text-slate-800 truncate">
-                  {user?.email}
+                  {loggedInUser?.email}
                 </p>
               </div>
             </div>
@@ -141,7 +165,7 @@ export const DashboardUsersView: React.FC = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-slate-500">Rol</p>
-                <p className="text-sm font-semibold text-slate-800">{user?.role}</p>
+                  <p className="text-sm font-semibold text-slate-800">{loggedInUser?.role}</p>
               </div>
             </div>
           </div>
