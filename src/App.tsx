@@ -91,7 +91,7 @@ const canAccessView = (view: DashboardViewType, role?: string): boolean => {
 const MainLayout: React.FC = () => {
   const { isAuthenticated, loading, user } = useAuth();
   const [currentView, setCurrentView] = useState<DashboardViewType>(() => {
-    const saved = localStorage.getItem('context7_current_view');
+    const saved = localStorage.getItem('on3_current_view');
     return (saved as DashboardViewType) || 'OVERVIEW';
   });
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
@@ -100,7 +100,7 @@ const MainLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('context7_current_view', currentView);
+    localStorage.setItem('on3_current_view', currentView);
   }, [currentView]);
 
   if (loading) {

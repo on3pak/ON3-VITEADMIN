@@ -38,13 +38,13 @@ export const signMockToken = (data: { sub: string; username: string; role: UserR
     ...data,
     iat,
     exp,
-    iss: 'auth-context7-api'
+    iss: 'auth-on3-api'
   };
 
   const encodedHeader = base64Encode(JSON.stringify(header));
   const encodedPayload = base64Encode(JSON.stringify(payload));
   // Simulated signature using a static salt
-  const mockSignature = base64Encode(`hmac_secret_key_context7_${encodedHeader}.${encodedPayload}`);
+  const mockSignature = base64Encode(`hmac_secret_key_on3_${encodedHeader}.${encodedPayload}`);
 
   return `${encodedHeader}.${encodedPayload}.${mockSignature}`;
 };
@@ -80,7 +80,7 @@ export const verifyMockToken = (token: string): boolean => {
     }
 
     // Check issuer
-    if (payload.iss !== 'auth-context7-api') {
+    if (payload.iss !== 'auth-on3-api') {
       return false;
     }
 

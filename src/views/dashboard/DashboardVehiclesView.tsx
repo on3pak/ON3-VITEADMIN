@@ -16,6 +16,10 @@ const wcCityMap = Object.fromEntries(
   INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.cityId])
 );
 
+const wcNameMap = Object.fromEntries(
+  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.name])
+);
+
 export const DashboardVehiclesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { vehicles } = useVehicles();
@@ -206,7 +210,7 @@ export const DashboardVehiclesView: React.FC = () => {
               <div key={stat.center} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-slate-400" />
-                  <span className="text-sm text-slate-600">{stat.center}</span>
+                  <span className="text-sm text-slate-600">{wcNameMap[stat.center] || stat.center}</span>
                 </div>
                 <span className="text-sm font-semibold text-slate-800">{stat.count}</span>
               </div>

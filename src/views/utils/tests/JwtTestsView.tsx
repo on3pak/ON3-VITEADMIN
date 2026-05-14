@@ -13,7 +13,7 @@ export const JwtTestsView: React.FC = () => {
       status: 'IDLE',
       assertions: [
         'El campo exp es mayor que el timestamp actual (+1 hora)',
-        'El parámetro iss coincide exactamente con "auth-context7-api"',
+        'El parámetro iss coincide exactamente con "auth-on3-api"',
         'verifyMockToken retorna true ante el token generado'
       ]
     }

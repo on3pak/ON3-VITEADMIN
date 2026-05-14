@@ -19,12 +19,12 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   useEffect(() => {
     setWorkCenters(INITIAL_WORK_CENTERS);
-    localStorage.setItem('context7_mock_workcenters', JSON.stringify(INITIAL_WORK_CENTERS));
+    localStorage.setItem('on3_mock_workcenters', JSON.stringify(INITIAL_WORK_CENTERS));
   }, []);
 
   const saveToStorage = (updated: WorkCenter[]) => {
     setWorkCenters(updated);
-    localStorage.setItem('context7_mock_workcenters', JSON.stringify(updated));
+    localStorage.setItem('on3_mock_workcenters', JSON.stringify(updated));
   };
 
   const resetMockData = () => {

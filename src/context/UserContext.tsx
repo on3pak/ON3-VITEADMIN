@@ -20,12 +20,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Always load fresh INITIAL_USERS on mount (ignore stale localStorage)
   useEffect(() => {
     setUsers(INITIAL_USERS);
-    localStorage.setItem('context7_mock_users', JSON.stringify(INITIAL_USERS));
+    localStorage.setItem('on3_mock_users', JSON.stringify(INITIAL_USERS));
   }, []);
 
   const saveUsersToStorage = (updatedUsers: User[]) => {
     setUsers(updatedUsers);
-    localStorage.setItem('context7_mock_users', JSON.stringify(updatedUsers));
+    localStorage.setItem('on3_mock_users', JSON.stringify(updatedUsers));
   };
 
   const resetMockData = () => {

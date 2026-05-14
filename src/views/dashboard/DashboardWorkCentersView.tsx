@@ -45,7 +45,7 @@ export const DashboardWorkCentersView: React.FC = () => {
     { status: 'INACTIVE', label: 'Inactivos', count: countByStatus('INACTIVE'), color: 'slate' },
   ];
 
-  const recentCenters = [...workCenters]
+  const recentCenters = [...scopedWorkCenters]
     .sort((a, b) => a.name.localeCompare(b.name))
     .slice(0, 5);
 
