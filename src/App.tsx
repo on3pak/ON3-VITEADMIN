@@ -32,6 +32,7 @@ import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 import { LogsView } from './views/utils/logs/LogsView';
 import { UtilsView } from './views/utils/UtilsView';
 import { InventoryView } from './views/admin/inventory/InventoryView';
+import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
 import { InventoryProvider } from './context/InventoryContext';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
@@ -49,6 +50,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   SERVICES_DASHBOARD: '/dashboard/services',
   SERVICE_DETAIL: '/admin/services/:id',
   INVENTORY_CRUD: '/admin/inventory',
+  INVENTORY_DASHBOARD: '/dashboard/inventory',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -76,6 +78,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   SERVICES_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   SERVICE_DETAIL: ['ROOT', 'ADMIN'],
   INVENTORY_CRUD: ['ROOT', 'ADMIN'],
+  INVENTORY_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -209,6 +212,8 @@ const MainLayout: React.FC = () => {
         return <LogsView logType={currentView} />;
       case 'INVENTORY_CRUD':
         return <InventoryView />;
+      case 'INVENTORY_DASHBOARD':
+        return <DashboardInventoryView />;
       case 'UTILS':
         return <UtilsView />;
       default:

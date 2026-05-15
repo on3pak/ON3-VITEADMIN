@@ -56,7 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
       },
       {
         id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType,
-        label: 'Centros Trabajo',
+        label: 'Centros',
         icon: <Building2 className="h-5 w-5" />,
         description: 'Panel de centros',
       },
@@ -65,6 +65,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         label: 'Servicios',
         icon: <ClipboardList className="h-5 w-5" />,
         description: 'Panel de servicios',
+      },
+      {
+        id: 'INVENTORY_DASHBOARD' as DashboardViewType,
+        label: 'Inventario',
+        icon: <Package className="h-5 w-5" />,
+        description: 'Panel de inventario',
       },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [
@@ -91,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
       },
       {
         id: 'WORK_CENTERS_CRUD' as DashboardViewType,
-        label: 'Centros Trabajo',
+        label: 'Gestión Centros',
         icon: <Building2 className="h-5 w-5" />,
         description: 'CRUD de centros',
         disabled: !canAccessUserCrud(user?.role),
