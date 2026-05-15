@@ -2,18 +2,10 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
 import {
-  LayoutDashboard, 
-  Users, 
-  UserSquare,
-  ShieldCheck, 
-  LogOut, 
-  KeyRound, 
-  Lock,
-  Truck,
-  Briefcase,
-  Building2,
-  ClipboardList,
-  Package,
+  LayoutDashboard, Users, UserSquare,
+  ShieldCheck, LogOut, KeyRound, Lock,
+  Truck, Briefcase, Building2, ClipboardList, Package,
+  UserCircle,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -71,6 +63,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         label: 'Inventario',
         icon: <Package className="h-5 w-5" />,
         description: 'Panel de inventario',
+      },
+      {
+        id: 'PROFILE' as DashboardViewType,
+        label: 'Mi Perfil',
+        icon: <UserCircle className="h-5 w-5" />,
+        description: 'Información personal',
       },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [

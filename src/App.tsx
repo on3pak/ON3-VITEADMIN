@@ -33,6 +33,7 @@ import { LogsView } from './views/utils/logs/LogsView';
 import { UtilsView } from './views/utils/UtilsView';
 import { InventoryView } from './views/admin/inventory/InventoryView';
 import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
+import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
 import { InventoryProvider } from './context/InventoryContext';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
@@ -51,6 +52,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   SERVICE_DETAIL: '/admin/services/:id',
   INVENTORY_CRUD: '/admin/inventory',
   INVENTORY_DASHBOARD: '/dashboard/inventory',
+  PROFILE: '/profile',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -79,6 +81,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   SERVICE_DETAIL: ['ROOT', 'ADMIN'],
   INVENTORY_CRUD: ['ROOT', 'ADMIN'],
   INVENTORY_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
+  PROFILE: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -214,6 +217,8 @@ const MainLayout: React.FC = () => {
         return <InventoryView />;
       case 'INVENTORY_DASHBOARD':
         return <DashboardInventoryView />;
+      case 'PROFILE':
+        return <DashboardProfileView />;
       case 'UTILS':
         return <UtilsView />;
       default:
