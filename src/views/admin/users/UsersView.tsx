@@ -14,7 +14,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 export const UsersView: React.FC = () => {
@@ -29,6 +31,8 @@ export const UsersView: React.FC = () => {
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<User | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ rol: false, estado: false });
+  const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
   React.useEffect(() => {
     setCurrentPage(1);
@@ -367,64 +371,40 @@ export const UsersView: React.FC = () => {
       </div>
         </div>
 
-        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Rol</h3>
-            <div className="space-y-1">
-              <button
-                onClick={() => setRoleFilter('ALL')}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                  roleFilter === 'ALL'
-                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                Todos los Roles
-              </button>
+        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
+          {(() => { const o = openSections.rol; return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('rol')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+              Rol
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+            </button>
+            {o && (
+            <div className="px-4 pb-3 space-y-1">
+              <button onClick={() => setRoleFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Roles</button>
               {(['ROOT', 'ADMIN', 'MANAGER', 'USER'] as const).map((role) => (
-                <button
-                  key={role}
-                  onClick={() => setRoleFilter(role)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                    roleFilter === role
-                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  {role}
-                </button>
+                <button key={role} onClick={() => setRoleFilter(role)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === role ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{role}</button>
               ))}
             </div>
+            )}
           </div>
+          )})()}
 
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado</h3>
-            <div className="space-y-1">
-              <button
-                onClick={() => setStatusFilter('ALL')}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                  statusFilter === 'ALL'
-                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                Todos los Estados
-              </button>
+          {(() => { const o = openSections.estado; return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+              Estado
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+            </button>
+            {o && (
+            <div className="px-4 pb-3 space-y-1">
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Estados</button>
               {(['ACTIVE', 'INACTIVE'] as const).map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setStatusFilter(status)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                    statusFilter === status
-                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  {status === 'ACTIVE' ? 'Activos' : 'Inactivos'}
-                </button>
+                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
               ))}
             </div>
+            )}
           </div>
+          )})()}
         </div>
       </div>
 

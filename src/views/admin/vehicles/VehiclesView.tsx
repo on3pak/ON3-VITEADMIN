@@ -8,7 +8,7 @@ import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Vehicle, VehicleOverview, VehicleType } from '../../types';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
-  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Truck,
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp, Truck,
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
@@ -41,6 +41,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const [workCenterFilter, setWorkCenterFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ centros: false, estado: false });
+  const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
@@ -250,64 +252,40 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
           </div>
         </div>
 
-        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Centros de Trabajo</h3>
-            <div className="space-y-1">
-              <button
-                onClick={() => setWorkCenterFilter('ALL')}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                  workCenterFilter === 'ALL'
-                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                Todos los Centros
-              </button>
+        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
+          {(() => { const o = openSections.centros; return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+              Centros de Trabajo
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+            </button>
+            {o && (
+            <div className="px-4 pb-3 space-y-1">
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button
-                  key={wc.id}
-                  onClick={() => setWorkCenterFilter(wc.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                    workCenterFilter === wc.id
-                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  {wc.name}
-                </button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{wc.name}</button>
               ))}
             </div>
+            )}
           </div>
+          )})()}
 
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-4">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado</h3>
-            <div className="space-y-1">
-              <button
-                onClick={() => setStatusFilter('ALL')}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                  statusFilter === 'ALL'
-                    ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                Todos los Estados
-              </button>
+          {(() => { const o = openSections.estado; return (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+              Estado
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+            </button>
+            {o && (
+            <div className="px-4 pb-3 space-y-1">
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Estados</button>
               {['ACTIVO', 'MANTENIMIENTO', 'AVERIADO', 'BAJA'].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                    statusFilter === s
-                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  {s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}
-                </button>
+                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}</button>
               ))}
             </div>
+            )}
           </div>
+          )})()}
         </div>
       </div>
 
