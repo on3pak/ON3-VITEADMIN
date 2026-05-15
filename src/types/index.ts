@@ -7,3 +7,4 @@ export * from './city';
 export * from './workCenter';
 export * from './vehicle';
 export * from './service';
+export * from './inventory';

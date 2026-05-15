@@ -333,3 +333,16 @@ const scopedData = useMemo(
 // Para WorkCenter -> filter(w => w.cityId === userCityId)
 // Para User     -> filter(u => u.cityId === userCityId)
 ```
+
+---
+
+## Mock Data: Cantidad mínima de ejemplos
+
+Toda entidad CRUD debe incluir **al menos 12 ejemplos** en su `INITIAL_` para poder probar la paginación (10/25/50 ítems por página). Si la entidad tiene tabs o categorías, cada tab debe tener al menos 12 ejemplos propios.
+
+```typescript
+// Ejemplo: contar items por categoría
+const ropaCount = INITIAL_INVENTORY.filter(i => i.category === 'ropa').length; // ≥ 12
+const epiCount = INITIAL_INVENTORY.filter(i => i.category === 'epi').length;    // ≥ 12
+const maqCount = INITIAL_INVENTORY.filter(i => i.category === 'maquinaria').length; // ≥ 12
+```

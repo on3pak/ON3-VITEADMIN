@@ -11,7 +11,7 @@ export const INITIAL_WORK_CENTERS: WorkCenter[] = [
   { id: 'wc-6', name: 'Divino Valles', address: 'Calle Divino Valles 7', city_id: 'city-1', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
   { id: 'wc-7', name: 'Taller', address: 'Polígono Industrial 12', city_id: 'city-1', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
   { id: 'wc-8', name: 'Oficinas', address: 'Calle Administración 1', city_id: 'city-1', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
-  { id: 'wc-9', name: 'Almacén', address: 'Av. Logística 55', city_id: 'city-1', status: 'INACTIVE', created_at: NOW, updated_at: NOW },
+  { id: 'wc-9', name: 'Almacén', address: 'Av. Logística 55', city_id: 'city-1', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
 
   { id: 'wc-11', name: 'Centro01', address: 'Av. Henares 100', city_id: 'city-2', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
   { id: 'wc-12', name: 'Centro02', address: 'Calle Innovación 5', city_id: 'city-2', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
@@ -23,6 +23,7 @@ export const INITIAL_WORK_CENTERS: WorkCenter[] = [
   { id: 'wc-18', name: 'Centro08', address: 'Calle Comercio 8', city_id: 'city-2', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
   { id: 'wc-19', name: 'Centro09', address: 'Calle Norte 33', city_id: 'city-2', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
   { id: 'wc-20', name: 'Centro10', address: 'Calle Clavín 17', city_id: 'city-2', status: 'INACTIVE', created_at: NOW, updated_at: NOW },
+  { id: 'wc-21', name: 'Almacén Sur', address: 'Polígono Industrial Sur 1', city_id: 'city-2', status: 'ACTIVE', created_at: NOW, updated_at: NOW },
 ];
 
 export const INITIAL_WORK_CENTER_STATUSES = ['ACTIVE', 'INACTIVE'] as const;

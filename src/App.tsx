@@ -20,6 +20,7 @@ import { WorkCenterProvider } from './context/WorkCenterContext';
 import { ServiceProvider } from './context/ServiceContext';
 import { WorkCentersView } from './views/admin/workCenters/WorkCentersView';
 import { DashboardWorkCentersView } from './views/dashboard/DashboardWorkCentersView';
+import { DashboardServicesView } from './views/dashboard/DashboardServicesView';
 import { ServicesView } from './views/admin/services/ServicesView';
 import { ServicesDetailView } from './views/admin/services/ServicesDetailView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
@@ -30,6 +31,8 @@ import { RbacTestsView } from './views/utils/tests/RbacTestsView';
 import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 import { LogsView } from './views/utils/logs/LogsView';
 import { UtilsView } from './views/utils/UtilsView';
+import { InventoryView } from './views/admin/inventory/InventoryView';
+import { InventoryProvider } from './context/InventoryContext';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
   USER_DASHBOARD: '/',
@@ -45,6 +48,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   SERVICES_CRUD: '/admin/services',
   SERVICES_DASHBOARD: '/dashboard/services',
   SERVICE_DETAIL: '/admin/services/:id',
+  INVENTORY_CRUD: '/admin/inventory',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -71,6 +75,7 @@ const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   SERVICES_CRUD: ['ROOT', 'ADMIN'],
   SERVICES_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   SERVICE_DETAIL: ['ROOT', 'ADMIN'],
+  INVENTORY_CRUD: ['ROOT', 'ADMIN'],
   TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
   TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -170,7 +175,7 @@ const MainLayout: React.FC = () => {
       case 'SERVICES_CRUD':
         return <ServicesView onViewService={(id) => handleViewChange('SERVICE_DETAIL', id)} />;
       case 'SERVICES_DASHBOARD':
-        return <DashboardWorkCentersView />;
+        return <DashboardServicesView />;
       case 'SERVICE_DETAIL':
         return selectedServiceId ? (
           <ServicesDetailView serviceId={selectedServiceId} onBack={() => setCurrentView('SERVICES_CRUD')} />
@@ -202,6 +207,8 @@ const MainLayout: React.FC = () => {
       case 'LOGS_USERS':
       case 'LOGS_EMPLOYEES':
         return <LogsView logType={currentView} />;
+      case 'INVENTORY_CRUD':
+        return <InventoryView />;
       case 'UTILS':
         return <UtilsView />;
       default:
@@ -237,8 +244,10 @@ export default function App() {
           <VehicleProvider>
             <WorkCenterProvider>
             <ServiceProvider>
+              <InventoryProvider>
               <MainLayout />
             <Toast />
+              </InventoryProvider>
             </ServiceProvider>
             </WorkCenterProvider>
           </VehicleProvider>

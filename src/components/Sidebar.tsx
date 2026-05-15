@@ -13,6 +13,7 @@ import {
   Briefcase,
   Building2,
   ClipboardList,
+  Package,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -100,6 +101,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         label: 'Gestión Servicios',
         icon: <ClipboardList className="h-5 w-5" />,
         description: 'CRUD de servicios',
+        disabled: !canAccessUserCrud(user?.role),
+      },
+      {
+        id: 'INVENTORY_CRUD' as DashboardViewType,
+        label: 'Gestión Inventario',
+        icon: <Package className="h-5 w-5" />,
+        description: 'Ropa, EPIs y Maquinaria',
         disabled: !canAccessUserCrud(user?.role),
       },
     ] : [],
