@@ -105,17 +105,20 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
           <span className="hidden sm:inline">Reiniciar DB</span>
         </button>
 
-        <div className="flex items-center gap-2 border-l border-slate-200 pl-2 sm:pl-4">
+        <button
+          onClick={() => setCurrentView('PROFILE')}
+          className="flex items-center gap-2 border-l border-slate-200 pl-2 sm:pl-4 hover:bg-indigo-50 hover:border-indigo-200 pr-2 sm:pr-3 rounded-xl transition-all group cursor-pointer"
+        >
           <div className="text-right hidden lg:block">
-            <p className="text-xs font-bold text-slate-800 leading-tight">{user?.full_name}</p>
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold font-mono text-right">{user?.role}</p>
+            <p className="text-xs font-bold text-slate-800 group-hover:text-indigo-700 leading-tight transition-colors">{user?.full_name}</p>
+            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold font-mono text-right group-hover:text-indigo-500 transition-colors">{user?.role}</p>
           </div>
-          <div className="p-0.5 rounded-lg bg-slate-100 border border-slate-200">
-            <div className="h-7 w-7 rounded-md bg-indigo-50 flex items-center justify-between text-indigo-700 font-bold text-xs p-1">
+          <div className="p-0.5 rounded-lg bg-slate-100 border border-slate-200 group-hover:bg-indigo-100 group-hover:border-indigo-300 transition-all">
+            <div className="h-7 w-7 rounded-md bg-indigo-50 flex items-center justify-between text-indigo-700 font-bold text-xs p-1 group-hover:bg-indigo-100 transition-colors">
               <Shield className="h-full w-full" />
             </div>
           </div>
-        </div>
+        </button>
       </div>
     </header>
   );

@@ -5,7 +5,6 @@ import {
   LayoutDashboard, Users, UserSquare,
   ShieldCheck, LogOut, KeyRound, Lock,
   Truck, Briefcase, Building2, ClipboardList, Package,
-  UserCircle,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -63,12 +62,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         label: 'Inventario',
         icon: <Package className="h-5 w-5" />,
         description: 'Panel de inventario',
-      },
-      {
-        id: 'PROFILE' as DashboardViewType,
-        label: 'Mi Perfil',
-        icon: <UserCircle className="h-5 w-5" />,
-        description: 'Información personal',
       },
     ],
     ADMIN: canSeeUserCrud(user?.role) ? [
@@ -161,21 +154,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
 
         {/* User Widget */}
         {user && (
-          <div className="p-4 border-b border-slate-800/60 bg-slate-950/20 flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => { setView('PROFILE'); setSidebarOpen?.(false); }}
+            className="w-full text-left p-4 border-b border-slate-800/60 bg-slate-950/20 flex items-center gap-3 shrink-0 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all group relative"
+          >
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-0 rounded-full group-hover:h-8 group-hover:bg-indigo-400/50 transition-all duration-300" />
             <img 
               src={user.avatar_url} 
               alt={user.full_name} 
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 p-0.5 shadow-sm shrink-0"
+              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 p-0.5 shadow-sm shrink-0 group-hover:border-indigo-500/50 transition-colors"
             />
             <div className="flex-1 min-w-0 lg:hidden xl:block">
-              <h3 className="text-sm font-semibold text-white truncate">{user.full_name}</h3>
-              <p className="text-xs text-slate-400 truncate">@{user.username}</p>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border mt-1 ${getRoleBadgeStyle(user.role)}`}>
+              <h3 className="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">{user.full_name}</h3>
+              <p className="text-xs text-slate-400 truncate group-hover:text-indigo-400/70 transition-colors">@{user.username}</p>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border mt-1 group-hover:border-indigo-500/40 transition-colors ${getRoleBadgeStyle(user.role)}`}>
                 <KeyRound className="h-2.5 w-2.5 mr-1 inline" />
                 {user.role}
               </span>
             </div>
-          </div>
+          </button>
         )}
 
         {/* Navigation Links */}

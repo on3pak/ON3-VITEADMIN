@@ -7,8 +7,8 @@ import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
   User, Shield, Mail, Calendar, MapPin, Briefcase,
   Building2, Phone, Smartphone, Palette, Bell, Globe,
-  Moon, Sun, Edit3, CheckCircle, Clock, Tag, Hash,
-  FileText, CreditCard, TrendingUp, AlertCircle, Award,
+  Edit3, CheckCircle, Clock, Tag, Hash,
+  FileText, CreditCard, TrendingUp, AlertCircle, Award, ShieldAlert,
 } from 'lucide-react';
 
 const cityMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
@@ -74,7 +74,9 @@ export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { employees, createEmployee, updateEmployee } = useEmployees();
 
-  const [activeTab, setActiveTab] = useState<'perfil' | 'empleado' | 'ajustes'>('perfil');
+  const isReadOnly = loggedInUser?.role === 'USER';
+
+  const [activeTab, setActiveTab] = useState<'perfil' | 'ajustes'>('perfil');
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [prefs, setPrefs] = useState<Prefs>(() => {
     const saved = localStorage.getItem('on3_profile_prefs');
@@ -89,6 +91,7 @@ export const DashboardProfileView: React.FC = () => {
   );
 
   const handleEmployeeSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
+    if (isReadOnly) return false;
     if (myEmployee) {
       updateEmployee(myEmployee.id, data);
     } else if (loggedInUser) {
@@ -100,12 +103,17 @@ export const DashboardProfileView: React.FC = () => {
 
   const tabs = [
     { value: 'perfil' as const, label: 'Mi Perfil', icon: <User className="h-4 w-4" /> },
-    { value: 'empleado' as const, label: 'Datos Laborales', icon: <Briefcase className="h-4 w-4" /> },
     { value: 'ajustes' as const, label: 'Preferencias', icon: <Palette className="h-4 w-4" /> },
   ];
 
   return (
     <div className="space-y-5">
+      {isReadOnly && (
+        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
+          <ShieldAlert className="h-4 w-4 text-amber-600 shrink-0" />
+          <span><span className="font-bold">Modo Consulta:</span> Tu rol es <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">USER</span>. Los datos se muestran en modo solo lectura.</span>
+        </div>
+      )}
       <div className="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto">
         {tabs.map((tab) => (
           <button
@@ -121,44 +129,42 @@ export const DashboardProfileView: React.FC = () => {
       </div>
 
       {activeTab === 'perfil' && loggedInUser && (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 text-center lg:col-span-1">
-            <div className="relative inline-block">
-              <img src={loggedInUser.avatar_url} alt={loggedInUser.full_name} className="w-24 h-24 rounded-2xl bg-slate-100 border border-slate-200 mx-auto" />
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
-            </div>
-            <h2 className="text-lg font-bold text-slate-800 mt-3">{loggedInUser.full_name}</h2>
-            <p className="text-xs text-slate-500">@{loggedInUser.username}</p>
-            <div className="flex justify-center mt-3">
-              <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${ROLE_STYLE[loggedInUser.role]}`}>
-                <Shield className="h-3 w-3" /> {loggedInUser.role}
-              </span>
-            </div>
-            <div className="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-500">
-              Miembro desde {formatDate(loggedInUser.created_at)}
-            </div>
-          </div>
-
-          <div className="lg:col-span-3 space-y-5">
-            <SectionCard icon={<User className="h-4 w-4" />} title="Información General">
-              <InfoRow icon={<Mail className="h-3.5 w-3.5" />} label="Email" value={loggedInUser.email} />
-              <InfoRow icon={<Hash className="h-3.5 w-3.5" />} label="Usuario" value={loggedInUser.username} />
-              <InfoRow icon={<Shield className="h-3.5 w-3.5" />} label="Rol" value={loggedInUser.role} />
-              <InfoRow icon={<AlertCircle className="h-3.5 w-3.5" />} label="Estado" value={
-                <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border ${loggedInUser.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
-                  {loggedInUser.status === 'ACTIVE' ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
-                  {loggedInUser.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 text-center lg:col-span-1">
+              <div className="relative inline-block">
+                <img src={loggedInUser.avatar_url} alt={loggedInUser.full_name} className="w-24 h-24 rounded-2xl bg-slate-100 border border-slate-200 mx-auto" />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
+              </div>
+              <h2 className="text-lg font-bold text-slate-800 mt-3">{loggedInUser.full_name}</h2>
+              <p className="text-xs text-slate-500">@{loggedInUser.username}</p>
+              <div className="flex justify-center mt-3">
+                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${ROLE_STYLE[loggedInUser.role]}`}>
+                  <Shield className="h-3 w-3" /> {loggedInUser.role}
                 </span>
-              } />
-              <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Registro" value={formatDate(loggedInUser.created_at)} />
-              <InfoRow icon={<MapPin className="h-3.5 w-3.5" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || 'Sin asignar'} />
-            </SectionCard>
-          </div>
-        </div>
-      )}
+              </div>
+              <div className="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-500">
+                Miembro desde {formatDate(loggedInUser.created_at)}
+              </div>
+            </div>
 
-      {activeTab === 'empleado' && (
-        <div>
+            <div className="lg:col-span-3 space-y-5">
+              <SectionCard icon={<User className="h-4 w-4" />} title="Información General">
+                <InfoRow icon={<Mail className="h-3.5 w-3.5" />} label="Email" value={loggedInUser.email} />
+                <InfoRow icon={<Hash className="h-3.5 w-3.5" />} label="Usuario" value={loggedInUser.username} />
+                <InfoRow icon={<Shield className="h-3.5 w-3.5" />} label="Rol" value={loggedInUser.role} />
+                <InfoRow icon={<AlertCircle className="h-3.5 w-3.5" />} label="Estado" value={
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border ${loggedInUser.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                    {loggedInUser.status === 'ACTIVE' ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                    {loggedInUser.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+                  </span>
+                } />
+                <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Registro" value={formatDate(loggedInUser.created_at)} />
+                <InfoRow icon={<MapPin className="h-3.5 w-3.5" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || 'Sin asignar'} />
+              </SectionCard>
+            </div>
+          </div>
+
           {myEmployee ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <SectionCard icon={<User className="h-4 w-4" />} title="Datos Personales" subtitle="Información del empleado">
@@ -198,11 +204,13 @@ export const DashboardProfileView: React.FC = () => {
                 <InfoRow icon={<CheckCircle className="h-3.5 w-3.5" />} label="Reconocimiento" value={myEmployee.medical_check ? 'Realizado' : 'Pendiente'} />
               </SectionCard>
 
+              {!isReadOnly && (
               <div className="lg:col-span-2 flex justify-end">
                 <button onClick={() => setEmployeeModalOpen(true)} className="flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-xs">
                   <Edit3 className="h-4 w-4" /> Editar Ficha de Empleado
                 </button>
               </div>
+              )}
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-12 text-center">
@@ -211,9 +219,11 @@ export const DashboardProfileView: React.FC = () => {
               </div>
               <h3 className="text-base font-semibold text-slate-700">Sin ficha de empleado</h3>
               <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">Tu cuenta de usuario no tiene un registro de empleado asociado. Crea uno para gestionar tus datos laborales.</p>
+              {!isReadOnly && (
               <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-5 py-2.5 mt-5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-xs">
                 <Briefcase className="h-4 w-4" /> Crear Ficha de Empleado
               </button>
+              )}
             </div>
           )}
         </div>
