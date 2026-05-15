@@ -63,7 +63,7 @@ function generateTasks(serviceId: string): ServiceTask[] {
   return tasks;
 }
 
-export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService }) => {
+export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService, workCenters }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('BARRIDO MIXTO');
   const [work_center_id, setWork_center_id] = useState('wc-1');
@@ -160,7 +160,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
             <label className="block text-xs font-semibold text-slate-600 mb-1">Centro de Trabajo *</label>
             <select
               value={work_center_id}
-              onChange={(e) => setWorkCenterId(e.target.value)}
+              onChange={(e) => setWork_center_id(e.target.value)}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
             >
               {(workCenters ?? INITIAL_WORK_CENTERS).map((wc) => (
