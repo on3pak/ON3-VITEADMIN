@@ -155,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
             </button>
 
             {userDropdownOpen && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-white rounded-xl shadow-lg border border-app-border py-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <div className="absolute left-full bottom-0 ml-2 w-56 bg-white rounded-xl shadow-lg border border-app-border py-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
                 <div className="px-4 py-2.5 border-b border-app-border">
                   <p className="text-sm font-semibold text-app-text">{user?.full_name}</p>
                   <p className="text-xs text-app-text-secondary">@{user?.username}</p>
