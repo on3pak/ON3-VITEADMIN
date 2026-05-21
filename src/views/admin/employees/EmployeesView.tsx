@@ -232,13 +232,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             </tbody>
           </table>
         </div>
-        <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-app-text-secondary">
+        <div className="bg-app-card border-t border-app-card-border flex items-center justify-between px-5 py-3.5">
+          <div className="flex items-center gap-2 text-sm text-app-text-secondary">
             <span>Mostrar</span>
             <select
               value={s.ipp}
               onChange={(e) => { s.setIpp(Number(e.target.value)); s.setPage(1); }}
-              className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
+              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -247,11 +247,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             <span>por página</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-xs text-app-text-secondary mr-2">Página {s.totalPages > 0 ? s.page : 0} de {s.totalPages}</span>
-            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.min(s.totalPages, p + 1))} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage(s.totalPages)} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+            <span className="text-xs text-app-text-secondary mr-3">Página {s.totalPages > 0 ? s.page : 0} de {s.totalPages}</span>
+            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.min(s.totalPages, p + 1))} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage(s.totalPages)} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
           </div>
         </div>
       </div>
@@ -319,29 +319,6 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         </div>
       )}
 
-      <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
-        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
-          <User className="h-4 w-4" /> Empleados
-        </button>
-        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
-          <Tags className="h-4 w-4" /> Categorías
-        </button>
-        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
-          <HeartPulse className="h-4 w-4" /> Estados
-        </button>
-        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
-          <CalendarDays className="h-4 w-4" /> Jornadas
-        </button>
-        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
-          <Clock className="h-4 w-4" /> Turnos
-        </button>
-        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
-          <FileText className="h-4 w-4" /> Contratos
-        </button>
-      </div>
-
-      {activeTab === 'employees' && (
-        <>
       <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
@@ -405,6 +382,30 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           </button>
         </div>
       </div>
+
+      <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
+        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+          <User className="h-4 w-4" /> Empleados
+        </button>
+        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+          <Tags className="h-4 w-4" /> Categorías
+        </button>
+        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+          <HeartPulse className="h-4 w-4" /> Estados
+        </button>
+        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+          <CalendarDays className="h-4 w-4" /> Jornadas
+        </button>
+        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+          <Clock className="h-4 w-4" /> Turnos
+        </button>
+        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+          <FileText className="h-4 w-4" /> Contratos
+        </button>
+      </div>
+
+      {activeTab === 'employees' && (
+        <>
 
       <div className="flex gap-5">
         <div className="flex-1">
@@ -480,13 +481,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                 </tbody>
               </table>
             </div>
-            <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-app-text-secondary">
+            <div className="bg-app-card border-t border-app-card-border flex items-center justify-between px-5 py-3.5">
+              <div className="flex items-center gap-2 text-sm text-app-text-secondary">
                 <span>Mostrar</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -496,11 +497,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               </div>
 
               <div className="flex items-center gap-1">
-                <span className="text-xs text-app-text-secondary mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+                <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>

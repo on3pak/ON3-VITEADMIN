@@ -227,7 +227,7 @@ const MainLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg text-app-text font-sans antialiased flex">
+    <div className="min-h-screen bg-[#f8f9fc] text-app-text font-sans antialiased flex">
       <Sidebar 
         currentView={currentView} 
         setView={handleViewChange} 
@@ -235,13 +235,35 @@ const MainLayout: React.FC = () => {
         setSidebarOpen={setSidebarOpen} 
       />
 
-      <div className="flex-1 flex flex-col min-w-0 lg:ml-[280px] transition-all duration-300">
-        <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <div className="flex flex-col grow lg:ms-[290px] min-h-screen">
+        {/* Mobile spacer for fixed header */}
+        <div className="h-16 lg:hidden" />
 
-        <main className="flex-1 overflow-y-auto w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {renderContent()}
-        </main>
+        {/* Main Content Card (Metronic-style) */}
+        <div className="flex grow rounded-xl bg-white border border-app-border lg:mt-5 mx-5 mb-5">
+          <div className="flex flex-col grow overflow-y-auto pt-5" id="scrollable_content">
+            <main className="grow">
+              {/* Toolbar */}
+              <div className="px-5">
+                <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+              </div>
+
+              {/* Page Content */}
+              <div className="px-5 pb-5">
+                {renderContent()}
+              </div>
+            </main>
+
+            {/* Footer */}
+            <footer className="flex items-center justify-between px-5 py-3 border-t border-app-border text-xs text-app-text-secondary">
+              <span>ON3ADMIN &copy; {new Date().getFullYear()}</span>
+              <span className="font-mono">v1.0.0</span>
+            </footer>
+          </div>
+        </div>
       </div>
+
+      <Toast />
     </div>
   );
 };
@@ -256,7 +278,6 @@ export default function App() {
             <ServiceProvider>
               <InventoryProvider>
               <MainLayout />
-            <Toast />
               </InventoryProvider>
             </ServiceProvider>
             </WorkCenterProvider>

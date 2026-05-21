@@ -243,13 +243,13 @@ export const WorkCentersView: React.FC = () => {
               </table>
             </div>
 
-            <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-app-text-secondary">
+            <div className="bg-app-card border-t border-app-card-border flex items-center justify-between px-5 py-3.5">
+              <div className="flex items-center gap-2 text-sm text-app-text-secondary">
                 <span>Mostrar</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -259,19 +259,11 @@ export const WorkCentersView: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-1">
-                <span className="text-xs text-app-text-secondary mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40" title="Primera página">
-                  <ChevronsLeft className="h-4 w-4" />
-                </button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40" title="Página anterior">
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40" title="Página siguiente">
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40" title="Última página">
-                  <ChevronsRight className="h-4 w-4" />
-                </button>
+                <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>

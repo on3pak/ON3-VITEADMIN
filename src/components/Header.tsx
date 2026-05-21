@@ -1,9 +1,8 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useUsers } from '../context/UserContext';
-import { useEmployees } from '../context/EmployeeContext';
 import { DashboardViewType } from '../types';
-import { RefreshCw, Shield, Wrench, Menu } from 'lucide-react';
+import { RefreshCw, Wrench, Menu, Search } from 'lucide-react';
+import { useUsers } from '../context/UserContext';
 
 interface HeaderProps {
   currentView: DashboardViewType;
@@ -12,112 +11,118 @@ interface HeaderProps {
   setSidebarOpen?: (open: boolean) => void;
 }
 
+const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string; section?: string }> = {
+  USER_DASHBOARD: { title: 'Usuarios', parent: 'Dashboard' },
+  EMPLOYEE_DASHBOARD: { title: 'Empleados', parent: 'Dashboard' },
+  VEHICLE_DASHBOARD: { title: 'Vehículos', parent: 'Dashboard' },
+  USERS_CRUD: { title: 'Usuarios', parent: 'Administración' },
+  EMPLOYEES_CRUD: { title: 'Empleados', parent: 'Administración' },
+  EMPLOYEE_DETAIL: { title: 'Detalle', parent: 'Empleados' },
+  VEHICLES_CRUD: { title: 'Vehículos', parent: 'Administración' },
+  VEHICLE_DETAIL: { title: 'Detalle', parent: 'Vehículos' },
+  WORK_CENTERS_CRUD: { title: 'Centros', parent: 'Administración' },
+  WORK_CENTERS_DASHBOARD: { title: 'Centros', parent: 'Dashboard' },
+  SERVICES_CRUD: { title: 'Servicios', parent: 'Administración' },
+  SERVICES_DASHBOARD: { title: 'Servicios', parent: 'Dashboard' },
+  SERVICE_DETAIL: { title: 'Detalle', parent: 'Servicios' },
+  INVENTORY_CRUD: { title: 'Inventario', parent: 'Administración' },
+  INVENTORY_DASHBOARD: { title: 'Dashboard', section: 'Inventario' },
+  PROFILE: { title: 'Mi Perfil' },
+  UTILS: { title: 'Utilidades' },
+  LOGS_AUTH: { title: 'Logs Auth', parent: 'Utilidades' },
+  LOGS_LOGOUT: { title: 'Logs Logout', parent: 'Utilidades' },
+  LOGS_USERS: { title: 'Logs Usuarios', parent: 'Utilidades' },
+  LOGS_EMPLOYEES: { title: 'Logs Empleados', parent: 'Utilidades' },
+  TESTS_AUTH: { title: 'Tests Auth', parent: 'Utilidades' },
+  TESTS_JWT: { title: 'Tests JWT', parent: 'Utilidades' },
+  TESTS_CRUD: { title: 'Tests CRUD', parent: 'Utilidades' },
+  TESTS_RBAC: { title: 'Tests RBAC', parent: 'Utilidades' },
+  TESTS_ROLES: { title: 'Tests Roles', parent: 'Utilidades' },
+};
+
 export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sidebarOpen, setSidebarOpen }) => {
-  const { user, token } = useAuth();
-  const { resetMockData, users } = useUsers();
-  const { employees } = useEmployees();
+  const { user, triggerToast } = useAuth();
+  const { resetMockData } = useUsers();
 
-  const getViewInfo = (view: DashboardViewType) => {
-    switch (view) {
-      case 'USER_DASHBOARD':
-        return { title: 'Dashboard de Usuarios', subtitle: 'Resumen y estadísticas del sistema' };
-      case 'EMPLOYEE_DASHBOARD':
-        return { title: 'Dashboard de Empleados', subtitle: 'Estadísticas y métricas de personal' };
-      case 'VEHICLE_DASHBOARD':
-        return { title: 'Dashboard de Vehículos', subtitle: 'Resumen de flota vehicular' };
-      case 'USERS_CRUD':
-        return { title: 'Gestión de Usuarios', subtitle: 'Crear, editar y eliminar cuentas' };
-      case 'EMPLOYEES_CRUD':
-        return { title: 'Gestión de Empleados', subtitle: 'Alta, modificación y listado de empleados' };
-      case 'EMPLOYEE_DETAIL':
-        return { title: 'Detalle de Empleado', subtitle: 'Información completa del empleado' };
-      case 'VEHICLES_CRUD':
-        return { title: 'Gestión de Vehículos', subtitle: 'Alta, modificación y listado de vehículos' };
-      case 'VEHICLE_DETAIL':
-        return { title: 'Detalle de Vehículo', subtitle: 'Información completa del vehículo' };
-      case 'WORK_CENTERS_CRUD':
-        return { title: 'Gestión de Centros de Trabajo', subtitle: 'Alta, modificación y listado de centros' };
-      case 'WORK_CENTERS_DASHBOARD':
-        return { title: 'Dashboard de Centros de Trabajo', subtitle: 'Resumen y estadísticas de centros' };
-      case 'SERVICES_CRUD':
-        return { title: 'Gestión de Servicios', subtitle: 'Alta, modificación y listado de servicios' };
-      case 'SERVICES_DASHBOARD':
-        return { title: 'Dashboard de Servicios', subtitle: 'Resumen y estadísticas de servicios' };
-      case 'SERVICE_DETAIL':
-        return { title: 'Detalle de Servicio', subtitle: 'Tareas semanales del servicio' };
-      case 'INVENTORY_CRUD':
-        return { title: 'Gestión de Inventario', subtitle: 'Ropa, EPIs y Maquinaria' };
-      case 'INVENTORY_DASHBOARD':
-        return { title: 'Dashboard de Inventario', subtitle: 'Resumen y estadísticas de inventario' };
-      case 'PROFILE':
-        return { title: 'Mi Perfil', subtitle: 'Información personal y ajustes' };
-      case 'LOGS_AUTH':
-        return { title: 'Logs de Auth', subtitle: 'Registro de autenticaciones' };
-      case 'LOGS_LOGOUT':
-        return { title: 'Logs de Logout', subtitle: 'Registro de cierres de sesión' };
-      case 'LOGS_USERS':
-        return { title: 'Logs de Usuarios', subtitle: 'Registro de usuarios' };
-      case 'LOGS_EMPLOYEES':
-        return { title: 'Logs de Empleados', subtitle: 'Registro de empleados' };
-      case 'UTILS':
-        return { title: 'Utilidades', subtitle: 'Logs y herramientas de desarrollo' };
-      default:
-        return { title: 'Panel de Control', subtitle: 'Resumen del sistema' };
-    }
-  };
-
-  const viewInfo = getViewInfo(currentView);
+  const info = viewBreadcrumb[currentView] || { title: 'Panel de Control' };
 
   return (
-    <header className="bg-white border-b border-app-border h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-20">
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => setSidebarOpen?.(!sidebarOpen)}
-          className="lg:hidden p-2 -ml-2 text-app-text-secondary hover:text-app-text hover:bg-app-bg rounded-lg transition-colors"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <div>
-          <h2 className="text-base sm:text-lg font-bold text-app-text tracking-tight">
-            {viewInfo.title}
-          </h2>
-          <p className="text-xs text-app-text-secondary hidden sm:block">{viewInfo.subtitle}</p>
+    <>
+      {/* Mobile Header (lg:hidden) */}
+      <header className="flex lg:hidden items-center fixed z-10 top-0 start-0 end-0 shrink-0 bg-[#f8f9fc] h-16 border-b border-app-border">
+        <div className="flex items-center justify-between w-full px-4">
+          <a className="cursor-pointer">
+            <div className="flex items-center gap-1.5">
+              <div className="size-8 rounded-md bg-primary-500 flex items-center justify-center">
+                <span className="text-white font-bold text-xs">O3</span>
+              </div>
+            </div>
+          </a>
+          <button
+            onClick={() => setSidebarOpen?.(!sidebarOpen)}
+            className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
         </div>
-      </div>
+      </header>
 
-      <div className="flex items-center gap-2 sm:gap-3">
-        <button
-          onClick={() => setCurrentView('UTILS')}
-          className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-app-text-secondary hover:text-primary-600 bg-app-bg hover:bg-primary-50 rounded-lg border border-app-border transition-colors"
-        >
-          <Wrench className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Utils</span>
-        </button>
-
-        <button
-          onClick={resetMockData}
-          title="Restaurar base de datos de prueba"
-          className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-app-text-secondary hover:text-primary-600 bg-app-bg hover:bg-primary-50 rounded-lg border border-app-border transition-colors"
-        >
-          <RefreshCw className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Reiniciar DB</span>
-        </button>
-
-        <button
-          onClick={() => setCurrentView('PROFILE')}
-          className="flex items-center gap-2.5 border-l border-app-border ml-1 pl-3 sm:pl-4 hover:bg-app-bg pr-2 sm:pr-3 rounded-lg transition-all group cursor-pointer"
-        >
-          <div className="text-right hidden lg:block">
-            <p className="text-xs font-semibold text-app-text group-hover:text-primary-700 leading-tight transition-colors">{user?.full_name}</p>
-            <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-semibold font-mono">{user?.role}</p>
-          </div>
-          <div className="p-0.5 rounded-lg bg-app-bg border border-app-border group-hover:border-primary-200 group-hover:bg-primary-50 transition-all">
-            <div className="h-7 w-7 rounded-md bg-primary-50 flex items-center justify-center text-primary-600 font-bold text-xs group-hover:bg-primary-100 transition-colors">
-              <Shield className="h-full w-full p-1" />
+      {/* Desktop Toolbar */}
+      <div className="pb-5">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          {/* Left: Title + Breadcrumbs */}
+          <div className="flex items-center flex-wrap gap-1 lg:gap-5">
+            <h1 className="font-medium text-base text-app-text">
+              {info.title}
+            </h1>
+            <div className="flex items-center flex-wrap gap-1 text-sm text-app-text-secondary">
+              <span className="text-app-text-secondary/50">/</span>
+              {info.section && (
+                <>
+                  <span className="hover:text-primary-600 transition-colors">{info.section}</span>
+                  <span className="text-app-text-secondary/50">/</span>
+                </>
+              )}
+              {info.parent && (
+                <>
+                  <span className="hover:text-primary-600 transition-colors">{info.parent}</span>
+                  <span className="text-app-text-secondary/50">/</span>
+                </>
+              )}
+              <span className="text-app-text font-medium">{info.title}</span>
             </div>
           </div>
-        </button>
+
+          {/* Right: Actions */}
+          <div className="flex items-center flex-wrap gap-2">
+            <button
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              title="Buscar"
+            >
+              <Search className="h-[18px] w-[18px] group-hover:text-primary-600" />
+            </button>
+
+            <button
+              onClick={() => setCurrentView('UTILS')}
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              title="Utilidades"
+            >
+              <Wrench className="h-[18px] w-[18px] group-hover:text-primary-600" />
+            </button>
+
+            <button
+              onClick={() => {
+                resetMockData();
+                triggerToast('Base de datos restaurada correctamente', 'success');
+              }}
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              title="Restaurar base de datos de prueba"
+            >
+              <RefreshCw className="h-[18px] w-[18px] group-hover:text-primary-600" />
+            </button>
+          </div>
+        </div>
       </div>
-    </header>
+    </>
   );
 };
