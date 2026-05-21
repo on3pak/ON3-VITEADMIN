@@ -8,7 +8,8 @@ import {
   User, Shield, Mail, Calendar, MapPin, Briefcase,
   Building2, Phone, Smartphone, Palette, Bell, Globe,
   Edit3, CheckCircle, Clock, Tag, Hash,
-  FileText, CreditCard, TrendingUp, AlertCircle, Award, ShieldAlert,
+  FileText, CreditCard, TrendingUp, Award,
+  Share2, Heart, Flag, ShieldAlert, ChevronRight,
 } from 'lucide-react';
 
 const cityMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
@@ -20,19 +21,19 @@ const wdMap = Object.fromEntries(INITIAL_WORK_DAYS.map((w) => [w.id, w.name]));
 const ctMap = Object.fromEntries(INITIAL_CONTRACT_TYPES.map((c) => [c.id, c.name]));
 
 const STATUS_BADGE: Record<string, string> = {
-  'es-1': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  'es-2': 'bg-blue-50 text-blue-700 border-blue-200',
-  'es-3': 'bg-rose-50 text-rose-700 border-rose-200',
-  'es-4': 'bg-amber-50 text-amber-700 border-amber-200',
-  'es-5': 'bg-purple-50 text-purple-700 border-purple-200',
-  'es-6': 'bg-cyan-50 text-cyan-700 border-cyan-200',
+  'es-1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'es-2': 'bg-blue-100 text-blue-700 border-blue-200',
+  'es-3': 'bg-rose-100 text-rose-700 border-rose-200',
+  'es-4': 'bg-amber-100 text-amber-700 border-amber-200',
+  'es-5': 'bg-purple-100 text-purple-700 border-purple-200',
+  'es-6': 'bg-cyan-100 text-cyan-700 border-cyan-200',
 };
 
 const ROLE_STYLE: Record<string, string> = {
   ROOT: 'bg-violet-100 text-violet-700 border-violet-200',
   ADMIN: 'bg-blue-100 text-blue-700 border-blue-200',
   MANAGER: 'bg-amber-100 text-amber-700 border-amber-200',
-  USER: 'bg-app-bg text-app-text border-app-border',
+  USER: 'bg-gray-100 text-gray-600 border-gray-200',
 };
 
 interface Prefs {
@@ -43,27 +44,6 @@ interface Prefs {
   compactView: boolean;
   itemsPerPage: number;
 }
-
-const SectionCard: React.FC<{ icon: React.ReactNode; title: string; subtitle?: string; children: React.ReactNode; className?: string }> = ({ icon, title, subtitle, children, className }) => (
-  <div className={`bg-app-card rounded-xl border border-app-card-border shadow-xs p-5 ${className || ''}`}>
-    <div className="flex items-center gap-2.5 mb-4">
-      <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">{icon}</div>
-      <div>
-        <h3 className="text-sm font-semibold text-app-text">{title}</h3>
-        {subtitle && <p className="text-[11px] text-app-text-secondary">{subtitle}</p>}
-      </div>
-    </div>
-    {children}
-  </div>
-);
-
-const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | React.ReactNode }> = ({ icon, label, value }) => (
-  <div className="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">
-    <div className="text-app-text-secondary w-4 shrink-0 flex justify-center">{icon}</div>
-    <div className="text-[11px] text-app-text-secondary w-24 shrink-0 font-medium">{label}</div>
-    <div className="text-sm min-w-0 flex-1 text-app-text font-medium truncate">{value}</div>
-  </div>
-);
 
 const formatDate = (d: string) => {
   const date = new Date(d);
@@ -109,18 +89,19 @@ export const DashboardProfileView: React.FC = () => {
   return (
     <div className="space-y-5">
       {isReadOnly && (
-        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
-          <ShieldAlert className="h-4 w-4 text-amber-600 shrink-0" />
-          <span><span className="font-bold">Modo Consulta:</span> Tu rol es <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">USER</span>. Los datos se muestran en modo solo lectura.</span>
+        <div className="flex items-center gap-3 px-4 py-3 text-xs font-medium text-amber-900 bg-amber-50 border border-amber-200 rounded-xl">
+          <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+          <span><span className="font-bold">Modo Consulta:</span> Tu rol es <span className="px-1 py-0.5 font-mono bg-amber-100 rounded text-amber-800">USER</span>. Los datos se muestran en modo solo lectura.</span>
         </div>
       )}
-      <div className="flex gap-1 bg-app-bg rounded-xl p-1 overflow-x-auto">
+
+      <div className="flex gap-1 p-1 overflow-x-auto bg-gray-100 rounded-xl">
         {tabs.map((tab) => (
           <button
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-              activeTab === tab.value ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all rounded-lg whitespace-nowrap ${
+              activeTab === tab.value ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             {tab.icon} {tab.label}
@@ -130,109 +111,295 @@ export const DashboardProfileView: React.FC = () => {
 
       {activeTab === 'perfil' && loggedInUser && (
         <div className="space-y-5">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-            <div className="bg-app-card rounded-xl border border-app-card-border shadow-xs p-6 text-center lg:col-span-1">
-              <div className="relative inline-block">
-                <img src={loggedInUser.avatar_url} alt={loggedInUser.full_name} className="w-24 h-24 rounded-2xl bg-app-bg border border-app-border mx-auto" />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
-              </div>
-              <h2 className="text-lg font-bold text-app-text mt-3">{loggedInUser.full_name}</h2>
-              <p className="text-xs text-app-text-secondary">@{loggedInUser.username}</p>
-              <div className="flex justify-center mt-3">
-                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${ROLE_STYLE[loggedInUser.role]}`}>
-                  <Shield className="h-3 w-3" /> {loggedInUser.role}
-                </span>
-              </div>
-              <div className="mt-4 pt-4 border-t border-app-border text-[11px] text-app-text-secondary">
-                Miembro desde {formatDate(loggedInUser.created_at)}
+          {/* Profile Header Card */}
+          <div className="overflow-hidden bg-white border border-gray-200 rounded-xl shadow-xs">
+            <div className="relative px-6 pt-12 pb-6 bg-gradient-to-r from-indigo-600 to-indigo-500">
+              <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-end sm:gap-6">
+                <div className="relative shrink-0">
+                  <div className="w-24 h-24 overflow-hidden border-4 border-white rounded-2xl shadow-md">
+                    <img src={loggedInUser.avatar_url} alt={loggedInUser.full_name} className="object-cover w-full h-full" />
+                  </div>
+                  <div className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full" />
+                </div>
+                <div className="mt-4 sm:mt-0 sm:pb-1">
+                  <h1 className="text-2xl font-bold text-white">{loggedInUser.full_name}</h1>
+                  <p className="text-indigo-200">@{loggedInUser.username}</p>
+                  <div className="flex flex-wrap items-center gap-2 mt-2 justify-center sm:justify-start">
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold border rounded-full ${ROLE_STYLE[loggedInUser.role]}`}>
+                      <Shield className="w-3 h-3" /> {loggedInUser.role}
+                    </span>
+                    <span className="text-xs text-indigo-200">
+                      <Calendar className="inline w-3 h-3 mr-1" />
+                      Miembro desde {formatDate(loggedInUser.created_at)}
+                    </span>
+                  </div>
+                </div>
+                <div className="hidden sm:flex sm:ml-auto sm:pb-1 gap-2">
+                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-white rounded-lg shadow-xs hover:bg-indigo-50 transition-colors">
+                    <Share2 className="w-3.5 h-3.5" /> Compartir
+                  </button>
+                  {!isReadOnly && (
+                    <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-700 rounded-lg shadow-xs hover:bg-indigo-800 transition-colors">
+                      <Edit3 className="w-3.5 h-3.5" /> Editar
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-
-            <div className="lg:col-span-3 space-y-5">
-              <SectionCard icon={<User className="h-4 w-4" />} title="Información General">
-                <InfoRow icon={<Mail className="h-3.5 w-3.5" />} label="Email" value={loggedInUser.email} />
-                <InfoRow icon={<Hash className="h-3.5 w-3.5" />} label="Usuario" value={loggedInUser.username} />
-                <InfoRow icon={<Shield className="h-3.5 w-3.5" />} label="Rol" value={loggedInUser.role} />
-                <InfoRow icon={<AlertCircle className="h-3.5 w-3.5" />} label="Estado" value={
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border ${loggedInUser.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-app-bg text-app-text-secondary border-app-border'}`}>
-                    {loggedInUser.status === 'ACTIVE' ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
-                    {loggedInUser.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
-                  </span>
-                } />
-                <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Registro" value={formatDate(loggedInUser.created_at)} />
-                <InfoRow icon={<MapPin className="h-3.5 w-3.5" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || 'Sin asignar'} />
-              </SectionCard>
+            <div className="flex items-center justify-center gap-1 px-6 py-3 bg-gray-50 border-t border-gray-100 sm:hidden">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-white border border-gray-200 rounded-lg shadow-xs hover:bg-indigo-50 transition-colors">
+                <Share2 className="w-3.5 h-3.5" /> Compartir
+              </button>
+              {!isReadOnly && (
+                <button onClick={() => setEmployeeModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg shadow-xs hover:bg-indigo-700 transition-colors">
+                  <Edit3 className="w-3.5 h-3.5" /> Editar
+                </button>
+              )}
             </div>
           </div>
 
-          {myEmployee ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-              <SectionCard icon={<User className="h-4 w-4" />} title="Datos Personales" subtitle="Información del empleado">
-                <InfoRow icon={<User className="h-3.5 w-3.5" />} label="Nombre" value={`${myEmployee.name} ${myEmployee.lastName1} ${myEmployee.lastName2 || ''}`} />
-                <InfoRow icon={<Mail className="h-3.5 w-3.5" />} label="Email" value={myEmployee.email} />
-                <InfoRow icon={<Phone className="h-3.5 w-3.5" />} label="Teléfono" value={myEmployee.phone} />
-                <InfoRow icon={<Smartphone className="h-3.5 w-3.5" />} label="Email Personal" value={myEmployee.personal_email || '-'} />
-                <InfoRow icon={<MapPin className="h-3.5 w-3.5" />} label="Ciudad" value={cityMap[myEmployee.city_id || ''] || 'Sin asignar'} />
-              </SectionCard>
-
-              <SectionCard icon={<Briefcase className="h-4 w-4" />} title="Datos Laborales" subtitle="Puesto y condiciones">
-                <InfoRow icon={<Building2 className="h-3.5 w-3.5" />} label="Centro" value={wcMap[myEmployee.work_center_id] || myEmployee.work_center_id} />
-                <InfoRow icon={<Award className="h-3.5 w-3.5" />} label="Categoría" value={catMap[myEmployee.category_id] || myEmployee.category_id} />
-                <InfoRow icon={<Tag className="h-3.5 w-3.5" />} label="Estado">
-                  <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border ${STATUS_BADGE[myEmployee.status_id] || 'bg-app-bg text-app-text'}`}>
-                    {statusMap[myEmployee.status_id] || myEmployee.status_id}
-                  </span>
-                </InfoRow>
-                <InfoRow icon={<Clock className="h-3.5 w-3.5" />} label="Jornada" value={wdMap[myEmployee.work_day] || myEmployee.work_day} />
-                <InfoRow icon={<Clock className="h-3.5 w-3.5" />} label="Turno" value={shiftMap[myEmployee.shift] || myEmployee.shift} />
-                <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Horario" value={`${myEmployee.start_time || '-'} - ${myEmployee.end_time || '-'}`} />
-              </SectionCard>
-
-              <SectionCard icon={<FileText className="h-4 w-4" />} title="Contrato" subtitle="Detalles contractuales">
-                <InfoRow icon={<Tag className="h-3.5 w-3.5" />} label="Tipo" value={ctMap[myEmployee.contract_type || ''] || 'Sin especificar'} />
-                <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Inicio" value={myEmployee.contract_start_date || '-'} />
-                <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Fin" value={myEmployee.contract_end_date || 'Indefinido'} />
-                <InfoRow icon={<TrendingUp className="h-3.5 w-3.5" />} label="IRPF" value={`${myEmployee.irpf}%`} />
-              </SectionCard>
-
-              <SectionCard icon={<CreditCard className="h-4 w-4" />} title="Otros Datos" subtitle="Información adicional">
-                <InfoRow icon={<CreditCard className="h-3.5 w-3.5" />} label="IBAN" value={myEmployee.iban || '-'} />
-                <InfoRow icon={<MapPin className="h-3.5 w-3.5" />} label="Taquilla" value={myEmployee.locker || '-'} />
-                <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Vacaciones" value={`${myEmployee.vacation_days} días`} />
-                <InfoRow icon={<TrendingUp className="h-3.5 w-3.5" />} label="Días Propios" value={`${myEmployee.own_days} días`} />
-                <InfoRow icon={<TrendingUp className="h-3.5 w-3.5" />} label="Acumulados" value={`${myEmployee.accumulated_days} días`} />
-                <InfoRow icon={<CheckCircle className="h-3.5 w-3.5" />} label="Reconocimiento" value={myEmployee.medical_check ? 'Realizado' : 'Pendiente'} />
-              </SectionCard>
-
-              {!isReadOnly && (
-              <div className="lg:col-span-2 flex justify-end">
-                <button onClick={() => setEmployeeModalOpen(true)} className="flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-xs">
-                  <Edit3 className="h-4 w-4" /> Editar Ficha de Empleado
-                </button>
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            {/* Left Column - About + Personal Details */}
+            <div className="space-y-5 lg:col-span-1">
+              {/* About Card */}
+              <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+                <div className="px-5 py-4 border-b border-gray-100">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                    <User className="w-4 h-4 text-gray-400" />
+                    Acerca de
+                  </div>
+                </div>
+                <div className="p-5 space-y-3">
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs font-medium text-gray-500">Email</span>
+                    <span className="text-sm text-right text-gray-900 truncate max-w-[180px]">{loggedInUser.email}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs font-medium text-gray-500">Usuario</span>
+                    <span className="text-sm text-right text-gray-900">{loggedInUser.username}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs font-medium text-gray-500">Rol</span>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold border rounded-full ${ROLE_STYLE[loggedInUser.role]}`}>
+                      <Shield className="w-2.5 h-2.5" /> {loggedInUser.role}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs font-medium text-gray-500">Estado</span>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold border rounded-full ${loggedInUser.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+                      {loggedInUser.status === 'ACTIVE' ? <CheckCircle className="w-2.5 h-2.5" /> : <Flag className="w-2.5 h-2.5" />}
+                      {loggedInUser.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs font-medium text-gray-500">Ciudad</span>
+                    <span className="text-sm text-right text-gray-900">{cityMap[loggedInUser.city_id || ''] || 'Sin asignar'}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs font-medium text-gray-500">Registro</span>
+                    <span className="text-sm text-right text-gray-900">{formatDate(loggedInUser.created_at)}</span>
+                  </div>
+                </div>
               </div>
+
+              {/* Quick Stats */}
+              {myEmployee && (
+                <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+                  <div className="px-5 py-4 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                      <TrendingUp className="w-4 h-4 text-gray-400" />
+                      Estadísticas
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 p-5">
+                    <div className="p-3 text-center bg-indigo-50 rounded-lg">
+                      <div className="text-lg font-bold text-indigo-600">{myEmployee.vacation_days}</div>
+                      <div className="text-[10px] text-gray-500">Vacaciones</div>
+                    </div>
+                    <div className="p-3 text-center bg-emerald-50 rounded-lg">
+                      <div className="text-lg font-bold text-emerald-600">{myEmployee.own_days}</div>
+                      <div className="text-[10px] text-gray-500">Propios</div>
+                    </div>
+                    <div className="p-3 text-center bg-amber-50 rounded-lg">
+                      <div className="text-lg font-bold text-amber-600">{myEmployee.accumulated_days}</div>
+                      <div className="text-[10px] text-gray-500">Acumulados</div>
+                    </div>
+                    <div className="p-3 text-center bg-rose-50 rounded-lg">
+                      <div className="text-lg font-bold text-rose-600">{myEmployee.excess_days}</div>
+                      <div className="text-[10px] text-gray-500">Extras</div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
-          ) : (
-            <div className="bg-app-card rounded-xl border border-app-card-border shadow-xs p-12 text-center">
-              <div className="p-3 rounded-xl bg-app-bg border border-app-border w-fit mx-auto mb-4">
-                <Briefcase className="h-10 w-10 text-app-text-secondary" />
-              </div>
-              <h3 className="text-base font-semibold text-app-text">Sin ficha de empleado</h3>
-              <p className="text-sm text-app-text-secondary mt-1 max-w-sm mx-auto">Tu cuenta de usuario no tiene un registro de empleado asociado. Crea uno para gestionar tus datos laborales.</p>
-              {!isReadOnly && (
-              <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-5 py-2.5 mt-5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-xs">
-                <Briefcase className="h-4 w-4" /> Crear Ficha de Empleado
-              </button>
+
+            {/* Right Column - Employee Details */}
+            <div className="space-y-5 lg:col-span-2">
+              {myEmployee ? (
+                <>
+                  {/* Work Info Card */}
+                  <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+                    <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                        <Briefcase className="w-4 h-4 text-gray-400" />
+                        Información Laboral
+                      </div>
+                      <span className={`inline-flex px-2.5 py-1 text-[10px] font-bold border rounded-full ${STATUS_BADGE[myEmployee.status_id] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>
+                        {statusMap[myEmployee.status_id] || myEmployee.status_id}
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Centro de Trabajo</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{wcMap[myEmployee.work_center_id] || myEmployee.work_center_id}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Categoría</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{catMap[myEmployee.category_id] || myEmployee.category_id}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Jornada</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{wdMap[myEmployee.work_day] || myEmployee.work_day}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Turno</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{shiftMap[myEmployee.shift] || myEmployee.shift}</div>
+                        </div>
+                        <div className="sm:col-span-2">
+                          <div className="text-[11px] font-medium text-gray-500">Horario</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.start_time || '-'} - {myEmployee.end_time || '-'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Personal Data Card */}
+                  <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+                    <div className="px-5 py-4 border-b border-gray-100">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                        <User className="w-4 h-4 text-gray-400" />
+                        Datos Personales
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Nombre Completo</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.name} {myEmployee.lastName1} {myEmployee.lastName2 || ''}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Email</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.email}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Teléfono</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.phone}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Email Personal</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.personal_email || '-'}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Ciudad</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{cityMap[myEmployee.city_id || ''] || 'Sin asignar'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contract Card */}
+                  <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+                    <div className="px-5 py-4 border-b border-gray-100">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                        <FileText className="w-4 h-4 text-gray-400" />
+                        Contrato
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Tipo</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{ctMap[myEmployee.contract_type || ''] || 'Sin especificar'}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Inicio</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.contract_start_date || '-'}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Fin</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.contract_end_date || 'Indefinido'}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">IRPF</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.irpf}%</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">IBAN</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.iban || '-'}</div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-medium text-gray-500">Taquilla</div>
+                          <div className="mt-0.5 text-sm font-medium text-gray-900">{myEmployee.locker || '-'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status Card */}
+                  <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+                    <div className="px-5 py-4 border-b border-gray-100">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                        <CheckCircle className="w-4 h-4 text-gray-400" />
+                        Estados
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 p-5">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg ${myEmployee.active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                        {myEmployee.active ? <CheckCircle className="w-3 h-3" /> : <Flag className="w-3 h-3" />}
+                        {myEmployee.active ? 'Activo' : 'Inactivo'}
+                      </span>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg ${myEmployee.medical_check ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                        <CheckCircle className="w-3 h-3" />
+                        {myEmployee.medical_check ? 'Rev. Médica Realizada' : 'Rev. Médica Pendiente'}
+                      </span>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg ${myEmployee.works_holidays ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                        <Calendar className="w-3 h-3" />
+                        {myEmployee.works_holidays ? 'Trabaja Festivos' : 'No trabaja Festivos'}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-12 bg-white border border-gray-200 rounded-xl shadow-xs">
+                  <div className="flex items-center justify-center w-16 h-16 mb-4 bg-gray-100 border border-gray-200 rounded-xl">
+                    <Briefcase className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-900">Sin ficha de empleado</h3>
+                  <p className="max-w-sm mt-1 text-sm text-center text-gray-500">Tu cuenta de usuario no tiene un registro de empleado asociado. Crea uno para gestionar tus datos laborales.</p>
+                  {!isReadOnly && (
+                    <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-5 py-2.5 mt-5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-xs">
+                      <Briefcase className="w-4 h-4" /> Crear Ficha de Empleado
+                    </button>
+                  )}
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       )}
 
       {activeTab === 'ajustes' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <SectionCard icon={<Palette className="h-4 w-4" />} title="Apariencia" subtitle="Personaliza la interfaz">
-            <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+            <div className="px-5 py-4 border-b border-gray-100">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                <Palette className="w-4 h-4 text-gray-400" />
+                Apariencia
+              </div>
+            </div>
+            <div className="p-5 space-y-4">
               {[
                 { label: 'Tema', key: 'theme', value: prefs.theme, onChange: (v: string) => savePrefs({ ...prefs, theme: v as Prefs['theme'] }), options: [
                   { v: 'claro', l: 'Claro' },
@@ -244,13 +411,13 @@ export const DashboardProfileView: React.FC = () => {
                 ] },
               ].map((field) => (
                 <div key={field.label} className="flex items-center justify-between py-1">
-                  <span className="text-sm text-app-text">{field.label}</span>
-                  <div className="flex gap-1 bg-app-bg rounded-lg p-0.5">
+                  <span className="text-sm text-gray-900">{field.label}</span>
+                  <div className="flex gap-1 p-0.5 bg-gray-100 rounded-lg">
                     {field.options.map((opt) => (
                       <button
                         key={opt.v}
                         onClick={() => field.onChange(opt.v)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${field.value === opt.v ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${field.value === opt.v ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-500 hover:text-gray-700'}`}
                       >
                         {opt.l}
                       </button>
@@ -260,56 +427,70 @@ export const DashboardProfileView: React.FC = () => {
               ))}
 
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-app-text">Vista compacta</span>
+                <span className="text-sm text-gray-900">Vista compacta</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={prefs.compactView} onChange={(e) => savePrefs({ ...prefs, compactView: e.target.checked })} className="sr-only peer" />
-                  <div className="w-9 h-5 bg-app-border peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
+                  <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-focus:outline-hidden peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
                 </label>
               </div>
 
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-app-text">Items por página</span>
-                <select value={prefs.itemsPerPage} onChange={(e) => savePrefs({ ...prefs, itemsPerPage: Number(e.target.value) })} className="text-xs border border-app-border rounded-lg px-2.5 py-1.5 text-app-text focus:outline-hidden focus:border-indigo-500 bg-white">
+                <span className="text-sm text-gray-900">Items por página</span>
+                <select value={prefs.itemsPerPage} onChange={(e) => savePrefs({ ...prefs, itemsPerPage: Number(e.target.value) })} className="px-2.5 py-1.5 text-xs text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-hidden focus:border-indigo-500">
                   {[10, 25, 50].map((n) => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
             </div>
-          </SectionCard>
+          </div>
 
           <div className="space-y-5">
-            <SectionCard icon={<Bell className="h-4 w-4" />} title="Notificaciones" subtitle="Controla las notificaciones">
-              {[
-                { label: 'Notificaciones push', key: 'notifications' as const },
-                { label: 'Informes por email', key: 'emailReports' as const },
-              ].map((item) => (
-                <div key={item.key} className="flex items-center justify-between py-1.5">
-                  <span className="text-sm text-app-text">{item.label}</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" checked={prefs[item.key]} onChange={(e) => savePrefs({ ...prefs, [item.key]: e.target.checked })} className="sr-only peer" />
-                    <div className="w-9 h-5 bg-app-border peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
-                  </label>
+            <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+              <div className="px-5 py-4 border-b border-gray-100">
+                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                  <Bell className="w-4 h-4 text-gray-400" />
+                  Notificaciones
                 </div>
-              ))}
-            </SectionCard>
+              </div>
+              <div className="p-5 space-y-3">
+                {[
+                  { label: 'Notificaciones push', key: 'notifications' as const },
+                  { label: 'Informes por email', key: 'emailReports' as const },
+                ].map((item) => (
+                  <div key={item.key} className="flex items-center justify-between py-1.5">
+                    <span className="text-sm text-gray-900">{item.label}</span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" checked={prefs[item.key]} onChange={(e) => savePrefs({ ...prefs, [item.key]: e.target.checked })} className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-focus:outline-hidden peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-            <SectionCard icon={<Globe className="h-4 w-4" />} title="Cuenta" subtitle="Información de la sesión">
-              <div className="space-y-2 text-sm">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
+              <div className="px-5 py-4 border-b border-gray-100">
+                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                  <Globe className="w-4 h-4 text-gray-400" />
+                  Cuenta
+                </div>
+              </div>
+              <div className="p-5 space-y-2 text-sm">
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-app-text-secondary">Versión</span>
-                  <span className="font-mono text-app-text text-xs">1.0.0</span>
+                  <span className="text-gray-500">Versión</span>
+                  <span className="font-mono text-xs text-gray-900">1.0.0</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-app-text-secondary">Estado</span>
-                  <span className="inline-flex items-center gap-1 text-emerald-600 text-xs font-semibold">
-                    <CheckCircle className="h-3 w-3" /> Sesión activa
+                  <span className="text-gray-500">Estado</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                    <CheckCircle className="w-3 h-3" /> Sesión activa
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-app-text-secondary">Usuario</span>
-                  <span className="text-app-text text-xs font-mono">{loggedInUser?.username}</span>
+                  <span className="text-gray-500">Usuario</span>
+                  <span className="font-mono text-xs text-gray-900">{loggedInUser?.username}</span>
                 </div>
               </div>
-            </SectionCard>
+            </div>
           </div>
         </div>
       )}
