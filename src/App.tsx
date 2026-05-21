@@ -235,7 +235,7 @@ const MainLayout: React.FC = () => {
         setSidebarOpen={setSidebarOpen} 
       />
 
-      <div className="flex-1 flex flex-col min-w-0 lg:ml-[265px] transition-all duration-300">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-[280px] transition-all duration-300">
         <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="flex-1 overflow-y-auto w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
