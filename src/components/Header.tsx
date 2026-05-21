@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useUsers } from '../context/UserContext';
 import { useEmployees } from '../context/EmployeeContext';
 import { DashboardViewType } from '../types';
-import { RefreshCw, Shield, Lock, Wrench, Menu } from 'lucide-react';
+import { RefreshCw, Shield, Wrench, Menu } from 'lucide-react';
 
 interface HeaderProps {
   currentView: DashboardViewType;
@@ -69,37 +69,35 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
   const viewInfo = getViewInfo(currentView);
 
   return (
-    <header className="bg-white border-b border-slate-200 h-14 sm:h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
-      <div className="flex items-center gap-3">
+    <header className="bg-white border-b border-app-border h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-20">
+      <div className="flex items-center gap-4">
         <button
           onClick={() => setSidebarOpen?.(!sidebarOpen)}
-          className="lg:hidden p-2 -ml-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+          className="lg:hidden p-2 -ml-2 text-app-text-secondary hover:text-app-text hover:bg-app-bg rounded-lg transition-colors"
         >
           <Menu className="h-5 w-5" />
         </button>
         <div>
-          <h2 className="text-base sm:text-lg font-bold text-slate-800 tracking-tight">
+          <h2 className="text-base sm:text-lg font-bold text-app-text tracking-tight">
             {viewInfo.title}
           </h2>
-          <p className="text-xs text-slate-500 hidden sm:block">{viewInfo.subtitle}</p>
+          <p className="text-xs text-app-text-secondary hidden sm:block">{viewInfo.subtitle}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
-        <div className="relative hidden sm:block">
-          <button
-            onClick={() => setCurrentView('UTILS')}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-slate-200 transition-colors"
-          >
-            <Wrench className="h-3.5 w-3.5" />
-            <span>Utils</span>
-          </button>
-        </div>
+      <div className="flex items-center gap-2 sm:gap-3">
+        <button
+          onClick={() => setCurrentView('UTILS')}
+          className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-app-text-secondary hover:text-primary-600 bg-app-bg hover:bg-primary-50 rounded-lg border border-app-border transition-colors"
+        >
+          <Wrench className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Utils</span>
+        </button>
 
         <button
           onClick={resetMockData}
           title="Restaurar base de datos de prueba"
-          className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-slate-200 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-app-text-secondary hover:text-primary-600 bg-app-bg hover:bg-primary-50 rounded-lg border border-app-border transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Reiniciar DB</span>
@@ -107,15 +105,15 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
 
         <button
           onClick={() => setCurrentView('PROFILE')}
-          className="flex items-center gap-2 border-l border-slate-200 pl-2 sm:pl-4 hover:bg-indigo-50 hover:border-indigo-200 pr-2 sm:pr-3 rounded-xl transition-all group cursor-pointer"
+          className="flex items-center gap-2.5 border-l border-app-border ml-1 pl-3 sm:pl-4 hover:bg-app-bg pr-2 sm:pr-3 rounded-lg transition-all group cursor-pointer"
         >
           <div className="text-right hidden lg:block">
-            <p className="text-xs font-bold text-slate-800 group-hover:text-indigo-700 leading-tight transition-colors">{user?.full_name}</p>
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold font-mono text-right group-hover:text-indigo-500 transition-colors">{user?.role}</p>
+            <p className="text-xs font-semibold text-app-text group-hover:text-primary-700 leading-tight transition-colors">{user?.full_name}</p>
+            <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-semibold font-mono">{user?.role}</p>
           </div>
-          <div className="p-0.5 rounded-lg bg-slate-100 border border-slate-200 group-hover:bg-indigo-100 group-hover:border-indigo-300 transition-all">
-            <div className="h-7 w-7 rounded-md bg-indigo-50 flex items-center justify-between text-indigo-700 font-bold text-xs p-1 group-hover:bg-indigo-100 transition-colors">
-              <Shield className="h-full w-full" />
+          <div className="p-0.5 rounded-lg bg-app-bg border border-app-border group-hover:border-primary-200 group-hover:bg-primary-50 transition-all">
+            <div className="h-7 w-7 rounded-md bg-primary-50 flex items-center justify-center text-primary-600 font-bold text-xs group-hover:bg-primary-100 transition-colors">
+              <Shield className="h-full w-full p-1" />
             </div>
           </div>
         </button>

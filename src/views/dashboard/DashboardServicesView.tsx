@@ -100,35 +100,35 @@ export const DashboardServicesView: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, i) => (
-          <div key={i} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <div key={i} className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
             <div className={`p-2.5 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-3`}>
               <div className={`text-${stat.color}-600`}>{stat.icon}</div>
             </div>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{stat.title}</p>
-            <p className="text-2xl font-bold text-slate-800 mt-1">{stat.value}</p>
+            <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">{stat.title}</p>
+            <p className="text-2xl font-bold text-app-text mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Por Tipo de Servicio</h3>
-              <p className="text-xs text-slate-500">Tareas completadas por tipo</p>
+              <h3 className="font-semibold text-app-text">Por Tipo de Servicio</h3>
+              <p className="text-xs text-app-text-secondary">Tareas completadas por tipo</p>
             </div>
-            <ListChecks className="h-5 w-5 text-slate-400" />
+            <ListChecks className="h-5 w-5 text-app-text-secondary" />
           </div>
           <div className="space-y-4">
             {typeStats.map((stat, i) => (
               <div key={i}>
                 <div className="flex items-center justify-between text-sm mb-1.5">
-                  <span className="font-medium text-slate-700">{stat.type}</span>
-                  <span className="text-slate-600 font-semibold">
+                  <span className="font-medium text-app-text">{stat.type}</span>
+                  <span className="text-app-text-secondary font-semibold">
                     {stat.completedTasks}/{stat.totalTasks} ({stat.rate.toFixed(0)}%)
                   </span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
                   <div
                     className="bg-indigo-600 h-full rounded-full transition-all duration-500"
                     style={{ width: `${stat.rate}%` }}
@@ -139,22 +139,22 @@ export const DashboardServicesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Tareas por Día</h3>
-              <p className="text-xs text-slate-500">Progreso semanal</p>
+              <h3 className="font-semibold text-app-text">Tareas por Día</h3>
+              <p className="text-xs text-app-text-secondary">Progreso semanal</p>
             </div>
-            <Calendar className="h-5 w-5 text-slate-400" />
+            <Calendar className="h-5 w-5 text-app-text-secondary" />
           </div>
           <div className="space-y-3">
             {dayStats.map((stat, i) => (
               <div key={i}>
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="font-medium text-slate-700">{stat.day}</span>
-                  <span className="text-slate-600 font-semibold">{stat.completed}/{stat.total}</span>
+                  <span className="font-medium text-app-text">{stat.day}</span>
+                  <span className="text-app-text-secondary font-semibold">{stat.completed}/{stat.total}</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${stat.rate >= 80 ? 'bg-emerald-500' : stat.rate >= 50 ? 'bg-amber-500' : 'bg-rose-500'}`}
                     style={{ width: `${stat.rate}%` }}
@@ -166,24 +166,24 @@ export const DashboardServicesView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="font-semibold text-slate-800">Servicios Recientes</h3>
-            <p className="text-xs text-slate-500">Últimos servicios registrados</p>
+            <h3 className="font-semibold text-app-text">Servicios Recientes</h3>
+            <p className="text-xs text-app-text-secondary">Últimos servicios registrados</p>
           </div>
-          <ClipboardList className="h-5 w-5 text-slate-400" />
+          <ClipboardList className="h-5 w-5 text-app-text-secondary" />
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-200">
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">Nombre</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">Tipo</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">Centro</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">Tareas</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">Progreso</th>
+              <tr className="border-b border-app-border">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">Nombre</th>
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">Tipo</th>
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">Centro</th>
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">Tareas</th>
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">Progreso</th>
               </tr>
             </thead>
             <tbody>
@@ -192,24 +192,24 @@ export const DashboardServicesView: React.FC = () => {
                 const done = svc.tasks.filter(t => t.status === 'COMPLETED').length;
                 const rate = total > 0 ? (done / total) * 100 : 0;
                 return (
-                  <tr key={svc.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                  <tr key={svc.id} className="border-b border-app-border last:border-0 hover:bg-app-bg">
                     <td className="py-3 px-4">
-                      <p className="text-sm font-semibold text-slate-800">{svc.name}</p>
+                      <p className="text-sm font-semibold text-app-text">{svc.name}</p>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">{svc.type}</span>
+                      <span className="text-xs font-medium text-app-text bg-app-bg px-2 py-1 rounded">{svc.type}</span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-slate-600">{wcNameMap[svc.work_center_id] || svc.work_center_id}</td>
-                    <td className="py-3 px-4 text-sm text-slate-600">{done}/{total}</td>
+                    <td className="py-3 px-4 text-sm text-app-text-secondary">{wcNameMap[svc.work_center_id] || svc.work_center_id}</td>
+                    <td className="py-3 px-4 text-sm text-app-text-secondary">{done}/{total}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div className="w-24 bg-app-bg rounded-full h-2 overflow-hidden">
                           <div
                             className={`h-full rounded-full ${rate >= 80 ? 'bg-emerald-500' : rate >= 50 ? 'bg-amber-500' : 'bg-rose-500'}`}
                             style={{ width: `${rate}%` }}
                           />
                         </div>
-                        <span className="text-xs text-slate-500">{rate.toFixed(0)}%</span>
+                        <span className="text-xs text-app-text-secondary">{rate.toFixed(0)}%</span>
                       </div>
                     </td>
                   </tr>

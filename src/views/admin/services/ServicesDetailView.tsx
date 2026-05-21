@@ -19,14 +19,14 @@ const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', '
 
 const InfoRow: React.FC<{ label: string; value: string; highlight?: boolean }> = ({ label, value, highlight }) => (
   <div>
-    <div className="text-xs text-slate-500">{label}</div>
-    <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-slate-800'}`}>{value}</div>
+    <div className="text-xs text-app-text-secondary">{label}</div>
+    <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-app-text'}`}>{value}</div>
   </div>
 );
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
-  <div className="bg-white rounded-xl border border-slate-200 p-4">
-    <div className="flex items-center gap-2 mb-4 text-slate-700 font-semibold text-sm">
+  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+    <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
       <span>{title}</span>
     </div>
@@ -55,8 +55,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
   if (!service) {
     return (
       <div className="space-y-5">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
-          <p className="text-slate-400">Servicio no encontrado.</p>
+        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+          <p className="text-app-text-secondary">Servicio no encontrado.</p>
           <button onClick={onBack} className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl">Volver</button>
         </div>
       </div>
@@ -88,12 +88,12 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
 
   return (
     <div className="space-y-5">
-      <button onClick={onBack} className="flex items-center gap-2 text-slate-600 hover:text-slate-800 text-sm font-medium">
+      <button onClick={onBack} className="flex items-center gap-2 text-app-text-secondary hover:text-app-text text-sm font-medium">
         <ArrowLeft className="h-4 w-4" />
         <span>Volver</span>
       </button>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
         <div className="px-6 py-5 bg-gradient-to-r from-indigo-600 to-indigo-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">
@@ -110,8 +110,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
           </div>
         </div>
 
-        <div className="px-6 py-4 border-b border-slate-200">
-          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="px-6 py-4 border-b border-app-border">
+          <div className="w-full h-2 bg-app-bg rounded-full overflow-hidden">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all"
               style={{ width: `${(totalCompleted / service.tasks.length) * 100}%` }}
@@ -127,8 +127,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="border-b border-slate-200">
+      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
+        <div className="border-b border-app-border">
           <div className="flex overflow-x-auto">
             {DAYS.map((day, idx) => {
               const dayTaskCount = service.tasks.filter((t) => t.dayIndex === idx);
@@ -142,7 +142,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                   className={`relative flex flex-col items-center gap-1 px-5 py-3 text-xs font-semibold transition-colors shrink-0 ${
                     activeDay === idx
                       ? 'text-indigo-700 bg-indigo-50'
-                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                      : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
                   }`}
                 >
                   <span>{day}</span>
@@ -150,7 +150,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                     {isAllDone ? (
                       <CheckCircle2 className="h-3 w-3 text-emerald-500" />
                     ) : (
-                      <Circle className="h-3 w-3 text-slate-300" />
+                      <Circle className="h-3 w-3 text-app-text-secondary" />
                     )}
                     <span className="text-[10px]">{dayDone}/{dayTaskCount.length}</span>
                   </span>
@@ -165,8 +165,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
 
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-slate-700">{DAYS[activeDay]} — {dayCompleted}/{dayTasks.length} completadas</h3>
-            <div className="w-32 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <h3 className="text-sm font-bold text-app-text">{DAYS[activeDay]} — {dayCompleted}/{dayTasks.length} completadas</h3>
+            <div className="w-32 h-1.5 bg-app-bg rounded-full overflow-hidden">
               <div
                 className="h-full bg-indigo-500 rounded-full transition-all"
                 style={{ width: `${dayTasks.length > 0 ? (dayCompleted / dayTasks.length) * 100 : 0}%` }}
@@ -178,15 +178,15 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
             {dayTasks.map((task) => (
               <div
                 key={task.id}
-                className="flex items-center gap-3 py-2.5 px-2 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                className="flex items-center gap-3 py-2.5 px-2 rounded-lg hover:bg-app-bg transition-colors cursor-pointer"
                 onClick={() => handleToggleTask(task.id, task.status)}
               >
                 {task.status === 'COMPLETED' ? (
                   <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
                 ) : (
-                  <Circle className="h-5 w-5 text-slate-300 hover:text-slate-400 shrink-0" />
+                  <Circle className="h-5 w-5 text-app-text-secondary hover:text-app-text-secondary shrink-0" />
                 )}
-                <span className={`text-sm ${task.status === 'COMPLETED' ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
+                <span className={`text-sm ${task.status === 'COMPLETED' ? 'text-app-text-secondary line-through' : 'text-app-text'}`}>
                   {task.description}
                 </span>
               </div>

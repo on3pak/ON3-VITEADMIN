@@ -49,7 +49,7 @@ export const DashboardEmployeesView: React.FC = () => {
       count: countByCategory(catId),
       color: name.includes('Encargado') || name.includes('Jefe') ? 'bg-purple-600'
         : name.includes('Mecánico') || name.includes('Mantenimiento') ? 'bg-blue-600'
-        : 'bg-slate-500'
+        : 'bg-app-bg0'
     };
   });
 
@@ -100,7 +100,7 @@ export const DashboardEmployeesView: React.FC = () => {
       'es-6': 'bg-cyan-50 text-cyan-700 border-cyan-200',
     };
     return (
-      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${colors[statusId] || 'bg-slate-50 text-slate-700'}`}>
+      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${colors[statusId] || 'bg-app-bg text-app-text'}`}>
         {getStatusLabel(statusId)}
       </span>
     );
@@ -144,27 +144,27 @@ export const DashboardEmployeesView: React.FC = () => {
         {stats.map((stat, i) => (
           <div
             key={i}
-            className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs"
+            className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs"
           >
             <div className={`p-2.5 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-3`}>
               <div className={`text-${stat.color}-600`}>{stat.icon}</div>
             </div>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+            <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">
               {stat.title}
             </p>
-            <p className="text-2xl font-bold text-slate-800 mt-1">{stat.value}</p>
+            <p className="text-2xl font-bold text-app-text mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs lg:col-span-2">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs lg:col-span-2">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Distribución por Categoría</h3>
-              <p className="text-xs text-slate-500">Empleados por puesto</p>
+              <h3 className="font-semibold text-app-text">Distribución por Categoría</h3>
+              <p className="text-xs text-app-text-secondary">Empleados por puesto</p>
             </div>
-            <Briefcase className="h-5 w-5 text-slate-400" />
+            <Briefcase className="h-5 w-5 text-app-text-secondary" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -173,12 +173,12 @@ export const DashboardEmployeesView: React.FC = () => {
               return (
                 <div key={i} className="space-y-1.5">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-700">{stat.category}</span>
-                    <span className="text-slate-600 font-semibold">
+                    <span className="font-medium text-app-text">{stat.category}</span>
+                    <span className="text-app-text-secondary font-semibold">
                       {stat.count} ({percentage.toFixed(0)}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
                     <div
                       className={`${stat.color} h-full rounded-full transition-all duration-500`}
                       style={{ width: `${percentage}%` }}
@@ -190,20 +190,20 @@ export const DashboardEmployeesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Por Centro de Trabajo</h3>
-              <p className="text-xs text-slate-500">Distribución locations</p>
+              <h3 className="font-semibold text-app-text">Por Centro de Trabajo</h3>
+              <p className="text-xs text-app-text-secondary">Distribución locations</p>
             </div>
-            <MapPin className="h-5 w-5 text-slate-400" />
+            <MapPin className="h-5 w-5 text-app-text-secondary" />
           </div>
 
           <div className="space-y-3">
             {workCenterStats.map((stat, i) => (
-              <div key={i} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-                <span className="text-sm font-medium text-slate-700">{stat.center}</span>
-                <span className="text-sm font-bold text-slate-800">{stat.count}</span>
+              <div key={i} className="flex items-center justify-between p-2 bg-app-bg rounded-lg">
+                <span className="text-sm font-medium text-app-text">{stat.center}</span>
+                <span className="text-sm font-bold text-app-text">{stat.count}</span>
               </div>
             ))}
           </div>
@@ -211,32 +211,32 @@ export const DashboardEmployeesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Estado Laboral</h3>
-              <p className="text-xs text-slate-500">Estado actual del personal</p>
+              <h3 className="font-semibold text-app-text">Estado Laboral</h3>
+              <p className="text-xs text-app-text-secondary">Estado actual del personal</p>
             </div>
-            <Clock className="h-5 w-5 text-slate-400" />
+            <Clock className="h-5 w-5 text-app-text-secondary" />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             {statusStats.map((stat, i) => (
-              <div key={i} className="text-center p-3 bg-slate-50 rounded-xl">
-                <p className="text-2xl font-bold text-slate-800">{stat.count}</p>
-                <p className="text-xs text-slate-500 mt-1">{stat.label}</p>
+              <div key={i} className="text-center p-3 bg-app-bg rounded-xl">
+                <p className="text-2xl font-bold text-app-text">{stat.count}</p>
+                <p className="text-xs text-app-text-secondary mt-1">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Distribución por Turno</h3>
-              <p className="text-xs text-slate-500">Horario de trabajo</p>
+              <h3 className="font-semibold text-app-text">Distribución por Turno</h3>
+              <p className="text-xs text-app-text-secondary">Horario de trabajo</p>
             </div>
-            <Wrench className="h-5 w-5 text-slate-400" />
+            <Wrench className="h-5 w-5 text-app-text-secondary" />
           </div>
 
           <div className="space-y-3">
@@ -245,12 +245,12 @@ export const DashboardEmployeesView: React.FC = () => {
               return (
                 <div key={i}>
                   <div className="flex items-center justify-between text-sm mb-1">
-                    <span className="font-medium text-slate-700">{stat.label}</span>
-                    <span className="text-slate-600 font-semibold">
+                    <span className="font-medium text-app-text">{stat.label}</span>
+                    <span className="text-app-text-secondary font-semibold">
                       {stat.count} ({percentage.toFixed(0)}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
                     <div
                       className="bg-indigo-600 h-full rounded-full"
                       style={{ width: `${percentage}%` }}
@@ -263,35 +263,35 @@ export const DashboardEmployeesView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="font-semibold text-slate-800">Empleados Recientes</h3>
-            <p className="text-xs text-slate-500">Últimas incorporaciones</p>
+            <h3 className="font-semibold text-app-text">Empleados Recientes</h3>
+            <p className="text-xs text-app-text-secondary">Últimas incorporaciones</p>
           </div>
-          <Calendar className="h-5 w-5 text-slate-400" />
+          <Calendar className="h-5 w-5 text-app-text-secondary" />
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-200">
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+              <tr className="border-b border-app-border">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Empleado
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Categoría
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Centro
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Turno
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Estado
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   <Calendar className="h-4 w-4 inline mr-1" />
                   Fecha Alta
                 </th>
@@ -301,27 +301,27 @@ export const DashboardEmployeesView: React.FC = () => {
               {recentEmployees.map((emp) => (
                 <tr
                   key={emp.id}
-                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                  className="border-b border-app-border last:border-0 hover:bg-app-bg"
                 >
                   <td className="py-3 px-4">
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-app-text">
                       {emp.name} {emp.lastName1}
                     </p>
-                    <p className="text-xs text-slate-500">{emp.email}</p>
+                    <p className="text-xs text-app-text-secondary">{emp.email}</p>
                   </td>
                   <td className="py-3 px-4">
-                    <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
+                    <span className="text-xs font-medium text-app-text bg-app-bg px-2 py-1 rounded">
                       {categoryMap[emp.category_id] || emp.category_id}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-sm text-slate-600">{wcNameMap[emp.work_center_id] || emp.work_center_id}</td>
+                  <td className="py-3 px-4 text-sm text-app-text-secondary">{wcNameMap[emp.work_center_id] || emp.work_center_id}</td>
                   <td className="py-3 px-4">
-                    <span className="text-xs text-slate-600">
+                    <span className="text-xs text-app-text-secondary">
                       {emp.start_time}-{emp.end_time}
                     </span>
                   </td>
                   <td className="py-3 px-4">{getStatusBadge(emp.status_id)}</td>
-                  <td className="py-3 px-4 text-sm text-slate-600">
+                  <td className="py-3 px-4 text-sm text-app-text-secondary">
                     {formatDate(emp.created_at)}
                   </td>
                 </tr>

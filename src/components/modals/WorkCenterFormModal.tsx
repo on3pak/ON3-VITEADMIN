@@ -57,22 +57,22 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 overflow-hidden animate-scale-in">
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+      <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-lg border border-app-card-border overflow-hidden animate-scale-in">
 
-        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div className="px-6 py-4 bg-app-bg border-b border-app-border flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className={`p-2 rounded-lg ${editingWorkCenter ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
               {editingWorkCenter ? <Save className="h-5 w-5" /> : <Building2 className="h-5 w-5" />}
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">
+              <h3 className="font-bold text-app-text">
                 {editingWorkCenter ? `Editar Centro: ${editingWorkCenter.name}` : 'Registrar Nuevo Centro'}
               </h3>
-              <p className="text-xs text-slate-400">Datos del centro de trabajo</p>
+              <p className="text-xs text-app-text-secondary">Datos del centro de trabajo</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
+          <button onClick={onClose} className="text-app-text-secondary hover:text-app-text-secondary p-1.5 hover:bg-app-bg rounded-lg transition-colors cursor-pointer">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -87,33 +87,33 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
 
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Nombre del Centro *</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Nave Central" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800" />
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">Nombre del Centro *</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Nave Central" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text" />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Dirección *</label>
-              <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Ej. Calle Industria 42" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800" />
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">Dirección *</label>
+              <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Ej. Calle Industria 42" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text" />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Ciudad</label>
-              <select value={cityId} onChange={(e) => setCityId(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">Ciudad</label>
+              <select value={cityId} onChange={(e) => setCityId(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text">
                 {INITIAL_CITIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Estado</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE')} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">Estado</label>
+              <select value={status} onChange={(e) => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text">
                 <option value="ACTIVE">Activo</option>
                 <option value="INACTIVE">Inactivo</option>
               </select>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-200 hover:bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl transition-colors cursor-pointer">Cancelar</button>
+          <div className="pt-3 border-t border-app-border flex items-center justify-end gap-2">
+            <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-200 hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors cursor-pointer">Cancelar</button>
             <button type="submit" className={`px-5 py-2 text-white text-sm font-semibold rounded-xl transition-all shadow-xs cursor-pointer ${editingWorkCenter ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/10' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/10'}`}>
               {editingWorkCenter ? 'Guardar Cambios' : 'Registrar Centro'}
             </button>

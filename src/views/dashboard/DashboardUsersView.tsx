@@ -45,7 +45,7 @@ export const DashboardUsersView: React.FC = () => {
     { label: 'ROOT', count: countByRole('ROOT'), color: 'bg-purple-500' },
     { label: 'ADMIN', count: countByRole('ADMIN'), color: 'bg-blue-500' },
     { label: 'MANAGER', count: countByRole('MANAGER'), color: 'bg-amber-500' },
-    { label: 'USER', count: countByRole('USER'), color: 'bg-slate-500' },
+    { label: 'USER', count: countByRole('USER'), color: 'bg-app-bg0' },
   ];
 
   const statColor = (color: string) => {
@@ -80,27 +80,27 @@ export const DashboardUsersView: React.FC = () => {
         {stats.map((stat, i) => (
           <div
             key={i}
-            className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs"
+            className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs"
           >
             <div className={`p-2.5 rounded-xl ${statColor(stat.color).bg} border ${statColor(stat.color).border} w-fit mb-3`}>
               <div className={`${statColor(stat.color).text}`}>{stat.icon}</div>
             </div>
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+            <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">
               {stat.title}
             </p>
-            <p className="text-2xl font-bold text-slate-800 mt-1">{stat.value}</p>
+            <p className="text-2xl font-bold text-app-text mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs lg:col-span-2">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs lg:col-span-2">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Distribución por Rol</h3>
-              <p className="text-xs text-slate-500">Usuarios por nivel de acceso</p>
+              <h3 className="font-semibold text-app-text">Distribución por Rol</h3>
+              <p className="text-xs text-app-text-secondary">Usuarios por nivel de acceso</p>
             </div>
-            <Shield className="h-5 w-5 text-slate-400" />
+            <Shield className="h-5 w-5 text-app-text-secondary" />
           </div>
 
           <div className="space-y-4">
@@ -109,12 +109,12 @@ export const DashboardUsersView: React.FC = () => {
               return (
                 <div key={i}>
                   <div className="flex items-center justify-between text-sm mb-1.5">
-                    <span className="font-medium text-slate-700">{stat.label}</span>
-                    <span className="text-slate-600 font-semibold">
+                    <span className="font-medium text-app-text">{stat.label}</span>
+                    <span className="text-app-text-secondary font-semibold">
                       {stat.count} ({percentage.toFixed(0)}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-app-bg rounded-full h-2.5 overflow-hidden">
                     <div
                       className={`${stat.color} h-full rounded-full transition-all duration-500`}
                       style={{ width: `${percentage}%` }}
@@ -126,78 +126,78 @@ export const DashboardUsersView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="font-semibold text-slate-800">Información de Sesión</h3>
-              <p className="text-xs text-slate-500">Tu cuenta actual</p>
+              <h3 className="font-semibold text-app-text">Información de Sesión</h3>
+              <p className="text-xs text-app-text-secondary">Tu cuenta actual</p>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+            <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
               <div className="p-2 bg-indigo-100 rounded-lg">
                 <Users className="h-4 w-4 text-indigo-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-slate-500">Usuario</p>
-                <p className="text-sm font-semibold text-slate-800 truncate">
+                <p className="text-xs text-app-text-secondary">Usuario</p>
+                <p className="text-sm font-semibold text-app-text truncate">
                   {loggedInUser?.full_name}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+            <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Mail className="h-4 w-4 text-blue-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-slate-500">Email</p>
-                <p className="text-sm font-semibold text-slate-800 truncate">
+                <p className="text-xs text-app-text-secondary">Email</p>
+                <p className="text-sm font-semibold text-app-text truncate">
                   {loggedInUser?.email}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+            <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Shield className="h-4 w-4 text-purple-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-slate-500">Rol</p>
-                  <p className="text-sm font-semibold text-slate-800">{loggedInUser?.role}</p>
+                <p className="text-xs text-app-text-secondary">Rol</p>
+                  <p className="text-sm font-semibold text-app-text">{loggedInUser?.role}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="font-semibold text-slate-800">Usuarios Recientes</h3>
-            <p className="text-xs text-slate-500">Últimos registros en el sistema</p>
+            <h3 className="font-semibold text-app-text">Usuarios Recientes</h3>
+            <p className="text-xs text-app-text-secondary">Últimos registros en el sistema</p>
           </div>
-          <Clock className="h-5 w-5 text-slate-400" />
+          <Clock className="h-5 w-5 text-app-text-secondary" />
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-200">
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+              <tr className="border-b border-app-border">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Usuario
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Email
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Rol
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   Estado
                 </th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-3 px-4">
+                <th className="text-left text-xs font-semibold text-app-text-secondary uppercase tracking-wide py-3 px-4">
                   <Calendar className="h-4 w-4 inline mr-1" />
                   Fecha de Creación
                 </th>
@@ -207,20 +207,20 @@ export const DashboardUsersView: React.FC = () => {
               {recentUsers.map((u, i) => (
                 <tr
                   key={u.id}
-                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                  className="border-b border-app-border last:border-0 hover:bg-app-bg"
                 >
                   <td className="py-3 px-4">
-                    <p className="text-sm font-semibold text-slate-800">{u.full_name}</p>
-                    <p className="text-xs text-slate-500">@{u.username}</p>
+                    <p className="text-sm font-semibold text-app-text">{u.full_name}</p>
+                    <p className="text-xs text-app-text-secondary">@{u.username}</p>
                   </td>
-                  <td className="py-3 px-4 text-sm text-slate-600">{u.email}</td>
+                  <td className="py-3 px-4 text-sm text-app-text-secondary">{u.email}</td>
                   <td className="py-3 px-4">
-                    <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
+                    <span className="text-xs font-medium text-app-text bg-app-bg px-2 py-1 rounded">
                       {u.role}
                     </span>
                   </td>
                   <td className="py-3 px-4">{getStatusBadge(u.status)}</td>
-                  <td className="py-3 px-4 text-sm text-slate-600">
+                  <td className="py-3 px-4 text-sm text-app-text-secondary">
                     {formatDate(u.created_at)}
                   </td>
                 </tr>

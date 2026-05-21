@@ -96,25 +96,25 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 overflow-hidden animate-scale-in">
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+      <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-lg border border-app-card-border overflow-hidden animate-scale-in">
         
         {/* Header Title */}
-        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div className="px-6 py-4 bg-app-bg border-b border-app-border flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className={`p-2 rounded-lg ${editingUser ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
               {editingUser ? <Save className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">
+              <h3 className="font-bold text-app-text">
                 {editingUser ? `Editar Usuario: @${editingUser.username}` : 'Registrar Nuevo Usuario'}
               </h3>
-              <p className="text-xs text-slate-400">Completa los parámetros de acceso y privilegios</p>
+              <p className="text-xs text-app-text-secondary">Completa los parámetros de acceso y privilegios</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+            className="text-app-text-secondary hover:text-app-text-secondary p-1.5 hover:bg-app-bg rounded-lg transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
@@ -134,7 +134,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
             
             {/* Full Name */}
             <div className="col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Nombre Completo *
               </label>
               <input
@@ -142,13 +142,13 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Ej. Juan Pérez González"
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800"
+                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
               />
             </div>
 
             {/* Username */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Nombre de Usuario *
               </label>
               <input
@@ -157,15 +157,15 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={!!editingUser}
                 placeholder="ej. jperez"
-                className={`w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden text-slate-800 ${
-                  editingUser ? 'bg-slate-100 cursor-not-allowed opacity-70' : 'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all'
+                className={`w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden text-app-text ${
+                  editingUser ? 'bg-app-bg cursor-not-allowed opacity-70' : 'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all'
                 }`}
               />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Correo Electrónico *
               </label>
               <input
@@ -173,19 +173,19 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="correo@on3.com"
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800"
+                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
               />
             </div>
 
             {/* Role Assignment Dropdown */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Rol de Privilegio (RBAC)
               </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800"
+                className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
               >
                 <option value="USER" disabled={isRoleSelectionDisabled('USER')}>USER (Lectura Básica)</option>
                 <option value="MANAGER" disabled={isRoleSelectionDisabled('MANAGER')}>MANAGER (Gestión Media)</option>
@@ -196,13 +196,13 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
 
             {/* Status Dropdown */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Estado Cuenta
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE')}
-                className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-slate-800"
+                className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
               >
                 <option value="ACTIVE">Activo</option>
                 <option value="INACTIVE">Inactivo</option>
@@ -212,17 +212,17 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
           </div>
 
           {/* Role hierarchy disclaimer */}
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-500 space-y-1">
-            <span className="font-bold text-slate-700 block">ℹ️ Restricciones jerárquicas en ejecución:</span>
+          <div className="p-3 rounded-xl bg-app-bg border border-app-border text-[11px] text-app-text-secondary space-y-1">
+            <span className="font-bold text-app-text block">ℹ️ Restricciones jerárquicas en ejecución:</span>
             <p>Los mánagers solo crean/editan mánagers y usuarios comunes. Los administradores controlan todos excepto cuentas del ROOT supremo.</p>
           </div>
 
           {/* Action buttons footer */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-app-border flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-slate-200 hover:bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl transition-colors cursor-pointer"
+              className="px-4 py-2 border border-slate-200 hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors cursor-pointer"
             >
               Cancelar
             </button>

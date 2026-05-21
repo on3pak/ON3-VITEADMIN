@@ -116,12 +116,12 @@ const MainLayout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-200 font-sans">
+      <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center text-sidebar-text font-sans">
         <div className="space-y-4 text-center">
-          <div className="h-10 w-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto" />
+          <div className="h-10 w-10 border-4 border-primary-500/20 border-t-primary-500 rounded-full animate-spin mx-auto" />
           <div className="space-y-1">
             <h2 className="font-bold text-base tracking-wide text-white">ON3ADMIN Secure App</h2>
-            <p className="text-xs text-slate-500 font-mono">Verificando firma de token JWT local...</p>
+            <p className="text-xs text-sidebar-text font-mono">Verificando firma de token JWT local...</p>
           </div>
         </div>
       </div>
@@ -227,7 +227,7 @@ const MainLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased flex">
+    <div className="min-h-screen bg-app-bg text-app-text font-sans antialiased flex">
       <Sidebar 
         currentView={currentView} 
         setView={handleViewChange} 
@@ -235,7 +235,7 @@ const MainLayout: React.FC = () => {
         setSidebarOpen={setSidebarOpen} 
       />
 
-      <div className="flex-1 flex flex-col min-w-0 ml-0 lg:ml-20 xl:ml-56 transition-all duration-300">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-[265px] transition-all duration-300">
         <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="flex-1 overflow-y-auto w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">

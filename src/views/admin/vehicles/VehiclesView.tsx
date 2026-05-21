@@ -15,7 +15,7 @@ const STATUS_STYLES: Record<string, string> = {
   'ACTIVO': 'bg-emerald-100 text-emerald-800 border-emerald-200',
   'MANTENIMIENTO': 'bg-amber-100 text-amber-800 border-amber-200',
   'AVERIADO': 'bg-rose-100 text-rose-800 border-rose-200',
-  'BAJA': 'bg-slate-100 text-slate-800 border-slate-200',
+  'BAJA': 'bg-app-bg text-app-text border-app-border',
 };
 
 const TYPE_COLORS: Record<VehicleType, string> = {
@@ -94,13 +94,13 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
   const paginatedVehicles = filteredVehicles.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const getBadgeStyle = (status: string) => STATUS_STYLES[status] ?? 'bg-slate-100 text-slate-800 border-slate-200';
+  const getBadgeStyle = (status: string) => STATUS_STYLES[status] ?? 'bg-app-bg text-app-text border-app-border';
 
   return (
     <div className="space-y-5">
-      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
           </div>
           <input
@@ -108,17 +108,17 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por matrícula, modelo o marca..."
-            className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 lg:hidden">
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
+            <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
               <option value="ACTIVO">Activo</option>
@@ -128,11 +128,11 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <select
               value={workCenterFilter}
               onChange={(e) => setWorkCenterFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
               {scopeWorkCenters.map((w) => (
@@ -157,11 +157,11 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
       <div className="flex gap-5">
         <div className="flex-1">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
+                  <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                     <th className="py-3 px-6">Vehículo</th>
                     <th className="py-3 px-4 w-28 text-center">Tipo</th>
                     <th className="py-3 px-4 w-24 text-center">Estado</th>
@@ -169,24 +169,24 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                     <th className="py-3 px-4 w-20 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
+                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
                   {paginatedVehicles.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-slate-400 font-medium">
+                      <td colSpan={5} className="py-12 text-center text-app-text-secondary font-medium">
                         No se encontraron vehículos.
                       </td>
                     </tr>
                   ) : (
                     paginatedVehicles.map((v) => (
-                      <tr key={v.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={v.id} className="hover:bg-app-bg/70 transition-colors">
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm shadow-blue-500/20">
                               <Truck className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                              <div className="font-bold text-slate-900 leading-tight">{v.brand} {v.model}</div>
-                              <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                              <div className="font-bold text-app-text-secondary leading-tight">{v.brand} {v.model}</div>
+                              <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
                                 <span className="font-mono text-indigo-600 font-semibold">{v.licensePlate}</span>
                               </div>
                             </div>
@@ -195,7 +195,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
-                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[vehicleTypeMap[v.vehicle_type_id]] || 'bg-slate-100'}`}>
+                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[vehicleTypeMap[v.vehicle_type_id]] || 'bg-app-bg'}`}>
                               {vehicleTypeMap[v.vehicle_type_id]}
                             </span>
                           </div>
@@ -210,14 +210,14 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                         </td>
 
                         <td className="py-3.5 px-4 text-center">
-                          <span className="text-xs font-mono text-slate-600">{v.kilometers.toLocaleString()} km</span>
+                          <span className="text-xs font-mono text-app-text-secondary">{v.kilometers.toLocaleString()} km</span>
                         </td>
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewVehicle?.(v.id)} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
-                            <button onClick={() => handleEdit(v.id)} className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                            <button onClick={() => handleDelete(v.id)} className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                            <button onClick={() => onViewVehicle?.(v.id)} className="p-1.5 text-app-text-secondary hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => handleEdit(v.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                            <button onClick={() => handleDelete(v.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                           </div>
                         </td>
                       </tr>
@@ -226,13 +226,13 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                 </tbody>
               </table>
             </div>
-            <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-app-text-secondary">
                 <span>Mostrar</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+                  className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -242,11 +242,11 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               </div>
 
               <div className="flex items-center gap-1">
-                <span className="text-xs text-slate-500 mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+                <span className="text-xs text-app-text-secondary mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -254,16 +254,16 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
         <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
           {(() => { const o = openSections.centros; return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Centros de Trabajo
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
             <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Centros</button>
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -271,16 +271,16 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
           )})()}
 
           {(() => { const o = openSections.estado; return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Estado
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
             <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Estados</button>
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {['ACTIVO', 'MANTENIMIENTO', 'AVERIADO', 'BAJA'].map((s) => (
-                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}</button>
+                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}</button>
               ))}
             </div>
             )}

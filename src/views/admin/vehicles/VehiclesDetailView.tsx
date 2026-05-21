@@ -14,17 +14,17 @@ interface VehiclesDetailViewProps {
 
 const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string; highlight?: boolean }> = ({ icon, label, value, highlight }) => (
   <div className="flex items-start gap-3">
-    <div className="text-slate-400 mt-0.5">{icon}</div>
+    <div className="text-app-text-secondary mt-0.5">{icon}</div>
     <div>
-      <div className="text-xs text-slate-500">{label}</div>
-      <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-slate-800'}`}>{value}</div>
+      <div className="text-xs text-app-text-secondary">{label}</div>
+      <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-app-text'}`}>{value}</div>
     </div>
   </div>
 );
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
-  <div className="bg-white rounded-xl border border-slate-200 p-4">
-    <div className="flex items-center gap-2 mb-4 text-slate-700 font-semibold text-sm">
+  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+    <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
       <span>{title}</span>
     </div>
@@ -37,7 +37,7 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
     'ACTIVE': 'bg-emerald-100 text-emerald-700 border-emerald-200',
     'MAINTENANCE': 'bg-amber-100 text-amber-700 border-amber-200',
     'AVERIADO': 'bg-rose-100 text-rose-700 border-rose-200',
-    'BAJA': 'bg-slate-100 text-slate-700 border-slate-200',
+    'BAJA': 'bg-app-bg text-app-text border-app-border',
   };
   const labels: Record<string, string> = {
     'ACTIVE': 'Activo',
@@ -45,7 +45,7 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
     'AVERIADO': 'Averiado',
     'BAJA': 'Baja',
   };
-  return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[status] || 'bg-slate-100'}`}>{labels[status] || status}</span>;
+  return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[status] || 'bg-app-bg'}`}>{labels[status] || status}</span>;
 };
 
 const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.type]));
@@ -61,8 +61,8 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
   if (!vehicle) {
     return (
       <div className="space-y-5">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
-          <p className="text-slate-400">Vehículo no encontrado.</p>
+        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+          <p className="text-app-text-secondary">Vehículo no encontrado.</p>
           <button onClick={onBack} className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl">Volver</button>
         </div>
       </div>
@@ -75,7 +75,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
   };
 
   const checkExpiration = (date: string) => {
-    if (!date) return { color: 'text-slate-500 bg-slate-50', text: 'Sin fecha' };
+    if (!date) return { color: 'text-app-text-secondary bg-app-bg', text: 'Sin fecha' };
     const exp = new Date(date);
     const now = new Date();
     const diff = exp.getTime() - now.getTime();
@@ -107,13 +107,13 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-2 text-slate-600 hover:text-slate-800 text-sm font-medium">
+        <button onClick={onBack} className="flex items-center gap-2 text-app-text-secondary hover:text-app-text text-sm font-medium">
           <ArrowLeft className="h-4 w-4" />
           <span>Volver</span>
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
         <div className="px-6 py-5 bg-gradient-to-r from-blue-600 to-blue-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">

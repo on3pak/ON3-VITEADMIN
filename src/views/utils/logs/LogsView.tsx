@@ -25,10 +25,10 @@ export const LogsView: React.FC<LogsViewProps> = ({ logType }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-slate-800">{getLogTitle(logType)}</h3>
+        <h3 className="font-semibold text-app-text">{getLogTitle(logType)}</h3>
       </div>
 
-      <div className="text-center py-12 text-slate-400">
+      <div className="text-center py-12 text-app-text-secondary">
         <p className="text-sm">No hay logs disponibles para {getLogTitle(logType)}</p>
       </div>
     </div>

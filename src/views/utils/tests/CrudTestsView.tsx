@@ -32,7 +32,7 @@ export const CrudTestsView: React.FC = () => {
   const getStatusBadge = (status: MockTest['status']) => {
     switch (status) {
       case 'IDLE':
-        return <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-500 font-mono">EN ESPERA</span>;
+        return <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-app-text-secondary font-mono">EN ESPERA</span>;
       case 'RUNNING':
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-700 font-mono font-bold animate-pulse">
@@ -61,8 +61,8 @@ export const CrudTestsView: React.FC = () => {
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-bold text-slate-800">Tests de CRUD</h3>
-            <p className="text-xs text-slate-400 mt-1">Operaciones de creación, lectura, actualización y eliminación</p>
+            <h3 className="font-bold text-app-text">Tests de CRUD</h3>
+            <p className="text-xs text-app-text-secondary mt-1">Operaciones de creación, lectura, actualización y eliminación</p>
           </div>
           <button
             onClick={runAllTests}
@@ -90,25 +90,25 @@ export const CrudTestsView: React.FC = () => {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-slate-400 font-bold bg-slate-100 px-1.5 py-0.2 rounded">
+                  <span className="font-mono text-xs text-app-text-secondary font-bold bg-slate-100 px-1.5 py-0.2 rounded">
                     {test.id}
                   </span>
                   <span className="text-[9px] bg-amber-50 text-amber-700 px-1.5 py-0.2 rounded font-extrabold uppercase font-mono">
                     CRUD
                   </span>
                 </div>
-                <h4 className="font-bold text-slate-800 text-sm mt-1">{test.name}</h4>
-                <p className="text-xs text-slate-400 mt-1">{test.description}</p>
+                <h4 className="font-bold text-app-text text-sm mt-1">{test.name}</h4>
+                <p className="text-xs text-app-text-secondary mt-1">{test.description}</p>
               </div>
               {getStatusBadge(test.status)}
             </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-100 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Assertions:</span>
+            <div className="mt-4 pt-3 border-t border-app-border space-y-2">
+              <span className="text-[10px] uppercase font-bold text-app-text-secondary tracking-wider block">Assertions:</span>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {test.assertions.map((assertion, aIdx) => (
                   <div key={aIdx} className={`p-2 rounded-xl border text-xs flex items-start gap-2 ${
-                    test.status === 'PASSED' ? 'bg-emerald-50/40 border-emerald-100 text-slate-600' : 'bg-slate-50 border-slate-100 text-slate-500'
+                    test.status === 'PASSED' ? 'bg-emerald-50/40 border-emerald-100 text-app-text-secondary' : 'bg-slate-50 border-app-border text-app-text-secondary'
                   }`}>
                     {test.status === 'PASSED' ? <CheckCircle className="h-3.5 w-3.5 text-emerald-600 mt-0.5" /> : <div className="h-3.5 w-3.5 rounded-full border border-slate-300 mt-0.5" />}
                     <span>{assertion}</span>

@@ -88,9 +88,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
   return (
     <div className="space-y-5">
-      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
           </div>
           <input
@@ -98,17 +98,17 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o tipo..."
-            className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 lg:hidden">
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
+            <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
               <option value="BARRIDO MIXTO">Barrido Mixto</option>
@@ -120,11 +120,11 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <select
               value={workCenterFilter}
               onChange={(e) => setWorkCenterFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
               {scopeWorkCenters.map((w) => (
@@ -149,35 +149,35 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
       <div className="flex gap-5">
         <div className="flex-1">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
+                  <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                     <th className="py-3 px-6">Servicio</th>
                     <th className="py-3 px-4 w-28 text-center">Tipo</th>
                     <th className="py-3 px-4 w-20 text-center">Progreso</th>
                     <th className="py-3 px-4 w-20 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
+                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
                   {paginatedServices.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="py-12 text-center text-slate-400 font-medium">
+                      <td colSpan={4} className="py-12 text-center text-app-text-secondary font-medium">
                         No se encontraron servicios.
                       </td>
                     </tr>
                   ) : (
                     paginatedServices.map((s) => (
-                      <tr key={s.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={s.id} className="hover:bg-app-bg/70 transition-colors">
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-sm shadow-indigo-500/20">
                               <ClipboardList className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                              <div className="font-bold text-slate-900 leading-tight">{s.name}</div>
-                              <div className="text-xs text-slate-400 mt-0.5">
+                              <div className="font-bold text-app-text-secondary leading-tight">{s.name}</div>
+                              <div className="text-xs text-app-text-secondary mt-0.5">
                                 <span className="font-medium text-indigo-600">{s.type}</span>
                               </div>
                             </div>
@@ -186,7 +186,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
-                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[s.type] || 'bg-slate-100'}`}>
+                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[s.type] || 'bg-app-bg'}`}>
                               {s.type}
                             </span>
                           </div>
@@ -194,10 +194,10 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex flex-col items-center gap-1">
-                            <span className="text-xs font-mono font-semibold text-slate-700">
+                            <span className="text-xs font-mono font-semibold text-app-text">
                               {s.completedTasks}/{s.totalTasks}
                             </span>
-                            <div className="w-full max-w-[80px] h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div className="w-full max-w-[80px] h-1.5 bg-app-bg rounded-full overflow-hidden">
                               <div
                                 className="h-full bg-indigo-500 rounded-full transition-all"
                                 style={{ width: `${(s.completedTasks / s.totalTasks) * 100}%` }}
@@ -208,9 +208,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewService?.(s.id)} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver tareas"><Eye className="h-4 w-4" /></button>
-                            <button onClick={() => handleEdit(s.id)} className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                            <button onClick={() => handleDelete(s.id)} className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                            <button onClick={() => onViewService?.(s.id)} className="p-1.5 text-app-text-secondary hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver tareas"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => handleEdit(s.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                            <button onClick={() => handleDelete(s.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                           </div>
                         </td>
                       </tr>
@@ -219,13 +219,13 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                 </tbody>
               </table>
             </div>
-            <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-app-text-secondary">
                 <span>Mostrar</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+                  className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -235,11 +235,11 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
               </div>
 
               <div className="flex items-center gap-1">
-                <span className="text-xs text-slate-500 mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+                <span className="text-xs text-app-text-secondary mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -247,16 +247,16 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
         <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
           {(() => { const o = openSections.centros; return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Centros de Trabajo
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
             <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Centros</button>
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -264,16 +264,16 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
           )})()}
 
           {(() => { const o = openSections.tipo; return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('tipo')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('tipo')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Tipo
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
             <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setTypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Tipos</button>
+              <button onClick={() => setTypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
               {['BARRIDO MIXTO', 'BARRIDO MANUAL', 'BARRIDO MECÁNICO', 'BALDEO', 'RECOGIDA', 'VACIADO'].map((t) => (
-                <button key={t} onClick={() => setTypeFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === t ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
+                <button key={t} onClick={() => setTypeFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === t ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
               ))}
             </div>
             )}

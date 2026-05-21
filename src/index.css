@@ -1,1 +1,106 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  --color-sidebar: #1a1a2e;
+  --color-sidebar-hover: #232344;
+  --color-sidebar-active: #2d2d5e;
+  --color-sidebar-muted: #2d2d4a;
+  --color-sidebar-text: #9293ab;
+  --color-sidebar-text-active: #ffffff;
+  --color-sidebar-border: #2d2d4a;
+  --color-sidebar-brand: #6366f1;
+
+  --color-app-bg: #f0f2f5;
+  --color-app-card: #ffffff;
+  --color-app-card-border: #eff0f2;
+  --color-app-text: #1a1a2e;
+  --color-app-text-secondary: #6c6c80;
+  --color-app-border: #e8e8ec;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Metronic-style scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Metronic-style card */
+.metronic-card {
+  background-color: var(--color-app-card);
+  border: 1px solid var(--color-app-card-border);
+  border-radius: 0.75rem;
+}
+
+.metronic-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-app-card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metronic-card-body {
+  padding: 1.25rem;
+}
+
+/* Metronic-style table wrapper */
+.metronic-table {
+  @apply w-full;
+}
+
+.metronic-table th {
+  @apply text-xs font-semibold uppercase tracking-wider text-app-text-secondary px-4 py-3 text-left bg-app-bg border-b border-app-border;
+}
+
+.metronic-table td {
+  @apply text-sm text-app-text px-4 py-3 border-b border-app-border;
+}
+
+/* Metronic badge variant */
+.metronic-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+/* Metronic button variant */
+.metronic-btn-primary {
+  @apply inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg hover:bg-primary-700 transition-colors;
+}
+
+.metronic-btn-light {
+  @apply inline-flex items-center gap-1.5 px-4 py-2 bg-app-bg text-app-text text-sm font-semibold rounded-lg hover:bg-app-border transition-colors;
+}
+
+/* Metronic input variant */
+.metronic-input {
+  @apply w-full px-3.5 py-2 text-sm border border-app-border rounded-lg bg-white text-app-text placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all;
+}

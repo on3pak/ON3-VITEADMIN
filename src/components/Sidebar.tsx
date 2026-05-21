@@ -113,42 +113,40 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
   const getRoleBadgeStyle = (role: string) => {
     switch (role) {
       case 'ROOT':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
       case 'ADMIN':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-primary-500/15 text-primary-300 border-primary-500/30';
       case 'MANAGER':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
       default:
-        return 'bg-slate-100 text-slate-800 border-slate-200';
+        return 'bg-sidebar-muted/30 text-sidebar-text border-sidebar-border';
     }
   };
 
   return (
     <>
-      {/* Mobile overlay backdrop */}
       {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20 lg:hidden"
+        <div
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
           onClick={() => setSidebarOpen?.(false)}
         />
       )}
-      
-      {/* Sidebar */}
+
       <aside className={`
         fixed inset-y-0 left-0 z-30
-        bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800
-        w-64 transform transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:w-20 xl:w-56
+        bg-sidebar text-sidebar-text flex flex-col
+        w-[265px] transform transition-transform duration-300 ease-in-out
+        lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        {/* Brand Logo Header */}
-        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-950/40 shrink-0">
-          <div className="p-2.5 rounded-lg bg-indigo-600 text-white shadow-md shadow-indigo-600/20 shrink-0">
-            <ShieldCheck className="h-6 w-6" />
+        {/* Brand */}
+        <div className="flex items-center gap-3 px-5 h-[70px] shrink-0 border-b border-sidebar-border">
+          <div className="p-2 rounded-lg bg-primary-500 text-white shadow-lg shadow-primary-500/20 shrink-0">
+            <ShieldCheck className="h-5 w-5" />
           </div>
-          <div className="lg:hidden xl:block overflow-hidden">
-            <h1 className="font-bold text-base text-white tracking-wide truncate">ON3ADMIN</h1>
-            <p className="text-xs text-indigo-400 font-semibold tracking-wider">SECURE SUITE</p>
+          <div className="overflow-hidden">
+            <h1 className="font-bold text-base text-white tracking-tight">ON3ADMIN</h1>
+            <p className="text-[11px] text-primary-400 font-semibold tracking-wider">SECURE SUITE</p>
           </div>
         </div>
 
@@ -156,18 +154,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         {user && (
           <button
             onClick={() => { setView('PROFILE'); setSidebarOpen?.(false); }}
-            className="w-full text-left p-4 border-b border-slate-800/60 bg-slate-950/20 flex items-center gap-3 shrink-0 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all group relative"
+            className="w-full text-left px-5 py-4 border-b border-sidebar-border flex items-center gap-3 shrink-0 hover:bg-sidebar-hover transition-colors group"
           >
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-0 rounded-full group-hover:h-8 group-hover:bg-indigo-400/50 transition-all duration-300" />
-            <img 
-              src={user.avatar_url} 
-              alt={user.full_name} 
-              className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 p-0.5 shadow-sm shrink-0 group-hover:border-indigo-500/50 transition-colors"
+            <img
+              src={user.avatar_url}
+              alt={user.full_name}
+              className="w-10 h-10 rounded-lg bg-sidebar-muted border border-sidebar-border p-0.5 shrink-0"
             />
-            <div className="flex-1 min-w-0 lg:hidden xl:block">
-              <h3 className="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">{user.full_name}</h3>
-              <p className="text-xs text-slate-400 truncate group-hover:text-indigo-400/70 transition-colors">@{user.username}</p>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border mt-1 group-hover:border-indigo-500/40 transition-colors ${getRoleBadgeStyle(user.role)}`}>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-semibold text-white truncate">{user.full_name}</h3>
+              <p className="text-xs text-sidebar-text truncate">@{user.username}</p>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border mt-1 ${getRoleBadgeStyle(user.role)}`}>
                 <KeyRound className="h-2.5 w-2.5 mr-1 inline" />
                 {user.role}
               </span>
@@ -175,41 +172,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           </button>
         )}
 
-        {/* Navigation Links */}
-        <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
+        {/* Navigation */}
+        <nav className="flex-1 py-4 px-3 space-y-5 overflow-y-auto">
           {Object.entries(menuItems).map(([category, items]) => (
             items.length > 0 && (
               <div key={category}>
-                <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 lg:hidden xl:block">{category}</p>
-                <div className="space-y-1">
+                <p className="px-3 text-[10px] font-bold text-sidebar-text uppercase tracking-[0.12em] mb-2">{category}</p>
+                <div className="space-y-0.5">
                   {items.map((item) => {
                     const isActive = currentView === item.id;
                     const isDisabled = (item as { disabled?: boolean }).disabled;
-                    
+
                     return (
                       <button
                         key={item.id}
                         onClick={() => !isDisabled && (setView(item.id), setSidebarOpen?.(false))}
                         disabled={isDisabled}
-                        className={`w-full flex items-center gap-3.5 px-3 py-3 rounded-xl text-left transition-all group ${
-                          isActive 
-                            ? 'bg-indigo-600 text-white font-medium shadow-md shadow-indigo-600/10' 
+                        className={`
+                          w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all relative
+                          ${isActive
+                            ? 'bg-primary-500/10 text-white font-medium'
                             : isDisabled
-                              ? 'opacity-50 cursor-not-allowed text-slate-500'
-                              : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
-                        }`}
+                              ? 'opacity-40 cursor-not-allowed text-sidebar-text'
+                              : 'text-sidebar-text hover:bg-sidebar-hover hover:text-white'
+                          }
+                        `}
                       >
-                        <div className={`p-1.5 rounded-lg transition-colors shrink-0 ${
-                          isActive ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
+                        {/* Active indicator */}
+                        {isActive && (
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary-400 rounded-full" />
+                        )}
+
+                        <div className={`p-1.5 rounded-lg shrink-0 ${
+                          isActive ? 'bg-primary-500/20 text-primary-300' : 'text-sidebar-text'
                         }`}>
                           {item.icon}
                         </div>
-                        <div className="flex-1 min-w-0 lg:hidden xl:block">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="text-sm leading-tight">{item.label}</p>
-                            {isDisabled && <Lock className="h-3 w-3 text-amber-500" />}
+                            {isDisabled && <Lock className="h-3 w-3 text-amber-500/70" />}
                           </div>
-                          <p className={`text-[11px] font-normal truncate mt-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-500'} lg:hidden xl:block`}>
+                          <p className={`text-[11px] font-normal truncate mt-0.5 ${isActive ? 'text-primary-300/70' : 'text-sidebar-text/60'}`}>
                             {item.description}
                           </p>
                         </div>
@@ -222,17 +226,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           ))}
         </nav>
 
-        {/* Footer Logout */}
-        <div className="p-3 border-t border-slate-800 bg-slate-950/30 shrink-0">
+        {/* Logout */}
+        <div className="shrink-0 border-t border-sidebar-border p-3">
           <button
             onClick={logout}
-            className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all group"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-text hover:text-rose-300 hover:bg-rose-500/10 transition-all group"
           >
-            <div className="flex items-center gap-3">
-              <LogOut className="h-4 w-4 shrink-0" />
-              <span className="lg:hidden xl:block">Cerrar Sesión</span>
-            </div>
-            <span className="text-[10px] bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded font-mono group-hover:bg-rose-500/20 lg:hidden xl:inline">JWT</span>
+            <LogOut className="h-4 w-4 shrink-0" />
+            <span className="flex-1 text-left">Cerrar Sesión</span>
+            <span className="text-[10px] bg-sidebar-muted text-sidebar-text/50 px-1.5 py-0.5 rounded font-mono">JWT</span>
           </button>
         </div>
       </aside>

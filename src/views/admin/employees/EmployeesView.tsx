@@ -34,7 +34,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   'ec-7': 'bg-emerald-100 text-emerald-700 border-emerald-200',
   'ec-8': 'bg-amber-100 text-amber-700 border-amber-200',
   'ec-9': 'bg-orange-100 text-orange-700 border-orange-200',
-  'ec-10': 'bg-slate-100 text-slate-700 border-slate-200',
+  'ec-10': 'bg-app-bg text-app-text border-app-border',
 };
 
 const getInitials = (name: string, last1: string) => {
@@ -156,16 +156,16 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
   const resolveCategory = (id: string) => INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === id)?.name ?? id;
   const resolveStatus = (id: string) => INITIAL_EMPLOYEE_STATUSES.find((s) => s.id === id)?.name ?? id;
-  const getBadgeStyle = (id: string) => STATUS_STYLES[id] ?? 'bg-slate-100 text-slate-800 border-slate-200';
-  const getCategoryBadgeStyle = (id: string) => CATEGORY_COLORS[id] ?? 'bg-slate-100 text-slate-800 border-slate-200';
+  const getBadgeStyle = (id: string) => STATUS_STYLES[id] ?? 'bg-app-bg text-app-text border-app-border';
+  const getCategoryBadgeStyle = (id: string) => CATEGORY_COLORS[id] ?? 'bg-app-bg text-app-text border-app-border';
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
   const renderLookupTab = (s: ReturnType<typeof useLookupState<NamedEntity>>, icon: React.ReactNode, singular: string, plural: string) => (
     <div className="space-y-5">
-      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
           </div>
           <input
@@ -173,55 +173,55 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             value={s.search}
             onChange={(e) => s.setSearch(e.target.value)}
             placeholder={`Buscar ${plural.toLowerCase()}...`}
-            className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
         <button
           onClick={() => s.openModal()}
           disabled={isReadOnly}
-          className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+          className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
         >
           {icon}
           <span>Crear {singular}</span>
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
+              <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                 <th className="py-3 px-6">Nombre</th>
                 <th className="py-3 px-4 w-24 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
+            <tbody className="divide-y divide-slate-100 text-app-text text-sm">
               {s.items.length === 0 ? (
                 <tr>
-                  <td colSpan={2} className="py-12 text-center text-slate-400 font-medium">
+                  <td colSpan={2} className="py-12 text-center text-app-text-secondary font-medium">
                     No se encontraron {plural.toLowerCase()}.
                   </td>
                 </tr>
               ) : (
                 s.items.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={item.id} className="hover:bg-app-bg/70 transition-colors">
                     <td className="py-3.5 px-6">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-lg bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0">
                           {icon}
                         </div>
                         <div>
-                          <div className="font-bold text-slate-900 leading-tight">{item.name}</div>
-                          <div className="text-xs text-slate-400 font-mono">{item.id}</div>
+                          <div className="font-bold text-app-text-secondary leading-tight">{item.name}</div>
+                          <div className="text-xs text-app-text-secondary font-mono">{item.id}</div>
                         </div>
                       </div>
                     </td>
                     <td className="py-3.5 px-4">
                       <div className="flex justify-center gap-1.5">
-                        <button onClick={() => s.openModal(item)} disabled={isReadOnly} className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg" title={`Editar ${singular.toLowerCase()}`}>
+                        <button onClick={() => s.openModal(item)} disabled={isReadOnly} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg" title={`Editar ${singular.toLowerCase()}`}>
                           <Edit3 className="h-4 w-4" />
                         </button>
-                        <button onClick={() => s.setDeleteTarget(item)} disabled={isReadOnly} className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg" title={`Eliminar ${singular.toLowerCase()}`}>
+                        <button onClick={() => s.setDeleteTarget(item)} disabled={isReadOnly} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg" title={`Eliminar ${singular.toLowerCase()}`}>
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -232,13 +232,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             </tbody>
           </table>
         </div>
-        <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+        <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-app-text-secondary">
             <span>Mostrar</span>
             <select
               value={s.ipp}
               onChange={(e) => { s.setIpp(Number(e.target.value)); s.setPage(1); }}
-              className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+              className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -247,40 +247,40 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             <span>por página</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-xs text-slate-500 mr-2">Página {s.totalPages > 0 ? s.page : 0} de {s.totalPages}</span>
-            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.min(s.totalPages, p + 1))} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage(s.totalPages)} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+            <span className="text-xs text-app-text-secondary mr-2">Página {s.totalPages > 0 ? s.page : 0} de {s.totalPages}</span>
+            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.min(s.totalPages, p + 1))} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage(s.totalPages)} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
           </div>
         </div>
       </div>
 
       {s.modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => s.setModalOpen(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-sidebar/80" onClick={() => s.setModalOpen(false)}>
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-app-text-secondary">
                 {s.editItem ? `Editar ${singular}` : `Nuev${singular.endsWith('a') ? 'a' : 'o'} ${singular}`}
               </h2>
-              <button onClick={() => s.setModalOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => s.setModalOpen(false)} className="p-1 text-app-text-secondary hover:text-app-text-secondary rounded-lg hover:bg-app-bg">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nombre</label>
+                <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Nombre</label>
                 <input
                   type="text"
                   value={s.name}
                   onChange={(e) => s.setName(e.target.value)}
                   placeholder={`Nombre del ${singular.toLowerCase()}`}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-slate-800"
+                  className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text"
                   autoFocus
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button onClick={() => s.setModalOpen(false)} className="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                <button onClick={() => s.setModalOpen(false)} className="px-4 py-2 text-sm font-semibold text-app-text-secondary bg-app-bg hover:bg-app-border rounded-xl transition-colors">
                   Cancelar
                 </button>
                 <button onClick={s.save} className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">
@@ -319,32 +319,32 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         </div>
       )}
 
-      <div className="flex gap-1.5 bg-slate-100 rounded-xl p-1 overflow-x-auto">
-        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}>
+      <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
+        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <User className="h-4 w-4" /> Empleados
         </button>
-        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}>
+        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <Tags className="h-4 w-4" /> Categorías
         </button>
-        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}>
+        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <HeartPulse className="h-4 w-4" /> Estados
         </button>
-        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}>
+        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <CalendarDays className="h-4 w-4" /> Jornadas
         </button>
-        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}>
+        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <Clock className="h-4 w-4" /> Turnos
         </button>
-        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}>
+        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <FileText className="h-4 w-4" /> Contratos
         </button>
       </div>
 
       {activeTab === 'employees' && (
         <>
-      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
           </div>
           <input
@@ -352,17 +352,17 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o apellidos..."
-            className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm placeholder-slate-400 text-slate-800 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 lg:hidden">
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
+            <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
               {INITIAL_EMPLOYEE_STATUSES.map((s) => (
@@ -371,11 +371,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <select
               value={workCenterFilter}
               onChange={(e) => setWorkCenterFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
               {scopeWorkCenters.map((w) => (
@@ -387,7 +387,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear</span>
@@ -398,7 +398,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear Empleado</span>
@@ -408,27 +408,27 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
       <div className="flex gap-5">
         <div className="flex-1">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
+                  <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                     <th className="py-3 px-6">Identidad / Empleado</th>
                     <th className="py-3 px-4 w-28 text-center">Categoría</th>
                     <th className="py-3 px-4 w-20 text-center">Estado</th>
                     <th className="py-3 px-4 w-24 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 text-sm">
+                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
                   {paginatedEmployees.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="py-12 text-center text-slate-400 font-medium">
+                      <td colSpan={4} className="py-12 text-center text-app-text-secondary font-medium">
                         No se encontraron empleados.
                       </td>
                     </tr>
                   ) : (
                     paginatedEmployees.map((emp) => (
-                      <tr key={emp.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={emp.id} className="hover:bg-app-bg/70 transition-colors">
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-sm shadow-indigo-500/20 relative overflow-hidden">
@@ -436,11 +436,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                               <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.lastName1)}</span>
                             </div>
                             <div>
-                              <div className="font-bold text-slate-900 leading-tight">{emp.name} {emp.lastName1} {emp.lastName2}</div>
-                              <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                              <div className="font-bold text-app-text-secondary leading-tight">{emp.name} {emp.lastName1} {emp.lastName2}</div>
+                              <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
                                 <span className="font-mono text-indigo-600 font-semibold">ID: {emp.id}</span>
                                 <span>•</span>
-                                <Mail className="h-3 w-3 text-slate-300 inline" />
+                                <Mail className="h-3 w-3 text-app-text-secondary inline" />
                                 <span className="truncate max-w-[140px]">{emp.email || 'sin email'}</span>
                               </div>
                             </div>
@@ -465,11 +465,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewEmployee?.(emp.id)} className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => onViewEmployee?.(emp.id)} className="p-1.5 text-app-text-secondary hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
                             {!isReadOnly && (
                               <>
-                                <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                                <button onClick={() => handleDelete(emp.id)} className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                                <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                                <button onClick={() => handleDelete(emp.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                               </>
                             )}
                           </div>
@@ -480,13 +480,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                 </tbody>
               </table>
             </div>
-            <div className="bg-white px-4 py-3 rounded-b-2xl border-x border-b border-slate-200 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="bg-app-card rounded-2xl border border-app-card-border flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-app-text-secondary">
                 <span>Mostrar</span>
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-slate-200 rounded-lg px-2 py-1 text-slate-700 focus:outline-hidden focus:border-indigo-500"
+                  className="border border-app-border rounded-lg px-2 py-1 text-app-text focus:outline-hidden focus:border-indigo-500"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -496,11 +496,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               </div>
 
               <div className="flex items-center gap-1">
-                <span className="text-xs text-slate-500 mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
+                <span className="text-xs text-app-text-secondary mr-2">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-app-bg disabled:opacity-40"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -508,16 +508,16 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
         <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
           {(() => { const o = openSections.centros; return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Centros de Trabajo
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
             <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Centros</button>
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -525,16 +525,16 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           )})()}
 
           {(() => { const o = openSections.estado; return (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:bg-slate-50 transition-colors">
+          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Estado
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
             <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>Todos los Estados</button>
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {INITIAL_EMPLOYEE_STATUSES.map((es) => (
-                <button key={es.id} onClick={() => setStatusFilter(es.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === es.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>{es.name}</button>
+                <button key={es.id} onClick={() => setStatusFilter(es.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === es.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{es.name}</button>
               ))}
             </div>
             )}

@@ -14,17 +14,17 @@ interface EmployeesDetailViewProps {
 
 const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | React.ReactNode; highlight?: boolean }> = ({ icon, label, value, highlight }) => (
   <div className="flex items-start gap-3">
-    <div className="text-slate-400 mt-0.5">{icon}</div>
+    <div className="text-app-text-secondary mt-0.5">{icon}</div>
     <div>
-      <div className="text-xs text-slate-500">{label}</div>
-      <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-slate-800'}`}>{value}</div>
+      <div className="text-xs text-app-text-secondary">{label}</div>
+      <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-app-text'}`}>{value}</div>
     </div>
   </div>
 );
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
-  <div className="bg-white rounded-xl border border-slate-200 p-4">
-    <div className="flex items-center gap-2 mb-4 text-slate-700 font-semibold text-sm">
+  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+    <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
       <span>{title}</span>
     </div>
@@ -42,7 +42,7 @@ const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }
     'es-5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
     'es-6': 'bg-violet-100 text-violet-700 border-violet-200',
   };
-  return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[id] || 'bg-slate-100'}`}>{status?.name || id}</span>;
+  return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[id] || 'bg-app-bg'}`}>{status?.name || id}</span>;
 };
 
 export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employeeId, onBack }) => {
@@ -75,8 +75,8 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
   if (!employee) {
     return (
       <div className="space-y-5">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
-          <p className="text-slate-400">Empleado no encontrado.</p>
+        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+          <p className="text-app-text-secondary">Empleado no encontrado.</p>
           <button onClick={onBack} className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl">Volver</button>
         </div>
       </div>
@@ -93,13 +93,13 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
       )}
 
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-2 text-slate-600 hover:text-slate-800 text-sm font-medium">
+        <button onClick={onBack} className="flex items-center gap-2 text-app-text-secondary hover:text-app-text text-sm font-medium">
           <ArrowLeft className="h-4 w-4" />
           <span>Volver</span>
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
         <div className="px-6 py-5 bg-gradient-to-r from-indigo-600 to-indigo-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">
@@ -134,19 +134,19 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             <div className="grid grid-cols-4 gap-4">
               <div className="text-center p-3 bg-indigo-50 rounded-lg">
                 <div className="text-2xl font-bold text-indigo-600">{employee.vacation_days}</div>
-                <div className="text-xs text-slate-500">Vacaciones</div>
+                <div className="text-xs text-app-text-secondary">Vacaciones</div>
               </div>
               <div className="text-center p-3 bg-emerald-50 rounded-lg">
                 <div className="text-2xl font-bold text-emerald-600">{employee.own_days}</div>
-                <div className="text-xs text-slate-500">Propios</div>
+                <div className="text-xs text-app-text-secondary">Propios</div>
               </div>
               <div className="text-center p-3 bg-amber-50 rounded-lg">
                 <div className="text-2xl font-bold text-amber-600">{employee.accumulated_days}</div>
-                <div className="text-xs text-slate-500">Acumulados</div>
+                <div className="text-xs text-app-text-secondary">Acumulados</div>
               </div>
               <div className="text-center p-3 bg-rose-50 rounded-lg">
                 <div className="text-2xl font-bold text-rose-600">{employee.excess_days}</div>
-                <div className="text-xs text-slate-500">Extras</div>
+                <div className="text-xs text-app-text-secondary">Extras</div>
               </div>
             </div>
           </SectionCard>
@@ -165,13 +165,13 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
 
           <SectionCard icon={<Activity className="h-4 w-4" />} title="Estados">
             <div className="flex flex-wrap gap-2">
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.active ? 'bg-emerald-100 text-emerald-700' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.active ? '✓ Activo' : '○ Inactivo'}
               </span>
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.medical_check ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.medical_check ? 'bg-emerald-100 text-emerald-700' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.medical_check ? '✓ Rev. Médica' : '○ Rev. Médica'}
               </span>
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.works_holidays ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.works_holidays ? 'bg-emerald-100 text-emerald-700' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.works_holidays ? '✓ Festivos' : '○ Festivos'}
               </span>
             </div>

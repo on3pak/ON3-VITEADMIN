@@ -17,9 +17,9 @@ export const AccessDeniedView: React.FC<AccessDeniedViewProps> = ({
           <ShieldOff className="h-10 w-10" />
         </div>
         
-        <h2 className="text-2xl font-bold text-slate-800 mb-3">Acceso Denegado</h2>
+        <h2 className="text-2xl font-bold text-app-text mb-3">Acceso Denegado</h2>
         
-        <p className="text-slate-600 mb-8 leading-relaxed">
+        <p className="text-app-text-secondary mb-8 leading-relaxed">
           {message}
         </p>
 
@@ -27,7 +27,7 @@ export const AccessDeniedView: React.FC<AccessDeniedViewProps> = ({
           {onBack && (
             <button
               onClick={onBack}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-app-bg text-app-text font-medium rounded-xl hover:bg-app-border transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               Volver

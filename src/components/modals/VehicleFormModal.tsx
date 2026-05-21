@@ -103,16 +103,16 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-sidebar/80" onClick={onClose} />
       <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-slate-200">
+        <div className="flex items-center justify-between p-4 border-b border-app-border">
           <div className="flex items-center gap-2">
             <Truck className="h-5 w-5 text-indigo-600" />
-            <h2 className="text-lg font-bold text-slate-800">
+            <h2 className="text-lg font-bold text-app-text">
               {editingVehicle ? 'Editar Vehículo' : 'Nuevo Vehículo'}
             </h2>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="p-1 text-app-text-secondary hover:text-app-text-secondary">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -124,32 +124,32 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Matrícula *</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Matrícula *</label>
               <input
                 type="text"
                 value={licensePlate}
                 onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Marca *</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Marca *</label>
               <input
                 type="text"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Modelo *</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Modelo *</label>
               <input
                 type="text"
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
                 required
               />
             </div>
@@ -157,11 +157,11 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Tipo</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Tipo</label>
               <select
                 value={vehicleTypeId}
                 onChange={(e) => setVehicleTypeId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 {INITIAL_VEHICLE_TYPES.map((vt) => (
                   <option key={vt.id} value={vt.id}>{vt.type}</option>
@@ -169,11 +169,11 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Estado</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Estado</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as VehicleStatus)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 <option value="ACTIVE">Activo</option>
                 <option value="MAINTENANCE">Mantenimiento</option>
@@ -182,11 +182,11 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Combustible</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Combustible</label>
               <select
                 value={fuelType}
                 onChange={(e) => setFuelType(e.target.value as FuelType)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 <option value="DIESEL">Diésel</option>
                 <option value="GASOLINA">Gasolina</option>
@@ -198,29 +198,29 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">VIN</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">VIN</label>
               <input
                 type="text"
                 value={vin}
                 onChange={(e) => setVin(e.target.value.toUpperCase())}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Kilómetros</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Kilómetros</label>
               <input
                 type="number"
                 value={kilometers}
                 onChange={(e) => setKilometers(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Centro de Trabajo</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Centro de Trabajo</label>
               <select
                 value={workCenter}
                 onChange={(e) => setWorkCenter(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 {INITIAL_WORK_CENTERS.map((wc) => (
                   <option key={wc.id} value={wc.id}>{wc.name}</option>
@@ -231,49 +231,49 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Fecha Matriculación</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Fecha Matriculación</label>
               <input
                 type="date"
                 value={registrationDate}
                 onChange={(e) => setRegistrationDate(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">ITV</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">ITV</label>
               <input
                 type="date"
                 value={itvExpiration}
                 onChange={(e) => setItvExpiration(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Seguro</label>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Seguro</label>
               <input
                 type="date"
                 value={insuranceExpiration}
                 onChange={(e) => setInsuranceExpiration(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Observaciones</label>
+            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Observaciones</label>
             <textarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-4 border-t border-slate-200">
+          <div className="flex justify-end gap-2 pt-4 border-t border-app-border">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg"
+              className="px-4 py-2 text-sm font-medium text-app-text-secondary hover:bg-app-bg rounded-lg"
             >
               Cancelar
             </button>

@@ -95,101 +95,101 @@ export const DashboardVehiclesView: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Vehículos</h2>
-        <p className="text-sm text-slate-500 mt-1">Resumen de flota vehicular</p>
+        <h2 className="text-2xl font-bold text-app-text">Vehículos</h2>
+        <p className="text-sm text-app-text-secondary mt-1">Resumen de flota vehicular</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-indigo-50">
               <TruckIcon className="h-5 w-5 text-indigo-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 font-medium">Total Flota</p>
-              <p className="text-xl font-bold text-slate-800">{totalVehicles}</p>
+              <p className="text-xs text-app-text-secondary font-medium">Total Flota</p>
+              <p className="text-xl font-bold text-app-text">{totalVehicles}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-emerald-50">
               <Truck className="h-5 w-5 text-emerald-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 font-medium">Activos</p>
-              <p className="text-xl font-bold text-slate-800">{activeVehicles.length}</p>
+              <p className="text-xs text-app-text-secondary font-medium">Activos</p>
+              <p className="text-xl font-bold text-app-text">{activeVehicles.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-amber-50">
               <Wrench className="h-5 w-5 text-amber-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 font-medium">En Taller</p>
-              <p className="text-xl font-bold text-slate-800">{maintenanceVehicles.length}</p>
+              <p className="text-xs text-app-text-secondary font-medium">En Taller</p>
+              <p className="text-xl font-bold text-app-text">{maintenanceVehicles.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-rose-50">
               <AlertTriangle className="h-5 w-5 text-rose-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-500 font-medium">Averiados</p>
-              <p className="text-xl font-bold text-slate-800">{brokenVehicles.length}</p>
+              <p className="text-xs text-app-text-secondary font-medium">Averiados</p>
+              <p className="text-xl font-bold text-app-text">{brokenVehicles.length}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-slate-100">
-            <h3 className="font-semibold text-slate-800">Estado de Flota</h3>
+        <div className="lg:col-span-2 bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="p-5 border-b border-app-border">
+            <h3 className="font-semibold text-app-text">Estado de Flota</h3>
           </div>
           <div className="p-5">
             <div className="grid grid-cols-2 gap-4">
               {statusStats.map((stat) => (
-                <div key={stat.status} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                <div key={stat.status} className="flex items-center justify-between p-4 bg-app-bg rounded-xl">
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full bg-${stat.color}-500`} />
-                    <span className="text-sm font-medium text-slate-700">{stat.label}</span>
+                    <span className="text-sm font-medium text-app-text">{stat.label}</span>
                   </div>
-                  <span className="text-lg font-bold text-slate-800">{stat.count}</span>
+                  <span className="text-lg font-bold text-app-text">{stat.count}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="p-5 border-t border-slate-100">
+          <div className="p-5 border-t border-app-border">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-emerald-600" />
-                <span className="text-sm text-slate-600">Tasa de Actividad</span>
+                <span className="text-sm text-app-text-secondary">Tasa de Actividad</span>
               </div>
               <span className="text-lg font-bold text-emerald-600">{activeRate.toFixed(0)}%</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-slate-100">
-            <h3 className="font-semibold text-slate-800">Tipos de Vehículo</h3>
+        <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="p-5 border-b border-app-border">
+            <h3 className="font-semibold text-app-text">Tipos de Vehículo</h3>
           </div>
           <div className="p-5 space-y-3">
             {typeStats.map((stat) => (
               <div key={stat.type} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${stat.color}`} />
-                  <span className="text-sm text-slate-600">{getTypeLabel(stat.type)}</span>
+                  <span className="text-sm text-app-text-secondary">{getTypeLabel(stat.type)}</span>
                 </div>
-                <span className="text-sm font-semibold text-slate-800">{stat.count}</span>
+                <span className="text-sm font-semibold text-app-text">{stat.count}</span>
               </div>
             ))}
           </div>
@@ -197,33 +197,33 @@ export const DashboardVehiclesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-slate-100">
-            <h3 className="font-semibold text-slate-800">Kilómetros Totales</h3>
+        <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="p-5 border-b border-app-border">
+            <h3 className="font-semibold text-app-text">Kilómetros Totales</h3>
           </div>
           <div className="p-5">
-            <div className="text-3xl font-bold text-slate-800">
-              {totalKilometers.toLocaleString()} <span className="text-lg font-medium text-slate-500">km</span>
+            <div className="text-3xl font-bold text-app-text">
+              {totalKilometers.toLocaleString()} <span className="text-lg font-medium text-app-text-secondary">km</span>
             </div>
-            <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+            <div className="mt-3 flex items-center gap-2 text-sm text-app-text-secondary">
               <Clock className="h-4 w-4" />
               <span>Promedio: {avgKilometers.toLocaleString()} km/vehículo</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-slate-100">
-            <h3 className="font-semibold text-slate-800">Por Centro de Trabajo</h3>
+        <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="p-5 border-b border-app-border">
+            <h3 className="font-semibold text-app-text">Por Centro de Trabajo</h3>
           </div>
           <div className="p-5 space-y-3">
             {workCenterStats.map((stat) => (
               <div key={stat.center} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-slate-400" />
-                  <span className="text-sm text-slate-600">{wcNameMap[stat.center] || stat.center}</span>
+                  <MapPin className="h-4 w-4 text-app-text-secondary" />
+                  <span className="text-sm text-app-text-secondary">{wcNameMap[stat.center] || stat.center}</span>
                 </div>
-                <span className="text-sm font-semibold text-slate-800">{stat.count}</span>
+                <span className="text-sm font-semibold text-app-text">{stat.count}</span>
               </div>
             ))}
           </div>

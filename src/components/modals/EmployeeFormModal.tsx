@@ -149,21 +149,21 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl border border-slate-200 overflow-hidden max-h-[90vh] overflow-y-auto">
-        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between sticky top-0">
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+      <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-2xl border border-app-card-border overflow-hidden max-h-[90vh] overflow-y-auto">
+        <div className="px-6 py-4 bg-app-bg border-b border-app-border flex items-center justify-between sticky top-0">
           <div className="flex items-center gap-2.5">
             <div className={`p-2 rounded-lg ${editingEmployee ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
               {editingEmployee ? <Save className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">
+              <h3 className="font-bold text-app-text">
                 {editingEmployee ? `Editar: ${editingEmployee.name} ${editingEmployee.lastName1}` : 'Nuevo Empleado'}
               </h3>
-              <p className="text-xs text-slate-400">Complete todos los datos</p>
+              <p className="text-xs text-app-text-secondary">Complete todos los datos</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded-lg">
+          <button onClick={onClose} className="text-app-text-secondary hover:text-app-text-secondary p-1.5 hover:bg-app-bg rounded-lg">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -181,58 +181,58 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Mail className="h-3 w-3"/> Datos Personales</h4>
             </div>
             <div className="col-span-2 md:col-span-1">
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre *</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Nombre *</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div className="col-span-2 md:col-span-1">
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Apellido 1 *</label>
-              <input type="text" value={lastName1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 1 *</label>
+              <input type="text" value={lastName1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Apellido 2</label>
-              <input type="text" value={lastName2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 2</label>
+              <input type="text" value={lastName2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Empresa *</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Empresa *</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono Móvil</label>
-              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Móvil</label>
+              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Personal</label>
-              <input type="email" value={personal_email} onChange={(e) => setPersonal_email(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Personal</label>
+              <input type="email" value={personal_email} onChange={(e) => setPersonal_email(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono Fijo</label>
-              <input type="text" value={phone_fixed} onChange={(e) => setPhone_fixed(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Fijo</label>
+              <input type="text" value={phone_fixed} onChange={(e) => setPhone_fixed(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
 
             <div className="col-span-2">
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría</label>
-              <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
+              <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                 {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Estado</label>
-              <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
+              <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                 {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Centro de Trabajo</label>
-              <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
+              <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                 {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Jornada</label>
-              <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
+              <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                 {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
               </select>
             </div>
@@ -241,67 +241,67 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Clock className="h-3 w-3"/> Horario</h4>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Hora Entrada</label>
-              <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Entrada</label>
+              <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Hora Salida</label>
-              <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Salida</label>
+              <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
 
             <div className="col-span-2">
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones y Días</h4>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Vacaciones</label>
-              <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Vacaciones</label>
+              <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Propios</label>
-              <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Propios</label>
+              <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Acumulados</label>
-              <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Acumulados</label>
+              <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Días Extras</label>
-              <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Extras</label>
+              <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
 
             <div className="col-span-2">
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
             </div>
             <div className="col-span-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">IBAN</label>
-              <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm font-mono" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
+              <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">IRPF %</label>
-              <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
+              <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Taquilla</label>
-              <input type="text" value={locker} onChange={(e) => setLocker(e.target.value)} placeholder="L-001" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquilla</label>
+              <input type="text" value={locker} onChange={(e) => setLocker(e.target.value)} placeholder="L-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
 
             <div className="col-span-2">
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Contrato</h4>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo Contrato</label>
-              <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white text-sm">
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
+              <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                 <option value="">Seleccionar...</option>
                 {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Fecha Inicio</label>
-              <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
+              <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Fecha Fin</label>
-              <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm" />
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Fin</label>
+              <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
 
             <div className="col-span-2">
@@ -323,8 +323,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-200 hover:bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl">Cancelar</button>
+          <div className="pt-4 border-t border-app-border flex items-center justify-end gap-2">
+            <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-200 hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl">Cancelar</button>
             <button type="submit" className={`px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs ${editingEmployee ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
               {editingEmployee ? 'Guardar Cambios' : 'Registrar'}
             </button>

@@ -32,7 +32,7 @@ const ROLE_STYLE: Record<string, string> = {
   ROOT: 'bg-violet-100 text-violet-700 border-violet-200',
   ADMIN: 'bg-blue-100 text-blue-700 border-blue-200',
   MANAGER: 'bg-amber-100 text-amber-700 border-amber-200',
-  USER: 'bg-slate-100 text-slate-700 border-slate-200',
+  USER: 'bg-app-bg text-app-text border-app-border',
 };
 
 interface Prefs {
@@ -45,12 +45,12 @@ interface Prefs {
 }
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; subtitle?: string; children: React.ReactNode; className?: string }> = ({ icon, title, subtitle, children, className }) => (
-  <div className={`bg-white rounded-xl border border-slate-200 shadow-xs p-5 ${className || ''}`}>
+  <div className={`bg-app-card rounded-xl border border-app-card-border shadow-xs p-5 ${className || ''}`}>
     <div className="flex items-center gap-2.5 mb-4">
       <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">{icon}</div>
       <div>
-        <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
-        {subtitle && <p className="text-[11px] text-slate-500">{subtitle}</p>}
+        <h3 className="text-sm font-semibold text-app-text">{title}</h3>
+        {subtitle && <p className="text-[11px] text-app-text-secondary">{subtitle}</p>}
       </div>
     </div>
     {children}
@@ -59,9 +59,9 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; subtitle?: s
 
 const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | React.ReactNode }> = ({ icon, label, value }) => (
   <div className="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">
-    <div className="text-slate-400 w-4 shrink-0 flex justify-center">{icon}</div>
-    <div className="text-[11px] text-slate-500 w-24 shrink-0 font-medium">{label}</div>
-    <div className="text-sm min-w-0 flex-1 text-slate-800 font-medium truncate">{value}</div>
+    <div className="text-app-text-secondary w-4 shrink-0 flex justify-center">{icon}</div>
+    <div className="text-[11px] text-app-text-secondary w-24 shrink-0 font-medium">{label}</div>
+    <div className="text-sm min-w-0 flex-1 text-app-text font-medium truncate">{value}</div>
   </div>
 );
 
@@ -114,13 +114,13 @@ export const DashboardProfileView: React.FC = () => {
           <span><span className="font-bold">Modo Consulta:</span> Tu rol es <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">USER</span>. Los datos se muestran en modo solo lectura.</span>
         </div>
       )}
-      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto">
+      <div className="flex gap-1 bg-app-bg rounded-xl p-1 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-              activeTab === tab.value ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'
+              activeTab === tab.value ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'
             }`}
           >
             {tab.icon} {tab.label}
@@ -131,19 +131,19 @@ export const DashboardProfileView: React.FC = () => {
       {activeTab === 'perfil' && loggedInUser && (
         <div className="space-y-5">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 text-center lg:col-span-1">
+            <div className="bg-app-card rounded-xl border border-app-card-border shadow-xs p-6 text-center lg:col-span-1">
               <div className="relative inline-block">
-                <img src={loggedInUser.avatar_url} alt={loggedInUser.full_name} className="w-24 h-24 rounded-2xl bg-slate-100 border border-slate-200 mx-auto" />
+                <img src={loggedInUser.avatar_url} alt={loggedInUser.full_name} className="w-24 h-24 rounded-2xl bg-app-bg border border-app-border mx-auto" />
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
               </div>
-              <h2 className="text-lg font-bold text-slate-800 mt-3">{loggedInUser.full_name}</h2>
-              <p className="text-xs text-slate-500">@{loggedInUser.username}</p>
+              <h2 className="text-lg font-bold text-app-text mt-3">{loggedInUser.full_name}</h2>
+              <p className="text-xs text-app-text-secondary">@{loggedInUser.username}</p>
               <div className="flex justify-center mt-3">
                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border ${ROLE_STYLE[loggedInUser.role]}`}>
                   <Shield className="h-3 w-3" /> {loggedInUser.role}
                 </span>
               </div>
-              <div className="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-500">
+              <div className="mt-4 pt-4 border-t border-app-border text-[11px] text-app-text-secondary">
                 Miembro desde {formatDate(loggedInUser.created_at)}
               </div>
             </div>
@@ -154,7 +154,7 @@ export const DashboardProfileView: React.FC = () => {
                 <InfoRow icon={<Hash className="h-3.5 w-3.5" />} label="Usuario" value={loggedInUser.username} />
                 <InfoRow icon={<Shield className="h-3.5 w-3.5" />} label="Rol" value={loggedInUser.role} />
                 <InfoRow icon={<AlertCircle className="h-3.5 w-3.5" />} label="Estado" value={
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border ${loggedInUser.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full border ${loggedInUser.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-app-bg text-app-text-secondary border-app-border'}`}>
                     {loggedInUser.status === 'ACTIVE' ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
                     {loggedInUser.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
                   </span>
@@ -179,7 +179,7 @@ export const DashboardProfileView: React.FC = () => {
                 <InfoRow icon={<Building2 className="h-3.5 w-3.5" />} label="Centro" value={wcMap[myEmployee.work_center_id] || myEmployee.work_center_id} />
                 <InfoRow icon={<Award className="h-3.5 w-3.5" />} label="Categoría" value={catMap[myEmployee.category_id] || myEmployee.category_id} />
                 <InfoRow icon={<Tag className="h-3.5 w-3.5" />} label="Estado">
-                  <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border ${STATUS_BADGE[myEmployee.status_id] || 'bg-slate-100 text-slate-700'}`}>
+                  <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border ${STATUS_BADGE[myEmployee.status_id] || 'bg-app-bg text-app-text'}`}>
                     {statusMap[myEmployee.status_id] || myEmployee.status_id}
                   </span>
                 </InfoRow>
@@ -213,12 +213,12 @@ export const DashboardProfileView: React.FC = () => {
               )}
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-12 text-center">
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 w-fit mx-auto mb-4">
-                <Briefcase className="h-10 w-10 text-slate-300" />
+            <div className="bg-app-card rounded-xl border border-app-card-border shadow-xs p-12 text-center">
+              <div className="p-3 rounded-xl bg-app-bg border border-app-border w-fit mx-auto mb-4">
+                <Briefcase className="h-10 w-10 text-app-text-secondary" />
               </div>
-              <h3 className="text-base font-semibold text-slate-700">Sin ficha de empleado</h3>
-              <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">Tu cuenta de usuario no tiene un registro de empleado asociado. Crea uno para gestionar tus datos laborales.</p>
+              <h3 className="text-base font-semibold text-app-text">Sin ficha de empleado</h3>
+              <p className="text-sm text-app-text-secondary mt-1 max-w-sm mx-auto">Tu cuenta de usuario no tiene un registro de empleado asociado. Crea uno para gestionar tus datos laborales.</p>
               {!isReadOnly && (
               <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-5 py-2.5 mt-5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-xs">
                 <Briefcase className="h-4 w-4" /> Crear Ficha de Empleado
@@ -244,13 +244,13 @@ export const DashboardProfileView: React.FC = () => {
                 ] },
               ].map((field) => (
                 <div key={field.label} className="flex items-center justify-between py-1">
-                  <span className="text-sm text-slate-700">{field.label}</span>
-                  <div className="flex gap-1 bg-slate-100 rounded-lg p-0.5">
+                  <span className="text-sm text-app-text">{field.label}</span>
+                  <div className="flex gap-1 bg-app-bg rounded-lg p-0.5">
                     {field.options.map((opt) => (
                       <button
                         key={opt.v}
                         onClick={() => field.onChange(opt.v)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${field.value === opt.v ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${field.value === opt.v ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}
                       >
                         {opt.l}
                       </button>
@@ -260,16 +260,16 @@ export const DashboardProfileView: React.FC = () => {
               ))}
 
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-slate-700">Vista compacta</span>
+                <span className="text-sm text-app-text">Vista compacta</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={prefs.compactView} onChange={(e) => savePrefs({ ...prefs, compactView: e.target.checked })} className="sr-only peer" />
-                  <div className="w-9 h-5 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
+                  <div className="w-9 h-5 bg-app-border peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
                 </label>
               </div>
 
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-slate-700">Items por página</span>
-                <select value={prefs.itemsPerPage} onChange={(e) => savePrefs({ ...prefs, itemsPerPage: Number(e.target.value) })} className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 focus:outline-hidden focus:border-indigo-500 bg-white">
+                <span className="text-sm text-app-text">Items por página</span>
+                <select value={prefs.itemsPerPage} onChange={(e) => savePrefs({ ...prefs, itemsPerPage: Number(e.target.value) })} className="text-xs border border-app-border rounded-lg px-2.5 py-1.5 text-app-text focus:outline-hidden focus:border-indigo-500 bg-white">
                   {[10, 25, 50].map((n) => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
@@ -283,10 +283,10 @@ export const DashboardProfileView: React.FC = () => {
                 { label: 'Informes por email', key: 'emailReports' as const },
               ].map((item) => (
                 <div key={item.key} className="flex items-center justify-between py-1.5">
-                  <span className="text-sm text-slate-700">{item.label}</span>
+                  <span className="text-sm text-app-text">{item.label}</span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked={prefs[item.key]} onChange={(e) => savePrefs({ ...prefs, [item.key]: e.target.checked })} className="sr-only peer" />
-                    <div className="w-9 h-5 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
+                    <div className="w-9 h-5 bg-app-border peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
                   </label>
                 </div>
               ))}
@@ -295,18 +295,18 @@ export const DashboardProfileView: React.FC = () => {
             <SectionCard icon={<Globe className="h-4 w-4" />} title="Cuenta" subtitle="Información de la sesión">
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-slate-500">Versión</span>
-                  <span className="font-mono text-slate-800 text-xs">1.0.0</span>
+                  <span className="text-app-text-secondary">Versión</span>
+                  <span className="font-mono text-app-text text-xs">1.0.0</span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-slate-500">Estado</span>
+                  <span className="text-app-text-secondary">Estado</span>
                   <span className="inline-flex items-center gap-1 text-emerald-600 text-xs font-semibold">
                     <CheckCircle className="h-3 w-3" /> Sesión activa
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-1">
-                  <span className="text-slate-500">Usuario</span>
-                  <span className="text-slate-800 text-xs font-mono">{loggedInUser?.username}</span>
+                  <span className="text-app-text-secondary">Usuario</span>
+                  <span className="text-app-text text-xs font-mono">{loggedInUser?.username}</span>
                 </div>
               </div>
             </SectionCard>
