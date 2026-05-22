@@ -50,10 +50,10 @@ const formatDate = (d: string) => {
   return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 };
 
-function StatCard({ value, label, icon, color }: { value: React.ReactNode; label: string; icon: React.ReactNode; color: string }) {
+function StatCard({ value, label, icon, color, primary }: { value: React.ReactNode; label: string; icon: React.ReactNode; color: string; primary?: boolean }) {
   return (
     <div className="relative group">
-      <div className="relative p-4 bg-white rounded-2xl border border-gray-100 shadow-xs transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+      <div className={`relative p-4 bg-white rounded-2xl border shadow-xs transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 ${primary ? 'border-primary-100' : 'border-gray-100'}`}>
         <div className="flex items-center gap-3">
           <div className={`flex items-center justify-center w-10 h-10 rounded-xl ${color} transition-transform duration-300 group-hover:scale-105`}>
             {icon}
@@ -70,8 +70,8 @@ function StatCard({ value, label, icon, color }: { value: React.ReactNode; label
 
 function DetailRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 py-2.5 px-4 -mx-4 rounded-xl transition-colors hover:bg-gray-50/80">
-      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-50 text-gray-400 shrink-0">
+    <div className="flex items-center gap-3 py-2.5 px-4 -mx-4 rounded-xl transition-colors hover:bg-primary-50/50">
+      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-50 text-primary-500 shrink-0">
         {icon}
       </div>
       <div className="min-w-0 flex-1">
@@ -158,24 +158,24 @@ export const DashboardProfileView: React.FC = () => {
 
       {loggedInUser && (
         <div className="space-y-6">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 shadow-lg">
-            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 shadow-lg shadow-primary-600/20">
+            <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-amber-300/10 rounded-full blur-3xl" />
 
             <div className="relative px-6 sm:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8">
               <div className="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-8">
                 <div className="relative shrink-0 self-center sm:self-auto">
                   <div className="relative">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-400 to-amber-400 blur-xl opacity-40 scale-110" />
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 overflow-hidden rounded-2xl border-2 border-white/20 shadow-xl ring-4 ring-white/10">
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/30 to-amber-200/20 blur-xl opacity-50 scale-110" />
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 overflow-hidden rounded-2xl border-2 border-white/30 shadow-xl ring-4 ring-white/20">
                       <img
                         src={loggedInUser.avatar_url}
                         alt={loggedInUser.full_name}
                         className="object-cover w-full h-full"
                       />
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-gray-900 rounded-full shadow-lg">
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-primary-700 rounded-full shadow-lg">
                       <div className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-30" />
                     </div>
                   </div>
@@ -202,13 +202,13 @@ export const DashboardProfileView: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 self-center sm:self-end shrink-0">
-                  <button className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white/80 bg-white/10 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-200 backdrop-blur-sm border border-white/10">
+                  <button className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white/80 bg-white/15 rounded-xl hover:bg-white/25 hover:text-white transition-all duration-200 backdrop-blur-sm border border-white/15">
                     <Share2 className="w-3.5 h-3.5" /> Compartir
                   </button>
                   {!isReadOnly && (
                     <button
                       onClick={() => setEmployeeModalOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-primary-500 rounded-xl hover:bg-primary-400 transition-all duration-200 shadow-lg shadow-primary-500/25"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-primary-500 rounded-xl hover:bg-primary-400 transition-all duration-200 shadow-lg shadow-primary-500/30"
                     >
                       <Edit3 className="w-3.5 h-3.5" /> Editar
                     </button>
@@ -220,7 +220,7 @@ export const DashboardProfileView: React.FC = () => {
 
           {myEmployee && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <StatCard value={<AnimatedNumber value={myEmployee.vacation_days} />} label="Vacaciones" icon={<SunSnow className="w-4 h-4" />} color="bg-amber-50 text-amber-600" />
+              <StatCard value={<AnimatedNumber value={myEmployee.vacation_days} />} label="Vacaciones" icon={<SunSnow className="w-4 h-4" />} color="bg-primary-50 text-primary-600" primary />
               <StatCard value={<AnimatedNumber value={myEmployee.own_days} />} label="Propios" icon={<Sun className="w-4 h-4" />} color="bg-emerald-50 text-emerald-600" />
               <StatCard value={<AnimatedNumber value={myEmployee.accumulated_days} />} label="Acumulados" icon={<Moon className="w-4 h-4" />} color="bg-blue-50 text-blue-600" />
               <StatCard value={<AnimatedNumber value={myEmployee.excess_days} />} label="Extras" icon={<AlarmClock className="w-4 h-4" />} color="bg-rose-50 text-rose-600" />
@@ -305,11 +305,12 @@ export const DashboardProfileView: React.FC = () => {
                   </InfoCard>
                 </>
               ) : (
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 shadow-xs">
-                  <div className="absolute top-0 right-0 w-48 h-48 bg-primary-100/50 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-50 to-white border border-primary-100 shadow-xs">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-primary-200/40 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
+                  <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-primary-100/30 rounded-full blur-3xl translate-y-1/2" />
                   <div className="relative flex flex-col items-center justify-center p-12 sm:p-16">
-                    <div className="flex items-center justify-center w-20 h-20 mb-5 bg-gradient-to-br from-primary-50 to-primary-100/50 rounded-2xl border border-primary-100 shadow-xs">
-                      <Briefcase className="w-10 h-10 text-primary-400" />
+                    <div className="flex items-center justify-center w-20 h-20 mb-5 bg-gradient-to-br from-primary-100 to-primary-50 rounded-2xl border border-primary-200 shadow-sm">
+                      <Briefcase className="w-10 h-10 text-primary-500" />
                     </div>
                     <h3 className="text-lg font-bold text-gray-900">Sin ficha de empleado</h3>
                     <p className="max-w-sm mt-2 text-sm text-center text-gray-500 leading-relaxed">
