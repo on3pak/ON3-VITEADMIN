@@ -6,7 +6,7 @@ import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES,
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
   User, Shield, Mail, Calendar, MapPin, Briefcase,
-  Building2, Phone, Smartphone, Palette, Bell, Globe,
+  Building2, Phone, Smartphone, Palette, Bell, Globe, Settings,
   Edit3, CheckCircle, Clock, Tag, Hash,
   FileText, CreditCard, TrendingUp, Award,
   Share2, Heart, Flag, ShieldAlert, ChevronRight,
@@ -50,13 +50,17 @@ const formatDate = (d: string) => {
   return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 };
 
-export const DashboardProfileView: React.FC = () => {
+interface DashboardProfileViewProps {
+  initialTab?: 'perfil' | 'ajustes';
+}
+
+export const DashboardProfileView: React.FC<DashboardProfileViewProps> = ({ initialTab }) => {
   const { user: loggedInUser } = useAuth();
   const { employees, createEmployee, updateEmployee } = useEmployees();
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  const [activeTab, setActiveTab] = useState<'perfil' | 'ajustes'>('perfil');
+  const [activeTab, setActiveTab] = useState<'perfil' | 'ajustes'>(initialTab || 'perfil');
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [prefs, setPrefs] = useState<Prefs>(() => {
     const saved = localStorage.getItem('on3_profile_prefs');
@@ -83,7 +87,7 @@ export const DashboardProfileView: React.FC = () => {
 
   const tabs = [
     { value: 'perfil' as const, label: 'Mi Perfil', icon: <User className="h-4 w-4" /> },
-    { value: 'ajustes' as const, label: 'Preferencias', icon: <Palette className="h-4 w-4" /> },
+    { value: 'ajustes' as const, label: 'Configuración', icon: <Settings className="h-4 w-4" /> },
   ];
 
   return (

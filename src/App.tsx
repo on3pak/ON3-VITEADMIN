@@ -30,7 +30,6 @@ import { CrudTestsView } from './views/utils/tests/CrudTestsView';
 import { RbacTestsView } from './views/utils/tests/RbacTestsView';
 import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 import { LogsView } from './views/utils/logs/LogsView';
-import { UtilsView } from './views/utils/UtilsView';
 import { InventoryView } from './views/admin/inventory/InventoryView';
 import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
 import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
@@ -186,7 +185,7 @@ const MainLayout: React.FC = () => {
       case 'PROFILE':
         return <DashboardProfileView />;
       case 'UTILS':
-        return <UtilsView />;
+        return <DashboardProfileView initialTab="ajustes" />;
       default:
         return <DashboardUsersView />;
     }
