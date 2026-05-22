@@ -84,13 +84,34 @@ const MainLayout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center text-sidebar-text font-sans">
-        <div className="space-y-4 text-center">
-          <div className="h-10 w-10 border-4 border-primary-500/20 border-t-primary-500 rounded-full animate-spin mx-auto" />
-          <div className="space-y-1">
-            <h2 className="font-bold text-base tracking-wide text-white">ON3ADMIN Secure App</h2>
-            <p className="text-xs text-sidebar-text font-mono">Verificando firma de token JWT local...</p>
+      <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center text-sidebar-text font-sans relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_50%_50%,#14b8a6_1px,transparent_1px)] bg-[length:24px_24px]" />
+
+        {/* Glow effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
+
+        <div className="relative flex flex-col items-center gap-6 text-center">
+          {/* Logo */}
+          <div className="relative">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl shadow-2xl shadow-primary-500/25 flex items-center justify-center">
+              <span className="text-2xl font-bold text-white tracking-tight">ON3</span>
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-sidebar rounded-full" />
           </div>
+
+          <div className="space-y-2">
+            <h2 className="text-lg font-bold tracking-wide text-white">ON3ADMIN</h2>
+            <p className="text-sm text-sidebar-text">Panel de Administración</p>
+          </div>
+
+          <div className="flex items-center gap-2.5 mt-2">
+            <div className="h-1 w-1 rounded-full bg-primary-500 animate-bounce [animation-delay:0ms]" />
+            <div className="h-1 w-1 rounded-full bg-primary-400 animate-bounce [animation-delay:150ms]" />
+            <div className="h-1 w-1 rounded-full bg-primary-300 animate-bounce [animation-delay:300ms]" />
+          </div>
+
+          <p className="text-[11px] text-sidebar-text/60 font-mono tracking-wider mt-1">VERIFICANDO SESIÓN</p>
         </div>
       </div>
     );

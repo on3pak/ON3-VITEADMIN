@@ -76,7 +76,7 @@ export const DashboardProfileView: React.FC = () => {
         <div className="space-y-5">
           {/* Profile Header Card */}
           <div className="overflow-hidden bg-white border border-gray-200 rounded-xl shadow-xs">
-            <div className="relative px-6 pt-12 pb-6 bg-gradient-to-r from-indigo-600 to-indigo-500">
+            <div className="relative px-6 pt-12 pb-6 bg-gradient-to-r from-primary-600 to-primary-500">
               <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-end sm:gap-6">
                 <div className="relative shrink-0">
                   <div className="w-24 h-24 overflow-hidden border-4 border-white rounded-2xl shadow-md">
@@ -86,23 +86,23 @@ export const DashboardProfileView: React.FC = () => {
                 </div>
                 <div className="mt-4 sm:mt-0 sm:pb-1">
                   <h1 className="text-2xl font-bold text-white">{loggedInUser.full_name}</h1>
-                  <p className="text-indigo-200">@{loggedInUser.username}</p>
+                  <p className="text-primary-200">@{loggedInUser.username}</p>
                   <div className="flex flex-wrap items-center gap-2 mt-2 justify-center sm:justify-start">
                     <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold border rounded-full ${ROLE_STYLE[loggedInUser.role]}`}>
                       <Shield className="w-3 h-3" /> {loggedInUser.role}
                     </span>
-                    <span className="text-xs text-indigo-200">
+                    <span className="text-xs text-primary-200">
                       <Calendar className="inline w-3 h-3 mr-1" />
                       Miembro desde {formatDate(loggedInUser.created_at)}
                     </span>
                   </div>
                 </div>
                 <div className="hidden sm:flex sm:ml-auto sm:pb-1 gap-2">
-                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-white rounded-lg shadow-xs hover:bg-indigo-50 transition-colors">
+                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-700 bg-white rounded-lg shadow-xs hover:bg-primary-50 transition-colors">
                     <Share2 className="w-3.5 h-3.5" /> Compartir
                   </button>
                   {!isReadOnly && (
-                    <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-700 rounded-lg shadow-xs hover:bg-indigo-800 transition-colors">
+                    <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-primary-700 rounded-lg shadow-xs hover:bg-primary-800 transition-colors">
                       <Edit3 className="w-3.5 h-3.5" /> Editar
                     </button>
                   )}
@@ -110,11 +110,11 @@ export const DashboardProfileView: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center justify-center gap-1 px-6 py-3 bg-gray-50 border-t border-gray-100 sm:hidden">
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-white border border-gray-200 rounded-lg shadow-xs hover:bg-indigo-50 transition-colors">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-700 bg-white border border-gray-200 rounded-lg shadow-xs hover:bg-primary-50 transition-colors">
                 <Share2 className="w-3.5 h-3.5" /> Compartir
               </button>
               {!isReadOnly && (
-                <button onClick={() => setEmployeeModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg shadow-xs hover:bg-indigo-700 transition-colors">
+                <button onClick={() => setEmployeeModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-primary-600 rounded-lg shadow-xs hover:bg-primary-700 transition-colors">
                   <Edit3 className="w-3.5 h-3.5" /> Editar
                 </button>
               )}
@@ -176,8 +176,8 @@ export const DashboardProfileView: React.FC = () => {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 p-5">
-                    <div className="p-3 text-center bg-indigo-50 rounded-lg">
-                      <div className="text-lg font-bold text-indigo-600">{myEmployee.vacation_days}</div>
+                    <div className="p-3 text-center bg-primary-50 rounded-lg">
+                      <div className="text-lg font-bold text-primary-600">{myEmployee.vacation_days}</div>
                       <div className="text-[10px] text-gray-500">Vacaciones</div>
                     </div>
                     <div className="p-3 text-center bg-emerald-50 rounded-lg">
@@ -342,7 +342,7 @@ export const DashboardProfileView: React.FC = () => {
                   <h3 className="text-base font-semibold text-gray-900">Sin ficha de empleado</h3>
                   <p className="max-w-sm mt-1 text-sm text-center text-gray-500">Tu cuenta de usuario no tiene un registro de empleado asociado. Crea uno para gestionar tus datos laborales.</p>
                   {!isReadOnly && (
-                    <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-5 py-2.5 mt-5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-xs">
+                    <button onClick={() => setEmployeeModalOpen(true)} className="inline-flex items-center gap-1.5 px-5 py-2.5 mt-5 text-sm font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors shadow-xs">
                       <Briefcase className="w-4 h-4" /> Crear Ficha de Empleado
                     </button>
                   )}
