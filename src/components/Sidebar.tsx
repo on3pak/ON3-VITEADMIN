@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { DashboardViewType } from '../types';
+import { DashboardViewType, VIEW_ROLES } from '../types';
 import {
   LayoutDashboard, Users, UserSquare,
   ShieldCheck, LogOut, KeyRound,
@@ -24,14 +24,17 @@ const canSeeUserCrud = (role?: string): boolean => {
   return role === 'ROOT' || role === 'ADMIN' || role === 'MANAGER';
 };
 
-const dashboardItems = [
-  { id: 'USER_DASHBOARD' as DashboardViewType, label: 'Usuarios', icon: <LayoutDashboard className="h-5 w-5" />, description: 'Estadísticas y métricas' },
-  { id: 'EMPLOYEE_DASHBOARD' as DashboardViewType, label: 'Empleados', icon: <Briefcase className="h-5 w-5" />, description: 'Panel de empleados' },
-  { id: 'VEHICLE_DASHBOARD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Panel de vehículos' },
-  { id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Panel de centros' },
-  { id: 'SERVICES_DASHBOARD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Panel de servicios' },
-  { id: 'INVENTORY_DASHBOARD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Panel de inventario' },
-];
+const dashboardItems = (role?: string) => {
+  const allItems = [
+    { id: 'USER_DASHBOARD' as DashboardViewType, label: 'Usuarios', icon: <LayoutDashboard className="h-5 w-5" />, description: 'Estadísticas y métricas' },
+    { id: 'EMPLOYEE_DASHBOARD' as DashboardViewType, label: 'Empleados', icon: <Briefcase className="h-5 w-5" />, description: 'Panel de empleados' },
+    { id: 'VEHICLE_DASHBOARD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Panel de vehículos' },
+    { id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Panel de centros' },
+    { id: 'SERVICES_DASHBOARD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Panel de servicios' },
+    { id: 'INVENTORY_DASHBOARD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Panel de inventario' },
+  ];
+  return allItems.filter((item) => (VIEW_ROLES[item.id] || []).includes(role || ''));
+};
 
 const adminItems = (role?: string) => {
   if (!canSeeUserCrud(role)) return [];
@@ -45,9 +48,14 @@ const adminItems = (role?: string) => {
   ];
 };
 
+const profileItems = [
+  { id: 'PROFILE' as DashboardViewType, label: 'Mi Perfil', icon: <User className="h-5 w-5" />, description: 'Información personal' },
+  { id: 'UTILS' as DashboardViewType, label: 'Configuración', icon: <Settings className="h-5 w-5" />, description: 'Ajustes del sistema' },
+];
+
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
   const { user, logout } = useAuth();
-  const [activeSection, setActiveSection] = useState<'dashboard' | 'admin'>('dashboard');
+  const [activeSection, setActiveSection] = useState<'profile' | 'dashboard' | 'admin'>('profile');
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -61,11 +69,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const items = activeSection === 'dashboard' ? dashboardItems : adminItems(user?.role);
+  const items = activeSection === 'profile' ? profileItems : activeSection === 'dashboard' ? dashboardItems(user?.role) : adminItems(user?.role);
 
   const handleSectionChange = (section: 'dashboard' | 'admin') => {
     setActiveSection(section);
-    const target = section === 'dashboard' ? dashboardItems[0] : adminItems(user?.role)[0];
+    const sectionItems = section === 'dashboard' ? dashboardItems(user?.role) : adminItems(user?.role);
+    const target = sectionItems[0];
     if (target && !target.disabled) {
       setView(target.id);
     }
@@ -108,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         <div className="w-[70px] bg-[#f8f9fc] border-r border-app-border flex flex-col items-center py-5 shrink-0">
           {/* Brand Icon */}
           <a
-            onClick={() => { setView('USER_DASHBOARD'); setSidebarOpen?.(false); }}
+            onClick={() => { setActiveSection('profile'); setView('PROFILE'); setSidebarOpen?.(false); }}
             className="flex items-center justify-center size-9 rounded-md bg-gradient-to-br from-primary-500 to-primary-700 text-white hover:from-primary-600 hover:to-primary-800 transition-all cursor-pointer shadow-sm"
           >
             <span className="text-white font-bold text-xs tracking-tight">ON3</span>
@@ -119,18 +128,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           {/* Navigation Icons */}
           <div className="flex-1 flex flex-col items-center gap-1.5 mt-4">
             <button
-              onClick={() => handleSectionChange('dashboard')}
+              onClick={() => { setActiveSection('profile'); setView('PROFILE'); setSidebarOpen?.(false); }}
               className={`flex items-center justify-center size-9 rounded-md border transition-all ${
-                activeSection === 'dashboard'
+                activeSection === 'profile'
                   ? 'bg-white text-primary-600 border-app-border shadow-xs'
                   : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
               }`}
-              title="Dashboard"
+              title="Perfil"
             >
-              <LayoutDashboard className="h-[18px] w-[18px]" />
+              <User className="h-[18px] w-[18px]" />
             </button>
 
-            {canSeeUserCrud(user?.role) && (
+            {dashboardItems(user?.role).length > 0 && (
+              <button
+                onClick={() => handleSectionChange('dashboard')}
+                className={`flex items-center justify-center size-9 rounded-md border transition-all ${
+                  activeSection === 'dashboard'
+                    ? 'bg-white text-primary-600 border-app-border shadow-xs'
+                    : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+                }`}
+                title="Dashboard"
+              >
+                <LayoutDashboard className="h-[18px] w-[18px]" />
+              </button>
+            )}
+
+            {canSeeUserCrud(user?.role) && adminItems(user?.role).length > 0 && (
               <button
                 onClick={() => handleSectionChange('admin')}
                 className={`flex items-center justify-center size-9 rounded-md border transition-all ${
@@ -258,7 +281,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
             <button className="w-full flex items-center justify-between px-2.5 py-2 rounded-md border border-app-border text-sm font-medium text-app-text hover:bg-app-bg transition-colors">
               <span className="flex items-center gap-1.5">
                 <LayoutDashboard className="h-[14px] w-[14px] text-app-text-secondary" />
-                {activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
+                {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
               </span>
               <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />
             </button>
@@ -267,7 +290,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           {/* Section Group Label */}
           <div className="px-[18px] pt-4 pb-1">
             <p className="text-[10px] font-semibold text-app-text-secondary uppercase tracking-[0.1em]">
-              {activeSection === 'dashboard' ? 'General' : 'Administración'}
+              {activeSection === 'profile' ? 'General' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
             </p>
           </div>
 

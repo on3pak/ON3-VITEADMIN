@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { UserProvider } from './context/UserContext';
 import { EmployeeProvider } from './context/EmployeeContext';
-import { DashboardViewType } from './types';
+import { DashboardViewType, VIEW_ROLES } from './types';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { Toast } from './components/Toast';
@@ -65,34 +65,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   UTILS: '/utils',
 };
 
-const VIEW_ROLES: Record<DashboardViewType, string[]> = {
-  USER_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
-  USERS_CRUD: ['ROOT', 'ADMIN'],
-  EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
-  EMPLOYEE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
-  EMPLOYEE_DETAIL: ['ROOT', 'ADMIN'],
-  VEHICLES_CRUD: ['ROOT', 'ADMIN'],
-  VEHICLE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
-  VEHICLE_DETAIL: ['ROOT', 'ADMIN'],
-  WORK_CENTERS_CRUD: ['ROOT', 'ADMIN'],
-  WORK_CENTERS_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
-  SERVICES_CRUD: ['ROOT', 'ADMIN'],
-  SERVICES_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
-  SERVICE_DETAIL: ['ROOT', 'ADMIN'],
-  INVENTORY_CRUD: ['ROOT', 'ADMIN'],
-  INVENTORY_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
-  PROFILE: ['ROOT', 'ADMIN', 'MANAGER', 'USER'],
-  TESTS_AUTH: ['ROOT', 'ADMIN', 'MANAGER'],
-  TESTS_JWT: ['ROOT', 'ADMIN', 'MANAGER'],
-  TESTS_CRUD: ['ROOT', 'ADMIN', 'MANAGER'],
-  TESTS_RBAC: ['ROOT', 'ADMIN', 'MANAGER'],
-  TESTS_ROLES: ['ROOT', 'ADMIN', 'MANAGER'],
-  LOGS_AUTH: ['ROOT', 'ADMIN'],
-  LOGS_LOGOUT: ['ROOT', 'ADMIN'],
-  LOGS_USERS: ['ROOT', 'ADMIN'],
-  LOGS_EMPLOYEES: ['ROOT', 'ADMIN'],
-  UTILS: ['ROOT', 'ADMIN', 'MANAGER'],
-};
+
 
 const canAccessView = (view: DashboardViewType, role?: string): boolean => {
   const allowedRoles = VIEW_ROLES[view] || [];
@@ -101,18 +74,11 @@ const canAccessView = (view: DashboardViewType, role?: string): boolean => {
 
 const MainLayout: React.FC = () => {
   const { isAuthenticated, loading, user } = useAuth();
-  const [currentView, setCurrentView] = useState<DashboardViewType>(() => {
-    const saved = localStorage.getItem('on3_current_view');
-    return (saved as DashboardViewType) || 'USER_DASHBOARD';
-  });
+  const [currentView, setCurrentView] = useState<DashboardViewType>('PROFILE');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('on3_current_view', currentView);
-  }, [currentView]);
 
   if (loading) {
     return (
@@ -153,7 +119,7 @@ const MainLayout: React.FC = () => {
     if (!hasAccess) {
       return (
         <AccessDeniedView 
-          onBack={() => setCurrentView('USER_DASHBOARD')}
+          onBack={() => setCurrentView('PROFILE')}
           message={`Tu rol (${user?.role}) no tiene permiso para acceder a esta sección. Contacta a un administrador.`}
         />
       );
