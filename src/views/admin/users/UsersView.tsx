@@ -117,7 +117,7 @@ export const UsersView: React.FC = () => {
       )}
 
       <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
           </div>
@@ -126,7 +126,7 @@ export const UsersView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, @username o correo..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 

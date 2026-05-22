@@ -111,6 +111,17 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const contracts = useLookupState<ContractType>(INITIAL_CONTRACT_TYPES, 'ct');
 
   const handleCreate = () => { setModalMode('create'); setSelectedEmployeeId(null); setModalOpen(true); };
+  const createButtonConfig = useMemo(() => {
+    const tabs: Record<string, { icon: React.ReactNode; label: string; action: () => void }> = {
+      employees: { icon: <UserPlus className="h-4 w-4" />, label: 'Crear Empleado', action: handleCreate },
+      categories: { icon: <Tags className="h-4 w-4" />, label: 'Crear Categoría', action: () => cats.openModal() },
+      statuses: { icon: <HeartPulse className="h-4 w-4" />, label: 'Crear Estado', action: () => statuses.openModal() },
+      workdays: { icon: <CalendarDays className="h-4 w-4" />, label: 'Crear Jornada', action: () => workDays.openModal() },
+      shifts: { icon: <Clock className="h-4 w-4" />, label: 'Crear Turno', action: () => shifts.openModal() },
+      contracts: { icon: <FileText className="h-4 w-4" />, label: 'Crear Contrato', action: () => contracts.openModal() },
+    };
+    return tabs[activeTab] ?? tabs.employees;
+  }, [activeTab, cats, statuses, workDays, shifts, contracts]);
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedEmployeeId(id); setModalOpen(true); };
   const handleDelete = (id: string) => { setDeletingEmployeeId(id); setDeleteDialogOpen(true); };
   const handleConfirmDelete = () => { if (deletingEmployeeId) { deleteEmployee(deletingEmployeeId); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
@@ -150,6 +161,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   }, [employeeOverviews, searchQuery, statusFilter, workCenterFilter, userCityId]);
 
   useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, workCenterFilter, itemsPerPage]);
+  useEffect(() => { cats.setPage(1); }, [searchQuery]);
+  useEffect(() => { statuses.setPage(1); }, [searchQuery]);
+  useEffect(() => { workDays.setPage(1); }, [searchQuery]);
+  useEffect(() => { shifts.setPage(1); }, [searchQuery]);
+  useEffect(() => { contracts.setPage(1); }, [searchQuery]);
 
   const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
   const paginatedEmployees = filteredEmployees.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -161,31 +177,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  const renderLookupTab = (s: ReturnType<typeof useLookupState<NamedEntity>>, icon: React.ReactNode, singular: string, plural: string) => (
-    <div className="space-y-5">
-      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-        <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
-            <Search className="h-4 w-4" />
-          </div>
-          <input
-            type="text"
-            value={s.search}
-            onChange={(e) => s.setSearch(e.target.value)}
-            placeholder={`Buscar ${plural.toLowerCase()}...`}
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
-          />
-        </div>
-        <button
-          onClick={() => s.openModal()}
-          disabled={isReadOnly}
-          className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
-        >
-          {icon}
-          <span>Crear {singular}</span>
-        </button>
-      </div>
+  const renderLookupTab = (s: ReturnType<typeof useLookupState<NamedEntity>>, icon: React.ReactNode, singular: string, plural: string) => {
+    const lookupFiltered = searchQuery ? s.allItems.filter((x) => x.name.toLowerCase().includes(searchQuery.toLowerCase())) : s.allItems;
+    const lookupTotalPages = Math.ceil(lookupFiltered.length / s.ipp);
+    const lookupPaginated = lookupFiltered.slice((s.page - 1) * s.ipp, s.page * s.ipp);
 
+    return (
+    <div className="space-y-5">
       <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -196,14 +194,14 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-app-text text-sm">
-              {s.items.length === 0 ? (
+              {lookupPaginated.length === 0 ? (
                 <tr>
                   <td colSpan={2} className="py-12 text-center text-app-text-secondary font-medium">
                     No se encontraron {plural.toLowerCase()}.
                   </td>
                 </tr>
               ) : (
-                s.items.map((item) => (
+                lookupPaginated.map((item) => (
                   <tr key={item.id} className="hover:bg-app-bg/70 transition-colors">
                     <td className="py-3.5 px-6">
                       <div className="flex items-center gap-3">
@@ -247,11 +245,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             <span>por página</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-xs text-app-text-secondary mr-3">Página {s.totalPages > 0 ? s.page : 0} de {s.totalPages}</span>
-            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.min(s.totalPages, p + 1))} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage(s.totalPages)} disabled={s.page === s.totalPages || s.totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+            <span className="text-xs text-app-text-secondary mr-3">Página {lookupTotalPages > 0 ? s.page : 0} de {lookupTotalPages}</span>
+            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.min(lookupTotalPages, p + 1))} disabled={s.page === lookupTotalPages || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage(lookupTotalPages)} disabled={s.page === lookupTotalPages || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
           </div>
         </div>
       </div>
@@ -307,6 +305,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       )}
     </div>
   );
+  };
 
   return (
     <div className="space-y-5">
@@ -320,7 +319,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       )}
 
       <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
           </div>
@@ -328,8 +327,8 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por nombre o apellidos..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            placeholder={activeTab === 'employees' ? 'Buscar por nombre o apellidos...' : `Buscar ${({categories: 'categorías', statuses: 'estados', workdays: 'jornadas', shifts: 'turnos', contracts: 'contratos'} as Record<string, string>)[activeTab] ?? '...'}`}
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
@@ -362,23 +361,23 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           </div>
 
           <button
-            onClick={handleCreate}
+            onClick={createButtonConfig.action}
             disabled={isReadOnly}
             className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
-            <UserPlus className="h-4 w-4" />
-            <span>Crear</span>
+            {createButtonConfig.icon}
+            <span>{createButtonConfig.label}</span>
           </button>
         </div>
 
         <div className="hidden lg:flex items-center gap-2.5">
           <button
-            onClick={handleCreate}
+            onClick={createButtonConfig.action}
             disabled={isReadOnly}
             className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
-            <UserPlus className="h-4 w-4" />
-            <span>Crear Empleado</span>
+            {createButtonConfig.icon}
+            <span>{createButtonConfig.label}</span>
           </button>
         </div>
       </div>
