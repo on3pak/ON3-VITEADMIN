@@ -28,6 +28,7 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
   INVENTORY_CRUD: { title: 'Inventario', parent: 'Administración' },
   INVENTORY_DASHBOARD: { title: 'Dashboard', section: 'Inventario' },
   PROFILE: { title: 'Mi Perfil' },
+  PROFILE_CONFIG: { title: 'Configuración', parent: 'Mi Perfil' },
   UTILS: { title: 'Utilidades' },
   LOGS_AUTH: { title: 'Logs Auth', parent: 'Utilidades' },
   LOGS_LOGOUT: { title: 'Logs Logout', parent: 'Utilidades' },
@@ -127,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
                       Mi Perfil
                     </button>
                     <button
-                      onClick={() => { setCurrentView('UTILS'); setMobileUserOpen(false); }}
+                      onClick={() => { setCurrentView('PROFILE_CONFIG'); setMobileUserOpen(false); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-app-text hover:bg-app-bg transition-colors"
                     >
                       <Settings className="h-4 w-4 text-app-text-secondary" />

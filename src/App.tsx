@@ -34,6 +34,7 @@ import { InventoryView } from './views/admin/inventory/InventoryView';
 import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
 import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
 import { DashboardConfigView } from './views/dashboard/DashboardConfigView';
+import { UtilsView } from './views/utils/UtilsView';
 import { InventoryProvider } from './context/InventoryContext';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
@@ -53,6 +54,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   INVENTORY_CRUD: '/admin/inventory',
   INVENTORY_DASHBOARD: '/dashboard/inventory',
   PROFILE: '/profile',
+  PROFILE_CONFIG: '/profile/config',
   TESTS_AUTH: '/tests/auth',
   TESTS_JWT: '/tests/jwt',
   TESTS_CRUD: '/tests/crud',
@@ -185,8 +187,10 @@ const MainLayout: React.FC = () => {
         return <DashboardInventoryView />;
       case 'PROFILE':
         return <DashboardProfileView />;
-      case 'UTILS':
+      case 'PROFILE_CONFIG':
         return <DashboardConfigView />;
+      case 'UTILS':
+        return <UtilsView />;
       default:
         return <DashboardUsersView />;
     }

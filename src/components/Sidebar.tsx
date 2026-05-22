@@ -50,7 +50,7 @@ const adminItems = (role?: string) => {
 
 const profileItems = [
   { id: 'PROFILE' as DashboardViewType, label: 'Mi Perfil', icon: <User className="h-5 w-5" />, description: 'Información personal' },
-  { id: 'UTILS' as DashboardViewType, label: 'Configuración', icon: <Settings className="h-5 w-5" />, description: 'Ajustes del sistema' },
+  { id: 'PROFILE_CONFIG' as DashboardViewType, label: 'Configuración', icon: <Settings className="h-5 w-5" />, description: 'Ajustes del sistema' },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
@@ -232,7 +232,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                       Mi Perfil
                     </button>
                     <button
-                      onClick={() => { setView('UTILS'); setUserDropdownOpen(false); setSidebarOpen?.(false); }}
+                      onClick={() => { setView('PROFILE_CONFIG'); setUserDropdownOpen(false); setSidebarOpen?.(false); }}
                       className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-app-text hover:bg-app-bg transition-colors"
                     >
                       <Settings className="h-4 w-4 text-app-text-secondary" />
