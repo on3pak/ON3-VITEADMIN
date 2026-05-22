@@ -109,13 +109,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           {/* Brand Icon */}
           <a
             onClick={() => { setView('USER_DASHBOARD'); setSidebarOpen?.(false); }}
-            className="flex items-center justify-center size-9 rounded-md bg-primary-500 text-white hover:bg-primary-600 transition-colors cursor-pointer"
+            className="flex items-center justify-center size-9 rounded-md bg-gradient-to-br from-primary-500 to-primary-700 text-white hover:from-primary-600 hover:to-primary-800 transition-all cursor-pointer shadow-sm"
           >
-            <ShieldCheck className="h-5 w-5" />
+            <span className="text-white font-bold text-xs tracking-tight">ON3</span>
           </a>
 
+          <div className="w-5 h-px bg-app-border mt-4 mb-2" />
+
           {/* Navigation Icons */}
-          <div className="flex-1 flex flex-col items-center gap-1.5 mt-6">
+          <div className="flex-1 flex flex-col items-center gap-1.5 mt-4">
             <button
               onClick={() => handleSectionChange('dashboard')}
               className={`flex items-center justify-center size-9 rounded-md border transition-all ${
@@ -152,8 +154,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
               <Grid className="h-[18px] w-[18px]" />
             </button>
 
+            <div className="w-6 h-px bg-app-border" />
+
             {/* User Avatar */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative pt-1" ref={dropdownRef}>
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="shrink-0 cursor-pointer"

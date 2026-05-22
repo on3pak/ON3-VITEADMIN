@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
-import { RefreshCw, Wrench, Menu, Search } from 'lucide-react';
+import { RefreshCw, Wrench, Menu, Search, User, Settings, LogOut, Moon, Grid } from 'lucide-react';
 import { useUsers } from '../context/UserContext';
 
 interface HeaderProps {
@@ -41,8 +41,29 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
 };
 
 export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sidebarOpen, setSidebarOpen }) => {
-  const { user, triggerToast } = useAuth();
+  const { user, triggerToast, logout } = useAuth();
   const { resetMockData } = useUsers();
+  const [mobileUserOpen, setMobileUserOpen] = useState(false);
+  const mobileUserRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (mobileUserRef.current && !mobileUserRef.current.contains(e.target as Node)) {
+        setMobileUserOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(w => w[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const info = viewBreadcrumb[currentView] || { title: 'Panel de Control' };
 
@@ -51,19 +72,82 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
       {/* Mobile Header (lg:hidden) */}
       <header className="flex lg:hidden items-center fixed z-10 top-0 start-0 end-0 shrink-0 bg-[#f8f9fc] h-16 border-b border-app-border">
         <div className="flex items-center justify-between w-full px-4">
-          <a className="cursor-pointer">
-            <div className="flex items-center gap-1.5">
-              <div className="size-8 rounded-md bg-primary-500 flex items-center justify-center">
-                <span className="text-white font-bold text-xs">O3</span>
-              </div>
-            </div>
-          </a>
           <button
             onClick={() => setSidebarOpen?.(!sidebarOpen)}
             className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
           >
             <Menu className="h-5 w-5" />
           </button>
+
+          <div className="flex items-center gap-2">
+            <button className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all">
+              <Grid className="h-5 w-5" />
+            </button>
+            <div className="w-px h-6 bg-app-border" />
+            <div className="relative pl-1" ref={mobileUserRef}>
+              <button
+                onClick={() => setMobileUserOpen(!mobileUserOpen)}
+                className="shrink-0 cursor-pointer"
+              >
+                <div className="size-8 rounded-full ring-2 ring-white overflow-hidden border-2 border-green-500">
+                  {user?.avatar_url ? (
+                    <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold">
+                      {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
+                    </div>
+                  )}
+                </div>
+              </button>
+
+              {mobileUserOpen && (
+                <div className="absolute right-0 top-full mt-2 w-[220px] bg-white rounded-xl shadow-lg border border-app-border overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="flex items-center gap-2.5 px-3 py-3">
+                    <div className="size-8 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-white">
+                      {user?.avatar_url ? (
+                        <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold">
+                          {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <span className="text-sm text-app-text font-semibold leading-none truncate">{user?.full_name}</span>
+                      <span className="text-xs text-app-text-secondary truncate">{user?.email}</span>
+                    </div>
+                  </div>
+                  <div className="border-t border-app-border" />
+                  <div className="py-1">
+                    <button
+                      onClick={() => { setCurrentView('PROFILE'); setMobileUserOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-app-text hover:bg-app-bg transition-colors"
+                    >
+                      <User className="h-4 w-4 text-app-text-secondary" />
+                      Mi Perfil
+                    </button>
+                    <button
+                      onClick={() => { setCurrentView('UTILS'); setMobileUserOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-app-text hover:bg-app-bg transition-colors"
+                    >
+                      <Settings className="h-4 w-4 text-app-text-secondary" />
+                      Configuración
+                    </button>
+                  </div>
+                  <div className="border-t border-app-border" />
+                  <div className="px-3 py-2">
+                    <button
+                      onClick={() => { logout(); setMobileUserOpen(false); }}
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 border border-app-border rounded-lg transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
