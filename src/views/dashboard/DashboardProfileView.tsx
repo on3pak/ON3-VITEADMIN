@@ -5,11 +5,9 @@ import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
-  User, Shield, Mail, Calendar, MapPin, Briefcase,
-  Building2, Phone, Smartphone, Palette, Bell, Globe, Settings,
-  Edit3, CheckCircle, Clock, Tag, Hash,
-  FileText, CreditCard, TrendingUp, Award,
-  Share2, Heart, Flag, ShieldAlert, ChevronRight,
+  User, Shield, Calendar, Briefcase,
+  Edit3, CheckCircle, Flag, TrendingUp,
+  FileText, Share2, ShieldAlert,
 } from 'lucide-react';
 
 const cityMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
@@ -36,38 +34,18 @@ const ROLE_STYLE: Record<string, string> = {
   USER: 'bg-gray-100 text-gray-600 border-gray-200',
 };
 
-interface Prefs {
-  theme: 'claro' | 'oscuro' | 'sistema';
-  language: string;
-  notifications: boolean;
-  emailReports: boolean;
-  compactView: boolean;
-  itemsPerPage: number;
-}
-
 const formatDate = (d: string) => {
   const date = new Date(d);
   return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 };
 
-interface DashboardProfileViewProps {
-  initialTab?: 'perfil' | 'ajustes';
-}
-
-export const DashboardProfileView: React.FC<DashboardProfileViewProps> = ({ initialTab }) => {
+export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { employees, createEmployee, updateEmployee } = useEmployees();
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  const [activeTab, setActiveTab] = useState<'perfil' | 'ajustes'>(initialTab || 'perfil');
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
-  const [prefs, setPrefs] = useState<Prefs>(() => {
-    const saved = localStorage.getItem('on3_profile_prefs');
-    return saved ? JSON.parse(saved) : { theme: 'sistema', language: 'es', notifications: true, emailReports: true, compactView: false, itemsPerPage: 10 };
-  });
-
-  const savePrefs = (next: Prefs) => { setPrefs(next); localStorage.setItem('on3_profile_prefs', JSON.stringify(next)); };
 
   const myEmployee = useMemo(
     () => (loggedInUser ? employees.find((e) => e.user_id === loggedInUser.id) : undefined),
@@ -85,11 +63,6 @@ export const DashboardProfileView: React.FC<DashboardProfileViewProps> = ({ init
     return true;
   };
 
-  const tabs = [
-    { value: 'perfil' as const, label: 'Mi Perfil', icon: <User className="h-4 w-4" /> },
-    { value: 'ajustes' as const, label: 'Configuración', icon: <Settings className="h-4 w-4" /> },
-  ];
-
   return (
     <div className="space-y-5">
       {isReadOnly && (
@@ -99,21 +72,7 @@ export const DashboardProfileView: React.FC<DashboardProfileViewProps> = ({ init
         </div>
       )}
 
-      <div className="flex gap-1 p-1 overflow-x-auto bg-gray-100 rounded-xl">
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all rounded-lg whitespace-nowrap ${
-              activeTab === tab.value ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === 'perfil' && loggedInUser && (
+      {loggedInUser && (
         <div className="space-y-5">
           {/* Profile Header Card */}
           <div className="overflow-hidden bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -394,111 +353,6 @@ export const DashboardProfileView: React.FC<DashboardProfileViewProps> = ({ init
         </div>
       )}
 
-      {activeTab === 'ajustes' && (
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
-            <div className="px-5 py-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                <Palette className="w-4 h-4 text-gray-400" />
-                Apariencia
-              </div>
-            </div>
-            <div className="p-5 space-y-4">
-              {[
-                { label: 'Tema', key: 'theme', value: prefs.theme, onChange: (v: string) => savePrefs({ ...prefs, theme: v as Prefs['theme'] }), options: [
-                  { v: 'claro', l: 'Claro' },
-                  { v: 'oscuro', l: 'Oscuro' },
-                  { v: 'sistema', l: 'Sistema' },
-                ] },
-                { label: 'Idioma', key: 'language', value: prefs.language, onChange: (v: string) => savePrefs({ ...prefs, language: v }), options: [
-                  { v: 'es', l: 'Español' }, { v: 'en', l: 'English' },
-                ] },
-              ].map((field) => (
-                <div key={field.label} className="flex items-center justify-between py-1">
-                  <span className="text-sm text-gray-900">{field.label}</span>
-                  <div className="flex gap-1 p-0.5 bg-gray-100 rounded-lg">
-                    {field.options.map((opt) => (
-                      <button
-                        key={opt.v}
-                        onClick={() => field.onChange(opt.v)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${field.value === opt.v ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-500 hover:text-gray-700'}`}
-                      >
-                        {opt.l}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-gray-900">Vista compacta</span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" checked={prefs.compactView} onChange={(e) => savePrefs({ ...prefs, compactView: e.target.checked })} className="sr-only peer" />
-                  <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-focus:outline-hidden peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
-                </label>
-              </div>
-
-              <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-gray-900">Items por página</span>
-                <select value={prefs.itemsPerPage} onChange={(e) => savePrefs({ ...prefs, itemsPerPage: Number(e.target.value) })} className="px-2.5 py-1.5 text-xs text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-hidden focus:border-indigo-500">
-                  {[10, 25, 50].map((n) => <option key={n} value={n}>{n}</option>)}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
-              <div className="px-5 py-4 border-b border-gray-100">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <Bell className="w-4 h-4 text-gray-400" />
-                  Notificaciones
-                </div>
-              </div>
-              <div className="p-5 space-y-3">
-                {[
-                  { label: 'Notificaciones push', key: 'notifications' as const },
-                  { label: 'Informes por email', key: 'emailReports' as const },
-                ].map((item) => (
-                  <div key={item.key} className="flex items-center justify-between py-1.5">
-                    <span className="text-sm text-gray-900">{item.label}</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" checked={prefs[item.key]} onChange={(e) => savePrefs({ ...prefs, [item.key]: e.target.checked })} className="sr-only peer" />
-                      <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-focus:outline-hidden peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600" />
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 rounded-xl shadow-xs">
-              <div className="px-5 py-4 border-b border-gray-100">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <Globe className="w-4 h-4 text-gray-400" />
-                  Cuenta
-                </div>
-              </div>
-              <div className="p-5 space-y-2 text-sm">
-                <div className="flex items-center justify-between py-1">
-                  <span className="text-gray-500">Versión</span>
-                  <span className="font-mono text-xs text-gray-900">1.0.0</span>
-                </div>
-                <div className="flex items-center justify-between py-1">
-                  <span className="text-gray-500">Estado</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
-                    <CheckCircle className="w-3 h-3" /> Sesión activa
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-1">
-                  <span className="text-gray-500">Usuario</span>
-                  <span className="font-mono text-xs text-gray-900">{loggedInUser?.username}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <EmployeeFormModal
         isOpen={employeeModalOpen}
         onClose={() => setEmployeeModalOpen(false)}
@@ -508,3 +362,4 @@ export const DashboardProfileView: React.FC<DashboardProfileViewProps> = ({ init
     </div>
   );
 };
+

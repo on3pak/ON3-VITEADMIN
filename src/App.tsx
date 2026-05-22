@@ -33,6 +33,7 @@ import { LogsView } from './views/utils/logs/LogsView';
 import { InventoryView } from './views/admin/inventory/InventoryView';
 import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
 import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
+import { DashboardConfigView } from './views/dashboard/DashboardConfigView';
 import { InventoryProvider } from './context/InventoryContext';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
@@ -185,7 +186,7 @@ const MainLayout: React.FC = () => {
       case 'PROFILE':
         return <DashboardProfileView />;
       case 'UTILS':
-        return <DashboardProfileView initialTab="ajustes" />;
+        return <DashboardConfigView />;
       default:
         return <DashboardUsersView />;
     }
