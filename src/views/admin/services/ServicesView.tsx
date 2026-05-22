@@ -83,8 +83,11 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
   useEffect(() => setCurrentPage(1), [searchQuery, typeFilter, workCenterFilter, itemsPerPage]);
 
-  const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
-  const paginatedServices = filteredServices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const { totalPages, paginatedServices } = useMemo(() => {
+    const t = Math.ceil(filteredServices.length / itemsPerPage);
+    const p = filteredServices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    return { totalPages: t, paginatedServices: p };
+  }, [filteredServices, currentPage, itemsPerPage]);
 
   return (
     <div className="space-y-5">
@@ -133,14 +136,14 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             </select>
           </div>
 
-          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
+          <button onClick={handleCreate} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
             <Plus className="h-4 w-4" />
             <span>Crear</span>
           </button>
         </div>
 
         <div className="hidden lg:flex items-center gap-2.5">
-          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
+          <button onClick={handleCreate} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
             <Plus className="h-4 w-4" />
             <span>Crear Servicio</span>
           </button>

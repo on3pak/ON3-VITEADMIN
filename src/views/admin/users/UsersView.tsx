@@ -62,19 +62,22 @@ export const UsersView: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const filteredUsers = users.filter((u) => {
-    const matchesSearch = 
-      u.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      u.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
-    const matchesStatus = statusFilter === 'ALL' || u.status === statusFilter;
+  const filteredUsers = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    return users.filter((u) => {
+      const matchesSearch =
+        u.full_name.toLowerCase().includes(q) ||
+        u.username.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q);
 
-    return matchesSearch && matchesRole && matchesStatus;
-  });
+      const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
+      const matchesStatus = statusFilter === 'ALL' || u.status === statusFilter;
 
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+      return matchesSearch && matchesRole && matchesStatus;
+    });
+  }, [users, searchQuery, roleFilter, statusFilter]);
+
+  const totalPages = useMemo(() => Math.ceil(filteredUsers.length / itemsPerPage), [filteredUsers, itemsPerPage]);
   const paginatedUsers = useMemo(
     () => filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
     [filteredUsers, currentPage, itemsPerPage]

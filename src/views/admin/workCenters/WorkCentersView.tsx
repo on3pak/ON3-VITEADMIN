@@ -43,19 +43,22 @@ export const WorkCentersView: React.FC = () => {
     ? INITIAL_CITIES.filter((c) => c.id === userCityId)
     : INITIAL_CITIES;
 
-  const filtered = workCenters.filter((wc) => {
-    const matchesSearch =
-      wc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      wc.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      resolveCity(wc.city_id).toLowerCase().includes(searchQuery.toLowerCase());
+  const filtered = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    return workCenters.filter((wc) => {
+      const matchesSearch =
+        wc.name.toLowerCase().includes(q) ||
+        wc.address.toLowerCase().includes(q) ||
+        resolveCity(wc.city_id).toLowerCase().includes(q);
 
-    const matchesCity = cityFilter === 'ALL' || wc.city_id === cityFilter;
-    const matchesStatus = statusFilter === 'ALL' || wc.status === statusFilter;
+      const matchesCity = cityFilter === 'ALL' || wc.city_id === cityFilter;
+      const matchesStatus = statusFilter === 'ALL' || wc.status === statusFilter;
 
-    return matchesSearch && matchesCity && matchesStatus;
-  });
+      return matchesSearch && matchesCity && matchesStatus;
+    });
+  }, [workCenters, searchQuery, cityFilter, statusFilter]);
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const totalPages = useMemo(() => Math.ceil(filtered.length / itemsPerPage), [filtered, itemsPerPage]);
   const paginated = useMemo(
     () => filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
     [filtered, currentPage, itemsPerPage]

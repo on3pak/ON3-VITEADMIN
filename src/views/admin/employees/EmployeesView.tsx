@@ -161,14 +161,19 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   }, [employeeOverviews, searchQuery, statusFilter, workCenterFilter, userCityId]);
 
   useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, workCenterFilter, itemsPerPage]);
-  useEffect(() => { cats.setPage(1); }, [searchQuery]);
-  useEffect(() => { statuses.setPage(1); }, [searchQuery]);
-  useEffect(() => { workDays.setPage(1); }, [searchQuery]);
-  useEffect(() => { shifts.setPage(1); }, [searchQuery]);
-  useEffect(() => { contracts.setPage(1); }, [searchQuery]);
+  useEffect(() => {
+    cats.setPage(1);
+    statuses.setPage(1);
+    workDays.setPage(1);
+    shifts.setPage(1);
+    contracts.setPage(1);
+  }, [searchQuery]);
 
-  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
-  const paginatedEmployees = filteredEmployees.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const { totalPages, paginatedEmployees } = useMemo(() => {
+    const t = Math.ceil(filteredEmployees.length / itemsPerPage);
+    const p = filteredEmployees.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    return { totalPages: t, paginatedEmployees: p };
+  }, [filteredEmployees, currentPage, itemsPerPage]);
 
   const resolveCategory = (id: string) => INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === id)?.name ?? id;
   const resolveStatus = (id: string) => INITIAL_EMPLOYEE_STATUSES.find((s) => s.id === id)?.name ?? id;

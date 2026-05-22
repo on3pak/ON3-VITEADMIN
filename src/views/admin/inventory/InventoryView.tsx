@@ -141,8 +141,11 @@ export const InventoryView: React.FC = () => {
 
   useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, subtypeFilter, workCenterFilter, cityFilter, activeCategory, itemsPerPage]);
 
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-  const paginatedItems = filteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const { totalPages, paginatedItems } = useMemo(() => {
+    const t = Math.ceil(filteredItems.length / itemsPerPage);
+    const p = filteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    return { totalPages: t, paginatedItems: p };
+  }, [filteredItems, currentPage, itemsPerPage]);
 
   const isReadOnly = loggedInUser?.role === 'USER';
 

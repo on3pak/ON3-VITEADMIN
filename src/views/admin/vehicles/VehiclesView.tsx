@@ -91,8 +91,11 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
   useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, workCenterFilter, itemsPerPage]);
 
-  const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
-  const paginatedVehicles = filteredVehicles.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const { totalPages, paginatedVehicles } = useMemo(() => {
+    const t = Math.ceil(filteredVehicles.length / itemsPerPage);
+    const p = filteredVehicles.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    return { totalPages: t, paginatedVehicles: p };
+  }, [filteredVehicles, currentPage, itemsPerPage]);
 
   const getBadgeStyle = (status: string) => STATUS_STYLES[status] ?? 'bg-app-bg text-app-text border-app-border';
 
@@ -141,14 +144,14 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             </select>
           </div>
 
-          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
+          <button onClick={handleCreate} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
             <Plus className="h-4 w-4" />
             <span>Crear</span>
           </button>
         </div>
 
         <div className="hidden lg:flex items-center gap-2.5">
-          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
+          <button onClick={handleCreate} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
             <Plus className="h-4 w-4" />
             <span>Crear Vehículo</span>
           </button>
