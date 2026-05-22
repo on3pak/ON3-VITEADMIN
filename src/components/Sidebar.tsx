@@ -26,8 +26,8 @@ const canSeeUserCrud = (role?: string): boolean => {
 
 const dashboardItems = (role?: string) => {
   const allItems = [
-    { id: 'USER_DASHBOARD' as DashboardViewType, label: 'Usuarios', icon: <LayoutDashboard className="h-5 w-5" />, description: 'Estadísticas y métricas' },
-    { id: 'EMPLOYEE_DASHBOARD' as DashboardViewType, label: 'Empleados', icon: <Briefcase className="h-5 w-5" />, description: 'Panel de empleados' },
+    { id: 'USER_DASHBOARD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Estadísticas y métricas' },
+    { id: 'EMPLOYEE_DASHBOARD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Panel de empleados' },
     { id: 'VEHICLE_DASHBOARD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Panel de vehículos' },
     { id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Panel de centros' },
     { id: 'SERVICES_DASHBOARD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Panel de servicios' },
@@ -70,6 +70,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
   }, []);
 
   const items = activeSection === 'profile' ? profileItems : activeSection === 'dashboard' ? dashboardItems(user?.role) : adminItems(user?.role);
+
+  const getItemSection = (id: DashboardViewType): 'profile' | 'dashboard' | 'admin' => {
+    if (profileItems.some((i) => i.id === id)) return 'profile';
+    if (dashboardItems(user?.role).some((i) => i.id === id)) return 'dashboard';
+    return 'admin';
+  };
 
   const handleSectionChange = (section: 'dashboard' | 'admin') => {
     setActiveSection(section);
@@ -126,7 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           <div className="w-5 h-px bg-app-border mt-4 mb-2" />
 
           {/* Navigation Icons */}
-          <div className="flex-1 flex flex-col items-center gap-1.5 mt-4">
+          <div className="flex-1 flex flex-col items-center gap-1.5">
             <button
               onClick={() => { setActiveSection('profile'); setView('PROFILE'); setSidebarOpen?.(false); }}
               className={`flex items-center justify-center size-9 rounded-md border transition-all ${
@@ -280,7 +286,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           <div className="px-3 pt-3 pb-1">
             <button className="w-full flex items-center justify-between px-2.5 py-2 rounded-md border border-app-border text-sm font-medium text-app-text hover:bg-app-bg transition-colors">
               <span className="flex items-center gap-1.5">
-                <LayoutDashboard className="h-[14px] w-[14px] text-app-text-secondary" />
+                {activeSection === 'profile' ? <User className="h-[14px] w-[14px] text-app-text-secondary" /> : activeSection === 'dashboard' ? <LayoutDashboard className="h-[14px] w-[14px] text-app-text-secondary" /> : <Shield className="h-[14px] w-[14px] text-app-text-secondary" />}
                 {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
               </span>
               <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />
@@ -303,7 +309,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
               return (
                 <button
                   key={item.id}
-                  onClick={() => !isDisabled && (setView(item.id), setSidebarOpen?.(false))}
+                  onClick={() => {
+                    if (!isDisabled) {
+                      setActiveSection(getItemSection(item.id));
+                      setView(item.id);
+                      setSidebarOpen?.(false);
+                    }
+                  }}
                   disabled={isDisabled}
                   className={`
                     w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md border text-left transition-all

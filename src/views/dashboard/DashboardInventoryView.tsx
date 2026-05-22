@@ -52,7 +52,7 @@ const formatDate = (dateStr: string) => {
 };
 
 const SUBTYPE_BAR_COLORS = [
-  'bg-indigo-600', 'bg-blue-600', 'bg-cyan-600', 'bg-teal-600',
+  'bg-primary-600', 'bg-blue-600', 'bg-cyan-600', 'bg-teal-600',
   'bg-emerald-600', 'bg-violet-600', 'bg-fuchsia-600', 'bg-rose-600',
   'bg-amber-600', 'bg-orange-600',
 ];
@@ -93,7 +93,7 @@ const TabContent: React.FC<{ items: typeof import('../../types').InventoryItem[]
   const recent = [...filtered].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 5);
 
   const stats = [
-    { title: category === 'ropa' ? 'Total Prendas' : category === 'epi' ? 'Total EPIs' : 'Total Máquinas', value: totalCount, sub: `${totalUnits} unidades`, icon: <Box className="h-5 w-5" />, color: 'indigo' },
+    { title: category === 'ropa' ? 'Total Prendas' : category === 'epi' ? 'Total EPIs' : 'Total Máquinas', value: totalCount, sub: `${totalUnits} unidades`, icon: <Box className="h-5 w-5" />, color: 'primary' },
     { title: 'Disponibles', value: disponibles, sub: `${filteredCount > 0 ? ((disponibles / filteredCount) * 100).toFixed(0) : 0}%`, icon: <TrendingUp className="h-5 w-5" />, color: 'emerald' },
     { title: 'Agotados', value: agotados, sub: `${filteredCount > 0 ? ((agotados / filteredCount) * 100).toFixed(0) : 0}%`, icon: <AlertTriangle className="h-5 w-5" />, color: 'rose' },
     { title: 'Stock Bajo', value: stockBajo, sub: 'por debajo del mínimo', icon: <Ruler className="h-5 w-5" />, color: 'amber' },
@@ -175,7 +175,7 @@ const TabContent: React.FC<{ items: typeof import('../../types').InventoryItem[]
                 <span className="text-sm font-medium text-app-text">{c.city}</span>
                 <div className="flex items-center gap-2">
                   <div className="w-24 bg-app-border rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-indigo-500 h-full rounded-full" style={{ width: `${filteredCount > 0 ? (c.count / filteredCount) * 100 : 0}%` }} />
+                    <div className="bg-primary-500 h-full rounded-full" style={{ width: `${filteredCount > 0 ? (c.count / filteredCount) * 100 : 0}%` }} />
                   </div>
                   <span className="text-sm font-bold text-app-text w-6 text-right">{c.count}</span>
                 </div>
@@ -244,7 +244,7 @@ export const DashboardInventoryView: React.FC = () => {
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-              activeTab === tab.value ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'
+              activeTab === tab.value ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'
             }`}
           >
             {tab.icon} {tab.label}
@@ -256,3 +256,4 @@ export const DashboardInventoryView: React.FC = () => {
     </div>
   );
 };
+

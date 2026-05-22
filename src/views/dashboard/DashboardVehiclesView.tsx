@@ -102,8 +102,8 @@ export const DashboardVehiclesView: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-indigo-50">
-              <TruckIcon className="h-5 w-5 text-indigo-600" />
+            <div className="p-2.5 rounded-xl bg-primary-50">
+              <TruckIcon className="h-5 w-5 text-primary-600" />
             </div>
             <div>
               <p className="text-xs text-app-text-secondary font-medium">Total Flota</p>

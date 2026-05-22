@@ -40,7 +40,7 @@ export const UtilsView: React.FC = () => {
             onClick={() => setSelectedLogType(tab.value)}
             className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
               selectedLogType === tab.value
-                ? 'bg-indigo-100 text-indigo-700'
+                ? 'bg-primary-100 text-primary-700'
                 : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
             }`}
           >
@@ -70,7 +70,7 @@ export const UtilsView: React.FC = () => {
               onClick={() => setSelectedTestType(tab.value)}
               className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                 selectedTestType === tab.value
-                  ? 'bg-indigo-100 text-indigo-700'
+                  ? 'bg-primary-100 text-primary-700'
                   : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
               }`}
             >

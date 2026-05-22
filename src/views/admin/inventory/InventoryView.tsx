@@ -182,7 +182,7 @@ export const InventoryView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o subtipo..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
@@ -233,7 +233,7 @@ export const InventoryView: React.FC = () => {
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <Plus className="h-4 w-4" />
             <span>Crear</span>
@@ -244,7 +244,7 @@ export const InventoryView: React.FC = () => {
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <Plus className="h-4 w-4" />
             <span>Crear {CATEGORY_TABS.find((t) => t.value === activeCategory)?.label}</span>
@@ -259,7 +259,7 @@ export const InventoryView: React.FC = () => {
             onClick={() => setActiveCategory(tab.value)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
               activeCategory === tab.value
-                ? 'bg-white text-indigo-700 shadow-xs'
+                ? 'bg-white text-primary-700 shadow-xs'
                 : 'text-app-text-secondary hover:text-app-text'
             }`}
           >
@@ -298,7 +298,7 @@ export const InventoryView: React.FC = () => {
                           <td className="py-3.5 px-6">
                             <div className="flex items-center gap-3">
                               <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                                activeCategory === 'ropa' ? 'bg-indigo-100 text-indigo-600 border border-indigo-200' :
+                                activeCategory === 'ropa' ? 'bg-primary-100 text-primary-600 border border-primary-200' :
                                 activeCategory === 'epi' ? 'bg-amber-100 text-amber-600 border border-amber-200' :
                                 'bg-cyan-100 text-cyan-600 border border-cyan-200'
                               }`}>
@@ -307,7 +307,7 @@ export const InventoryView: React.FC = () => {
                               <div>
                                 <div className="font-bold text-app-text-secondary leading-tight text-sm">{item.name}</div>
                                 <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-                                  <span className="font-mono text-indigo-600 font-semibold">{item.id}</span>
+                                  <span className="font-mono text-primary-600 font-semibold">{item.id}</span>
                                   <span>•</span>
                                   <MapPin className="h-3 w-3 text-app-text-secondary" />
                                   <span>{getWcName(item.work_center_id)}</span>
@@ -371,7 +371,7 @@ export const InventoryView: React.FC = () => {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -401,10 +401,10 @@ export const InventoryView: React.FC = () => {
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
               </button>
               {open && (
-              <div className="px-4 pb-3 space-y-1">
-                <button onClick={() => { setCityFilter('ALL'); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
+              <div className="px-4 pt-2 pb-3 space-y-1">
+                <button onClick={() => { setCityFilter('ALL'); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
                 {scopeCities.map((c) => (
-                  <button key={c.id} onClick={() => { setCityFilter(c.id); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === c.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{c.name}</button>
+                  <button key={c.id} onClick={() => { setCityFilter(c.id); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === c.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{c.name}</button>
                 ))}
               </div>
               )}
@@ -421,10 +421,10 @@ export const InventoryView: React.FC = () => {
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
               </button>
               {open && (
-              <div className="px-4 pb-3 space-y-1">
-                <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+              <div className="px-4 pt-2 pb-3 space-y-1">
+                <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
                 {scopeWorkCenters.map((wc) => (
-                  <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                  <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
                 ))}
               </div>
               )}
@@ -441,10 +441,10 @@ export const InventoryView: React.FC = () => {
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
               </button>
               {open && (
-              <div className="px-4 pb-3 space-y-1">
-                <button onClick={() => setSubtypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos</button>
+              <div className="px-4 pt-2 pb-3 space-y-1">
+                <button onClick={() => setSubtypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos</button>
                 {getSubtypesForCategory(activeCategory).map((st) => (
-                  <button key={st.id} onClick={() => setSubtypeFilter(st.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === st.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{st.name}</button>
+                  <button key={st.id} onClick={() => setSubtypeFilter(st.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === st.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{st.name}</button>
                 ))}
               </div>
               )}
@@ -461,10 +461,10 @@ export const InventoryView: React.FC = () => {
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
               </button>
               {open && (
-              <div className="px-4 pb-3 space-y-1">
-                <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+              <div className="px-4 pt-2 pb-3 space-y-1">
+                <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
                 {getStatusesForCategory(activeCategory).map((s) => (
-                  <button key={s.id} onClick={() => setStatusFilter(s.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s.name}</button>
+                  <button key={s.id} onClick={() => setStatusFilter(s.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s.name}</button>
                 ))}
               </div>
               )}
@@ -491,3 +491,5 @@ export const InventoryView: React.FC = () => {
     </div>
   );
 };
+
+

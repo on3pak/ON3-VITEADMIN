@@ -25,7 +25,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'ec-1': 'bg-indigo-100 text-indigo-700 border-indigo-200',
+  'ec-1': 'bg-primary-100 text-primary-700 border-primary-200',
   'ec-2': 'bg-purple-100 text-purple-700 border-purple-200',
   'ec-3': 'bg-violet-100 text-violet-700 border-violet-200',
   'ec-4': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
@@ -173,13 +173,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             value={s.search}
             onChange={(e) => s.setSearch(e.target.value)}
             placeholder={`Buscar ${plural.toLowerCase()}...`}
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
         <button
           onClick={() => s.openModal()}
           disabled={isReadOnly}
-          className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+          className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
         >
           {icon}
           <span>Crear {singular}</span>
@@ -207,7 +207,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                   <tr key={item.id} className="hover:bg-app-bg/70 transition-colors">
                     <td className="py-3.5 px-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0">
+                        <div className="w-9 h-9 rounded-lg bg-primary-100 border border-primary-200 flex items-center justify-center text-primary-600 shrink-0">
                           {icon}
                         </div>
                         <div>
@@ -238,7 +238,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             <select
               value={s.ipp}
               onChange={(e) => { s.setIpp(Number(e.target.value)); s.setPage(1); }}
-              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -275,7 +275,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                   value={s.name}
                   onChange={(e) => s.setName(e.target.value)}
                   placeholder={`Nombre del ${singular.toLowerCase()}`}
-                  className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text"
+                  className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100 text-app-text"
                   autoFocus
                 />
               </div>
@@ -283,7 +283,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                 <button onClick={() => s.setModalOpen(false)} className="px-4 py-2 text-sm font-semibold text-app-text-secondary bg-app-bg hover:bg-app-border rounded-xl transition-colors">
                   Cancelar
                 </button>
-                <button onClick={s.save} className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">
+                <button onClick={s.save} className="px-4 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl transition-colors">
                   {s.editItem ? 'Guardar' : 'Crear'}
                 </button>
               </div>
@@ -329,7 +329,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o apellidos..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
@@ -364,7 +364,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear</span>
@@ -375,7 +375,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear Empleado</span>
@@ -384,22 +384,22 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       </div>
 
       <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
-        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <User className="h-4 w-4" /> Empleados
         </button>
-        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <Tags className="h-4 w-4" /> Categorías
         </button>
-        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <HeartPulse className="h-4 w-4" /> Estados
         </button>
-        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <CalendarDays className="h-4 w-4" /> Jornadas
         </button>
-        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <Clock className="h-4 w-4" /> Turnos
         </button>
-        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-indigo-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <FileText className="h-4 w-4" /> Contratos
         </button>
       </div>
@@ -432,14 +432,14 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                       <tr key={emp.id} className="hover:bg-app-bg/70 transition-colors">
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-sm shadow-indigo-500/20 relative overflow-hidden">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-sm shadow-primary-500/20 relative overflow-hidden">
                               <User className="w-8 h-8 text-black/50 absolute" />
                               <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.lastName1)}</span>
                             </div>
                             <div>
                               <div className="font-bold text-app-text-secondary leading-tight">{emp.name} {emp.lastName1} {emp.lastName2}</div>
                               <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-                                <span className="font-mono text-indigo-600 font-semibold">ID: {emp.id}</span>
+                                <span className="font-mono text-primary-600 font-semibold">ID: {emp.id}</span>
                                 <span>•</span>
                                 <Mail className="h-3 w-3 text-app-text-secondary inline" />
                                 <span className="truncate max-w-[140px]">{emp.email || 'sin email'}</span>
@@ -466,7 +466,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewEmployee?.(emp.id)} className="p-1.5 text-app-text-secondary hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => onViewEmployee?.(emp.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
                             {!isReadOnly && (
                               <>
                                 <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
@@ -487,7 +487,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -515,10 +515,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -532,10 +532,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {INITIAL_EMPLOYEE_STATUSES.map((es) => (
-                <button key={es.id} onClick={() => setStatusFilter(es.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === es.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{es.name}</button>
+                <button key={es.id} onClick={() => setStatusFilter(es.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === es.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{es.name}</button>
               ))}
             </div>
             )}
@@ -569,3 +569,4 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
     </div>
   );
 };
+

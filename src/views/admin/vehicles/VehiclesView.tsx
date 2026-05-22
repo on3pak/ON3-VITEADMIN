@@ -108,7 +108,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por matrícula, modelo o marca..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
@@ -141,14 +141,14 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             </select>
           </div>
 
-          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-indigo-600 hover:bg-indigo-700">
+          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
             <Plus className="h-4 w-4" />
             <span>Crear</span>
           </button>
         </div>
 
         <div className="hidden lg:flex items-center gap-2.5">
-          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-indigo-600 hover:bg-indigo-700">
+          <button onClick={() => handleCreate()} className="flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs bg-primary-600 hover:bg-primary-700">
             <Plus className="h-4 w-4" />
             <span>Crear Vehículo</span>
           </button>
@@ -187,7 +187,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                             <div>
                               <div className="font-bold text-app-text-secondary leading-tight">{v.brand} {v.model}</div>
                               <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-                                <span className="font-mono text-indigo-600 font-semibold">{v.licensePlate}</span>
+                                <span className="font-mono text-primary-600 font-semibold">{v.licensePlate}</span>
                               </div>
                             </div>
                           </div>
@@ -215,7 +215,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewVehicle?.(v.id)} className="p-1.5 text-app-text-secondary hover:text-indigo-600 hover:bg-indigo-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => onViewVehicle?.(v.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
                             <button onClick={() => handleEdit(v.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
                             <button onClick={() => handleDelete(v.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                           </div>
@@ -232,7 +232,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -260,10 +260,10 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -277,10 +277,10 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {['ACTIVO', 'MANTENIMIENTO', 'AVERIADO', 'BAJA'].map((s) => (
-                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}</button>
+                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}</button>
               ))}
             </div>
             )}
@@ -306,3 +306,4 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
     </div>
   );
 };
+

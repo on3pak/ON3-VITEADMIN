@@ -126,7 +126,7 @@ export const UsersView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, @username o correo..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
@@ -161,7 +161,7 @@ export const UsersView: React.FC = () => {
           <button
             onClick={handleOpenCreateModal}
             disabled={isReadOnlyOperator}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear</span>
@@ -172,7 +172,7 @@ export const UsersView: React.FC = () => {
           <button
             onClick={handleOpenCreateModal}
             disabled={isReadOnlyOperator}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <UserPlus className="h-4 w-4" />
             <span>Crear Usuario</span>
@@ -213,7 +213,7 @@ export const UsersView: React.FC = () => {
                         <div>
                           <div className="font-bold text-app-text-secondary leading-tight">{u.full_name}</div>
                           <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-                            <span className="font-mono text-indigo-600 font-semibold">@{u.username}</span>
+                            <span className="font-mono text-primary-600 font-semibold">@{u.username}</span>
                             <span>•</span>
                             <Mail className="h-3 w-3 text-app-text-secondary inline" />
                             <span className="truncate max-w-[140px]">{u.email}</span>
@@ -323,7 +323,7 @@ export const UsersView: React.FC = () => {
             <select
               value={itemsPerPage}
               onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -379,10 +379,10 @@ export const UsersView: React.FC = () => {
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setRoleFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Roles</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setRoleFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Roles</button>
               {(['ROOT', 'ADMIN', 'MANAGER', 'USER'] as const).map((role) => (
-                <button key={role} onClick={() => setRoleFilter(role)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === role ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{role}</button>
+                <button key={role} onClick={() => setRoleFilter(role)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === role ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{role}</button>
               ))}
             </div>
             )}
@@ -396,10 +396,10 @@ export const UsersView: React.FC = () => {
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {(['ACTIVE', 'INACTIVE'] as const).map((status) => (
-                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
+                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
               ))}
             </div>
             )}
@@ -418,3 +418,4 @@ export const UsersView: React.FC = () => {
     </div>
   );
 };
+

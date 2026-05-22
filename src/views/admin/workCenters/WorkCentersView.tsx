@@ -93,7 +93,7 @@ export const WorkCentersView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, dirección o ciudad..."
-            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
@@ -125,7 +125,7 @@ export const WorkCentersView: React.FC = () => {
           <button
             onClick={() => { setSelectedForEdit(undefined); setIsModalOpen(true); }}
             disabled={isReadOnlyOperator}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <Plus className="h-4 w-4" />
             <span>Crear</span>
@@ -136,7 +136,7 @@ export const WorkCentersView: React.FC = () => {
           <button
             onClick={() => { setSelectedForEdit(undefined); setIsModalOpen(true); }}
             disabled={isReadOnlyOperator}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <Plus className="h-4 w-4" />
             <span>Crear Centro</span>
@@ -169,7 +169,7 @@ export const WorkCentersView: React.FC = () => {
                       <tr key={wc.id} className="hover:bg-app-bg/70 transition-colors">
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-lg bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0">
+                            <div className="w-9 h-9 rounded-lg bg-primary-100 border border-primary-200 flex items-center justify-center text-primary-600 shrink-0">
                               <Building2 className="h-5 w-5" />
                             </div>
                             <div>
@@ -249,7 +249,7 @@ export const WorkCentersView: React.FC = () => {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -277,10 +277,10 @@ export const WorkCentersView: React.FC = () => {
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setCityFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setCityFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
               {scopeCities.map((city) => (
-                <button key={city.id} onClick={() => setCityFilter(city.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === city.id ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{city.name}</button>
+                <button key={city.id} onClick={() => setCityFilter(city.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === city.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{city.name}</button>
               ))}
             </div>
             )}
@@ -294,10 +294,10 @@ export const WorkCentersView: React.FC = () => {
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
             </button>
             {o && (
-            <div className="px-4 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {(['ACTIVE', 'INACTIVE'] as const).map((status) => (
-                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
+                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
               ))}
             </div>
             )}
@@ -316,3 +316,5 @@ export const WorkCentersView: React.FC = () => {
     </div>
   );
 };
+
+

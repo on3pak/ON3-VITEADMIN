@@ -20,7 +20,7 @@ const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', '
 const InfoRow: React.FC<{ label: string; value: string; highlight?: boolean }> = ({ label, value, highlight }) => (
   <div>
     <div className="text-xs text-app-text-secondary">{label}</div>
-    <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-app-text'}`}>{value}</div>
+    <div className={`text-sm ${highlight ? 'font-semibold text-primary-600' : 'text-app-text'}`}>{value}</div>
   </div>
 );
 
@@ -57,7 +57,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
       <div className="space-y-5">
         <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
           <p className="text-app-text-secondary">Servicio no encontrado.</p>
-          <button onClick={onBack} className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl">Volver</button>
+          <button onClick={onBack} className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-xl">Volver</button>
         </div>
       </div>
     );
@@ -94,19 +94,19 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
       </button>
 
       <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
-        <div className="px-6 py-5 bg-gradient-to-r from-indigo-600 to-indigo-500 flex items-center justify-between">
+        <div className="px-6 py-5 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">
               <ClipboardList className="w-8 h-8 text-white" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">{service.name}</h1>
-              <p className="text-indigo-200 text-sm">{service.type}</p>
+              <p className="text-primary-200 text-sm">{service.type}</p>
             </div>
           </div>
           <div className="text-right text-white">
             <div className="text-2xl font-bold">{totalCompleted}/{service.tasks.length}</div>
-            <div className="text-xs text-indigo-200">tareas completadas</div>
+            <div className="text-xs text-primary-200">tareas completadas</div>
           </div>
         </div>
 
@@ -141,7 +141,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                   onClick={() => setActiveDay(idx)}
                   className={`relative flex flex-col items-center gap-1 px-5 py-3 text-xs font-semibold transition-colors shrink-0 ${
                     activeDay === idx
-                      ? 'text-indigo-700 bg-indigo-50'
+                      ? 'text-primary-700 bg-primary-50'
                       : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
                   }`}
                 >
@@ -155,7 +155,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                     <span className="text-[10px]">{dayDone}/{dayTaskCount.length}</span>
                   </span>
                   {activeDay === idx && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />
                   )}
                 </button>
               );
@@ -168,7 +168,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
             <h3 className="text-sm font-bold text-app-text">{DAYS[activeDay]} — {dayCompleted}/{dayTasks.length} completadas</h3>
             <div className="w-32 h-1.5 bg-app-bg rounded-full overflow-hidden">
               <div
-                className="h-full bg-indigo-500 rounded-full transition-all"
+                className="h-full bg-primary-500 rounded-full transition-all"
                 style={{ width: `${dayTasks.length > 0 ? (dayCompleted / dayTasks.length) * 100 : 0}%` }}
               />
             </div>
@@ -224,3 +224,4 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
     </div>
   );
 };
+

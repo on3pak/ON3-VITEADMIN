@@ -36,7 +36,7 @@ export const AccessDeniedView: React.FC<AccessDeniedViewProps> = ({
           
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 transition-colors"
           >
             <Home className="h-4 w-4" />
             Ir al Inicio

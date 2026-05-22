@@ -115,7 +115,7 @@ export const RolesTestsView: React.FC = () => {
           <button
             onClick={runAllTests}
             disabled={isRunningAll}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 disabled:opacity-40 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white font-bold text-xs rounded-xl hover:bg-primary-700 disabled:opacity-40 transition-all cursor-pointer"
           >
             <Play className={`h-4 w-4 ${isRunningAll ? 'animate-spin' : ''}`} />
             Ejecutar

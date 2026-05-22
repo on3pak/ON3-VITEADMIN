@@ -35,7 +35,7 @@ export const DashboardUsersView: React.FC = () => {
     .slice(0, 5);
 
   const stats = [
-    { title: 'Total Usuarios', value: totalUsers, icon: <Users className="h-5 w-5" />, color: 'indigo' },
+    { title: 'Total Usuarios', value: totalUsers, icon: <Users className="h-5 w-5" />, color: 'primary' },
     { title: 'Usuarios Activos', value: activeUsers.length, icon: <UserCheck className="h-5 w-5" />, color: 'emerald' },
     { title: 'Usuarios Inactivos', value: inactiveUsers.length, icon: <UserX className="h-5 w-5" />, color: 'rose' },
     { title: 'Tasa de Actividad', value: `${activeRate.toFixed(0)}%`, icon: <TrendingUp className="h-5 w-5" />, color: 'amber' },
@@ -50,12 +50,12 @@ export const DashboardUsersView: React.FC = () => {
 
   const statColor = (color: string) => {
     const map: Record<string, { bg: string, border: string, text: string }> = {
-      indigo: { bg: 'bg-indigo-50', border: 'border-indigo-100', text: 'text-indigo-600' },
+      primary: { bg: 'bg-primary-50', border: 'border-primary-100', text: 'text-primary-600' },
       emerald: { bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-600' },
       rose: { bg: 'bg-rose-50', border: 'border-rose-100', text: 'text-rose-600' },
       amber: { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-600' },
     };
-    return map[color] || map.indigo;
+    return map[color] || map.primary;
   };
 
   const getStatusBadge = (status: string) => {
@@ -136,8 +136,8 @@ export const DashboardUsersView: React.FC = () => {
 
           <div className="space-y-4">
             <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
-              <div className="p-2 bg-indigo-100 rounded-lg">
-                <Users className="h-4 w-4 text-indigo-600" />
+              <div className="p-2 bg-primary-100 rounded-lg">
+                <Users className="h-4 w-4 text-primary-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-app-text-secondary">Usuario</p>
@@ -232,3 +232,4 @@ export const DashboardUsersView: React.FC = () => {
     </div>
   );
 };
+

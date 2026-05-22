@@ -116,7 +116,7 @@ export const DashboardEmployeesView: React.FC = () => {
       title: 'Total Empleados',
       value: totalEmployees,
       icon: <Users className="h-5 w-5" />,
-      color: 'indigo',
+      color: 'primary',
     },
     {
       title: 'Activos',
@@ -252,7 +252,7 @@ export const DashboardEmployeesView: React.FC = () => {
                   </div>
                   <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
                     <div
-                      className="bg-indigo-600 h-full rounded-full"
+                      className="bg-primary-600 h-full rounded-full"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>

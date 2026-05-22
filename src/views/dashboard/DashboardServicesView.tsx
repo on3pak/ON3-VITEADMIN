@@ -74,7 +74,7 @@ export const DashboardServicesView: React.FC = () => {
       title: 'Servicios',
       value: totalServices,
       icon: <ClipboardList className="h-5 w-5" />,
-      color: 'indigo',
+      color: 'primary',
     },
     {
       title: 'Tareas Completadas',
@@ -130,7 +130,7 @@ export const DashboardServicesView: React.FC = () => {
                 </div>
                 <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                    className="bg-primary-600 h-full rounded-full transition-all duration-500"
                     style={{ width: `${stat.rate}%` }}
                   />
                 </div>
@@ -222,3 +222,4 @@ export const DashboardServicesView: React.FC = () => {
     </div>
   );
 };
+

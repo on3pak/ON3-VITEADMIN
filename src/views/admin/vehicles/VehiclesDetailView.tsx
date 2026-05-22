@@ -17,7 +17,7 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string; h
     <div className="text-app-text-secondary mt-0.5">{icon}</div>
     <div>
       <div className="text-xs text-app-text-secondary">{label}</div>
-      <div className={`text-sm ${highlight ? 'font-semibold text-indigo-600' : 'text-app-text'}`}>{value}</div>
+      <div className={`text-sm ${highlight ? 'font-semibold text-primary-600' : 'text-app-text'}`}>{value}</div>
     </div>
   </div>
 );
@@ -63,7 +63,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
       <div className="space-y-5">
         <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
           <p className="text-app-text-secondary">Vehículo no encontrado.</p>
-          <button onClick={onBack} className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl">Volver</button>
+          <button onClick={onBack} className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-xl">Volver</button>
         </div>
       </div>
     );
