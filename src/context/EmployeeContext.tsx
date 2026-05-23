@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { Employee, EmployeeOverview } from '../types';
+import { Employee, EmployeeOverview, VacationRequest } from '../types';
 import { INITIAL_EMPLOYEES } from '../data/mockEmployees';
 import { generateId } from '../utils/id';
 
@@ -10,12 +10,17 @@ interface EmployeeContextType {
   createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
   updateEmployee: (id: string, data: Partial<Employee>) => { success: boolean };
   deleteEmployee: (id: string) => void;
+  vacationRequests: VacationRequest[];
+  createVacationRequest: (data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => { success: boolean };
+  resolveVacationRequest: (id: string, status: 'aprobado' | 'rechazado') => void;
+  getVacationRequestsByEmployee: (employeeId: string) => VacationRequest[];
 }
 
 const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined);
 
 export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
+  const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>([]);
 
   const getEmployeeOverviews = useCallback(() => {
     return employees.map((emp) => ({
@@ -61,9 +66,35 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     setEmployees((prev) => prev.filter((emp) => emp.id !== id));
   }, []);
 
+  const createVacationRequest = useCallback((data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => {
+    const newRequest: VacationRequest = {
+      ...data,
+      id: generateId('vrq'),
+      created_at: new Date().toISOString(),
+    };
+    setVacationRequests((prev) => [...prev, newRequest]);
+    return { success: true };
+  }, []);
+
+  const resolveVacationRequest = useCallback((id: string, status: 'aprobado' | 'rechazado') => {
+    setVacationRequests((prev) =>
+      prev.map((req) =>
+        req.id === id ? { ...req, status, resolved_at: new Date().toISOString() } : req
+      )
+    );
+  }, []);
+
+  const getVacationRequestsByEmployee = useCallback((employeeId: string) => {
+    return vacationRequests.filter((req) => req.employee_id === employeeId);
+  }, [vacationRequests]);
+
   return (
     <EmployeeContext.Provider
-      value={{ employees, getEmployeeOverviews, getEmployeeById, createEmployee, updateEmployee, deleteEmployee }}
+      value={{
+        employees, getEmployeeOverviews, getEmployeeById,
+        createEmployee, updateEmployee, deleteEmployee,
+        vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
+      }}
     >
       {children}
     </EmployeeContext.Provider>

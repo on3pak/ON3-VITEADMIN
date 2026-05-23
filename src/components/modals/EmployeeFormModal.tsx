@@ -25,6 +25,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [work_day, setWork_day] = useState('wd-1');
   const [start_time, setStart_time] = useState('');
   const [end_time, setEnd_time] = useState('');
+  const [vacation_month, setVacation_month] = useState<'julio' | 'agosto' | 'septiembre' | ''>('');
   const [vacation_days, setVacation_days] = useState(22);
   const [own_days, setOwn_days] = useState(0);
   const [accumulated_days, setAccumulated_days] = useState(0);
@@ -55,6 +56,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setWork_day(editingEmployee.work_day);
       setStart_time(editingEmployee.start_time || '');
       setEnd_time(editingEmployee.end_time || '');
+      setVacation_month(editingEmployee.vacation_month || '');
       setVacation_days(editingEmployee.vacation_days);
       setOwn_days(editingEmployee.own_days);
       setAccumulated_days(editingEmployee.accumulated_days);
@@ -82,6 +84,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setWork_day('wd-1');
       setStart_time('');
       setEnd_time('');
+      setVacation_month('');
       setVacation_days(22);
       setOwn_days(0);
       setAccumulated_days(0);
@@ -126,9 +129,12 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       schedule: '',
       start_time,
       end_time,
+      vacation_month: vacation_month || null,
+      vacation_year: vacation_month ? new Date().getFullYear() : null,
+      vacation_days,
       own_days,
       accumulated_days,
-      vacation_days,
+      excess_days,
       personal_email: personal_email.trim(),
       phone_fixed: phone_fixed.trim(),
       work_day,
@@ -140,7 +146,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       contract_start_date,
       contract_end_date: contract_end_date || null,
       irpf,
-      excess_days,
     });
 
     if (success) {
@@ -250,7 +255,17 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             </div>
 
             <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones y Días</h4>
+              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones</h4>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
+              <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'julio' | 'agosto' | 'septiembre' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                <option value="">Sin asignar</option>
+                <option value="julio">Julio</option>
+                <option value="agosto">Agosto</option>
+                <option value="septiembre">Septiembre</option>
+              </select>
+              <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año: julio → agosto → septiembre → julio...</p>
             </div>
             <div>
               <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Vacaciones</label>

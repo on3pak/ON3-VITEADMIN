@@ -130,24 +130,39 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={employee.start_time && employee.end_time ? `${employee.start_time} - ${employee.end_time}` : '-'} />
           </SectionCard>
 
-          <SectionCard icon={<Calendar className="h-4 w-4" />} title="Vacaciones y Días">
-            <div className="grid grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-primary-50 rounded-lg">
-                <div className="text-2xl font-bold text-primary-600">{employee.vacation_days}</div>
-                <div className="text-xs text-app-text-secondary">Vacaciones</div>
+          <SectionCard icon={<Calendar className="h-4 w-4" />} title="Vacaciones">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-primary-50/60 rounded-xl border border-primary-100/50">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-100 text-primary-600 shrink-0">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div className="flex-1 flex items-center justify-between">
+                  <div>
+                    <div className="text-xs text-app-text-secondary font-medium">Mes asignado</div>
+                    <div className="text-sm font-bold text-primary-700 capitalize">{employee.vacation_month || 'Sin asignar'}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
+                    <div className="text-sm font-bold text-emerald-600 capitalize">{(() => { const m = ['julio','agosto','septiembre']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
+                  </div>
+                </div>
               </div>
-              <div className="text-center p-3 bg-emerald-50 rounded-lg">
-                <div className="text-2xl font-bold text-emerald-600">{employee.own_days}</div>
-                <div className="text-xs text-app-text-secondary">Propios</div>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { label: 'Vacaciones', value: employee.vacation_days, color: 'text-primary-600', bg: 'bg-primary-50' },
+                  { label: 'Propios', value: employee.own_days, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                  { label: 'Acumulados', value: employee.accumulated_days, color: 'text-blue-600', bg: 'bg-blue-50' },
+                  { label: 'Extras', value: employee.excess_days, color: 'text-rose-600', bg: 'bg-rose-50' },
+                ].map((d) => (
+                  <div key={d.label} className={`text-center p-2 rounded-lg ${d.bg}`}>
+                    <div className={`text-lg font-bold ${d.color}`}>{d.value}</div>
+                    <div className="text-[10px] text-app-text-secondary">{d.label}</div>
+                  </div>
+                ))}
               </div>
-              <div className="text-center p-3 bg-amber-50 rounded-lg">
-                <div className="text-2xl font-bold text-amber-600">{employee.accumulated_days}</div>
-                <div className="text-xs text-app-text-secondary">Acumulados</div>
-              </div>
-              <div className="text-center p-3 bg-rose-50 rounded-lg">
-                <div className="text-2xl font-bold text-rose-600">{employee.excess_days}</div>
-                <div className="text-xs text-app-text-secondary">Extras</div>
-              </div>
+              <p className="text-[11px] text-gray-400 leading-relaxed">
+                Rota cada año: julio → agosto → septiembre → julio...
+              </p>
             </div>
           </SectionCard>
 
