@@ -9,9 +9,10 @@ interface EmployeeFormModalProps {
   onClose: () => void;
   onSubmit: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => boolean;
   editingEmployee?: Employee;
+  profileMode?: boolean;
 }
 
-export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, onClose, onSubmit, editingEmployee }) => {
+export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, onClose, onSubmit, editingEmployee, profileMode = false }) => {
   const [name, setName] = useState('');
   const [lastName1, setLastName1] = useState('');
   const [lastName2, setLastName2] = useState('');
@@ -214,128 +215,132 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               <input type="text" value={phone_fixed} onChange={(e) => setPhone_fixed(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
 
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
-              <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
-              <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
-              <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
-              <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
-              </select>
-            </div>
+            {!profileMode && (
+              <>
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
+                <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
+                <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
+                <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
+                <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
+                </select>
+              </div>
 
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Clock className="h-3 w-3"/> Horario</h4>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Entrada</label>
-              <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Salida</label>
-              <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Clock className="h-3 w-3"/> Horario</h4>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Entrada</label>
+                <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Salida</label>
+                <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
 
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones</h4>
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
-              <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'julio' | 'agosto' | 'septiembre' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                <option value="">Sin asignar</option>
-                <option value="julio">Julio</option>
-                <option value="agosto">Agosto</option>
-                <option value="septiembre">Septiembre</option>
-              </select>
-              <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año: julio → agosto → septiembre → julio...</p>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Vacaciones</label>
-              <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Propios</label>
-              <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Acumulados</label>
-              <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Extras</label>
-              <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones</h4>
+              </div>
+              <div className="col-span-2 md:col-span-1">
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
+                <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'julio' | 'agosto' | 'septiembre' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  <option value="">Sin asignar</option>
+                  <option value="julio">Julio</option>
+                  <option value="agosto">Agosto</option>
+                  <option value="septiembre">Septiembre</option>
+                </select>
+                <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año: julio → agosto → septiembre → julio...</p>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Vacaciones</label>
+                <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Propios</label>
+                <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Acumulados</label>
+                <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Extras</label>
+                <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
 
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
-            </div>
-            <div className="col-span-2">
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
-              <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
-              <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquilla</label>
-              <input type="text" value={locker} onChange={(e) => setLocker(e.target.value)} placeholder="L-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
+              </div>
+              <div className="col-span-2">
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
+                <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
+                <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquilla</label>
+                <input type="text" value={locker} onChange={(e) => setLocker(e.target.value)} placeholder="L-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
 
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Contrato</h4>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
-              <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                <option value="">Seleccionar...</option>
-                {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
-              <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Fin</label>
-              <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Contrato</h4>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
+                <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  <option value="">Seleccionar...</option>
+                  {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
+                <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Fin</label>
+                <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              </div>
 
-            <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Extras</h4>
-            </div>
-            <div className="col-span-2 flex flex-wrap gap-4">
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="rounded" />
-                <span>Activo</span>
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={medical_check} onChange={(e) => setMedical_check(e.target.checked)} className="rounded" />
-                <span>Revisión Médica</span>
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={works_holidays} onChange={(e) => setWorks_holidays(e.target.checked)} className="rounded" />
-                <span>Trabaja Festivos</span>
-              </label>
-            </div>
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Extras</h4>
+              </div>
+              <div className="col-span-2 flex flex-wrap gap-4">
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="rounded" />
+                  <span>Activo</span>
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={medical_check} onChange={(e) => setMedical_check(e.target.checked)} className="rounded" />
+                  <span>Revisión Médica</span>
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={works_holidays} onChange={(e) => setWorks_holidays(e.target.checked)} className="rounded" />
+                  <span>Trabaja Festivos</span>
+                </label>
+              </div>
+              </>
+            )}
           </div>
 
           <div className="pt-4 border-t border-app-border flex items-center justify-end gap-2">

@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
-import { VacationRequestModal } from '../../components/modals/VacationRequestModal';
+import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
+import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
 import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
@@ -14,7 +15,7 @@ import {
   SunSnow, Sunset,
   Banknote, PersonStanding,
   ChevronRight, Award, Sparkles,
-  Send, 
+  Send, Sun,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['julio', 'agosto', 'septiembre'] as const;
@@ -183,7 +184,9 @@ export const DashboardProfileView: React.FC = () => {
   const isReadOnly = loggedInUser?.role === 'USER';
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
-  const [vacationModalOpen, setVacationModalOpen] = useState(false);
+  const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
+  const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
+  const [cambioSubmitted, setCambioSubmitted] = useState(false);
 
   const myEmployee = useMemo(
     () => (loggedInUser ? employees.find((e) => e.user_id === loggedInUser.id) : undefined),
@@ -211,16 +214,27 @@ export const DashboardProfileView: React.FC = () => {
     return true;
   };
 
-  const handleVacationRequest = (data: { type: 'cambio_mes' | 'dias_libres'; requested_month?: 'julio' | 'agosto' | 'septiembre'; requested_days?: string[] }) => {
+  const handleCambioVacaciones = (data: { type: 'cambio_vacaciones'; requested_month: 'julio' | 'agosto' | 'septiembre' | 'partidas' }) => {
     if (!myEmployee || isReadOnly) return;
     createVacationRequest({
       employee_id: myEmployee.id,
       type: data.type,
       status: 'pendiente',
       requested_month: data.requested_month,
+    });
+    setCambioVacacionesOpen(false);
+    setCambioSubmitted(true);
+  };
+
+  const handleSolicitarDias = (data: { type: 'dias_libres'; requested_days: string[] }) => {
+    if (!myEmployee || isReadOnly) return;
+    createVacationRequest({
+      employee_id: myEmployee.id,
+      type: data.type,
+      status: 'pendiente',
       requested_days: data.requested_days,
     });
-    setVacationModalOpen(false);
+    setSolicitarDiasOpen(false);
   };
 
   const pendingRequests = useMemo(
@@ -398,12 +412,11 @@ export const DashboardProfileView: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       {[
-                        { label: 'Días Vacaciones', value: myEmployee.vacation_days, color: 'text-primary-600', bg: 'bg-primary-50/80 border-primary-100/40' },
                         { label: 'Días Propios', value: myEmployee.own_days, color: 'text-emerald-600', bg: 'bg-emerald-50/80 border-emerald-100/40' },
-                        { label: 'Acumulados', value: myEmployee.accumulated_days, color: 'text-blue-600', bg: 'bg-blue-50/80 border-blue-100/40' },
-                        { label: 'Extras', value: myEmployee.excess_days, color: 'text-rose-600', bg: 'bg-rose-50/80 border-rose-100/40' },
+                        { label: 'Días Acumulados', value: myEmployee.accumulated_days, color: 'text-blue-600', bg: 'bg-blue-50/80 border-blue-100/40' },
+                        { label: 'Días Excesos', value: myEmployee.excess_days, color: 'text-rose-600', bg: 'bg-rose-50/80 border-rose-100/40' },
                       ].map((item) => (
                         <div key={item.label} className={`flex flex-col items-center justify-center p-2.5 rounded-xl border ${item.bg}`}>
                           <div className={`text-lg font-bold ${item.color}`}>{item.value}</div>
@@ -413,12 +426,29 @@ export const DashboardProfileView: React.FC = () => {
                     </div>
 
                     {!isReadOnly && (
-                      <button
-                        onClick={() => setVacationModalOpen(true)}
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl hover:from-primary-500 hover:to-primary-400 transition-all duration-200 shadow-md shadow-primary-500/20 hover:shadow-lg active:scale-[0.98]"
-                      >
-                        <Calendar className="w-4 h-4" /> Solicitar Cambio de Vacaciones
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() => setCambioVacacionesOpen(true)}
+                          disabled={cambioSubmitted}
+                          className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-xl transition-all duration-200 shadow-md active:scale-[0.98] ${
+                            cambioSubmitted
+                              ? 'bg-amber-100 text-amber-700 border border-amber-200 cursor-not-allowed shadow-none'
+                              : 'text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 shadow-primary-500/20 hover:shadow-lg'
+                          }`}
+                        >
+                          {cambioSubmitted ? (
+                            <><CheckCircle className="w-4 h-4" /> Pendiente de cambio</>
+                          ) : (
+                            <><Calendar className="w-4 h-4" /> Cambio de Vacaciones</>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => setSolicitarDiasOpen(true)}
+                          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all duration-200 shadow-md shadow-emerald-500/20 hover:shadow-lg active:scale-[0.98]"
+                        >
+                          <Sun className="w-4 h-4" /> Solicitar Días
+                        </button>
+                      </div>
                     )}
                   </div>
                 </SectionCard>
@@ -502,14 +532,23 @@ export const DashboardProfileView: React.FC = () => {
         onClose={() => setEmployeeModalOpen(false)}
         onSubmit={handleEmployeeSubmit}
         editingEmployee={myEmployee}
+        profileMode
       />
 
-      <VacationRequestModal
-        isOpen={vacationModalOpen}
-        onClose={() => setVacationModalOpen(false)}
+      <CambioVacacionesModal
+        isOpen={cambioVacacionesOpen}
+        onClose={() => setCambioVacacionesOpen(false)}
         currentMonth={currentVacationMonth}
         employeeId={myEmployee?.id || ''}
-        onSubmit={handleVacationRequest}
+        onSubmit={handleCambioVacaciones}
+      />
+
+      <SolicitarDiasModal
+        isOpen={solicitarDiasOpen}
+        onClose={() => setSolicitarDiasOpen(false)}
+        employeeId={myEmployee?.id || ''}
+        disableWeekends={myEmployee?.work_day === 'wd-1'}
+        onSubmit={handleSolicitarDias}
       />
     </div>
   );

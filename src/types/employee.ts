@@ -1,9 +1,9 @@
-export type VacationMonth = 'julio' | 'agosto' | 'septiembre';
+export type VacationMonth = 'julio' | 'agosto' | 'septiembre' | 'partidas';
 
 export interface VacationRequest {
   id: string;
   employee_id: string;
-  type: 'cambio_mes' | 'dias_libres';
+  type: 'cambio_mes' | 'dias_libres' | 'cambio_vacaciones';
   status: 'pendiente' | 'aprobado' | 'rechazado';
   requested_month?: VacationMonth;
   requested_days?: string[];
