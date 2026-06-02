@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { InventoryItem, InventoryCategory } from '../../types';
+import { InventoryItem, InventoryCategory, InventoryAttributes } from '../../types';
 import { INVENTORY_CATEGORIES, INVENTORY_SUBTYPES, INVENTORY_WAREHOUSE_IDS, getStatusesForCategory, getSubtypesForCategory } from '../../data/mockInventory';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { INITIAL_CITIES } from '../../data/mockEmployees';
@@ -32,19 +32,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
   const [location, setLocation] = useState('');
   const [assigned_to, setAssigned_to] = useState('');
   const [notes, setNotes] = useState('');
-  const [size, setSize] = useState('');
-  const [color, setColor] = useState('');
-  const [material, setMaterial] = useState('');
-  const [gender, setGender] = useState('');
-  const [certification, setCertification] = useState('');
-  const [safety_standard, setSafety_standard] = useState('');
-  const [serial_number, setSerial_number] = useState('');
-  const [brand, setBrand] = useState('');
-  const [model, setModel] = useState('');
-  const [expiration_date, setExpiration_date] = useState('');
-  const [warranty_expiration, setWarranty_expiration] = useState('');
-  const [last_maintenance, setLast_maintenance] = useState('');
-  const [next_maintenance, setNext_maintenance] = useState('');
+  const [attributes, setAttributes] = useState<InventoryAttributes>({});
   const [formError, setFormError] = useState<string | null>(null);
 
   const isRopa = category === 'ropa';
@@ -58,6 +46,10 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
     : INITIAL_WORK_CENTERS;
 
   const filteredSubtypes = getSubtypesForCategory(category);
+
+  const setAttr = (key: keyof InventoryAttributes, value: string) => {
+    setAttributes((prev) => ({ ...prev, [key]: value || undefined }));
+  };
 
   useEffect(() => {
     if (editingItem) {
@@ -74,19 +66,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
       setLocation(editingItem.location || '');
       setAssigned_to(editingItem.assigned_to || '');
       setNotes(editingItem.notes || '');
-      setSize(editingItem.size || '');
-      setColor(editingItem.color || '');
-      setMaterial(editingItem.material || '');
-      setGender(editingItem.gender || '');
-      setCertification(editingItem.certification || '');
-      setSafety_standard(editingItem.safety_standard || '');
-      setSerial_number(editingItem.serial_number || '');
-      setBrand(editingItem.brand || '');
-      setModel(editingItem.model || '');
-      setExpiration_date(editingItem.expiration_date || '');
-      setWarranty_expiration(editingItem.warranty_expiration || '');
-      setLast_maintenance(editingItem.last_maintenance || '');
-      setNext_maintenance(editingItem.next_maintenance || '');
+      setAttributes(editingItem.attributes || {});
     } else {
       setName('');
       setDescription('');
@@ -101,19 +81,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
       setLocation('');
       setAssigned_to('');
       setNotes('');
-      setSize('');
-      setColor('');
-      setMaterial('');
-      setGender('');
-      setCertification('');
-      setSafety_standard('');
-      setSerial_number('');
-      setBrand('');
-      setModel('');
-      setExpiration_date('');
-      setWarranty_expiration('');
-      setLast_maintenance('');
-      setNext_maintenance('');
+      setAttributes({});
     }
     setFormError(null);
   }, [editingItem, isOpen]);
@@ -151,19 +119,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
       location,
       assigned_to: assigned_to || null,
       notes,
-      size: isRopa ? (size || null) : null,
-      color: isRopa ? (color || null) : null,
-      material: isRopa ? (material || null) : null,
-      gender: isRopa ? (gender || null) : null,
-      certification: isEpi ? (certification || null) : null,
-      safety_standard: isEpi ? (safety_standard || null) : null,
-      serial_number: (isEpi || isMaquinaria) ? (serial_number || null) : null,
-      brand: isMaquinaria ? (brand || null) : null,
-      model: isMaquinaria ? (model || null) : null,
-      expiration_date: isEpi ? (expiration_date || null) : null,
-      warranty_expiration: isMaquinaria ? (warranty_expiration || null) : null,
-      last_maintenance: isMaquinaria ? (last_maintenance || null) : null,
-      next_maintenance: isMaquinaria ? (next_maintenance || null) : null,
+      attributes,
     });
 
     if (success) onClose();
@@ -276,19 +232,19 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Talla</label>
-                  <input type="text" value={size} onChange={(e) => setSize(e.target.value)} placeholder="Ej: L, XL, 42" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.size || ''} onChange={(e) => setAttr('size', e.target.value)} placeholder="Ej: L, XL, 42" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Color</label>
-                  <input type="text" value={color} onChange={(e) => setColor(e.target.value)} placeholder="Ej: Naranja, Azul" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.color || ''} onChange={(e) => setAttr('color', e.target.value)} placeholder="Ej: Naranja, Azul" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Material</label>
-                  <input type="text" value={material} onChange={(e) => setMaterial(e.target.value)} placeholder="Ej: Algodón, Poliéster" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.material || ''} onChange={(e) => setAttr('material', e.target.value)} placeholder="Ej: Algodón, Poliéster" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Género</label>
-                  <select value={gender} onChange={(e) => setGender(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
+                  <select value={attributes.gender || ''} onChange={(e) => setAttr('gender', e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
                     <option value="">Sin especificar</option>
                     <option value="Hombre">Hombre</option>
                     <option value="Mujer">Mujer</option>
@@ -305,19 +261,19 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Certificación</label>
-                  <input type="text" value={certification} onChange={(e) => setCertification(e.target.value)} placeholder="Ej: CE" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.certification || ''} onChange={(e) => setAttr('certification', e.target.value)} placeholder="Ej: CE" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Norma de Seguridad</label>
-                  <input type="text" value={safety_standard} onChange={(e) => setSafety_standard(e.target.value)} placeholder="Ej: EN 397, EN 388" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.safety_standard || ''} onChange={(e) => setAttr('safety_standard', e.target.value)} placeholder="Ej: EN 397, EN 388" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Número de Serie</label>
-                  <input type="text" value={serial_number} onChange={(e) => setSerial_number(e.target.value)} placeholder="Ej: ARN-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.serial_number || ''} onChange={(e) => setAttr('serial_number', e.target.value)} placeholder="Ej: ARN-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Fecha de Caducidad</label>
-                  <input type="date" value={expiration_date} onChange={(e) => setExpiration_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={attributes.expiration_date || ''} onChange={(e) => setAttr('expiration_date', e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
               </div>
             </div>
@@ -329,27 +285,27 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Marca</label>
-                  <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="Ej: STIHL" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.brand || ''} onChange={(e) => setAttr('brand', e.target.value)} placeholder="Ej: STIHL" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Modelo</label>
-                  <input type="text" value={model} onChange={(e) => setModel(e.target.value)} placeholder="Ej: BR 600" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.model || ''} onChange={(e) => setAttr('model', e.target.value)} placeholder="Ej: BR 600" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Número de Serie</label>
-                  <input type="text" value={serial_number} onChange={(e) => setSerial_number(e.target.value)} placeholder="Ej: STIHL-BR600-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={attributes.serial_number || ''} onChange={(e) => setAttr('serial_number', e.target.value)} placeholder="Ej: STIHL-BR600-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Garantía Hasta</label>
-                  <input type="date" value={warranty_expiration} onChange={(e) => setWarranty_expiration(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={attributes.warranty_expiration || ''} onChange={(e) => setAttr('warranty_expiration', e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Último Mantenimiento</label>
-                  <input type="date" value={last_maintenance} onChange={(e) => setLast_maintenance(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={attributes.last_maintenance || ''} onChange={(e) => setAttr('last_maintenance', e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Próximo Mantenimiento</label>
-                  <input type="date" value={next_maintenance} onChange={(e) => setNext_maintenance(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={attributes.next_maintenance || ''} onChange={(e) => setAttr('next_maintenance', e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
                 </div>
               </div>
             </div>

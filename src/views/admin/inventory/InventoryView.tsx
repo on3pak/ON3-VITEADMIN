@@ -154,11 +154,11 @@ export const InventoryView: React.FC = () => {
     if (!full) return null;
     switch (activeCategory) {
       case 'ropa':
-        return <span className="text-xs text-app-text-secondary">{full.size || '-'} / {full.color || '-'}</span>;
+        return <span className="text-xs text-app-text-secondary">{full.attributes.size || '-'} / {full.attributes.color || '-'}</span>;
       case 'epi':
-        return <span className="text-xs text-app-text-secondary">{full.expiration_date ? `Cad: ${full.expiration_date}` : '-'}</span>;
+        return <span className="text-xs text-app-text-secondary">{full.attributes.expiration_date ? `Cad: ${full.attributes.expiration_date}` : '-'}</span>;
       case 'maquinaria':
-        return <span className="text-xs text-app-text-secondary">{full.brand ? `${full.brand} ${full.model || ''}` : '-'}</span>;
+        return <span className="text-xs text-app-text-secondary">{full.attributes.brand ? `${full.attributes.brand} ${full.attributes.model || ''}` : '-'}</span>;
       default:
         return null;
     }
