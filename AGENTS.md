@@ -143,3 +143,7 @@ See [`list.md`](./list.md) for 3 reusable prompts to clone existing CRUD pattern
 - **Package manager**: usar exclusivamente `pnpm` — no mezclar con `npm` o `yarn`
 - **No commits de lockfile innecesarios**: solo cuando hay cambios reales de dependencias
 - **No instalar dependencias globales**: todo debe ir en `devDependencies` o `dependencies` del proyecto
+
+## Preferencias personales
+
+Ver [`on3.md`](./on3.md) para gustos personales del desarrollador (interacciones con git, filosofía de trabajo). Este archivo prevalece sobre reglas genéricas en caso de conflicto.
