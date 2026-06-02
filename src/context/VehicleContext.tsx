@@ -20,7 +20,7 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   const getVehicleOverviews = useCallback(() => {
     return vehicles.map((v) => ({
       id: v.id,
-      licensePlate: v.licensePlate,
+      license_plate: v.license_plate,
       model: v.model,
       brand: v.brand,
       vehicle_type_id: v.vehicle_type_id,

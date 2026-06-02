@@ -36,20 +36,26 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const colors: Record<string, string> = {
     'ACTIVE': 'bg-emerald-100 text-emerald-700 border-emerald-200',
     'MAINTENANCE': 'bg-amber-100 text-amber-700 border-amber-200',
-    'AVERIADO': 'bg-rose-100 text-rose-700 border-rose-200',
-    'BAJA': 'bg-app-bg text-app-text border-app-border',
+    'BROKEN': 'bg-rose-100 text-rose-700 border-rose-200',
+    'RETIRED': 'bg-app-bg text-app-text border-app-border',
   };
   const labels: Record<string, string> = {
     'ACTIVE': 'Activo',
     'MAINTENANCE': 'En Taller',
-    'AVERIADO': 'Averiado',
-    'BAJA': 'Baja',
+    'BROKEN': 'Averiado',
+    'RETIRED': 'Baja',
   };
   return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[status] || 'bg-app-bg'}`}>{labels[status] || status}</span>;
 };
 
 const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.type]));
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find(w => w.id === id)?.name ?? id;
+const fuelTypeLabels: Record<string, string> = {
+  'DIESEL': 'Diésel',
+  'PETROL': 'Gasolina',
+  'ELECTRIC': 'Eléctrico',
+  'LPG': 'Gas',
+};
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {
   const { getVehicleById, updateVehicle, deleteVehicle } = useVehicles();
@@ -121,7 +127,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">{vehicle.brand} {vehicle.model}</h1>
-              <p className="text-blue-200 text-sm font-mono">{vehicle.licensePlate}</p>
+              <p className="text-blue-200 text-sm font-mono">{vehicle.license_plate}</p>
             </div>
           </div>
           <StatusBadge status={vehicle.status} />
@@ -132,7 +138,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
             <InfoRow icon={<Truck className="h-4 w-4" />} label="Tipo" value={vehicleTypeMap[vehicle.vehicle_type_id]} highlight />
             <InfoRow icon={<FileCheck className="h-4 w-4" />} label="VIN" value={vehicle.vin || '-'} />
             <InfoRow icon={<Truck className="h-4 w-4" />} label="Kilómetros" value={`${vehicle.kilometers.toLocaleString()} km`} highlight />
-            <InfoRow icon={<Truck className="h-4 w-4" />} label="Combustible" value={vehicle.fuel_type} />
+            <InfoRow icon={<Truck className="h-4 w-4" />} label="Combustible" value={fuelTypeLabels[vehicle.fuel_type] || vehicle.fuel_type} />
           </SectionCard>
 
           <SectionCard icon={<FileCheck className="h-4 w-4" />} title="Documentación">
@@ -194,7 +200,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
       <ConfirmDialog
         isOpen={deleteDialogOpen}
         title="Eliminar Vehículo"
-        message={`¿Estás seguro de eliminar el vehículo ${vehicle.licensePlate}? Esta acción no se puede deshacer.`}
+        message={`¿Estás seguro de eliminar el vehículo ${vehicle.license_plate}? Esta acción no se puede deshacer.`}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteDialogOpen(false)}
       />

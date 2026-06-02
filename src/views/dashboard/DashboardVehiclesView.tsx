@@ -37,9 +37,9 @@ export const DashboardVehiclesView: React.FC = () => {
   );
 
   const activeVehicles = scopedVehicles.filter(v => v.status === 'ACTIVE');
-  const maintenanceVehicles = scopedVehicles.filter(v => v.status === 'MANTENIMIENTO');
-  const brokenVehicles = scopedVehicles.filter(v => v.status === 'AVERIADO');
-  const inactiveVehicles = scopedVehicles.filter(v => v.status === 'BAJA');
+  const maintenanceVehicles = scopedVehicles.filter(v => v.status === 'MAINTENANCE');
+  const brokenVehicles = scopedVehicles.filter(v => v.status === 'BROKEN');
+  const inactiveVehicles = scopedVehicles.filter(v => v.status === 'RETIRED');
   const totalVehicles = scopedVehicles.length;
   const activeRate = totalVehicles > 0 ? (activeVehicles.length / totalVehicles) * 100 : 0;
 
@@ -76,9 +76,9 @@ export const DashboardVehiclesView: React.FC = () => {
 
   const statusStats = [
     { status: 'ACTIVE', label: 'Activos', count: countByStatus('ACTIVE'), color: 'emerald' },
-    { status: 'MANTENIMIENTO', label: 'En Taller', count: countByStatus('MANTENIMIENTO'), color: 'amber' },
-    { status: 'AVERIADO', label: 'Averiados', count: countByStatus('AVERIADO'), color: 'rose' },
-    { status: 'BAJA', label: 'Baja', count: countByStatus('BAJA'), color: 'slate' },
+    { status: 'MAINTENANCE', label: 'En Taller', count: countByStatus('MAINTENANCE'), color: 'amber' },
+    { status: 'BROKEN', label: 'Averiados', count: countByStatus('BROKEN'), color: 'rose' },
+    { status: 'RETIRED', label: 'Baja', count: countByStatus('RETIRED'), color: 'slate' },
   ];
 
   const getTypeLabel = (type: string) => {

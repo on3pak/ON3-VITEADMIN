@@ -6,13 +6,13 @@ export interface VehicleTypeOption {
   type: VehicleType;
 }
 
-export type VehicleStatus = 'ACTIVO' | 'MANTENIMIENTO' | 'AVERIADO' | 'BAJA';
+export type VehicleStatus = 'ACTIVE' | 'MAINTENANCE' | 'BROKEN' | 'RETIRED';
 
-export type FuelType = 'DIESEL' | 'GASOLINA' | 'ELECTRICO' | 'GAS';
+export type FuelType = 'DIESEL' | 'PETROL' | 'ELECTRIC' | 'LPG';
 
 export interface Vehicle {
   id: string;
-  licensePlate: string;
+  license_plate: string;
   model: string;
   brand: string;
   vehicle_type_id: string;
@@ -26,11 +26,11 @@ export interface Vehicle {
   
   fuel_type: FuelType;
   kilometers: number;
-  last_review_date: string;
-  next_review_kilometers: number;
+  last_review_date: string | null;
+  next_review_kilometers: number | null;
   
   work_center_id: string;
-  assigned_employee_id: string;
+  assigned_employee_id: string | null;
   
   observations: string;
   created_at: string;
@@ -39,7 +39,7 @@ export interface Vehicle {
 
 export interface VehicleOverview {
   id: string;
-  licensePlate: string;
+  license_plate: string;
   model: string;
   brand: string;
   vehicle_type_id: string;

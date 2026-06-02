@@ -12,7 +12,7 @@ interface VehicleFormModalProps {
 }
 
 export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onClose, onSubmit, editingVehicle }) => {
-  const [licensePlate, setLicensePlate] = useState('');
+  const [license_plate, setLicense_plate] = useState('');
   const [model, setModel] = useState('');
   const [brand, setBrand] = useState('');
   const [vehicleTypeId, setVehicleTypeId] = useState('vt-1');
@@ -33,7 +33,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
   useEffect(() => {
     if (editingVehicle) {
-      setLicensePlate(editingVehicle.licensePlate);
+      setLicense_plate(editingVehicle.license_plate);
       setModel(editingVehicle.model);
       setBrand(editingVehicle.brand);
       setVehicleTypeId(editingVehicle.vehicle_type_id);
@@ -46,12 +46,12 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setFuelType(editingVehicle.fuel_type);
       setKilometers(editingVehicle.kilometers);
       setLastReviewDate(editingVehicle.last_review_date || '');
-      setNextReviewKilometers(editingVehicle.next_review_kilometers);
+      setNextReviewKilometers(editingVehicle.next_review_kilometers ?? 0);
       setWorkCenter(editingVehicle.work_center_id);
       setAssignedEmployee(editingVehicle.assigned_employee_id || '');
       setObservations(editingVehicle.observations || '');
     } else {
-      setLicensePlate('');
+      setLicense_plate('');
       setModel('');
       setBrand('');
       setVehicleTypeId('vt-1');
@@ -73,12 +73,12 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!licensePlate || !model || !brand) {
+    if (!license_plate || !model || !brand) {
       setFormError('Por favor, completa los campos obligatorios');
       return;
     }
     const success = onSubmit({
-      licensePlate,
+      license_plate,
       model,
       brand,
       vehicle_type_id: vehicleTypeId,
@@ -93,7 +93,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       last_review_date: lastReviewDate,
       next_review_kilometers: nextReviewKilometers,
       work_center_id: workCenter,
-      assigned_employee_id: assignedEmployee,
+      assigned_employee_id: assignedEmployee || null,
       observations,
     });
     if (success) onClose();
@@ -127,8 +127,8 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
               <label className="block text-xs font-semibold text-app-text-secondary mb-1">Matrícula *</label>
               <input
                 type="text"
-                value={licensePlate}
-                onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
+                value={license_plate}
+                onChange={(e) => setLicense_plate(e.target.value.toUpperCase())}
                 className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
                 required
               />
@@ -177,8 +177,8 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
               >
                 <option value="ACTIVE">Activo</option>
                 <option value="MAINTENANCE">Mantenimiento</option>
-                <option value="AVERIADO">Averiado</option>
-                <option value="BAJA">Baja</option>
+                <option value="BROKEN">Averiado</option>
+                <option value="RETIRED">Baja</option>
               </select>
             </div>
             <div>
@@ -189,9 +189,9 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
                 className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 <option value="DIESEL">Diésel</option>
-                <option value="GASOLINA">Gasolina</option>
-                <option value="ELECTRICO">Eléctrico</option>
-                <option value="GAS">Gas</option>
+                <option value="PETROL">Gasolina</option>
+                <option value="ELECTRIC">Eléctrico</option>
+                <option value="LPG">Gas</option>
               </select>
             </div>
           </div>
