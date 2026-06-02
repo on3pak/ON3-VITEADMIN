@@ -1,4 +1,14 @@
-import { JwtPayload, UserRole } from '../types';
+import { UserRole } from '../types';
+
+interface JwtPayload {
+  sub: string;
+  username: string;
+  role: UserRole;
+  full_name: string;
+  iat: number;
+  exp: number;
+  iss: string;
+}
 
 /**
  * Utility to simulate JWT Token creation, decoding and verification.

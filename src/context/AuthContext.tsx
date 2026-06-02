@@ -1,7 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthState, User, UserRole } from '../types';
-import { mockAuthUsers, createMockAuthSession } from '../data/mockAuth';
-import { INITIAL_USERS } from '../data/mockUsers';
+import { User, UserRole } from '../types';
+import { INITIAL_USERS, TEST_ACCOUNTS } from '../data/mockUsers';
+import { signMockToken, verifyMockToken, decodeMockToken } from '../utils/jwt';
+
+interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
+}
 
 interface AuthContextProps extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
@@ -15,15 +23,6 @@ interface AuthContextProps extends AuthState {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 const STORAGE_KEY = 'mock_auth_session';
-
-const buildUserFromAuth = (authUser: typeof mockAuthUsers[number]): User | null => {
-  const matchedUser = INITIAL_USERS.find(u => u.id === authUser.user_id);
-  if (!matchedUser) return null;
-  return {
-    ...matchedUser,
-    avatar_url: `https://api.dicebear.com/7.x/bottts/svg?seed=${authUser.user_metadata.user_name}`,
-  };
-};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
@@ -53,18 +52,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const storedSession = localStorage.getItem(STORAGE_KEY);
         if (storedSession) {
           const session = JSON.parse(storedSession);
-          const mockUser = mockAuthUsers.find(u => u.id === session.user.id);
-          if (mockUser) {
-            const appUser = buildUserFromAuth(mockUser);
-            if (appUser) {
-              setState({
-                isAuthenticated: true,
-                user: appUser,
-                token: session.access_token,
-                loading: false,
-                error: null,
-              });
-              return;
+          if (verifyMockToken(session.token)) {
+            const payload = decodeMockToken(session.token);
+            if (payload) {
+              const appUser = INITIAL_USERS.find(u => u.username === payload.username);
+              if (appUser) {
+                setState({
+                  isAuthenticated: true,
+                  user: { ...appUser, avatar_url: session.user?.avatar_url },
+                  token: session.token,
+                  loading: false,
+                  error: null,
+                });
+                return;
+              }
             }
           }
         }
@@ -85,11 +86,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await new Promise(resolve => setTimeout(resolve, 800));
 
     const lowercaseEmail = email.trim().toLowerCase();
-    const mockUser = mockAuthUsers.find(
-      u => u.email.toLowerCase() === lowercaseEmail && u.password === password
+    const testAccount = TEST_ACCOUNTS.find(
+      a => a.email.toLowerCase() === lowercaseEmail && a.password === password
     );
 
-    if (!mockUser) {
+    if (!testAccount) {
       setState({
         isAuthenticated: false,
         user: null,
@@ -101,10 +102,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
-    const session = createMockAuthSession(mockUser);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-
-    const appUser = buildUserFromAuth(mockUser);
+    const appUser = INITIAL_USERS.find(
+      u => u.email.toLowerCase() === lowercaseEmail
+    );
 
     if (!appUser) {
       setState({
@@ -112,15 +112,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user: null,
         token: null,
         loading: false,
-        error: 'Error al cargar datos del usuario.',
+        error: 'Credenciales inválidas. Compruebe el email y la contraseña de prueba.',
       });
+      triggerToast('Error de autenticación. Credenciales incorrectas.', 'error');
       return false;
     }
 
+    const token = signMockToken({
+      sub: appUser.id,
+      username: appUser.username,
+      role: appUser.role,
+      full_name: appUser.full_name,
+    });
+
+    const avatar_url = `https://api.dicebear.com/7.x/bottts/svg?seed=${appUser.username}`;
+    const userWithAvatar = { ...appUser, avatar_url };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token, user: userWithAvatar }));
+
     setState({
       isAuthenticated: true,
-      user: appUser,
-      token: session.access_token,
+      user: userWithAvatar,
+      token,
       loading: false,
       error: null,
     });
