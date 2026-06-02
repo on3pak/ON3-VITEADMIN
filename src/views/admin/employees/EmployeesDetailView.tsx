@@ -103,7 +103,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
         <div className="px-6 py-5 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">{(employee.name?.[0] || '') + (employee.lastName1?.[0] || '')}</span>
+              <span className="text-white font-bold text-2xl">{(employee.name?.[0] || '') + (employee.last_name1?.[0] || '')}</span>
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">{employee.name} {employee.lastName1} {employee.lastName2}</h1>

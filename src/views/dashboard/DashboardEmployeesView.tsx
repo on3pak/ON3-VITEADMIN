@@ -305,7 +305,7 @@ export const DashboardEmployeesView: React.FC = () => {
                 >
                   <td className="py-3 px-4">
                     <p className="text-sm font-semibold text-app-text">
-                      {emp.name} {emp.lastName1}
+                      {emp.name} {emp.last_name1}
                     </p>
                     <p className="text-xs text-app-text-secondary">{emp.email}</p>
                   </td>

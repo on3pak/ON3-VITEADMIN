@@ -152,7 +152,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       const matchesCityScope = !userCityId || emp.city_id === userCityId;
       if (!matchesCityScope) return false;
 
-      const name = `${emp.name} ${emp.lastName1} ${emp.lastName2}`.toLowerCase();
+      const name = `${emp.name} ${emp.last_name1} ${emp.last_name2}`.toLowerCase();
       const matchesSearch = !q || name.includes(q) || emp.name.toLowerCase().includes(q) || emp.lastName1.toLowerCase().includes(q);
       const matchesStatus = statusFilter === 'ALL' || emp.status_id === statusFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || emp.work_center_id === workCenterFilter;
