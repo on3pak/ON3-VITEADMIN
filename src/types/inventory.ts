@@ -19,19 +19,19 @@ export interface InventorySubtype {
 }
 
 export interface InventoryAttributes {
-  size?: string;
-  color?: string;
-  material?: string;
-  gender?: string;
-  certification?: string;
-  safety_standard?: string;
-  serial_number?: string;
-  brand?: string;
-  model?: string;
-  expiration_date?: string;
-  warranty_expiration?: string;
-  last_maintenance?: string;
-  next_maintenance?: string;
+  size?: string | null;
+  color?: string | null;
+  material?: string | null;
+  gender?: string | null;
+  certification?: string | null;
+  safety_standard?: string | null;
+  serial_number?: string | null;
+  brand?: string | null;
+  model?: string | null;
+  expiration_date?: string | null;
+  warranty_expiration?: string | null;
+  last_maintenance?: string | null;
+  next_maintenance?: string | null;
 }
 
 export interface InventoryItem {

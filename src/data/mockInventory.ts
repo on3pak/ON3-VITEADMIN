@@ -73,11 +73,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla L',
     attributes: {
-
       size: 'L', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -88,11 +86,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla M',
     attributes: {
-
       size: 'M', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -103,11 +99,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla L',
     attributes: {
-
       size: 'L', color: 'Gris', material: 'Algodón/Poliéster térmico', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -118,11 +112,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla M',
     attributes: {
-
       size: 'M', color: 'Gris', material: 'Algodón/Poliéster térmico', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -133,11 +125,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-1',
     assigned_to: null, notes: 'Talla L',
     attributes: {
-
       size: 'L', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -148,11 +138,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-1',
     assigned_to: null, notes: 'Talla M - agotado',
     attributes: {
-
       size: 'M', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -163,11 +151,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla L',
     attributes: {
-
       size: 'L', color: 'Azul claro', material: 'Algodón/Poliéster', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -178,11 +164,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla L',
     attributes: {
-
       size: 'L', color: 'Verde', material: 'Poliéster transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -193,11 +177,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-3',
     assigned_to: null, notes: 'En reposición - pendiente de recepción',
     attributes: {
-
       size: 'XL', color: 'Azul', material: 'Poliéster con forro térmico', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -208,11 +190,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-4',
     assigned_to: null, notes: 'Talla M',
     attributes: {
-
       size: 'M', color: 'Negro', material: 'Microfibra polar', gender: 'Unisex',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -223,12 +203,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-1',
     assigned_to: null, notes: 'Caja de 100 unidades',
     attributes: {
-
       size: 'Talla única', color: 'Blanco', material: 'Latex', gender: null,
-    certification: 'CE', safety_standard: 'EN 455', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-06-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 455', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-06-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -239,12 +217,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-2',
     assigned_to: null, notes: 'Certificado CE',
     attributes: {
-
       size: null, color: 'Amarillo', material: 'ABS', gender: null,
-    certification: 'CE', safety_standard: 'EN 397', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-06-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 397', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-06-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -255,12 +231,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-3',
     assigned_to: null, notes: 'Resistentes a cortes',
     attributes: {
-
       size: 'L', color: 'Gris', material: 'Kevlar', gender: null,
-    certification: 'CE', safety_standard: 'EN 388', serial_number: null,
-    brand: null, model: null, expiration_date: '2026-12-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 388', serial_number: null,
+      brand: null, model: null, expiration_date: '2026-12-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -271,12 +245,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-4',
     assigned_to: null, notes: 'Caja de 20 unidades',
     attributes: {
-
       size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
-    certification: 'CE', safety_standard: 'EN 149', serial_number: null,
-    brand: null, model: null, expiration_date: '2026-08-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 149', serial_number: null,
+      brand: null, model: null, expiration_date: '2026-08-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -287,12 +259,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante D-1',
     assigned_to: null, notes: 'Incluye visor',
     attributes: {
-
       size: 'Talla única', color: 'Negro', material: 'Plástico/Malla', gender: null,
-    certification: 'CE', safety_standard: 'EN 1731', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-01-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 1731', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-01-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -303,12 +273,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-2',
     assigned_to: null, notes: 'En reposición - filtros pendientes de cambiar',
     attributes: {
-
       size: 'Talla única', color: 'Negro', material: 'Silicona/Plástico', gender: null,
-    certification: 'CE', safety_standard: 'EN 140', serial_number: 'MF-002',
-    brand: null, model: null, expiration_date: '2026-11-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 140', serial_number: 'MF-002',
+      brand: null, model: null, expiration_date: '2026-11-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -319,12 +287,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-3',
     assigned_to: null, notes: 'Revisar antes de usar',
     attributes: {
-
       size: 'L', color: 'Naranja', material: 'Poliamida', gender: null,
-    certification: 'CE', safety_standard: 'EN 361', serial_number: 'ARN-001',
-    brand: null, model: null, expiration_date: '2026-05-01', warranty_expiration: null,
-    last_maintenance: '2025-01-15', next_maintenance: '2025-07-15'
-
+      certification: 'CE', safety_standard: 'EN 361', serial_number: 'ARN-001',
+      brand: null, model: null, expiration_date: '2026-05-01', warranty_expiration: null,
+      last_maintenance: '2025-01-15', next_maintenance: '2025-07-15'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -335,12 +301,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-4',
     assigned_to: null, notes: 'SNR 30 dB',
     attributes: {
-
       size: 'Talla única', color: 'Amarillo/Negro', material: 'Plástico/Espuma', gender: null,
-    certification: 'CE', safety_standard: 'EN 352-1', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-03-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 352-1', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-03-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -351,12 +315,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-1',
     assigned_to: null, notes: 'Anti-empañamiento',
     attributes: {
-
       size: 'Talla única', color: 'Transparente', material: 'Policarbonato', gender: null,
-    certification: 'CE', safety_standard: 'EN 166', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-06-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 166', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-06-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -367,12 +329,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave - Estante 1',
     assigned_to: null, notes: 'Velocidad variable',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-BR600-001',
-    brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-01-01',
-    last_maintenance: '2025-03-01', next_maintenance: '2025-09-01'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-BR600-001',
+      brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-01-01',
+      last_maintenance: '2025-03-01', next_maintenance: '2025-09-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -383,12 +343,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos - Estante 2',
     assigned_to: null, notes: 'Cabezal de hilo y cuchilla',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-FS131-001',
-    brand: 'STIHL', model: 'FS 131', expiration_date: null, warranty_expiration: '2026-06-01',
-    last_maintenance: '2025-02-15', next_maintenance: '2025-08-15'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-FS131-001',
+      brand: 'STIHL', model: 'FS 131', expiration_date: null, warranty_expiration: '2026-06-01',
+      last_maintenance: '2025-02-15', next_maintenance: '2025-08-15'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -399,12 +357,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-5', location: 'Garaje Garena - Estante 3',
     assigned_to: null, notes: 'Gasolina 4 tiempos',
     attributes: {
-
       size: null, color: 'Rojo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-001',
-    brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
-    last_maintenance: '2025-01-20', next_maintenance: '2025-07-20'
-
+      certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-001',
+      brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
+      last_maintenance: '2025-01-20', next_maintenance: '2025-07-20'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -415,12 +371,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave - Estante 4',
     assigned_to: null, notes: 'Requiere revisión de transmisión',
     attributes: {
-
       size: null, color: 'Rojo', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HONDA-F220-001',
-    brand: 'Honda', model: 'F220', expiration_date: null, warranty_expiration: null,
-    last_maintenance: '2024-11-01', next_maintenance: '2025-05-01'
-
+      certification: null, safety_standard: null, serial_number: 'HONDA-F220-001',
+      brand: 'Honda', model: 'F220', expiration_date: null, warranty_expiration: null,
+      last_maintenance: '2024-11-01', next_maintenance: '2025-05-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -431,12 +385,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos - Estante 5',
     assigned_to: null, notes: 'Incluye lanza y boquillas',
     attributes: {
-
       size: null, color: 'Amarillo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'KARCHER-K5-001',
-    brand: 'Kärcher', model: 'K5 Premium', expiration_date: null, warranty_expiration: '2026-09-01',
-    last_maintenance: '2025-02-01', next_maintenance: '2025-08-01'
-
+      certification: null, safety_standard: null, serial_number: 'KARCHER-K5-001',
+      brand: 'Kärcher', model: 'K5 Premium', expiration_date: null, warranty_expiration: '2026-09-01',
+      last_maintenance: '2025-02-01', next_maintenance: '2025-08-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -447,12 +399,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-7', location: 'Taller - Zona reparación',
     assigned_to: null, notes: 'En reparación - motor de cepillo',
     attributes: {
-
       size: null, color: 'Azul', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'TENNANT-5700-001',
-    brand: 'Tennant', model: '5700', expiration_date: null, warranty_expiration: null,
-    last_maintenance: '2024-12-15', next_maintenance: '2025-06-15'
-
+      certification: null, safety_standard: null, serial_number: 'TENNANT-5700-001',
+      brand: 'Tennant', model: '5700', expiration_date: null, warranty_expiration: null,
+      last_maintenance: '2024-12-15', next_maintenance: '2025-06-15'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -463,12 +413,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén herramientas',
     assigned_to: null, notes: 'Espada de 40cm',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-MS261-001',
-    brand: 'STIHL', model: 'MS 261 C-M', expiration_date: null, warranty_expiration: '2027-02-01',
-    last_maintenance: '2025-03-10', next_maintenance: '2025-09-10'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-MS261-001',
+      brand: 'STIHL', model: 'MS 261 C-M', expiration_date: null, warranty_expiration: '2027-02-01',
+      last_maintenance: '2025-03-10', next_maintenance: '2025-09-10'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -479,12 +427,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: 'emp_000011', notes: 'Asignado a Javier Ramos',
     attributes: {
-
       size: null, color: 'Rojo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HONDA-EU30-001',
-    brand: 'Honda', model: 'EU30i', expiration_date: null, warranty_expiration: '2028-01-01',
-    last_maintenance: '2025-01-05', next_maintenance: '2025-07-05'
-
+      certification: null, safety_standard: null, serial_number: 'HONDA-EU30-001',
+      brand: 'Honda', model: 'EU30i', expiration_date: null, warranty_expiration: '2028-01-01',
+      last_maintenance: '2025-01-05', next_maintenance: '2025-07-05'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -495,11 +441,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla XL',
     attributes: {
-
       size: 'XL', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -510,11 +454,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla M - en reposición',
     attributes: {
-
       size: 'M', color: 'Azul claro', material: 'Algodón/Poliéster', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -525,12 +467,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-1',
     assigned_to: null, notes: 'Caja de 100 unidades - talla M',
     attributes: {
-
       size: 'M', color: 'Azul', material: 'Nitrilo', gender: null,
-    certification: 'CE', safety_standard: 'EN 455', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-01-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 455', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-01-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -541,12 +481,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-2',
     assigned_to: null, notes: 'Protección facial incluida',
     attributes: {
-
       size: null, color: 'Blanco', material: 'ABS', gender: null,
-    certification: 'CE', safety_standard: 'EN 397 / EN 166', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-09-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 397 / EN 166', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-09-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -557,12 +495,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-3',
     assigned_to: null, notes: 'Agotado - solicitar reposición',
     attributes: {
-
       size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
-    certification: 'CE', safety_standard: 'EN 149', serial_number: null,
-    brand: null, model: null, expiration_date: '2026-10-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 149', serial_number: null,
+      brand: null, model: null, expiration_date: '2026-10-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -573,12 +509,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén herramientas',
     assigned_to: null, notes: 'Unidad de respaldo',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-BR600-002',
-    brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-01-01',
-    last_maintenance: '2025-04-01', next_maintenance: '2025-10-01'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-BR600-002',
+      brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-01-01',
+      last_maintenance: '2025-04-01', next_maintenance: '2025-10-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -589,12 +523,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'En mantenimiento preventivo',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-FS131-002',
-    brand: 'STIHL', model: 'FS 131', expiration_date: null, warranty_expiration: '2026-06-01',
-    last_maintenance: '2025-05-01', next_maintenance: '2025-11-01'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-FS131-002',
+      brand: 'STIHL', model: 'FS 131', expiration_date: null, warranty_expiration: '2026-06-01',
+      last_maintenance: '2025-05-01', next_maintenance: '2025-11-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -605,12 +537,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Exterior',
     assigned_to: null, notes: 'Motor averiado - pendiente de reparar',
     attributes: {
-
       size: null, color: 'Rojo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-002',
-    brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
-    last_maintenance: '2024-12-01', next_maintenance: '2025-06-01'
-
+      certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-002',
+      brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
+      last_maintenance: '2024-12-01', next_maintenance: '2025-06-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -621,12 +551,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave - Estante 5',
     assigned_to: null, notes: 'De baja - motor irrecuperable',
     attributes: {
-
       size: null, color: 'Rojo', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HONDA-F220-002',
-    brand: 'Honda', model: 'F220', expiration_date: null, warranty_expiration: null,
-    last_maintenance: '2024-06-01', next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: 'HONDA-F220-002',
+      brand: 'Honda', model: 'F220', expiration_date: null, warranty_expiration: null,
+      last_maintenance: '2024-06-01', next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -637,11 +565,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-3',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XL', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -652,11 +578,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-2',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XL', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -667,11 +591,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-3',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'M', color: 'Verde', material: 'Poliéster transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -682,11 +604,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-2',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XL', color: 'Azul claro', material: 'Algodón/Poliéster', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -697,11 +617,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-3',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XL', color: 'Gris', material: 'Algodón/Poliéster térmico', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -712,11 +630,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-1',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XXL', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -727,11 +643,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante B-1',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XXL', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -742,11 +656,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-2',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'XL', color: 'Verde', material: 'Poliéster transpirable', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -757,11 +669,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-3',
     assigned_to: null, notes: 'En reposición',
     attributes: {
-
       size: 'L', color: 'Azul', material: 'Poliéster con forro térmico', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -772,11 +682,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-4',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'L', color: 'Negro', material: 'Microfibra polar', gender: 'Unisex',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -787,11 +695,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-4',
     assigned_to: null, notes: 'Agotado',
     attributes: {
-
       size: 'XL', color: 'Negro', material: 'Microfibra polar', gender: 'Unisex',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -802,12 +708,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-2',
     assigned_to: null, notes: 'Lote nuevo',
     attributes: {
-
       size: null, color: 'Azul', material: 'ABS', gender: null,
-    certification: 'CE', safety_standard: 'EN 397', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-03-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 397', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-03-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -818,12 +722,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-3',
     assigned_to: null, notes: 'Resistentes a químicos',
     attributes: {
-
       size: 'L', color: 'Negro', material: 'Neopreno', gender: null,
-    certification: 'CE', safety_standard: 'EN 374', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-08-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 374', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-08-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -834,12 +736,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-4',
     assigned_to: null, notes: 'Agotado - pedir nuevo lote',
     attributes: {
-
       size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
-    certification: 'CE', safety_standard: 'EN 149', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-05-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 149', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-05-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -850,12 +750,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante D-4',
     assigned_to: null, notes: 'SNR 25 dB',
     attributes: {
-
       size: 'Talla única', color: 'Azul', material: 'Silicona', gender: null,
-    certification: 'CE', safety_standard: 'EN 352-2', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-01-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 352-2', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-01-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -866,12 +764,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante E-1',
     assigned_to: null, notes: 'Protección UV',
     attributes: {
-
       size: 'Talla única', color: 'Oscuro', material: 'Policarbonato', gender: null,
-    certification: 'CE', safety_standard: 'EN 166', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-09-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 166', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-09-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -882,12 +778,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante D-3',
     assigned_to: null, notes: 'Uso en altura',
     attributes: {
-
       size: 'L', color: 'Azul', material: 'Poliamida', gender: null,
-    certification: 'CE', safety_standard: 'EN 358', serial_number: 'ARN-002',
-    brand: null, model: null, expiration_date: '2027-02-01', warranty_expiration: null,
-    last_maintenance: '2025-02-01', next_maintenance: '2025-08-01'
-
+      certification: 'CE', safety_standard: 'EN 358', serial_number: 'ARN-002',
+      brand: null, model: null, expiration_date: '2027-02-01', warranty_expiration: null,
+      last_maintenance: '2025-02-01', next_maintenance: '2025-08-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -898,12 +792,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante C-1',
     assigned_to: null, notes: 'Invierno',
     attributes: {
-
       size: 'L', color: 'Negro', material: 'Forro térmico', gender: null,
-    certification: 'CE', safety_standard: 'EN 511', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-06-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 511', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-06-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -914,12 +806,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-2',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
-    certification: 'CE', safety_standard: 'EN 149', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-10-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 149', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-10-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -930,12 +820,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-4',
     assigned_to: null, notes: 'En reposición - baterías agotadas',
     attributes: {
-
       size: 'Talla única', color: 'Amarillo/Negro', material: 'Plástico/Electrónica', gender: null,
-    certification: 'CE', safety_standard: 'EN 352-1', serial_number: 'ELEC-001',
-    brand: null, model: null, expiration_date: '2028-03-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 352-1', serial_number: 'ELEC-001',
+      brand: null, model: null, expiration_date: '2028-03-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -946,12 +834,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-1',
     assigned_to: null, notes: 'Adaptables',
     attributes: {
-
       size: 'Talla única', color: 'Transparente', material: 'Policarbonato', gender: null,
-    certification: 'CE', safety_standard: 'EN 166', serial_number: null,
-    brand: null, model: null, expiration_date: '2029-01-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 166', serial_number: null,
+      brand: null, model: null, expiration_date: '2029-01-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -962,12 +848,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-2',
     assigned_to: null, notes: '',
     attributes: {
-
       size: null, color: 'Blanco', material: 'ABS', gender: null,
-    certification: 'CE', safety_standard: 'EN 397', serial_number: null,
-    brand: null, model: null, expiration_date: '2028-11-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 397', serial_number: null,
+      brand: null, model: null, expiration_date: '2028-11-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -978,12 +862,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos',
     assigned_to: null, notes: 'Alta presión',
     attributes: {
-
       size: null, color: 'Amarillo', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'KARCHER-K7-001',
-    brand: 'Kärcher', model: 'K7', expiration_date: null, warranty_expiration: '2028-06-01',
-    last_maintenance: '2025-03-15', next_maintenance: '2025-09-15'
-
+      certification: null, safety_standard: null, serial_number: 'KARCHER-K7-001',
+      brand: 'Kärcher', model: 'K7', expiration_date: null, warranty_expiration: '2028-06-01',
+      last_maintenance: '2025-03-15', next_maintenance: '2025-09-15'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -994,12 +876,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-7', location: 'Taller',
     assigned_to: null, notes: 'Unidad de repuesto',
     attributes: {
-
       size: null, color: 'Azul', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'TENNANT-5700-002',
-    brand: 'Tennant', model: '5700', expiration_date: null, warranty_expiration: null,
-    last_maintenance: '2025-02-10', next_maintenance: '2025-08-10'
-
+      certification: null, safety_standard: null, serial_number: 'TENNANT-5700-002',
+      brand: 'Tennant', model: '5700', expiration_date: null, warranty_expiration: null,
+      last_maintenance: '2025-02-10', next_maintenance: '2025-08-10'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1010,12 +890,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-5', location: 'Garaje Garena',
     assigned_to: null, notes: 'Espada de 45cm',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-MS261-002',
-    brand: 'STIHL', model: 'MS 261 C-M', expiration_date: null, warranty_expiration: '2027-02-01',
-    last_maintenance: '2025-04-01', next_maintenance: '2025-10-01'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-MS261-002',
+      brand: 'STIHL', model: 'MS 261 C-M', expiration_date: null, warranty_expiration: '2027-02-01',
+      last_maintenance: '2025-04-01', next_maintenance: '2025-10-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1026,12 +904,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave',
     assigned_to: null, notes: '',
     attributes: {
-
       size: null, color: 'Rojo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HYUNDAI-HY2-001',
-    brand: 'Hyundai', model: 'HY2000i', expiration_date: null, warranty_expiration: '2028-01-01',
-    last_maintenance: '2025-01-20', next_maintenance: '2025-07-20'
-
+      certification: null, safety_standard: null, serial_number: 'HYUNDAI-HY2-001',
+      brand: 'Hyundai', model: 'HY2000i', expiration_date: null, warranty_expiration: '2028-01-01',
+      last_maintenance: '2025-01-20', next_maintenance: '2025-07-20'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1042,12 +918,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos',
     assigned_to: null, notes: '',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-BR600-003',
-    brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-06-01',
-    last_maintenance: '2025-03-20', next_maintenance: '2025-09-20'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-BR600-003',
+      brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-06-01',
+      last_maintenance: '2025-03-20', next_maintenance: '2025-09-20'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1058,12 +932,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: '',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-FS131-003',
-    brand: 'STIHL', model: 'FS 131', expiration_date: null, warranty_expiration: '2026-09-01',
-    last_maintenance: '2025-04-10', next_maintenance: '2025-10-10'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-FS131-003',
+      brand: 'STIHL', model: 'FS 131', expiration_date: null, warranty_expiration: '2026-09-01',
+      last_maintenance: '2025-04-10', next_maintenance: '2025-10-10'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1074,12 +946,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'En mantenimiento preventivo',
     attributes: {
-
       size: null, color: 'Rojo', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HONDA-F220-003',
-    brand: 'Honda', model: 'F220', expiration_date: null, warranty_expiration: null,
-    last_maintenance: '2025-05-01', next_maintenance: '2025-11-01'
-
+      certification: null, safety_standard: null, serial_number: 'HONDA-F220-003',
+      brand: 'Honda', model: 'F220', expiration_date: null, warranty_expiration: null,
+      last_maintenance: '2025-05-01', next_maintenance: '2025-11-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1090,12 +960,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Exterior',
     assigned_to: null, notes: 'Averiado - cuchilla desviada',
     attributes: {
-
       size: null, color: 'Rojo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-003',
-    brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
-    last_maintenance: '2025-01-10', next_maintenance: '2025-07-10'
-
+      certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-003',
+      brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
+      last_maintenance: '2025-01-10', next_maintenance: '2025-07-10'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1106,12 +974,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'Ligera para poda',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-MS181-001',
-    brand: 'STIHL', model: 'MS 181 C-BE', expiration_date: null, warranty_expiration: '2027-08-01',
-    last_maintenance: '2025-03-05', next_maintenance: '2025-09-05'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-MS181-001',
+      brand: 'STIHL', model: 'MS 181 C-BE', expiration_date: null, warranty_expiration: '2027-08-01',
+      last_maintenance: '2025-03-05', next_maintenance: '2025-09-05'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1122,11 +988,9 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-1',
     assigned_to: null, notes: '',
     attributes: {
-
       size: 'S', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
-    certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
-    expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
-
+      certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
+      expiration_date: null, warranty_expiration: null, last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1137,12 +1001,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-3',
     assigned_to: null, notes: 'Baja protección - para polvo',
     attributes: {
-
       size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
-    certification: 'CE', safety_standard: 'EN 149', serial_number: null,
-    brand: null, model: null, expiration_date: '2027-12-01', warranty_expiration: null,
-    last_maintenance: null, next_maintenance: null
-
+      certification: 'CE', safety_standard: 'EN 149', serial_number: null,
+      brand: null, model: null, expiration_date: '2027-12-01', warranty_expiration: null,
+      last_maintenance: null, next_maintenance: null
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1153,12 +1015,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'Ligera para bordes',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-FS94-001',
-    brand: 'STIHL', model: 'FS 94', expiration_date: null, warranty_expiration: '2027-05-01',
-    last_maintenance: '2025-03-01', next_maintenance: '2025-09-01'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-FS94-001',
+      brand: 'STIHL', model: 'FS 94', expiration_date: null, warranty_expiration: '2027-05-01',
+      last_maintenance: '2025-03-01', next_maintenance: '2025-09-01'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1169,12 +1029,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: '',
     attributes: {
-
       size: null, color: 'Naranja/Gris', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'STIHL-BR600-004',
-    brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-06-01',
-    last_maintenance: '2025-04-15', next_maintenance: '2025-10-15'
-
+      certification: null, safety_standard: null, serial_number: 'STIHL-BR600-004',
+      brand: 'STIHL', model: 'BR 600', expiration_date: null, warranty_expiration: '2027-06-01',
+      last_maintenance: '2025-04-15', next_maintenance: '2025-10-15'
     },
 
     created_at: NOW, updated_at: NOW,
@@ -1185,12 +1043,10 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Exterior',
     assigned_to: null, notes: '',
     attributes: {
-
       size: null, color: 'Rojo/Negro', material: null, gender: null,
-    certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-004',
-    brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
-    last_maintenance: '2025-02-15', next_maintenance: '2025-08-15'
-
+      certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-004',
+      brand: 'Husqvarna', model: 'LC 247', expiration_date: null, warranty_expiration: '2027-03-01',
+      last_maintenance: '2025-02-15', next_maintenance: '2025-08-15'
     },
 
     created_at: NOW, updated_at: NOW,
