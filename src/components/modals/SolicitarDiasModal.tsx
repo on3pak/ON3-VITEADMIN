@@ -22,7 +22,7 @@ interface SolicitarDiasModalProps {
   onClose: () => void;
   employeeId: string;
   disableWeekends: boolean;
-  onSubmit: (data: { type: 'dias_libres'; requested_days: string[] }) => void;
+  onSubmit: (data: { type: 'FREE_DAYS'; requested_days: string[] }) => void;
 }
 
 export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, onClose, employeeId, disableWeekends, onSubmit }) => {
@@ -46,7 +46,7 @@ export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, 
   const handleSubmit = () => {
     if (selectedDays.length === 0) return;
     setSubmitting(true);
-    onSubmit({ type: 'dias_libres', requested_days: selectedDays });
+    onSubmit({ type: 'FREE_DAYS', requested_days: selectedDays });
     setSubmitting(false);
     onClose();
   };

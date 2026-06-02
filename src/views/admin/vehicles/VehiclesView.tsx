@@ -12,10 +12,10 @@ import {
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
-  'ACTIVO': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'MANTENIMIENTO': 'bg-amber-100 text-amber-800 border-amber-200',
-  'AVERIADO': 'bg-rose-100 text-rose-800 border-rose-200',
-  'BAJA': 'bg-app-bg text-app-text border-app-border',
+  'ACTIVE': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'MAINTENANCE': 'bg-amber-100 text-amber-800 border-amber-200',
+  'BROKEN': 'bg-rose-100 text-rose-800 border-rose-200',
+  'RETIRED': 'bg-app-bg text-app-text border-app-border',
 };
 
 const TYPE_COLORS: Record<VehicleType, string> = {
@@ -26,7 +26,7 @@ const TYPE_COLORS: Record<VehicleType, string> = {
   'PORTER': 'bg-amber-100 text-amber-700 border-amber-200',
 };
 
-const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.type]));
+const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.category]));
 
 const wcCityMap = Object.fromEntries(
   INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
@@ -124,10 +124,10 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
               className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
-              <option value="ACTIVO">Activo</option>
-              <option value="MANTENIMIENTO">Mantenimiento</option>
-              <option value="AVERIADO">Averiado</option>
-              <option value="BAJA">Baja</option>
+              <option value="ACTIVE">Activo</option>
+              <option value="MAINTENANCE">Mantenimiento</option>
+              <option value="BROKEN">Averiado</option>
+              <option value="RETIRED">Baja</option>
             </select>
           </div>
 
@@ -207,7 +207,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
                             <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border text-center ${getBadgeStyle(v.status)}`}>
-                              {v.status === 'ACTIVO' ? 'Activo' : v.status === 'MANTENIMIENTO' ? 'Mantenimiento' : v.status === 'AVERIADO' ? 'Averiado' : 'Baja'}
+                              {v.status === 'ACTIVE' ? 'Activo' : v.status === 'MAINTENANCE' ? 'Mantenimiento' : v.status === 'BROKEN' ? 'Averiado' : 'Baja'}
                             </span>
                           </div>
                         </td>
@@ -282,8 +282,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
               <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
-              {['ACTIVO', 'MANTENIMIENTO', 'AVERIADO', 'BAJA'].map((s) => (
-                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVO' ? 'Activo' : s === 'MANTENIMIENTO' ? 'Mantenimiento' : s === 'AVERIADO' ? 'Averiado' : 'Baja'}</button>
+              {['ACTIVE', 'MAINTENANCE', 'BROKEN', 'RETIRED'].map((s) => (
+                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVE' ? 'Activo' : s === 'MAINTENANCE' ? 'Mantenimiento' : s === 'BROKEN' ? 'Averiado' : 'Baja'}</button>
               ))}
             </div>
             )}

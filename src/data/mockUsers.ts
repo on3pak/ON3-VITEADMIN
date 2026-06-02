@@ -43,6 +43,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Miguel Ángel Torres',
     role: 'ROOT',
     status: 'ACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-01-10T08:30:00Z',
     updated_at: '2025-01-10T08:30:00Z',
     city_id: 'city-1'
@@ -54,6 +56,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Alejandro Mendoza',
     role: 'ADMIN',
     status: 'ACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-01-15T10:15:00Z',
     updated_at: '2025-01-15T10:15:00Z',
     city_id: 'city-1'
@@ -65,6 +69,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Beatriz Salazar',
     role: 'MANAGER',
     status: 'ACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-02-01T14:22:00Z',
     updated_at: '2025-02-01T14:22:00Z',
     city_id: 'city-1'
@@ -76,6 +82,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Carlos Fuentes',
     role: 'USER',
     status: 'ACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-02-12T09:05:00Z',
     updated_at: '2025-02-12T09:05:00Z',
     city_id: 'city-1'
@@ -87,6 +95,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Diana Reyes',
     role: 'MANAGER',
     status: 'ACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-02-14T11:40:00Z',
     updated_at: '2025-02-14T11:40:00Z',
     city_id: 'city-2'
@@ -98,6 +108,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Eduardo Gómez',
     role: 'USER',
     status: 'INACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-02-18T16:50:00Z',
     updated_at: '2025-02-18T16:50:00Z',
     city_id: 'city-2'
@@ -109,6 +121,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Gabriela Vaca',
     role: 'ADMIN',
     status: 'INACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-01-20T13:12:00Z',
     updated_at: '2025-01-20T13:12:00Z',
     city_id: 'city-2'
@@ -120,6 +134,8 @@ export const INITIAL_USERS: User[] = [
     full_name: 'Hugo Pérez',
     role: 'USER',
     status: 'ACTIVE',
+    language: 'ES',
+    employee_id: null,
     created_at: '2025-02-20T10:00:00Z',
     updated_at: '2025-02-20T10:00:00Z',
     city_id: 'city-1'

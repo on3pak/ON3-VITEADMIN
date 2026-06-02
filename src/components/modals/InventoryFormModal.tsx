@@ -13,15 +13,15 @@ interface InventoryFormModalProps {
 }
 
 const CATEGORY_ICONS: Record<InventoryCategory, React.ReactNode> = {
-  ropa: <Shirt className="h-4 w-4" />,
-  epi: <Shield className="h-4 w-4" />,
-  maquinaria: <Wrench className="h-4 w-4" />,
+  CLOTHING: <Shirt className="h-4 w-4" />,
+  PPE: <Shield className="h-4 w-4" />,
+  MACHINERY: <Wrench className="h-4 w-4" />,
 };
 
 export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, onClose, onSubmit, editingItem }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<InventoryCategory>('ropa');
+  const [category, setCategory] = useState<InventoryCategory>('CLOTHING');
   const [subtype_id, setSubtype_id] = useState('');
   const [status_id, setStatus_id] = useState('is-1');
   const [quantity, setQuantity] = useState(1);
@@ -47,9 +47,9 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
   const [next_maintenance, setNext_maintenance] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  const isRopa = category === 'ropa';
-  const isEpi = category === 'epi';
-  const isMaquinaria = category === 'maquinaria';
+  const isRopa = category === 'CLOTHING';
+  const isEpi = category === 'PPE';
+  const isMaquinaria = category === 'MACHINERY';
 
   const isWarehouseItem = isRopa || isEpi;
 
@@ -90,7 +90,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
     } else {
       setName('');
       setDescription('');
-      setCategory('ropa');
+      setCategory('CLOTHING');
       setSubtype_id('');
       setStatus_id('is-1');
       setQuantity(1);

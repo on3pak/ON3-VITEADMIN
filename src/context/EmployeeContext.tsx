@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Employee, EmployeeOverview, VacationRequest } from '../types';
-import { INITIAL_EMPLOYEES } from '../data/mockEmployees';
+import { INITIAL_EMPLOYEES, INITIAL_EMPLOYEE_STATUSES } from '../data/mockEmployees';
 import { generateId } from '../utils/id';
 
 interface EmployeeContextType {
@@ -12,7 +12,7 @@ interface EmployeeContextType {
   deleteEmployee: (id: string) => void;
   vacationRequests: VacationRequest[];
   createVacationRequest: (data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => { success: boolean };
-  resolveVacationRequest: (id: string, status: 'aprobado' | 'rechazado') => void;
+  resolveVacationRequest: (id: string, status: 'APPROVED' | 'REJECTED') => void;
   getVacationRequestsByEmployee: (employeeId: string) => VacationRequest[];
 }
 
@@ -30,9 +30,10 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
       lastName1: emp.lastName1,
       lastName2: emp.lastName2,
       category_id: emp.category_id,
-      work_day_id: emp.work_day,
+      work_day_id: emp.work_day_id,
       work_center_id: emp.work_center_id,
       status_id: emp.status_id,
+      status_name: INITIAL_EMPLOYEE_STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id,
       city_id: emp.city_id,
     }));
   }, [employees]);
@@ -76,7 +77,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     return { success: true };
   }, []);
 
-  const resolveVacationRequest = useCallback((id: string, status: 'aprobado' | 'rechazado') => {
+  const resolveVacationRequest = useCallback((id: string, status: 'APPROVED' | 'REJECTED') => {
     setVacationRequests((prev) =>
       prev.map((req) =>
         req.id === id ? { ...req, status, resolved_at: new Date().toISOString() } : req

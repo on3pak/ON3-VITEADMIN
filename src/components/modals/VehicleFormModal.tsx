@@ -26,7 +26,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
   const [kilometers, setKilometers] = useState(0);
   const [lastReviewDate, setLastReviewDate] = useState('');
   const [nextReviewKilometers, setNextReviewKilometers] = useState(0);
-  const [workCenter, setWorkCenter] = useState('wc-1');
+  const [workCenter, setWorkCenter] = useState('wc_1');
   const [assignedEmployee, setAssignedEmployee] = useState('');
   const [observations, setObservations] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setKilometers(0);
       setLastReviewDate('');
       setNextReviewKilometers(0);
-      setWorkCenter('wc-1');
+      setWorkCenter('wc_1');
       setAssignedEmployee('');
       setObservations('');
     }
@@ -164,7 +164,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
                 className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 {INITIAL_VEHICLE_TYPES.map((vt) => (
-                  <option key={vt.id} value={vt.id}>{vt.type}</option>
+                  <option key={vt.id} value={vt.id}>{vt.category}</option>
                 ))}
               </select>
             </div>
@@ -177,8 +177,8 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
               >
                 <option value="ACTIVE">Activo</option>
                 <option value="MAINTENANCE">Mantenimiento</option>
-                <option value="AVERIADO">Averiado</option>
-                <option value="BAJA">Baja</option>
+                <option value="BROKEN">Averiado</option>
+                <option value="RETIRED">Baja</option>
               </select>
             </div>
             <div>
@@ -189,9 +189,9 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
                 className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
                 <option value="DIESEL">Diésel</option>
-                <option value="GASOLINA">Gasolina</option>
-                <option value="ELECTRICO">Eléctrico</option>
-                <option value="GAS">Gas</option>
+                <option value="PETROL">Gasolina</option>
+                <option value="ELECTRIC">Eléctrico</option>
+                <option value="LPG">Gas</option>
               </select>
             </div>
           </div>

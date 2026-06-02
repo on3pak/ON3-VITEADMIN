@@ -126,7 +126,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
           <SectionCard icon={<Award className="h-4 w-4" />} title="Información Laboral">
             <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={resolveCategory(employee.category_id)} highlight />
             <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={resolveWorkCenter(employee.work_center_id)} highlight />
-            <InfoRow icon={<Clock className="h-4 w-4" />} label="Jornada" value={resolveWorkDay(employee.work_day)} />
+            <InfoRow icon={<Clock className="h-4 w-4" />} label="Jornada" value={resolveWorkDay(employee.work_day_id)} />
             <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={employee.start_time && employee.end_time ? `${employee.start_time} - ${employee.end_time}` : '-'} />
           </SectionCard>
 
@@ -143,7 +143,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
-                    <div className="text-sm font-bold text-emerald-600 capitalize">{(() => { const m = ['julio','agosto','septiembre']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
+                    <div className="text-sm font-bold text-emerald-600 capitalize">{(() => { const m = ['JULY','AUGUST','SEPTEMBER']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
                   </div>
                 </div>
               </div>

@@ -70,6 +70,8 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       email: email.trim(),
       role,
       status,
+      language: 'ES',
+      employee_id: null,
     });
 
     if (success) {
