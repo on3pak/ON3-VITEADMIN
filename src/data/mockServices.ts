@@ -1,6 +1,6 @@
 import { Service, ServiceTask, TaskStatus } from '../types';
 
-export const INITIAL_SERVICE_TYPES: string[] = [
+export const INITIAL_SERVICE_CATEGORIES: string[] = [
   'BARRIDO MIXTO',
   'BARRIDO MANUAL',
   'BARRIDO MECÁNICO',
@@ -49,6 +49,7 @@ const DAY_ZONES: string[] = [
 function generateTasks(serviceId: string, baseStatus: TaskStatus = 'COMPLETED'): ServiceTask[] {
   const tasks: ServiceTask[] = [];
   let taskId = 0;
+  const now = new Date().toISOString();
 
   for (let day = 0; day < 7; day++) {
     for (let t = 0; t < 20; t++) {
@@ -57,10 +58,15 @@ function generateTasks(serviceId: string, baseStatus: TaskStatus = 'COMPLETED'):
 
       tasks.push({
         id: `${serviceId}-task-${taskId++}`,
-        dayIndex: day,
-        taskIndex: t,
+        service_id: serviceId,
+        day_index: day,
+        task_index: t,
         description: `${TASK_TEMPLATES[t]} - ${DAY_ZONES[day]}`,
         status,
+        zone: DAY_ZONES[day],
+        assigned_to: null,
+        created_at: now,
+        updated_at: now,
       });
     }
   }
@@ -72,8 +78,9 @@ export const INITIAL_SERVICES: Service[] = [
     id: 'svc_1',
     work_center_id: 'wc-1',
     name: 'BMIX1',
-    type: 'BARRIDO MIXTO',
+    category: 'BARRIDO MIXTO',
     tasks: generateTasks('svc_1'),
+    week_start: '2024-06-17',
     created_at: '2024-01-01T08:00:00Z',
     updated_at: '2024-06-15T08:00:00Z',
   },
@@ -81,8 +88,9 @@ export const INITIAL_SERVICES: Service[] = [
     id: 'svc_2',
     work_center_id: 'wc-5',
     name: 'BMA2',
-    type: 'BARRIDO MANUAL',
+    category: 'BARRIDO MANUAL',
     tasks: generateTasks('svc_2'),
+    week_start: '2024-06-17',
     created_at: '2024-01-15T08:00:00Z',
     updated_at: '2024-06-10T08:00:00Z',
   },
@@ -90,8 +98,9 @@ export const INITIAL_SERVICES: Service[] = [
     id: 'svc_3',
     work_center_id: 'wc-3',
     name: 'BMEC3',
-    type: 'BARRIDO MECÁNICO',
+    category: 'BARRIDO MECÁNICO',
     tasks: generateTasks('svc_3'),
+    week_start: '2024-06-17',
     created_at: '2024-02-01T08:00:00Z',
     updated_at: '2024-06-01T08:00:00Z',
   },
@@ -99,8 +108,9 @@ export const INITIAL_SERVICES: Service[] = [
     id: 'svc_4',
     work_center_id: 'wc-2',
     name: 'BALD1',
-    type: 'BALDEO',
+    category: 'BALDEO',
     tasks: generateTasks('svc_4'),
+    week_start: '2024-06-17',
     created_at: '2024-03-01T08:00:00Z',
     updated_at: '2024-05-20T08:00:00Z',
   },
@@ -108,8 +118,9 @@ export const INITIAL_SERVICES: Service[] = [
     id: 'svc_5',
     work_center_id: 'wc-7',
     name: 'RVOL1',
-    type: 'RECOGIDA',
+    category: 'RECOGIDA',
     tasks: generateTasks('svc_5'),
+    week_start: '2024-06-17',
     created_at: '2024-04-01T08:00:00Z',
     updated_at: '2024-06-05T08:00:00Z',
   },
@@ -117,8 +128,9 @@ export const INITIAL_SERVICES: Service[] = [
     id: 'svc_6',
     work_center_id: 'wc-6',
     name: 'VAC1',
-    type: 'VACIADO',
+    category: 'VACIADO',
     tasks: generateTasks('svc_6'),
+    week_start: '2024-06-17',
     created_at: '2024-05-01T08:00:00Z',
     updated_at: '2024-06-12T08:00:00Z',
   },

@@ -23,7 +23,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: s.id,
       work_center_id: s.work_center_id,
       name: s.name,
-      type: s.type,
+      category: s.category,
       totalTasks: s.tasks.length,
       completedTasks: s.tasks.filter((t) => t.status === 'COMPLETED').length,
     }));
