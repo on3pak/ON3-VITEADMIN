@@ -1,28 +1,28 @@
 import { InventoryItem, InventoryCategory, InventoryCategoryOption, InventoryStatus, InventorySubtype } from '../types';
 
 export const INVENTORY_CATEGORIES: InventoryCategoryOption[] = [
-  { id: 'ic-1', name: 'Ropa', value: 'CLOTHING' },
-  { id: 'ic-2', name: 'EPIs', value: 'PPE' },
-  { id: 'ic-3', name: 'Maquinaria', value: 'MACHINERY' },
+  { id: 'ic_1', name: 'Ropa', value: 'CLOTHING' },
+  { id: 'ic_2', name: 'EPIs', value: 'PPE' },
+  { id: 'ic_3', name: 'Maquinaria', value: 'MACHINERY' },
 ];
 
 export const ROPA_STATUSES: InventoryStatus[] = [
-  { id: 'rs-1', name: 'Disponible' },
-  { id: 'rs-2', name: 'Agotado' },
-  { id: 'rs-3', name: 'En Reposición' },
+  { id: 'rs_1', name: 'Disponible' },
+  { id: 'rs_2', name: 'Agotado' },
+  { id: 'rs_3', name: 'En Reposición' },
 ];
 
 export const EPI_STATUSES: InventoryStatus[] = [
-  { id: 'es-1', name: 'Disponible' },
-  { id: 'es-2', name: 'Agotado' },
-  { id: 'es-3', name: 'En Reposición' },
+  { id: 'es_1', name: 'Disponible' },
+  { id: 'es_2', name: 'Agotado' },
+  { id: 'es_3', name: 'En Reposición' },
 ];
 
 export const MAQUINARIA_STATUSES: InventoryStatus[] = [
-  { id: 'ms-1', name: 'Disponible' },
-  { id: 'ms-2', name: 'Mantenimiento' },
-  { id: 'ms-3', name: 'Averiado' },
-  { id: 'ms-4', name: 'Baja' },
+  { id: 'ms_1', name: 'Disponible' },
+  { id: 'ms_2', name: 'Mantenimiento' },
+  { id: 'ms_3', name: 'Averiado' },
+  { id: 'ms_4', name: 'Baja' },
 ];
 
 export const getStatusesForCategory = (cat: InventoryCategory): InventoryStatus[] => {
@@ -34,33 +34,33 @@ export const getStatusesForCategory = (cat: InventoryCategory): InventoryStatus[
 };
 
 export const INVENTORY_SUBTYPES: InventorySubtype[] = [
-  { id: 'ist-1', category: 'CLOTHING', name: 'Pantalón' },
-  { id: 'ist-2', category: 'CLOTHING', name: 'Camisa' },
-  { id: 'ist-3', category: 'CLOTHING', name: 'Chaqueta' },
-  { id: 'ist-4', category: 'CLOTHING', name: 'Forro' },
+  { id: 'ist_1', category: 'CLOTHING', name: 'Pantalón' },
+  { id: 'ist_2', category: 'CLOTHING', name: 'Camisa' },
+  { id: 'ist_3', category: 'CLOTHING', name: 'Chaqueta' },
+  { id: 'ist_4', category: 'CLOTHING', name: 'Forro' },
 
-  { id: 'ist-11', category: 'PPE', name: 'Casco' },
-  { id: 'ist-12', category: 'PPE', name: 'Guantes' },
-  { id: 'ist-13', category: 'PPE', name: 'Mascarilla' },
-  { id: 'ist-14', category: 'PPE', name: 'Máscara' },
-  { id: 'ist-15', category: 'PPE', name: 'Arnés' },
-  { id: 'ist-16', category: 'PPE', name: 'Protector' },
-  { id: 'ist-17', category: 'PPE', name: 'Gafas' },
+  { id: 'ist_11', category: 'PPE', name: 'Casco' },
+  { id: 'ist_12', category: 'PPE', name: 'Guantes' },
+  { id: 'ist_13', category: 'PPE', name: 'Mascarilla' },
+  { id: 'ist_14', category: 'PPE', name: 'Máscara' },
+  { id: 'ist_15', category: 'PPE', name: 'Arnés' },
+  { id: 'ist_16', category: 'PPE', name: 'Protector' },
+  { id: 'ist_17', category: 'PPE', name: 'Gafas' },
 
-  { id: 'ist-20', category: 'MACHINERY', name: 'Sopladora' },
-  { id: 'ist-21', category: 'MACHINERY', name: 'Desbrozadora' },
-  { id: 'ist-22', category: 'MACHINERY', name: 'Cortacésped' },
-  { id: 'ist-23', category: 'MACHINERY', name: 'Motocultor' },
-  { id: 'ist-24', category: 'MACHINERY', name: 'Hidrolimpiadora' },
-  { id: 'ist-25', category: 'MACHINERY', name: 'Barredora' },
-  { id: 'ist-26', category: 'MACHINERY', name: 'Motosierra' },
-  { id: 'ist-27', category: 'MACHINERY', name: 'Generador' },
+  { id: 'ist_20', category: 'MACHINERY', name: 'Sopladora' },
+  { id: 'ist_21', category: 'MACHINERY', name: 'Desbrozadora' },
+  { id: 'ist_22', category: 'MACHINERY', name: 'Cortacésped' },
+  { id: 'ist_23', category: 'MACHINERY', name: 'Motocultor' },
+  { id: 'ist_24', category: 'MACHINERY', name: 'Hidrolimpiadora' },
+  { id: 'ist_25', category: 'MACHINERY', name: 'Barredora' },
+  { id: 'ist_26', category: 'MACHINERY', name: 'Motosierra' },
+  { id: 'ist_27', category: 'MACHINERY', name: 'Generador' },
 ];
 
 export const getSubtypesForCategory = (cat: InventoryCategory): InventorySubtype[] =>
   INVENTORY_SUBTYPES.filter((st) => st.category === cat);
 
-export const INVENTORY_WAREHOUSE_IDS = ['wc-9', 'wc-21'];
+export const INVENTORY_WAREHOUSE_IDS = ['wc_9', 'wc_21'];
 
 const NOW = '2024-01-01T00:00:00Z';
 
@@ -69,8 +69,8 @@ const NOW_ISO = new Date().toISOString();
 export const INITIAL_INVENTORY: InventoryItem[] = [
   {
     id: 'inv_000001', name: 'Pantalón Verano Azul L', description: 'Pantalón de trabajo ligero para verano',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 30, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-1',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 30, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla L',
     size: 'L', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -79,8 +79,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000002', name: 'Pantalón Verano Azul M', description: 'Pantalón de trabajo ligero para verano',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 25, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-1',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 25, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla M',
     size: 'M', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -89,8 +89,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000003', name: 'Pantalón Invierno Gris L', description: 'Pantalón de trabajo térmico para invierno',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 20, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-2',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 20, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla L',
     size: 'L', color: 'Gris', material: 'Algodón/Poliéster térmico', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -99,8 +99,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000004', name: 'Pantalón Invierno Gris M', description: 'Pantalón de trabajo térmico para invierno',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 15, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-2',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 15, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla M',
     size: 'M', color: 'Gris', material: 'Algodón/Poliéster térmico', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -109,8 +109,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000005', name: 'Camisa Verano Blanca L', description: 'Camisa de trabajo manga corta para verano',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-1', quantity: 40, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-1',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_1', quantity: 40, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante B-1',
     assigned_to: null, notes: 'Talla L',
     size: 'L', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -119,8 +119,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000006', name: 'Camisa Verano Blanca M', description: 'Camisa de trabajo manga corta para verano',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-2', quantity: 0, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-1',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_2', quantity: 0, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante B-1',
     assigned_to: null, notes: 'Talla M - agotado',
     size: 'M', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -129,8 +129,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000007', name: 'Camisa Invierno Azul L', description: 'Camisa de trabajo manga larga para invierno',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-1', quantity: 20, min_stock: 10, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-1',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_1', quantity: 20, min_stock: 10, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla L',
     size: 'L', color: 'Azul claro', material: 'Algodón/Poliéster', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -139,8 +139,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000008', name: 'Chaqueta Verano Verde L', description: 'Chaqueta transpirable para verano',
-    category: 'CLOTHING', subtype_id: 'ist-3', status_id: 'rs-1', quantity: 15, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-2',
+    category: 'CLOTHING', subtype_id: 'ist_3', status_id: 'rs_1', quantity: 15, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla L',
     size: 'L', color: 'Verde', material: 'Poliéster transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -149,8 +149,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000009', name: 'Chaqueta Invierno Azul XL', description: 'Chaqueta térmica con forro para invierno',
-    category: 'CLOTHING', subtype_id: 'ist-3', status_id: 'rs-3', quantity: 10, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-3',
+    category: 'CLOTHING', subtype_id: 'ist_3', status_id: 'rs_3', quantity: 10, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-3',
     assigned_to: null, notes: 'En reposición - pendiente de recepción',
     size: 'XL', color: 'Azul', material: 'Poliéster con forro térmico', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -159,8 +159,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000010', name: 'Forro Polar Negro M', description: 'Forro polar térmico para media temporada',
-    category: 'CLOTHING', subtype_id: 'ist-4', status_id: 'rs-1', quantity: 35, min_stock: 10, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-4',
+    category: 'CLOTHING', subtype_id: 'ist_4', status_id: 'rs_1', quantity: 35, min_stock: 10, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-4',
     assigned_to: null, notes: 'Talla M',
     size: 'M', color: 'Negro', material: 'Microfibra polar', gender: 'Unisex',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -169,8 +169,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000011', name: 'Guantes de Latex', description: 'Guantes desechables de látex sin polvo',
-    category: 'PPE', subtype_id: 'ist-12', status_id: 'es-1', quantity: 500, min_stock: 100, unit: 'pares',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-1',
+    category: 'PPE', subtype_id: 'ist_12', status_id: 'es_1', quantity: 500, min_stock: 100, unit: 'pares',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-1',
     assigned_to: null, notes: 'Caja de 100 unidades',
     size: 'Talla única', color: 'Blanco', material: 'Latex', gender: null,
     certification: 'CE', safety_standard: 'EN 455', serial_number: null,
@@ -180,8 +180,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000012', name: 'Casco de Seguridad', description: 'Casco de seguridad con visera',
-    category: 'PPE', subtype_id: 'ist-11', status_id: 'es-1', quantity: 40, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-2',
+    category: 'PPE', subtype_id: 'ist_11', status_id: 'es_1', quantity: 40, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-2',
     assigned_to: null, notes: 'Certificado CE',
     size: null, color: 'Amarillo', material: 'ABS', gender: null,
     certification: 'CE', safety_standard: 'EN 397', serial_number: null,
@@ -191,8 +191,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000013', name: 'Guantes de Seguridad Nivel 5', description: 'Guantes anticorte nivel 5',
-    category: 'PPE', subtype_id: 'ist-12', status_id: 'es-1', quantity: 80, min_stock: 20, unit: 'pares',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-3',
+    category: 'PPE', subtype_id: 'ist_12', status_id: 'es_1', quantity: 80, min_stock: 20, unit: 'pares',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-3',
     assigned_to: null, notes: 'Resistentes a cortes',
     size: 'L', color: 'Gris', material: 'Kevlar', gender: null,
     certification: 'CE', safety_standard: 'EN 388', serial_number: null,
@@ -202,8 +202,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000014', name: 'Mascarilla FFP3', description: 'Mascarilla autofiltrante FFP3',
-    category: 'PPE', subtype_id: 'ist-13', status_id: 'es-1', quantity: 200, min_stock: 50, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-4',
+    category: 'PPE', subtype_id: 'ist_13', status_id: 'es_1', quantity: 200, min_stock: 50, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-4',
     assigned_to: null, notes: 'Caja de 20 unidades',
     size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
     certification: 'CE', safety_standard: 'EN 149', serial_number: null,
@@ -213,8 +213,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000015', name: 'Máscara de Desbrozar', description: 'Máscara de protección para desbrozadora',
-    category: 'PPE', subtype_id: 'ist-14', status_id: 'es-1', quantity: 15, min_stock: 5, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante D-1',
+    category: 'PPE', subtype_id: 'ist_14', status_id: 'es_1', quantity: 15, min_stock: 5, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante D-1',
     assigned_to: null, notes: 'Incluye visor',
     size: 'Talla única', color: 'Negro', material: 'Plástico/Malla', gender: null,
     certification: 'CE', safety_standard: 'EN 1731', serial_number: null,
@@ -224,8 +224,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000016', name: 'Mascarilla con Filtro', description: 'Mascarilla con filtro recambiable',
-    category: 'PPE', subtype_id: 'ist-13', status_id: 'es-3', quantity: 8, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-2',
+    category: 'PPE', subtype_id: 'ist_13', status_id: 'es_3', quantity: 8, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante D-2',
     assigned_to: null, notes: 'En reposición - filtros pendientes de cambiar',
     size: 'Talla única', color: 'Negro', material: 'Silicona/Plástico', gender: null,
     certification: 'CE', safety_standard: 'EN 140', serial_number: 'MF-002',
@@ -235,8 +235,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000017', name: 'Arnés Anti-Caídas', description: 'Arnés de seguridad con doble enganche',
-    category: 'PPE', subtype_id: 'ist-15', status_id: 'es-1', quantity: 10, min_stock: 3, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-3',
+    category: 'PPE', subtype_id: 'ist_15', status_id: 'es_1', quantity: 10, min_stock: 3, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante D-3',
     assigned_to: null, notes: 'Revisar antes de usar',
     size: 'L', color: 'Naranja', material: 'Poliamida', gender: null,
     certification: 'CE', safety_standard: 'EN 361', serial_number: 'ARN-001',
@@ -246,8 +246,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000018', name: 'Protector Auditivo Copa', description: 'Protector auditivo tipo copa',
-    category: 'PPE', subtype_id: 'ist-16', status_id: 'es-1', quantity: 30, min_stock: 10, unit: 'pares',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-4',
+    category: 'PPE', subtype_id: 'ist_16', status_id: 'es_1', quantity: 30, min_stock: 10, unit: 'pares',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante D-4',
     assigned_to: null, notes: 'SNR 30 dB',
     size: 'Talla única', color: 'Amarillo/Negro', material: 'Plástico/Espuma', gender: null,
     certification: 'CE', safety_standard: 'EN 352-1', serial_number: null,
@@ -257,8 +257,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000019', name: 'Gafas de Seguridad', description: 'Gafas de protección transparente',
-    category: 'PPE', subtype_id: 'ist-17', status_id: 'es-1', quantity: 50, min_stock: 15, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-1',
+    category: 'PPE', subtype_id: 'ist_17', status_id: 'es_1', quantity: 50, min_stock: 15, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-1',
     assigned_to: null, notes: 'Anti-empañamiento',
     size: 'Talla única', color: 'Transparente', material: 'Policarbonato', gender: null,
     certification: 'CE', safety_standard: 'EN 166', serial_number: null,
@@ -268,8 +268,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000028', name: 'Sopladora STIHL BR600', description: 'Sopladora de gasolina STIHL BR 600',
-    category: 'MACHINERY', subtype_id: 'ist-20', status_id: 'ms-1', quantity: 3, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave - Estante 1',
+    category: 'MACHINERY', subtype_id: 'ist_20', status_id: 'ms_1', quantity: 3, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_1', location: 'Garaje Nave - Estante 1',
     assigned_to: null, notes: 'Velocidad variable',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-BR600-001',
@@ -279,8 +279,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000029', name: 'Desbrozadora STIHL FS131', description: 'Desbrozadora de gasolina STIHL FS 131',
-    category: 'MACHINERY', subtype_id: 'ist-21', status_id: 'ms-1', quantity: 4, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos - Estante 2',
+    category: 'MACHINERY', subtype_id: 'ist_21', status_id: 'ms_1', quantity: 4, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_3', location: 'Garaje Gilitos - Estante 2',
     assigned_to: null, notes: 'Cabezal de hilo y cuchilla',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-FS131-001',
@@ -290,8 +290,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000030', name: 'Cortacésped Husqvarna LC247', description: 'Cortacésped autopropulsado',
-    category: 'MACHINERY', subtype_id: 'ist-22', status_id: 'ms-1', quantity: 2, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-5', location: 'Garaje Garena - Estante 3',
+    category: 'MACHINERY', subtype_id: 'ist_22', status_id: 'ms_1', quantity: 2, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_5', location: 'Garaje Garena - Estante 3',
     assigned_to: null, notes: 'Gasolina 4 tiempos',
     size: null, color: 'Rojo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-001',
@@ -301,8 +301,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000031', name: 'Motocultor Honda F220', description: 'Motocultor con motor Honda',
-    category: 'MACHINERY', subtype_id: 'ist-23', status_id: 'ms-3', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave - Estante 4',
+    category: 'MACHINERY', subtype_id: 'ist_23', status_id: 'ms_3', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_1', location: 'Garaje Nave - Estante 4',
     assigned_to: null, notes: 'Requiere revisión de transmisión',
     size: null, color: 'Rojo', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HONDA-F220-001',
@@ -312,8 +312,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000032', name: 'Hidrolimpiadora Kärcher K5', description: 'Hidrolimpiadora de presión Kärcher K5',
-    category: 'MACHINERY', subtype_id: 'ist-24', status_id: 'ms-1', quantity: 3, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos - Estante 5',
+    category: 'MACHINERY', subtype_id: 'ist_24', status_id: 'ms_1', quantity: 3, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_3', location: 'Garaje Gilitos - Estante 5',
     assigned_to: null, notes: 'Incluye lanza y boquillas',
     size: null, color: 'Amarillo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'KARCHER-K5-001',
@@ -323,8 +323,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000033', name: 'Barredora Tennant 5700', description: 'Barredora industrial Tennant 5700',
-    category: 'MACHINERY', subtype_id: 'ist-25', status_id: 'ms-2', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-7', location: 'Taller - Zona reparación',
+    category: 'MACHINERY', subtype_id: 'ist_25', status_id: 'ms_2', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_7', location: 'Taller - Zona reparación',
     assigned_to: null, notes: 'En reparación - motor de cepillo',
     size: null, color: 'Azul', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'TENNANT-5700-001',
@@ -334,8 +334,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000034', name: 'Motosierra STIHL MS261', description: 'Motosierra STIHL MS 261 C-M',
-    category: 'MACHINERY', subtype_id: 'ist-26', status_id: 'ms-1', quantity: 2, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén herramientas',
+    category: 'MACHINERY', subtype_id: 'ist_26', status_id: 'ms_1', quantity: 2, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén herramientas',
     assigned_to: null, notes: 'Espada de 40cm',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-MS261-001',
@@ -345,8 +345,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000035', name: 'Generador Honda EU30', description: 'Generador portátil Honda EU30i',
-    category: 'MACHINERY', subtype_id: 'ist-27', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_27', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: 'emp_000011', notes: 'Asignado a Javier Ramos',
     size: null, color: 'Rojo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HONDA-EU30-001',
@@ -356,8 +356,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000036', name: 'Pantalón Verano Azul XL', description: 'Pantalón de trabajo ligero para verano',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 18, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-1',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 18, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-1',
     assigned_to: null, notes: 'Talla XL',
     size: 'XL', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -366,8 +366,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000037', name: 'Camisa Invierno Azul M', description: 'Camisa de trabajo manga larga para invierno',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-3', quantity: 12, min_stock: 10, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-2',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_3', quantity: 12, min_stock: 10, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-2',
     assigned_to: null, notes: 'Talla M - en reposición',
     size: 'M', color: 'Azul claro', material: 'Algodón/Poliéster', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -376,8 +376,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000038', name: 'Guantes de Nitrilo', description: 'Guantes desechables de nitrilo sin polvo',
-    category: 'PPE', subtype_id: 'ist-12', status_id: 'es-1', quantity: 300, min_stock: 100, unit: 'pares',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-1',
+    category: 'PPE', subtype_id: 'ist_12', status_id: 'es_1', quantity: 300, min_stock: 100, unit: 'pares',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-1',
     assigned_to: null, notes: 'Caja de 100 unidades - talla M',
     size: 'M', color: 'Azul', material: 'Nitrilo', gender: null,
     certification: 'CE', safety_standard: 'EN 455', serial_number: null,
@@ -387,8 +387,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000039', name: 'Casco con Pantalla', description: 'Casco de seguridad con pantalla facial',
-    category: 'PPE', subtype_id: 'ist-11', status_id: 'es-1', quantity: 12, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-2',
+    category: 'PPE', subtype_id: 'ist_11', status_id: 'es_1', quantity: 12, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-2',
     assigned_to: null, notes: 'Protección facial incluida',
     size: null, color: 'Blanco', material: 'ABS', gender: null,
     certification: 'CE', safety_standard: 'EN 397 / EN 166', serial_number: null,
@@ -398,8 +398,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000040', name: 'Mascarilla FFP2', description: 'Mascarilla autofiltrante FFP2',
-    category: 'PPE', subtype_id: 'ist-13', status_id: 'es-2', quantity: 0, min_stock: 50, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-3',
+    category: 'PPE', subtype_id: 'ist_13', status_id: 'es_2', quantity: 0, min_stock: 50, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-3',
     assigned_to: null, notes: 'Agotado - solicitar reposición',
     size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
     certification: 'CE', safety_standard: 'EN 149', serial_number: null,
@@ -409,8 +409,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000041', name: 'Sopladora STIHL BR600 (2)', description: 'Segunda sopladora STIHL BR 600',
-    category: 'MACHINERY', subtype_id: 'ist-20', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén herramientas',
+    category: 'MACHINERY', subtype_id: 'ist_20', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén herramientas',
     assigned_to: null, notes: 'Unidad de respaldo',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-BR600-002',
@@ -420,8 +420,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000042', name: 'Desbrozadora STIHL FS131 (2)', description: 'Segunda desbrozadora STIHL FS 131',
-    category: 'MACHINERY', subtype_id: 'ist-21', status_id: 'ms-2', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_21', status_id: 'ms_2', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'En mantenimiento preventivo',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-FS131-002',
@@ -431,8 +431,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000043', name: 'Cortacésped Husqvarna LC247 (2)', description: 'Segundo cortacésped Husqvarna',
-    category: 'MACHINERY', subtype_id: 'ist-22', status_id: 'ms-3', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Exterior',
+    category: 'MACHINERY', subtype_id: 'ist_22', status_id: 'ms_3', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Exterior',
     assigned_to: null, notes: 'Motor averiado - pendiente de reparar',
     size: null, color: 'Rojo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-002',
@@ -442,8 +442,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000044', name: 'Motocultor Honda F220 (2)', description: 'Segundo motocultor Honda F220',
-    category: 'MACHINERY', subtype_id: 'ist-23', status_id: 'ms-4', quantity: 0, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave - Estante 5',
+    category: 'MACHINERY', subtype_id: 'ist_23', status_id: 'ms_4', quantity: 0, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_1', location: 'Garaje Nave - Estante 5',
     assigned_to: null, notes: 'De baja - motor irrecuperable',
     size: null, color: 'Rojo', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HONDA-F220-002',
@@ -453,8 +453,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000045', name: 'Pantalón Verano Azul XL', description: 'Pantalón de trabajo verano talla XL',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 20, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-3',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 20, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-3',
     assigned_to: null, notes: '',
     size: 'XL', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -463,8 +463,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000046', name: 'Camisa Verano Blanca XL', description: 'Camisa verano manga corta talla XL',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-1', quantity: 18, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-2',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_1', quantity: 18, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante B-2',
     assigned_to: null, notes: '',
     size: 'XL', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -473,8 +473,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000047', name: 'Chaqueta Verano Verde M', description: 'Chaqueta transpirable verano talla M',
-    category: 'CLOTHING', subtype_id: 'ist-3', status_id: 'rs-1', quantity: 12, min_stock: 5, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-3',
+    category: 'CLOTHING', subtype_id: 'ist_3', status_id: 'rs_1', quantity: 12, min_stock: 5, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-3',
     assigned_to: null, notes: '',
     size: 'M', color: 'Verde', material: 'Poliéster transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -483,8 +483,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000048', name: 'Camisa Invierno Azul XL', description: 'Camisa invierno manga larga talla XL',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-1', quantity: 15, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante B-2',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_1', quantity: 15, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante B-2',
     assigned_to: null, notes: '',
     size: 'XL', color: 'Azul claro', material: 'Algodón/Poliéster', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -493,8 +493,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000049', name: 'Pantalón Invierno Gris XL', description: 'Pantalón invierno térmico talla XL',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 14, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante A-3',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 14, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante A-3',
     assigned_to: null, notes: '',
     size: 'XL', color: 'Gris', material: 'Algodón/Poliéster térmico', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -503,8 +503,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000050', name: 'Pantalón Verano Azul XXL', description: 'Pantalón de trabajo verano talla XXL',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 10, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-1',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 10, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-1',
     assigned_to: null, notes: '',
     size: 'XXL', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -513,8 +513,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000051', name: 'Camisa Verano Blanca XXL', description: 'Camisa verano manga corta talla XXL',
-    category: 'CLOTHING', subtype_id: 'ist-2', status_id: 'rs-1', quantity: 12, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante B-1',
+    category: 'CLOTHING', subtype_id: 'ist_2', status_id: 'rs_1', quantity: 12, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante B-1',
     assigned_to: null, notes: '',
     size: 'XXL', color: 'Blanca', material: 'Algodón transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -523,8 +523,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000052', name: 'Chaqueta Verano Verde XL', description: 'Chaqueta transpirable verano talla XL',
-    category: 'CLOTHING', subtype_id: 'ist-3', status_id: 'rs-1', quantity: 10, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-2',
+    category: 'CLOTHING', subtype_id: 'ist_3', status_id: 'rs_1', quantity: 10, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-2',
     assigned_to: null, notes: '',
     size: 'XL', color: 'Verde', material: 'Poliéster transpirable', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -533,8 +533,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000053', name: 'Chaqueta Invierno Azul L', description: 'Chaqueta térmica invierno talla L',
-    category: 'CLOTHING', subtype_id: 'ist-3', status_id: 'rs-3', quantity: 8, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-3',
+    category: 'CLOTHING', subtype_id: 'ist_3', status_id: 'rs_3', quantity: 8, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-3',
     assigned_to: null, notes: 'En reposición',
     size: 'L', color: 'Azul', material: 'Poliéster con forro térmico', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -543,8 +543,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000054', name: 'Forro Polar Negro L', description: 'Forro polar térmico talla L',
-    category: 'CLOTHING', subtype_id: 'ist-4', status_id: 'rs-1', quantity: 22, min_stock: 10, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-4',
+    category: 'CLOTHING', subtype_id: 'ist_4', status_id: 'rs_1', quantity: 22, min_stock: 10, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-4',
     assigned_to: null, notes: '',
     size: 'L', color: 'Negro', material: 'Microfibra polar', gender: 'Unisex',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -553,8 +553,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000055', name: 'Forro Polar Negro XL', description: 'Forro polar térmico talla XL',
-    category: 'CLOTHING', subtype_id: 'ist-4', status_id: 'rs-2', quantity: 0, min_stock: 10, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-4',
+    category: 'CLOTHING', subtype_id: 'ist_4', status_id: 'rs_2', quantity: 0, min_stock: 10, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-4',
     assigned_to: null, notes: 'Agotado',
     size: 'XL', color: 'Negro', material: 'Microfibra polar', gender: 'Unisex',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -563,8 +563,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000056', name: 'Casco de Seguridad Azul', description: 'Casco de seguridad azul con visera',
-    category: 'PPE', subtype_id: 'ist-11', status_id: 'es-1', quantity: 25, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-2',
+    category: 'PPE', subtype_id: 'ist_11', status_id: 'es_1', quantity: 25, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-2',
     assigned_to: null, notes: 'Lote nuevo',
     size: null, color: 'Azul', material: 'ABS', gender: null,
     certification: 'CE', safety_standard: 'EN 397', serial_number: null,
@@ -574,8 +574,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000057', name: 'Guantes de Neopreno', description: 'Guantes de neopreno para productos químicos',
-    category: 'PPE', subtype_id: 'ist-12', status_id: 'es-1', quantity: 60, min_stock: 20, unit: 'pares',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-3',
+    category: 'PPE', subtype_id: 'ist_12', status_id: 'es_1', quantity: 60, min_stock: 20, unit: 'pares',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-3',
     assigned_to: null, notes: 'Resistentes a químicos',
     size: 'L', color: 'Negro', material: 'Neopreno', gender: null,
     certification: 'CE', safety_standard: 'EN 374', serial_number: null,
@@ -585,8 +585,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000058', name: 'Mascarilla KN95', description: 'Mascarilla KN95 con válvula',
-    category: 'PPE', subtype_id: 'ist-13', status_id: 'es-2', quantity: 0, min_stock: 50, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante C-4',
+    category: 'PPE', subtype_id: 'ist_13', status_id: 'es_2', quantity: 0, min_stock: 50, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante C-4',
     assigned_to: null, notes: 'Agotado - pedir nuevo lote',
     size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
     certification: 'CE', safety_standard: 'EN 149', serial_number: null,
@@ -596,8 +596,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000059', name: 'Protector Tapones', description: 'Protector auditivo tipo tapones reutilizables',
-    category: 'PPE', subtype_id: 'ist-16', status_id: 'es-1', quantity: 100, min_stock: 30, unit: 'pares',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante D-4',
+    category: 'PPE', subtype_id: 'ist_16', status_id: 'es_1', quantity: 100, min_stock: 30, unit: 'pares',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante D-4',
     assigned_to: null, notes: 'SNR 25 dB',
     size: 'Talla única', color: 'Azul', material: 'Silicona', gender: null,
     certification: 'CE', safety_standard: 'EN 352-2', serial_number: null,
@@ -607,8 +607,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000060', name: 'Gafas Oscuras', description: 'Gafas de seguridad con filtro solar',
-    category: 'PPE', subtype_id: 'ist-17', status_id: 'es-1', quantity: 30, min_stock: 10, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante E-1',
+    category: 'PPE', subtype_id: 'ist_17', status_id: 'es_1', quantity: 30, min_stock: 10, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante E-1',
     assigned_to: null, notes: 'Protección UV',
     size: 'Talla única', color: 'Oscuro', material: 'Policarbonato', gender: null,
     certification: 'CE', safety_standard: 'EN 166', serial_number: null,
@@ -618,8 +618,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000061', name: 'Arnés Posicionamiento', description: 'Arnés de posicionamiento con cinturón',
-    category: 'PPE', subtype_id: 'ist-15', status_id: 'es-1', quantity: 5, min_stock: 3, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-9', location: 'Estante D-3',
+    category: 'PPE', subtype_id: 'ist_15', status_id: 'es_1', quantity: 5, min_stock: 3, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_9', location: 'Estante D-3',
     assigned_to: null, notes: 'Uso en altura',
     size: 'L', color: 'Azul', material: 'Poliamida', gender: null,
     certification: 'CE', safety_standard: 'EN 358', serial_number: 'ARN-002',
@@ -629,8 +629,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000062', name: 'Guantes Térmicos', description: 'Guantes térmicos para trabajos en frío',
-    category: 'PPE', subtype_id: 'ist-12', status_id: 'es-1', quantity: 40, min_stock: 15, unit: 'pares',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante C-1',
+    category: 'PPE', subtype_id: 'ist_12', status_id: 'es_1', quantity: 40, min_stock: 15, unit: 'pares',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante C-1',
     assigned_to: null, notes: 'Invierno',
     size: 'L', color: 'Negro', material: 'Forro térmico', gender: null,
     certification: 'CE', safety_standard: 'EN 511', serial_number: null,
@@ -640,8 +640,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000063', name: 'Mascarilla FFP3 Válvula', description: 'Mascarilla FFP3 con válvula de exhalación',
-    category: 'PPE', subtype_id: 'ist-13', status_id: 'es-1', quantity: 150, min_stock: 50, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-2',
+    category: 'PPE', subtype_id: 'ist_13', status_id: 'es_1', quantity: 150, min_stock: 50, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-2',
     assigned_to: null, notes: '',
     size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
     certification: 'CE', safety_standard: 'EN 149', serial_number: null,
@@ -651,8 +651,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000064', name: 'Protector Electrónico', description: 'Protector auditivo electrónico con micrófono',
-    category: 'PPE', subtype_id: 'ist-16', status_id: 'es-3', quantity: 12, min_stock: 5, unit: 'pares',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante D-4',
+    category: 'PPE', subtype_id: 'ist_16', status_id: 'es_3', quantity: 12, min_stock: 5, unit: 'pares',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante D-4',
     assigned_to: null, notes: 'En reposición - baterías agotadas',
     size: 'Talla única', color: 'Amarillo/Negro', material: 'Plástico/Electrónica', gender: null,
     certification: 'CE', safety_standard: 'EN 352-1', serial_number: 'ELEC-001',
@@ -662,8 +662,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000065', name: 'Gafas Graduables', description: 'Gafas de seguridad con soporte para graduación',
-    category: 'PPE', subtype_id: 'ist-17', status_id: 'es-1', quantity: 20, min_stock: 10, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-1',
+    category: 'PPE', subtype_id: 'ist_17', status_id: 'es_1', quantity: 20, min_stock: 10, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-1',
     assigned_to: null, notes: 'Adaptables',
     size: 'Talla única', color: 'Transparente', material: 'Policarbonato', gender: null,
     certification: 'CE', safety_standard: 'EN 166', serial_number: null,
@@ -673,8 +673,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000066', name: 'Casco Barbuquejo', description: 'Casco de seguridad con barbuquejo',
-    category: 'PPE', subtype_id: 'ist-11', status_id: 'es-1', quantity: 15, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-2',
+    category: 'PPE', subtype_id: 'ist_11', status_id: 'es_1', quantity: 15, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-2',
     assigned_to: null, notes: '',
     size: null, color: 'Blanco', material: 'ABS', gender: null,
     certification: 'CE', safety_standard: 'EN 397', serial_number: null,
@@ -684,8 +684,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000067', name: 'Hidrolimpiadora Kärcher K7', description: 'Hidrolimpiadora Kärcher K7 premium',
-    category: 'MACHINERY', subtype_id: 'ist-24', status_id: 'ms-1', quantity: 2, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos',
+    category: 'MACHINERY', subtype_id: 'ist_24', status_id: 'ms_1', quantity: 2, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_3', location: 'Garaje Gilitos',
     assigned_to: null, notes: 'Alta presión',
     size: null, color: 'Amarillo', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'KARCHER-K7-001',
@@ -695,8 +695,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000068', name: 'Barredora Tennant 5700 (2)', description: 'Segunda barredora industrial Tennant',
-    category: 'MACHINERY', subtype_id: 'ist-25', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-7', location: 'Taller',
+    category: 'MACHINERY', subtype_id: 'ist_25', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_7', location: 'Taller',
     assigned_to: null, notes: 'Unidad de repuesto',
     size: null, color: 'Azul', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'TENNANT-5700-002',
@@ -706,8 +706,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000069', name: 'Motosierra STIHL MS261 (2)', description: 'Segunda motosierra STIHL MS 261',
-    category: 'MACHINERY', subtype_id: 'ist-26', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-5', location: 'Garaje Garena',
+    category: 'MACHINERY', subtype_id: 'ist_26', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_5', location: 'Garaje Garena',
     assigned_to: null, notes: 'Espada de 45cm',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-MS261-002',
@@ -717,8 +717,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000070', name: 'Generador Hyundai HY2000', description: 'Generador portátil Hyundai HY2000i',
-    category: 'MACHINERY', subtype_id: 'ist-27', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-1', location: 'Garaje Nave',
+    category: 'MACHINERY', subtype_id: 'ist_27', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_1', location: 'Garaje Nave',
     assigned_to: null, notes: '',
     size: null, color: 'Rojo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HYUNDAI-HY2-001',
@@ -728,8 +728,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000071', name: 'Sopladora STIHL BR600 (3)', description: 'Tercera sopladora STIHL BR 600',
-    category: 'MACHINERY', subtype_id: 'ist-20', status_id: 'ms-1', quantity: 2, min_stock: 1, unit: 'unidades',
-    city_id: 'city-1', work_center_id: 'wc-3', location: 'Garaje Gilitos',
+    category: 'MACHINERY', subtype_id: 'ist_20', status_id: 'ms_1', quantity: 2, min_stock: 1, unit: 'unidades',
+    city_id: 'city_1', work_center_id: 'wc_3', location: 'Garaje Gilitos',
     assigned_to: null, notes: '',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-BR600-003',
@@ -739,8 +739,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000072', name: 'Desbrozadora STIHL FS131 (3)', description: 'Tercera desbrozadora STIHL FS 131',
-    category: 'MACHINERY', subtype_id: 'ist-21', status_id: 'ms-1', quantity: 2, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_21', status_id: 'ms_1', quantity: 2, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: '',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-FS131-003',
@@ -750,8 +750,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000073', name: 'Motocultor Honda F220 (3)', description: 'Tercer motocultor Honda F220',
-    category: 'MACHINERY', subtype_id: 'ist-23', status_id: 'ms-2', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_23', status_id: 'ms_2', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'En mantenimiento preventivo',
     size: null, color: 'Rojo', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HONDA-F220-003',
@@ -761,8 +761,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000074', name: 'Cortacésped Husqvarna LC247 (3)', description: 'Tercer cortacésped Husqvarna',
-    category: 'MACHINERY', subtype_id: 'ist-22', status_id: 'ms-3', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Exterior',
+    category: 'MACHINERY', subtype_id: 'ist_22', status_id: 'ms_3', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Exterior',
     assigned_to: null, notes: 'Averiado - cuchilla desviada',
     size: null, color: 'Rojo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-003',
@@ -772,8 +772,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000075', name: 'Motosierra STIHL MS181', description: 'Motosierra STIHL MS 181 C-BE',
-    category: 'MACHINERY', subtype_id: 'ist-26', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_26', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'Ligera para poda',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-MS181-001',
@@ -783,8 +783,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000077', name: 'Pantalón Verano Azul S', description: 'Pantalón de trabajo verano talla S',
-    category: 'CLOTHING', subtype_id: 'ist-1', status_id: 'rs-1', quantity: 10, min_stock: 5, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante A-1',
+    category: 'CLOTHING', subtype_id: 'ist_1', status_id: 'rs_1', quantity: 10, min_stock: 5, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante A-1',
     assigned_to: null, notes: '',
     size: 'S', color: 'Azul', material: 'Algodón ligero', gender: 'Hombre',
     certification: null, safety_standard: null, serial_number: null, brand: null, model: null,
@@ -793,8 +793,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000078', name: 'Mascarilla FFP1', description: 'Mascarilla autofiltrante FFP1',
-    category: 'PPE', subtype_id: 'ist-13', status_id: 'es-1', quantity: 100, min_stock: 30, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-21', location: 'Estante E-3',
+    category: 'PPE', subtype_id: 'ist_13', status_id: 'es_1', quantity: 100, min_stock: 30, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_21', location: 'Estante E-3',
     assigned_to: null, notes: 'Baja protección - para polvo',
     size: 'Talla única', color: 'Blanco', material: 'Tejido no tejido', gender: null,
     certification: 'CE', safety_standard: 'EN 149', serial_number: null,
@@ -804,8 +804,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000079', name: 'Desbrozadora STIHL FS94', description: 'Desbrozadora STIHL FS 94',
-    category: 'MACHINERY', subtype_id: 'ist-21', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_21', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: 'Ligera para bordes',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-FS94-001',
@@ -815,8 +815,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000080', name: 'Sopladora STIHL BR600 (4)', description: 'Cuarta sopladora STIHL BR 600',
-    category: 'MACHINERY', subtype_id: 'ist-20', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
+    category: 'MACHINERY', subtype_id: 'ist_20', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Almacén',
     assigned_to: null, notes: '',
     size: null, color: 'Naranja/Gris', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'STIHL-BR600-004',
@@ -826,8 +826,8 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
   },
   {
     id: 'inv_000081', name: 'Cortacésped Husqvarna LC247 (4)', description: 'Cuarto cortacésped Husqvarna',
-    category: 'MACHINERY', subtype_id: 'ist-22', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
-    city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Exterior',
+    category: 'MACHINERY', subtype_id: 'ist_22', status_id: 'ms_1', quantity: 1, min_stock: 1, unit: 'unidades',
+    city_id: 'city_2', work_center_id: 'wc_11', location: 'Centro01 - Exterior',
     assigned_to: null, notes: '',
     size: null, color: 'Rojo/Negro', material: null, gender: null,
     certification: null, safety_standard: null, serial_number: 'HUSQ-LC247-004',

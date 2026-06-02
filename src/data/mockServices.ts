@@ -70,7 +70,7 @@ function generateTasks(serviceId: string, baseStatus: TaskStatus = 'COMPLETED'):
 export const INITIAL_SERVICES: Service[] = [
   {
     id: 'svc_1',
-    work_center_id: 'wc-1',
+    work_center_id: 'wc_1',
     name: 'BMIX1',
     type: 'BARRIDO MIXTO',
     tasks: generateTasks('svc_1'),
@@ -79,7 +79,7 @@ export const INITIAL_SERVICES: Service[] = [
   },
   {
     id: 'svc_2',
-    work_center_id: 'wc-5',
+    work_center_id: 'wc_5',
     name: 'BMA2',
     type: 'BARRIDO MANUAL',
     tasks: generateTasks('svc_2'),
@@ -88,7 +88,7 @@ export const INITIAL_SERVICES: Service[] = [
   },
   {
     id: 'svc_3',
-    work_center_id: 'wc-3',
+    work_center_id: 'wc_3',
     name: 'BMEC3',
     type: 'BARRIDO MECÁNICO',
     tasks: generateTasks('svc_3'),
@@ -97,7 +97,7 @@ export const INITIAL_SERVICES: Service[] = [
   },
   {
     id: 'svc_4',
-    work_center_id: 'wc-2',
+    work_center_id: 'wc_2',
     name: 'BALD1',
     type: 'BALDEO',
     tasks: generateTasks('svc_4'),
@@ -106,7 +106,7 @@ export const INITIAL_SERVICES: Service[] = [
   },
   {
     id: 'svc_5',
-    work_center_id: 'wc-7',
+    work_center_id: 'wc_7',
     name: 'RVOL1',
     type: 'RECOGIDA',
     tasks: generateTasks('svc_5'),
@@ -115,7 +115,7 @@ export const INITIAL_SERVICES: Service[] = [
   },
   {
     id: 'svc_6',
-    work_center_id: 'wc-6',
+    work_center_id: 'wc_6',
     name: 'VAC1',
     type: 'VACIADO',
     tasks: generateTasks('svc_6'),

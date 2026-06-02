@@ -15,16 +15,16 @@ import {
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
-  'rs-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'rs-2': 'bg-rose-100 text-rose-800 border-rose-200',
-  'rs-3': 'bg-amber-100 text-amber-800 border-amber-200',
-  'es-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'es-2': 'bg-rose-100 text-rose-800 border-rose-200',
-  'es-3': 'bg-amber-100 text-amber-800 border-amber-200',
-  'ms-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'ms-2': 'bg-amber-100 text-amber-800 border-amber-200',
-  'ms-3': 'bg-rose-100 text-rose-800 border-rose-200',
-  'ms-4': 'bg-app-bg text-app-text border-app-border',
+  'rs_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'rs_2': 'bg-rose-100 text-rose-800 border-rose-200',
+  'rs_3': 'bg-amber-100 text-amber-800 border-amber-200',
+  'es_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'es_2': 'bg-rose-100 text-rose-800 border-rose-200',
+  'es_3': 'bg-amber-100 text-amber-800 border-amber-200',
+  'ms_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'ms_2': 'bg-amber-100 text-amber-800 border-amber-200',
+  'ms_3': 'bg-rose-100 text-rose-800 border-rose-200',
+  'ms_4': 'bg-app-bg text-app-text border-app-border',
 };
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [

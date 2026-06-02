@@ -47,7 +47,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-01-10T08:30:00Z',
     updated_at: '2025-01-10T08:30:00Z',
-    city_id: 'city-1'
+    city_id: 'city_1'
   },
   {
     id: 'usr_b2c3d4e5',
@@ -60,7 +60,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-01-15T10:15:00Z',
     updated_at: '2025-01-15T10:15:00Z',
-    city_id: 'city-1'
+    city_id: 'city_1'
   },
   {
     id: 'usr_c3d4e5f6',
@@ -73,7 +73,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-02-01T14:22:00Z',
     updated_at: '2025-02-01T14:22:00Z',
-    city_id: 'city-1'
+    city_id: 'city_1'
   },
   {
     id: 'usr_d4e5f6g7',
@@ -86,7 +86,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-02-12T09:05:00Z',
     updated_at: '2025-02-12T09:05:00Z',
-    city_id: 'city-1'
+    city_id: 'city_1'
   },
   {
     id: 'usr_e5f6g7h8',
@@ -99,7 +99,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-02-14T11:40:00Z',
     updated_at: '2025-02-14T11:40:00Z',
-    city_id: 'city-2'
+    city_id: 'city_2'
   },
   {
     id: 'usr_f6g7h8i9',
@@ -112,7 +112,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-02-18T16:50:00Z',
     updated_at: '2025-02-18T16:50:00Z',
-    city_id: 'city-2'
+    city_id: 'city_2'
   },
   {
     id: 'usr_g7h8i9j0',
@@ -125,7 +125,7 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-01-20T13:12:00Z',
     updated_at: '2025-01-20T13:12:00Z',
-    city_id: 'city-2'
+    city_id: 'city_2'
   },
   {
     id: 'usr_h8i9j0k1',
@@ -138,6 +138,6 @@ export const INITIAL_USERS: User[] = [
     employee_id: null,
     created_at: '2025-02-20T10:00:00Z',
     updated_at: '2025-02-20T10:00:00Z',
-    city_id: 'city-1'
+    city_id: 'city_1'
   }
 ];

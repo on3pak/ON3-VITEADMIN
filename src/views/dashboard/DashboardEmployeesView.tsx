@@ -60,12 +60,12 @@ export const DashboardEmployeesView: React.FC = () => {
   }));
 
   const statusStats = [
-    { status: 'es-1', label: 'Trabajando', count: countByStatus('es-1'), color: 'emerald' },
-    { status: 'es-2', label: 'Descanso', count: countByStatus('es-2'), color: 'blue' },
-    { status: 'es-3', label: 'Baja', count: countByStatus('es-3'), color: 'rose' },
-    { status: 'es-4', label: 'Días Propios', count: countByStatus('es-4'), color: 'amber' },
-    { status: 'es-5', label: 'Días Acumulados', count: countByStatus('es-5'), color: 'purple' },
-    { status: 'es-6', label: 'Vacaciones', count: countByStatus('es-6'), color: 'cyan' },
+    { status: 'es_1', label: 'Trabajando', count: countByStatus('es_1'), color: 'emerald' },
+    { status: 'es_2', label: 'Descanso', count: countByStatus('es_2'), color: 'blue' },
+    { status: 'es_3', label: 'Baja', count: countByStatus('es_3'), color: 'rose' },
+    { status: 'es_4', label: 'Días Propios', count: countByStatus('es_4'), color: 'amber' },
+    { status: 'es_5', label: 'Días Acumulados', count: countByStatus('es_5'), color: 'purple' },
+    { status: 'es_6', label: 'Vacaciones', count: countByStatus('es_6'), color: 'cyan' },
   ];
 
   const shiftStats = [
@@ -80,24 +80,24 @@ export const DashboardEmployeesView: React.FC = () => {
 
   const getStatusLabel = (statusId: string) => {
     const labels: Record<string, string> = {
-      'es-1': 'Trabajando',
-      'es-2': 'Descanso',
-      'es-3': 'Baja',
-      'es-4': 'Días Propios',
-      'es-5': 'Días Acumulados',
-      'es-6': 'Vacaciones',
+      'es_1': 'Trabajando',
+      'es_2': 'Descanso',
+      'es_3': 'Baja',
+      'es_4': 'Días Propios',
+      'es_5': 'Días Acumulados',
+      'es_6': 'Vacaciones',
     };
     return labels[statusId] || statusId;
   };
 
   const getStatusBadge = (statusId: string) => {
     const colors: Record<string, string> = {
-      'es-1': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      'es-2': 'bg-blue-50 text-blue-700 border-blue-200',
-      'es-3': 'bg-rose-50 text-rose-700 border-rose-200',
-      'es-4': 'bg-amber-50 text-amber-700 border-amber-200',
-      'es-5': 'bg-purple-50 text-purple-700 border-purple-200',
-      'es-6': 'bg-cyan-50 text-cyan-700 border-cyan-200',
+      'es_1': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      'es_2': 'bg-blue-50 text-blue-700 border-blue-200',
+      'es_3': 'bg-rose-50 text-rose-700 border-rose-200',
+      'es_4': 'bg-amber-50 text-amber-700 border-amber-200',
+      'es_5': 'bg-purple-50 text-purple-700 border-purple-200',
+      'es_6': 'bg-cyan-50 text-cyan-700 border-cyan-200',
     };
     return (
       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${colors[statusId] || 'bg-app-bg text-app-text'}`}>

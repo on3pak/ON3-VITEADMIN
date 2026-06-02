@@ -16,25 +16,25 @@ import {
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
-  'es-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'es-2': 'bg-amber-100 text-amber-800 border-amber-200',
-  'es-3': 'bg-rose-100 text-rose-800 border-rose-200',
-  'es-4': 'bg-blue-100 text-blue-800 border-blue-200',
-  'es-5': 'bg-cyan-100 text-cyan-800 border-cyan-200',
-  'es-6': 'bg-violet-100 text-violet-800 border-violet-200',
+  'es_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'es_2': 'bg-amber-100 text-amber-800 border-amber-200',
+  'es_3': 'bg-rose-100 text-rose-800 border-rose-200',
+  'es_4': 'bg-blue-100 text-blue-800 border-blue-200',
+  'es_5': 'bg-cyan-100 text-cyan-800 border-cyan-200',
+  'es_6': 'bg-violet-100 text-violet-800 border-violet-200',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'ec-1': 'bg-primary-100 text-primary-700 border-primary-200',
-  'ec-2': 'bg-purple-100 text-purple-700 border-purple-200',
-  'ec-3': 'bg-violet-100 text-violet-700 border-violet-200',
-  'ec-4': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
-  'ec-5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-  'ec-6': 'bg-teal-100 text-teal-700 border-teal-200',
-  'ec-7': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'ec-8': 'bg-amber-100 text-amber-700 border-amber-200',
-  'ec-9': 'bg-orange-100 text-orange-700 border-orange-200',
-  'ec-10': 'bg-app-bg text-app-text border-app-border',
+  'ec_1': 'bg-primary-100 text-primary-700 border-primary-200',
+  'ec_2': 'bg-purple-100 text-purple-700 border-purple-200',
+  'ec_3': 'bg-violet-100 text-violet-700 border-violet-200',
+  'ec_4': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
+  'ec_5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+  'ec_6': 'bg-teal-100 text-teal-700 border-teal-200',
+  'ec_7': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'ec_8': 'bg-amber-100 text-amber-700 border-amber-200',
+  'ec_9': 'bg-orange-100 text-orange-700 border-orange-200',
+  'ec_10': 'bg-app-bg text-app-text border-app-border',
 };
 
 const getInitials = (name: string, last1: string) => {
