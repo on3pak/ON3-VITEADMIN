@@ -15,27 +15,27 @@ import {
 } from 'lucide-react';
 
 const STATUS_STYLES: Record<string, string> = {
-  'rs_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'rs_2': 'bg-rose-100 text-rose-800 border-rose-200',
-  'rs_3': 'bg-amber-100 text-amber-800 border-amber-200',
-  'es_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'es_2': 'bg-rose-100 text-rose-800 border-rose-200',
-  'es_3': 'bg-amber-100 text-amber-800 border-amber-200',
-  'ms_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'ms_2': 'bg-amber-100 text-amber-800 border-amber-200',
-  'ms_3': 'bg-rose-100 text-rose-800 border-rose-200',
-  'ms_4': 'bg-app-bg text-app-text border-app-border',
+  'rs-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'rs-2': 'bg-rose-100 text-rose-800 border-rose-200',
+  'rs-3': 'bg-amber-100 text-amber-800 border-amber-200',
+  'es-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'es-2': 'bg-rose-100 text-rose-800 border-rose-200',
+  'es-3': 'bg-amber-100 text-amber-800 border-amber-200',
+  'ms-1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'ms-2': 'bg-amber-100 text-amber-800 border-amber-200',
+  'ms-3': 'bg-rose-100 text-rose-800 border-rose-200',
+  'ms-4': 'bg-app-bg text-app-text border-app-border',
 };
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
-  { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
-  { value: 'PPE', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
-  { value: 'MACHINERY', label: 'Maquinaria', icon: <Wrench className="h-4 w-4" /> },
+  { value: 'ropa', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
+  { value: 'epi', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
+  { value: 'maquinaria', label: 'Maquinaria', icon: <Wrench className="h-4 w-4" /> },
 ];
 
 const getSubtypeName = (id: string) => INVENTORY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
 const statusNameCache = (() => {
-  const all = [...getStatusesForCategory('CLOTHING'), ...getStatusesForCategory('PPE'), ...getStatusesForCategory('MACHINERY')];
+  const all = [...getStatusesForCategory('ropa'), ...getStatusesForCategory('epi'), ...getStatusesForCategory('maquinaria')];
   return (id: string) => all.find((s) => s.id === id)?.name ?? id;
 })();
 const getStatusName = statusNameCache;
@@ -51,7 +51,7 @@ export const InventoryView: React.FC = () => {
   const { getOverviews, getById, create, update, remove } = useInventory();
   const { user: loggedInUser } = useAuth();
 
-  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
+  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('ropa');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [subtypeFilter, setSubtypeFilter] = useState('ALL');
@@ -153,12 +153,12 @@ export const InventoryView: React.FC = () => {
     const full = getById(item.id);
     if (!full) return null;
     switch (activeCategory) {
-      case 'CLOTHING':
-        return <span className="text-xs text-app-text-secondary">{full.size || '-'} / {full.color || '-'}</span>;
-      case 'PPE':
-        return <span className="text-xs text-app-text-secondary">{full.expiration_date ? `Cad: ${full.expiration_date}` : '-'}</span>;
-      case 'MACHINERY':
-        return <span className="text-xs text-app-text-secondary">{full.brand ? `${full.brand} ${full.model || ''}` : '-'}</span>;
+      case 'ropa':
+        return <span className="text-xs text-app-text-secondary">{full.attributes.size || '-'} / {full.attributes.color || '-'}</span>;
+      case 'epi':
+        return <span className="text-xs text-app-text-secondary">{full.attributes.expiration_date ? `Cad: ${full.attributes.expiration_date}` : '-'}</span>;
+      case 'maquinaria':
+        return <span className="text-xs text-app-text-secondary">{full.attributes.brand ? `${full.attributes.brand} ${full.attributes.model || ''}` : '-'}</span>;
       default:
         return null;
     }
@@ -218,7 +218,7 @@ export const InventoryView: React.FC = () => {
             </select>
           </div>
 
-          {activeCategory === 'MACHINERY' && (
+          {activeCategory === 'maquinaria' && (
           <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <select
               value={workCenterFilter}
@@ -301,8 +301,8 @@ export const InventoryView: React.FC = () => {
                           <td className="py-3.5 px-6">
                             <div className="flex items-center gap-3">
                               <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                                activeCategory === 'CLOTHING' ? 'bg-primary-100 text-primary-600 border border-primary-200' :
-                                activeCategory === 'PPE' ? 'bg-amber-100 text-amber-600 border border-amber-200' :
+                                activeCategory === 'ropa' ? 'bg-primary-100 text-primary-600 border border-primary-200' :
+                                activeCategory === 'epi' ? 'bg-amber-100 text-amber-600 border border-amber-200' :
                                 'bg-cyan-100 text-cyan-600 border border-cyan-200'
                               }`}>
                                 {CATEGORY_TABS.find((t) => t.value === activeCategory)?.icon}
@@ -415,7 +415,7 @@ export const InventoryView: React.FC = () => {
             );
           })()}
 
-          {activeCategory === 'MACHINERY' && (() => {
+          {activeCategory === 'maquinaria' && (() => {
             const open = openSections.centros;
             return (
             <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">

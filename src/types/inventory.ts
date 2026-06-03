@@ -9,12 +9,29 @@ export interface InventoryCategoryOption {
 export interface InventoryStatus {
   id: string;
   name: string;
+  category: InventoryCategory;
 }
 
 export interface InventorySubtype {
   id: string;
   category: InventoryCategory;
   name: string;
+}
+
+export interface InventoryAttributes {
+  size?: string | null;
+  color?: string | null;
+  material?: string | null;
+  gender?: string | null;
+  certification?: string | null;
+  safety_standard?: string | null;
+  serial_number?: string | null;
+  brand?: string | null;
+  model?: string | null;
+  expiration_date?: string | null;
+  warranty_expiration?: string | null;
+  last_maintenance?: string | null;
+  next_maintenance?: string | null;
 }
 
 export interface InventoryItem {
@@ -32,19 +49,7 @@ export interface InventoryItem {
   location: string;
   assigned_to: string | null;
   notes: string;
-  size: string | null;
-  color: string | null;
-  material: string | null;
-  gender: string | null;
-  certification: string | null;
-  safety_standard: string | null;
-  serial_number: string | null;
-  brand: string | null;
-  model: string | null;
-  expiration_date: string | null;
-  warranty_expiration: string | null;
-  last_maintenance: string | null;
-  next_maintenance: string | null;
+  attributes: InventoryAttributes;
   created_at: string;
   updated_at: string;
 }

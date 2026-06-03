@@ -11,7 +11,7 @@ import {
   ClipboardList,
 } from 'lucide-react';
 
-const TYPE_COLORS: Record<string, string> = {
+const CATEGORY_COLORS: Record<string, string> = {
   'BARRIDO MIXTO': 'bg-violet-100 text-violet-700 border-violet-200',
   'BARRIDO MANUAL': 'bg-blue-100 text-blue-700 border-blue-200',
   'BARRIDO MECÁNICO': 'bg-cyan-100 text-cyan-700 border-cyan-200',
@@ -29,7 +29,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('ALL');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [workCenterFilter, setWorkCenterFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -73,9 +73,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
       const matchesCityScope = !userCityId || wcCityMap[s.work_center_id] === userCityId;
       if (!matchesCityScope) return false;
 
-      const searchable = `${s.name} ${s.type}`.toLowerCase();
+      const searchable = `${s.name} ${s.category}`.toLowerCase();
       const matchesSearch = !q || searchable.includes(q);
-      const matchesType = typeFilter === 'ALL' || s.type === typeFilter;
+      const matchesType = typeFilter === 'ALL' || s.category === typeFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || s.work_center_id === workCenterFilter;
       return matchesSearch && matchesType && matchesWorkCenter;
     });
@@ -110,7 +110,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
               value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
+              onChange={(e) => setCategoryFilter(e.target.value)}
               className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
@@ -181,7 +181,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                             <div>
                               <div className="font-bold text-app-text-secondary leading-tight">{s.name}</div>
                               <div className="text-xs text-app-text-secondary mt-0.5">
-                                <span className="font-medium text-primary-600">{s.type}</span>
+                                <span className="font-medium text-primary-600">{s.category}</span>
                               </div>
                             </div>
                           </div>
@@ -189,8 +189,8 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
-                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${TYPE_COLORS[s.type] || 'bg-app-bg'}`}>
-                              {s.type}
+                            <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${CATEGORY_COLORS[s.category] || 'bg-app-bg'}`}>
+                              {s.category}
                             </span>
                           </div>
                         </td>
@@ -274,9 +274,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setTypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
+              <button onClick={() => setCategoryFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
               {['BARRIDO MIXTO', 'BARRIDO MANUAL', 'BARRIDO MECÁNICO', 'BALDEO', 'RECOGIDA', 'VACIADO'].map((t) => (
-                <button key={t} onClick={() => setTypeFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === t ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
+                <button key={t} onClick={() => setCategoryFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === t ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
               ))}
             </div>
             )}

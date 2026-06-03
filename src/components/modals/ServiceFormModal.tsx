@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Service, ServiceTask } from '../../types';
-import { INITIAL_SERVICE_TYPES } from '../../data/mockServices';
+import { INITIAL_SERVICE_CATEGORIES } from '../../data/mockServices';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { WorkCenter } from '../../types';
 import { X, ClipboardList, Save } from 'lucide-react';
@@ -49,14 +49,20 @@ const DAY_ZONES: string[] = [
 function generateTasks(serviceId: string): ServiceTask[] {
   const tasks: ServiceTask[] = [];
   let taskId = 0;
+  const now = new Date().toISOString();
   for (let day = 0; day < 7; day++) {
     for (let t = 0; t < 20; t++) {
       tasks.push({
         id: `${serviceId}-task-${taskId++}`,
-        dayIndex: day,
-        taskIndex: t,
+        service_id: serviceId,
+        day_index: day,
+        task_index: t,
         description: `${TASK_TEMPLATES[t]} - ${DAY_ZONES[day]}`,
         status: 'PENDING',
+        zone: DAY_ZONES[day],
+        assigned_to: null,
+        created_at: now,
+        updated_at: now,
       });
     }
   }
@@ -65,25 +71,25 @@ function generateTasks(serviceId: string): ServiceTask[] {
 
 export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService, workCenters }) => {
   const [name, setName] = useState('');
-  const [type, setType] = useState('BARRIDO MIXTO');
+  const [category, setCategory] = useState('BARRIDO MIXTO');
   const [work_center_id, setWork_center_id] = useState('wc-1');
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingService) {
       setName(editingService.name);
-      setType(editingService.type);
+      setCategory(editingService.category);
       setWork_center_id(editingService.work_center_id);
     } else {
       setName('');
-      setType('BARRIDO MIXTO');
+      setCategory('BARRIDO MIXTO');
       setWork_center_id('wc-1');
     }
   }, [editingService, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !type) {
+    if (!name || !category) {
       setFormError('Completa todos los campos obligatorios');
       return;
     }
@@ -91,8 +97,9 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
     if (editingService) {
       const success = onSubmit({
         name,
-        type,
+        category,
         work_center_id,
+        week_start: editingService.week_start,
         tasks: editingService.tasks,
       });
       if (success) onClose();
@@ -100,8 +107,9 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       const tempId = `new-${Date.now()}`;
       const success = onSubmit({
         name,
-        type,
+        category,
         work_center_id,
+        week_start: new Date().toISOString().slice(0, 10),
         tasks: generateTasks(tempId),
       });
       if (success) onClose();
@@ -144,13 +152,13 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Tipo *</label>
+            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Categoría *</label>
             <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
             >
-              {INITIAL_SERVICE_TYPES.map((t) => (
+              {INITIAL_SERVICE_CATEGORIES.map((t) => (
                 <option key={t} value={t}>{t}</option>
               ))}
             </select>

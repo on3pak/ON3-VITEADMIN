@@ -63,7 +63,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
     );
   }
 
-  const dayTasks = service.tasks.filter((t) => t.dayIndex === activeDay);
+  const dayTasks = service.tasks.filter((t) => t.day_index === activeDay);
   const dayCompleted = dayTasks.filter((t) => t.status === 'COMPLETED').length;
   const totalCompleted = service.tasks.filter((t) => t.status === 'COMPLETED').length;
 
@@ -101,7 +101,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">{service.name}</h1>
-              <p className="text-primary-200 text-sm">{service.type}</p>
+              <p className="text-primary-200 text-sm">{service.category}</p>
             </div>
           </div>
           <div className="text-right text-white">
@@ -122,7 +122,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
         <div className="p-6 space-y-5">
           <SectionCard icon={<ClipboardList className="h-4 w-4" />} title="Información">
             <InfoRow label="Centro de Trabajo" value={resolveWorkCenter(service.work_center_id)} highlight />
-            <InfoRow label="Tipo" value={service.type} highlight />
+            <InfoRow label="Tipo" value={service.category} highlight />
           </SectionCard>
         </div>
       </div>
@@ -131,7 +131,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
         <div className="border-b border-app-border">
           <div className="flex overflow-x-auto">
             {DAYS.map((day, idx) => {
-              const dayTaskCount = service.tasks.filter((t) => t.dayIndex === idx);
+              const dayTaskCount = service.tasks.filter((t) => t.day_index === idx);
               const dayDone = dayTaskCount.filter((t) => t.status === 'COMPLETED').length;
               const isAllDone = dayDone === dayTaskCount.length && dayTaskCount.length > 0;
 

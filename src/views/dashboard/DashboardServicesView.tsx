@@ -39,10 +39,10 @@ export const DashboardServicesView: React.FC = () => {
   const pendingTasks = totalTasks - completedTasks;
   const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
-  const serviceTypes = [...new Set(filteredServices.map(s => s.type))];
+  const serviceTypes = [...new Set(filteredServices.map(s => s.category))];
 
   const typeStats = serviceTypes.map(type => {
-    const typeServices = filteredServices.filter(s => s.type === type);
+    const typeServices = filteredServices.filter(s => s.category === type);
     const typeTasks = typeServices.flatMap(s => s.tasks);
     const completed = typeTasks.filter(t => t.status === 'COMPLETED').length;
     return {
@@ -55,7 +55,7 @@ export const DashboardServicesView: React.FC = () => {
   });
 
   const dayStats = DAY_LABELS.map((label, dayIndex) => {
-    const dayTasks = allTasks.filter(t => t.dayIndex === dayIndex);
+    const dayTasks = allTasks.filter(t => t.day_index === dayIndex);
     const completed = dayTasks.filter(t => t.status === 'COMPLETED').length;
     return {
       day: label,
@@ -197,7 +197,7 @@ export const DashboardServicesView: React.FC = () => {
                       <p className="text-sm font-semibold text-app-text">{svc.name}</p>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-xs font-medium text-app-text bg-app-bg px-2 py-1 rounded">{svc.type}</span>
+                      <span className="text-xs font-medium text-app-text bg-app-bg px-2 py-1 rounded">{svc.category}</span>
                     </td>
                     <td className="py-3 px-4 text-sm text-app-text-secondary">{wcNameMap[svc.work_center_id] || svc.work_center_id}</td>
                     <td className="py-3 px-4 text-sm text-app-text-secondary">{done}/{total}</td>

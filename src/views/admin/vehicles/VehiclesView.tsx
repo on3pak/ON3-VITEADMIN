@@ -81,7 +81,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
       const matchesCityScope = !userCityId || wcCityMap[v.work_center_id] === userCityId;
       if (!matchesCityScope) return false;
 
-      const searchable = `${v.licensePlate} ${v.model} ${v.brand}`.toLowerCase();
+      const searchable = `${v.license_plate} ${v.model} ${v.brand}`.toLowerCase();
       const matchesSearch = !q || searchable.includes(q);
       const matchesStatus = statusFilter === 'ALL' || v.status === statusFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || v.work_center_id === workCenterFilter;
@@ -190,7 +190,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                             <div>
                               <div className="font-bold text-app-text-secondary leading-tight">{v.brand} {v.model}</div>
                               <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-                                <span className="font-mono text-primary-600 font-semibold">{v.licensePlate}</span>
+                                <span className="font-mono text-primary-600 font-semibold">{v.license_plate}</span>
                               </div>
                             </div>
                           </div>
