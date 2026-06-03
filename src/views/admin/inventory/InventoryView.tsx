@@ -189,7 +189,7 @@ export const InventoryView: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 lg:hidden">
+        <div className="flex flex-wrap items-center gap-2.5 xl:hidden">
           <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
@@ -243,7 +243,7 @@ export const InventoryView: React.FC = () => {
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2.5">
+        <div className="hidden xl:flex items-center gap-2.5">
           <button
             onClick={handleCreate}
             disabled={isReadOnly}
@@ -394,7 +394,7 @@ export const InventoryView: React.FC = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
+        <div className="hidden xl:flex xl:flex-col xl:w-64 flex-shrink-0 xl:space-y-3">
           {isRoot && (() => {
             const open = openSections.ciudad;
             return (

@@ -104,7 +104,7 @@ export const WorkCentersView: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 lg:hidden">
+        <div className="flex flex-wrap items-center gap-2.5 xl:hidden">
           <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
@@ -139,7 +139,7 @@ export const WorkCentersView: React.FC = () => {
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2.5">
+        <div className="hidden xl:flex items-center gap-2.5">
           <button
             onClick={() => { setSelectedForEdit(undefined); setIsModalOpen(true); }}
             disabled={isReadOnlyOperator}
@@ -272,7 +272,7 @@ export const WorkCentersView: React.FC = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 lg:space-y-3">
+        <div className="hidden xl:flex xl:flex-col xl:w-64 flex-shrink-0 xl:space-y-3">
           {(() => { const o = openSections.ciudad; return (
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
             <button onClick={() => toggleSection('ciudad')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
