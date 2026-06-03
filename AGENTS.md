@@ -82,7 +82,7 @@ Two context patterns:
 
 ### CRUD Patterns
 
-Two patterns exist (documented in `list.md` for cloning):
+Two patterns exist (documented in `.customSkills/list.md` for cloning):
 
 1. **UsersView pattern** — single file, inline CRUD, `UserFormModal`, toggle status switch, avatar via dicebear API
 2. **EmployeesView/VehiclesView pattern** — view + detail, `onViewEntity` prop, gradient header, `SectionCard`/`InfoRow` composition, `ConfirmDialog`
@@ -108,7 +108,7 @@ Both share: search bar, mobile filters (lg:hidden), sidebar filters (lg:flex), p
 
 ## Scaffolding CRUD Prompts
 
-See [`list.md`](./list.md) for 3 reusable prompts to clone existing CRUD patterns:
+See [`.customSkills/list.md`](./.customSkills/list.md) for 3 reusable prompts to clone existing CRUD patterns:
 1. Clone `UsersView` (simple, single-file)
 2. Clone `EmployeesView` + `EmployeesDetailView` (view + detail)
 3. Tab with table inside an existing view (interactive)
@@ -146,4 +146,4 @@ See [`list.md`](./list.md) for 3 reusable prompts to clone existing CRUD pattern
 
 ## Preferencias personales
 
-Ver [`on3.md`](./on3.md) para gustos personales del desarrollador (interacciones con git, filosofía de trabajo). Este archivo prevalece sobre reglas genéricas en caso de conflicto.
+Ver [`.customSkills/on3.md`](./.customSkills/on3.md) para gustos personales del desarrollador (interacciones con git, filosofía de trabajo). Este archivo prevalece sobre reglas genéricas en caso de conflicto.
