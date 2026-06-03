@@ -60,12 +60,12 @@ const ROLE_ICON: Record<string, React.ReactNode> = {
 };
 
 const STATUS_BADGE: Record<string, string> = {
-  'es-1': 'bg-emerald-500/10 text-emerald-600 border-emerald-200/50',
-  'es-2': 'bg-blue-500/10 text-blue-600 border-blue-200/50',
-  'es-3': 'bg-rose-500/10 text-rose-600 border-rose-200/50',
-  'es-4': 'bg-amber-500/10 text-amber-600 border-amber-200/50',
-  'es-5': 'bg-purple-500/10 text-purple-600 border-purple-200/50',
-  'es-6': 'bg-cyan-500/10 text-cyan-600 border-cyan-200/50',
+  'es_1': 'bg-emerald-500/10 text-emerald-600 border-emerald-200/50',
+  'es_2': 'bg-blue-500/10 text-blue-600 border-blue-200/50',
+  'es_3': 'bg-rose-500/10 text-rose-600 border-rose-200/50',
+  'es_4': 'bg-amber-500/10 text-amber-600 border-amber-200/50',
+  'es_5': 'bg-purple-500/10 text-purple-600 border-purple-200/50',
+  'es_6': 'bg-cyan-500/10 text-cyan-600 border-cyan-200/50',
 };
 
 const ROLE_BADGE: Record<string, string> = {
@@ -462,7 +462,7 @@ export const DashboardProfileView: React.FC = () => {
                     <SectionCard icon={<Briefcase className="w-4 h-4" />} title="Información Laboral" accent="emerald">
                       <div className="flex items-center gap-2 mb-4">
                         <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold rounded-full border ${STATUS_BADGE[myEmployee.status_id] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${myEmployee.status_id === 'es-1' ? 'bg-emerald-500' : myEmployee.status_id === 'es-2' ? 'bg-blue-500' : 'bg-gray-400'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${myEmployee.status_id === 'es_1' ? 'bg-emerald-500' : myEmployee.status_id === 'es_2' ? 'bg-blue-500' : 'bg-gray-400'}`} />
                           {statusMap[myEmployee.status_id] || myEmployee.status_id}
                         </span>
                       </div>

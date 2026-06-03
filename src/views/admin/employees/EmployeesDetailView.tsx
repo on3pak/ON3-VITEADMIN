@@ -35,12 +35,12 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }[] }> = ({ id, statuses }) => {
   const status = statuses.find(s => s.id === id);
   const colors: Record<string, string> = {
-    'es-1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    'es-2': 'bg-amber-100 text-amber-700 border-amber-200',
-    'es-3': 'bg-rose-100 text-rose-700 border-rose-200',
-    'es-4': 'bg-blue-100 text-blue-700 border-blue-200',
-    'es-5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-    'es-6': 'bg-violet-100 text-violet-700 border-violet-200',
+    'es_1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    'es_2': 'bg-amber-100 text-amber-700 border-amber-200',
+    'es_3': 'bg-rose-100 text-rose-700 border-rose-200',
+    'es_4': 'bg-blue-100 text-blue-700 border-blue-200',
+    'es_5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+    'es_6': 'bg-violet-100 text-violet-700 border-violet-200',
   };
   return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[id] || 'bg-app-bg'}`}>{status?.name || id}</span>;
 };
