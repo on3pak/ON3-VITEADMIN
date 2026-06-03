@@ -173,7 +173,6 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
                   <span className="text-app-text-secondary/50">/</span>
                 </>
               )}
-              {(info.parent || info.section) && <span className="text-app-text-secondary/50">/</span>}
               <span className="text-app-text font-medium">{info.title}</span>
             </div>
           </div>

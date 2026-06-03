@@ -43,8 +43,8 @@ export const DashboardProfileView: React.FC = () => {
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  type ProfileTab = 'usuario' | 'empleado' | 'dias';
-  const [activeTab, setActiveTab] = useState<ProfileTab>('usuario');
+  type ProfileTab = 'info' | 'solicitar';
+  const [activeTab, setActiveTab] = useState<ProfileTab>('info');
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
@@ -159,148 +159,149 @@ export const DashboardProfileView: React.FC = () => {
                 <div className="text-sm text-app-text-secondary mt-0.5">{loggedInUser.email}</div>
               </div>
 
-              {/* Nav Tabs */}
-              <div className="mb-4 mt-5 flex items-center gap-1 lg:mb-0 lg:ml-auto lg:mt-0">
-                {([
-                  { key: 'usuario' as const, label: 'Info de Usuario' },
-                  { key: 'empleado' as const, label: 'Info Empleado' },
-                  { key: 'dias' as const, label: 'Días y Vacaciones' },
-                ]).map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
-                    className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                      activeTab === tab.key
-                        ? 'bg-primary-100 text-primary-700'
-                        : 'text-app-text-secondary hover:text-app-text hover:bg-gray-100'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+              {/* Nav Tabs — segmented control style */}
+              <div className="mb-4 mt-5 lg:mb-0 lg:ml-auto lg:mt-0">
+                <div className="inline-flex rounded-lg border border-app-border overflow-hidden shadow-xs bg-app-border gap-px">
+                  {([
+                    { key: 'info' as const, label: 'Info' },
+                    { key: 'solicitar' as const, label: 'Solicitar' },
+                  ]).map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`px-4 py-1.5 text-sm font-medium transition-all ${
+                        activeTab === tab.key
+                          ? 'bg-primary-500 text-white shadow-sm'
+                          : 'bg-white text-app-text-secondary hover:bg-gray-50'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Tab Content */}
           <div className="mx-auto flex w-full max-w-2xl flex-auto justify-center p-6 sm:p-8">
-            {activeTab === 'usuario' && (
-              <div className="w-full flex flex-col p-8 bg-white rounded-xl border border-app-border shadow-sm">
-                <div className="text-base font-semibold text-app-text">Información Personal</div>
-                <div className="mt-6 flex flex-col gap-5">
-                  <div className="flex items-center">
-                    <User className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                    <div>
-                      <div className="text-xs text-app-text-secondary">Nombre completo</div>
-                      <div className="text-sm text-app-text">{fullName}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Mail className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                    <div>
-                      <div className="text-xs text-app-text-secondary">Email</div>
-                      <div className="text-sm text-app-text">{loggedInUser.email || '—'}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Phone className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                    <div>
-                      <div className="text-xs text-app-text-secondary">Teléfono</div>
-                      <div className="text-sm text-app-text">{myEmployee?.phone || '—'}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Hash className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                    <div>
-                      <div className="text-xs text-app-text-secondary">Usuario</div>
-                      <div className="text-sm text-app-text">{loggedInUser.username || '—'}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Shield className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                    <div>
-                      <div className="text-xs text-app-text-secondary">Rol</div>
-                      <div className="text-sm text-app-text">{loggedInUser.role || '—'}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <MapPin className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                    <div>
-                      <div className="text-xs text-app-text-secondary">Ciudad</div>
-                      <div className="text-sm text-app-text">{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'empleado' && (
+            {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-6">
                 {myEmployee ? (
                   <>
+                    {/* User + Employee combined card */}
                     <div className="w-full flex flex-col p-8 bg-white rounded-xl border border-app-border shadow-sm">
-                      <div className="text-base font-semibold text-app-text">Información del Empleado</div>
-                      <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5">
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Categoría</div>
-                          <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                            <Award className="w-4 h-4 text-primary-500 shrink-0" />
-                            {categoryName || '—'}
+                      <div className="text-base font-semibold text-app-text">Información Personal</div>
+                      <div className="mt-6 flex flex-col gap-5">
+                        <div className="flex items-center">
+                          <User className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Nombre completo</div>
+                            <div className="text-sm text-app-text">{fullName}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Turno</div>
-                          <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                            <Clock className="w-4 h-4 text-primary-500 shrink-0" />
-                            {shiftName || '—'}
+                        <div className="flex items-center">
+                          <Mail className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Email</div>
+                            <div className="text-sm text-app-text">{loggedInUser.email || '—'}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Horario</div>
-                          <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                            <Clock3 className="w-4 h-4 text-primary-500 shrink-0" />
-                            {scheduleDisplay}
+                        <div className="flex items-center">
+                          <Phone className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Teléfono</div>
+                            <div className="text-sm text-app-text">{myEmployee?.phone || '—'}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Contrato</div>
-                          <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                            <IdCard className="w-4 h-4 text-primary-500 shrink-0" />
-                            {myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}
+                        <div className="flex items-center">
+                          <Hash className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Usuario</div>
+                            <div className="text-sm text-app-text">{loggedInUser.username || '—'}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Centro de Trabajo</div>
-                          <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                            <Building2 className="w-4 h-4 text-primary-500 shrink-0" />
-                            {myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}
+                        <div className="flex items-center">
+                          <Shield className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Rol</div>
+                            <div className="text-sm text-app-text">{loggedInUser.role || '—'}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Días Laborables</div>
-                          <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                            <Calendar className="w-4 h-4 text-primary-500 shrink-0" />
-                            {myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}
+                        <div className="flex items-center">
+                          <MapPin className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Ciudad</div>
+                            <div className="text-sm text-app-text">{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Estado</div>
-                          <div className="mt-1.5">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                              myEmployee.active
-                                ? 'bg-emerald-50 text-emerald-700'
-                                : 'bg-gray-100 text-gray-600'
-                            }`}>
-                              <span className={`mr-1.5 h-2 w-2 rounded-full ${
-                                myEmployee.active ? 'bg-emerald-500' : 'bg-gray-400'
-                              }`} />
-                              {statusName || '—'}
-                            </span>
+                      </div>
+
+                      <div className="mt-8 pt-8 border-t border-app-border">
+                        <div className="text-base font-semibold text-app-text">Información del Empleado</div>
+                        <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5">
+                          <div>
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Categoría</div>
+                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
+                              <Award className="w-4 h-4 text-primary-500 shrink-0" />
+                              {categoryName || '—'}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Turno</div>
+                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
+                              <Clock className="w-4 h-4 text-primary-500 shrink-0" />
+                              {shiftName || '—'}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Horario</div>
+                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
+                              <Clock3 className="w-4 h-4 text-primary-500 shrink-0" />
+                              {scheduleDisplay}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Contrato</div>
+                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
+                              <IdCard className="w-4 h-4 text-primary-500 shrink-0" />
+                              {myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Centro de Trabajo</div>
+                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
+                              <Building2 className="w-4 h-4 text-primary-500 shrink-0" />
+                              {myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Días Laborables</div>
+                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
+                              <Calendar className="w-4 h-4 text-primary-500 shrink-0" />
+                              {myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}
+                            </div>
+                          </div>
+                          <div className="col-span-2">
+                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Estado</div>
+                            <div className="mt-1.5">
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                                myEmployee.active
+                                  ? 'bg-emerald-50 text-emerald-700'
+                                  : 'bg-gray-100 text-gray-600'
+                              }`}>
+                                <span className={`mr-1.5 h-2 w-2 rounded-full ${
+                                  myEmployee.active ? 'bg-emerald-500' : 'bg-gray-400'
+                                }`} />
+                                {statusName || '—'}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
+                    {/* Schedule card */}
                     <div className="w-full flex flex-col p-8 bg-white rounded-xl border border-app-border shadow-sm">
                       <div className="text-base font-semibold text-app-text">Jornada Laboral</div>
                       <div className="mt-6 grid grid-cols-2 gap-6">
@@ -332,7 +333,7 @@ export const DashboardProfileView: React.FC = () => {
               </div>
             )}
 
-            {activeTab === 'dias' && (
+            {activeTab === 'solicitar' && (
               <div className="w-full flex flex-col gap-6">
                 {myEmployee ? (
                   <>
