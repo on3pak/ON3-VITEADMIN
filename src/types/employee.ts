@@ -1,10 +1,10 @@
-export type VacationMonth = 'julio' | 'agosto' | 'septiembre' | 'partidas';
+export type VacationMonth = 'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT';
 
 export interface VacationRequest {
   id: string;
   employee_id: string;
-  type: 'cambio_mes' | 'dias_libres' | 'cambio_vacaciones';
-  status: 'pendiente' | 'aprobado' | 'rechazado';
+  type: 'MONTH_CHANGE' | 'FREE_DAYS' | 'VACATION_CHANGE';
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
   requested_month?: VacationMonth;
   requested_days?: string[];
   notes?: string;
@@ -14,7 +14,6 @@ export interface VacationRequest {
 
 export interface Employee {
   id: string;
-  user_id: string | null;
   city_id: string | null;
   name: string;
   last_name1: string;
@@ -25,8 +24,7 @@ export interface Employee {
   status_id: string;
   work_center_id: string;
   active: boolean;
-  shift: string;
-  schedule: string;
+  shift_id: string;
   start_time: string;
   end_time: string;
   vacation_month: VacationMonth | null;
@@ -39,7 +37,7 @@ export interface Employee {
   updated_at: string;
   personal_email: string;
   phone_fixed: string;
-  work_day: string;
+  work_day_id: string;
   iban: string;
   locker: string;
   medical_check: boolean;
@@ -60,6 +58,7 @@ export interface EmployeeOverview {
   work_day_id: string;
   work_center_id: string;
   status_id: string;
+  status_name: string;
   city_id: string | null;
 }
 

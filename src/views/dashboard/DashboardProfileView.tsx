@@ -18,7 +18,7 @@ import {
   Send, Sun,
 } from 'lucide-react';
 
-const VACATION_MONTHS = ['julio', 'agosto', 'septiembre'] as const;
+const VACATION_MONTHS = ['JULY', 'AUGUST', 'SEPTEMBER'] as const;
 
 function getCurrentVacationMonth(month: string | null, year: number | null): string | null {
   if (!month || !year) return null;
@@ -189,7 +189,7 @@ export const DashboardProfileView: React.FC = () => {
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
 
   const myEmployee = useMemo(
-    () => (loggedInUser ? employees.find((e) => e.user_id === loggedInUser.id) : undefined),
+    () => (loggedInUser ? employees.find((e) => e.id === loggedInUser.employee_id) : undefined),
     [employees, loggedInUser]
   );
 
@@ -208,37 +208,37 @@ export const DashboardProfileView: React.FC = () => {
     if (myEmployee) {
       updateEmployee(myEmployee.id, data);
     } else if (loggedInUser) {
-      createEmployee({ ...data, user_id: loggedInUser.id, city_id: loggedInUser.city_id || null });
+      createEmployee({ ...data, city_id: loggedInUser.city_id || null });
     }
     setEmployeeModalOpen(false);
     return true;
   };
 
-  const handleCambioVacaciones = (data: { type: 'cambio_vacaciones'; requested_month: 'julio' | 'agosto' | 'septiembre' | 'partidas' }) => {
+  const handleCambioVacaciones = (data: { type: 'VACATION_CHANGE'; requested_month: 'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT' }) => {
     if (!myEmployee || isReadOnly) return;
     createVacationRequest({
       employee_id: myEmployee.id,
       type: data.type,
-      status: 'pendiente',
+      status: 'PENDING',
       requested_month: data.requested_month,
     });
     setCambioVacacionesOpen(false);
     setCambioSubmitted(true);
   };
 
-  const handleSolicitarDias = (data: { type: 'dias_libres'; requested_days: string[] }) => {
+  const handleSolicitarDias = (data: { type: 'FREE_DAYS'; requested_days: string[] }) => {
     if (!myEmployee || isReadOnly) return;
     createVacationRequest({
       employee_id: myEmployee.id,
       type: data.type,
-      status: 'pendiente',
+      status: 'PENDING',
       requested_days: data.requested_days,
     });
     setSolicitarDiasOpen(false);
   };
 
   const pendingRequests = useMemo(
-    () => myEmployee ? getVacationRequestsByEmployee(myEmployee.id).filter((r) => r.status === 'pendiente').length : 0,
+    () => myEmployee ? getVacationRequestsByEmployee(myEmployee.id).filter((r) => r.status === 'PENDING').length : 0,
     [myEmployee, vacationRequests]
   );
 
@@ -469,8 +469,8 @@ export const DashboardProfileView: React.FC = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <DetailRow icon={<Building2 className="w-4 h-4" />} label="Centro" value={wcMap[myEmployee.work_center_id] || myEmployee.work_center_id} />
                         <DetailRow icon={<IdCard className="w-4 h-4" />} label="Categoría" value={catMap[myEmployee.category_id] || myEmployee.category_id} />
-                        <DetailRow icon={<Calendar className="w-4 h-4" />} label="Jornada" value={wdMap[myEmployee.work_day] || myEmployee.work_day} />
-                        <DetailRow icon={<Clock className="w-4 h-4" />} label="Turno" value={shiftMap[myEmployee.shift] || myEmployee.shift} />
+                        <DetailRow icon={<Calendar className="w-4 h-4" />} label="Jornada" value={wdMap[myEmployee.work_day_id] || myEmployee.work_day_id} />
+                        <DetailRow icon={<Clock className="w-4 h-4" />} label="Turno" value={shiftMap[myEmployee.shift_id] || myEmployee.shift_id} />
                         <div className="sm:col-span-2">
                           <DetailRow icon={<Sunset className="w-4 h-4" />} label="Horario" value={`${myEmployee.start_time || '-'} — ${myEmployee.end_time || '-'}`} />
                         </div>
@@ -547,7 +547,7 @@ export const DashboardProfileView: React.FC = () => {
         isOpen={solicitarDiasOpen}
         onClose={() => setSolicitarDiasOpen(false)}
         employeeId={myEmployee?.id || ''}
-        disableWeekends={myEmployee?.work_day === 'wd-1'}
+        disableWeekends={myEmployee?.work_day_id === 'wd_1'}
         onSubmit={handleSolicitarDias}
       />
     </div>

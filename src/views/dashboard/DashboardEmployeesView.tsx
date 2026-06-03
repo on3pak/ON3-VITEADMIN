@@ -69,9 +69,9 @@ export const DashboardEmployeesView: React.FC = () => {
   ];
 
   const shiftStats = [
-    { shift: 's-1', label: 'Mañana', count: scopedEmployees.filter(e => e.shift === 's-1').length },
-    { shift: 's-2', label: 'Tarde', count: scopedEmployees.filter(e => e.shift === 's-2').length },
-    { shift: 's-3', label: 'Noche', count: scopedEmployees.filter(e => e.shift === 's-3').length },
+    { shift: 's_1', label: 'Mañana', count: scopedEmployees.filter(e => e.shift_id === 's_1').length },
+    { shift: 's_2', label: 'Tarde', count: scopedEmployees.filter(e => e.shift_id === 's_2').length },
+    { shift: 's_3', label: 'Noche', count: scopedEmployees.filter(e => e.shift_id === 's_3').length },
   ];
 
   const recentEmployees = [...scopedEmployees]

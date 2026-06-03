@@ -3,12 +3,12 @@ export type VehicleType = 'BARREDORA' | 'CAMION' | 'FURGONETA' | 'TURISMO' | 'PO
 export interface VehicleTypeOption {
   id: string;
   name: string;
-  type: VehicleType;
+  category: VehicleType;
 }
 
-export type VehicleStatus = 'ACTIVO' | 'MANTENIMIENTO' | 'AVERIADO' | 'BAJA';
+export type VehicleStatus = 'ACTIVE' | 'MAINTENANCE' | 'BROKEN' | 'RETIRED';
 
-export type FuelType = 'DIESEL' | 'GASOLINA' | 'ELECTRICO' | 'GAS';
+export type FuelType = 'DIESEL' | 'PETROL' | 'ELECTRIC' | 'LPG';
 
 export interface Vehicle {
   id: string;

@@ -36,19 +36,19 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const colors: Record<string, string> = {
     'ACTIVE': 'bg-emerald-100 text-emerald-700 border-emerald-200',
     'MAINTENANCE': 'bg-amber-100 text-amber-700 border-amber-200',
-    'AVERIADO': 'bg-rose-100 text-rose-700 border-rose-200',
-    'BAJA': 'bg-app-bg text-app-text border-app-border',
+    'BROKEN': 'bg-rose-100 text-rose-700 border-rose-200',
+    'RETIRED': 'bg-app-bg text-app-text border-app-border',
   };
   const labels: Record<string, string> = {
     'ACTIVE': 'Activo',
     'MAINTENANCE': 'En Taller',
-    'AVERIADO': 'Averiado',
-    'BAJA': 'Baja',
+    'BROKEN': 'Averiado',
+    'RETIRED': 'Baja',
   };
   return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[status] || 'bg-app-bg'}`}>{labels[status] || status}</span>;
 };
 
-const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.type]));
+const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.category]));
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find(w => w.id === id)?.name ?? id;
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {

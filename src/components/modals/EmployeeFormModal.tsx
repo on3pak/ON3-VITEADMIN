@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Employee } from '../../types';
-import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_SHIFTS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
+import { Employee, VacationMonth } from '../../types';
+import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, ShieldAlert, UserPlus, Save, CreditCard, Calendar, Clock, Phone, Mail, Award } from 'lucide-react';
 
@@ -20,13 +20,13 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [phone, setPhone] = useState('');
   const [personal_email, setPersonal_email] = useState('');
   const [phone_fixed, setPhone_fixed] = useState('');
-  const [category_id, setCategory_id] = useState('ec-1');
-  const [status_id, setStatus_id] = useState('es-1');
-  const [work_center_id, setWork_center_id] = useState('wc-1');
-  const [work_day, setWork_day] = useState('wd-1');
+  const [category_id, setCategory_id] = useState('ec_1');
+  const [status_id, setStatus_id] = useState('es_1');
+  const [work_center_id, setWork_center_id] = useState('wc_1');
+  const [work_day_id, setWork_day_id] = useState('wd_1');
   const [start_time, setStart_time] = useState('');
   const [end_time, setEnd_time] = useState('');
-  const [vacation_month, setVacation_month] = useState<'julio' | 'agosto' | 'septiembre' | ''>('');
+  const [vacation_month, setVacation_month] = useState<'' | VacationMonth>('');
   const [vacation_days, setVacation_days] = useState(22);
   const [own_days, setOwn_days] = useState(0);
   const [accumulated_days, setAccumulated_days] = useState(0);
@@ -54,7 +54,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setCategory_id(editingEmployee.category_id);
       setStatus_id(editingEmployee.status_id);
       setWork_center_id(editingEmployee.work_center_id);
-      setWork_day(editingEmployee.work_day);
+      setWork_day_id(editingEmployee.work_day_id);
       setStart_time(editingEmployee.start_time || '');
       setEnd_time(editingEmployee.end_time || '');
       setVacation_month(editingEmployee.vacation_month || '');
@@ -79,10 +79,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setPhone('');
       setPersonal_email('');
       setPhone_fixed('');
-      setCategory_id('ec-1');
-      setStatus_id('es-1');
-      setWork_center_id('wc-1');
-      setWork_day('wd-1');
+      setCategory_id('ec_1');
+      setStatus_id('es_1');
+      setWork_center_id('wc_1');
+      setWork_day_id('wd_1');
       setStart_time('');
       setEnd_time('');
       setVacation_month('');
@@ -115,7 +115,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     }
 
     const success = onSubmit({
-      user_id: editingEmployee?.user_id ?? null,
       city_id: editingEmployee?.city_id ?? null,
       name: name.trim(),
       last_name1: last_name1.trim(),
@@ -126,8 +125,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       status_id,
       work_center_id,
       active,
-      shift: editingEmployee?.shift ?? '',
-      schedule: '',
+      shift_id: editingEmployee?.shift_id ?? '',
       start_time,
       end_time,
       vacation_month: vacation_month || null,
@@ -138,7 +136,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       excess_days,
       personal_email: personal_email.trim(),
       phone_fixed: phone_fixed.trim(),
-      work_day,
+      work_day_id,
       iban: iban.trim(),
       locker: locker.trim(),
       medical_check,
@@ -240,7 +238,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </div>
               <div>
                 <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
-                <select value={work_day} onChange={(e) => setWork_day(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                <select value={work_day_id} onChange={(e) => setWork_day_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                   {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
                 </select>
               </div>
@@ -262,11 +260,11 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </div>
               <div className="col-span-2 md:col-span-1">
                 <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
-                <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'julio' | 'agosto' | 'septiembre' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'JULY' | 'AUGUST' | 'SEPTEMBER' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                   <option value="">Sin asignar</option>
-                  <option value="julio">Julio</option>
-                  <option value="agosto">Agosto</option>
-                  <option value="septiembre">Septiembre</option>
+                  <option value="JULY">Julio</option>
+                  <option value="AUGUST">Agosto</option>
+                  <option value="SEPTEMBER">Septiembre</option>
                 </select>
                 <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año: julio → agosto → septiembre → julio...</p>
               </div>
