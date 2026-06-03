@@ -27,7 +27,7 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
   SERVICE_DETAIL: { title: 'Detalle', parent: 'Servicios' },
   INVENTORY_CRUD: { title: 'Inventario', parent: 'Administración' },
   INVENTORY_DASHBOARD: { title: 'Dashboard', section: 'Inventario' },
-  PROFILE: { title: 'Mi Perfil' },
+  PROFILE: { title: 'Mi Perfil', parent: 'Dashboard' },
   PROFILE_CONFIG: { title: 'Configuración', parent: 'Mi Perfil' },
   UTILS: { title: 'Utilidades' },
   LOGS_AUTH: { title: 'Logs Auth', parent: 'Utilidades' },
@@ -153,15 +153,14 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
       </header>
 
       {/* Desktop Toolbar */}
-      <div className="pb-5">
+      <div className="relative z-10 pb-5">
         <div className="flex items-center justify-between flex-wrap gap-3">
           {/* Left: Title + Breadcrumbs */}
-          <div className="flex items-center flex-wrap gap-1 lg:gap-5">
+          <div className="pb-2">
             <h1 className="font-medium text-base text-app-text">
               {info.title}
             </h1>
-            <div className="flex items-center flex-wrap gap-1 text-sm text-app-text-secondary">
-              <span className="text-app-text-secondary/50">/</span>
+            <div className="flex items-center flex-wrap gap-1 mt-0.5 text-xs text-app-text-secondary">
               {info.section && (
                 <>
                   <span className="hover:text-primary-600 transition-colors">{info.section}</span>
@@ -174,6 +173,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
                   <span className="text-app-text-secondary/50">/</span>
                 </>
               )}
+              {(info.parent || info.section) && <span className="text-app-text-secondary/50">/</span>}
               <span className="text-app-text font-medium">{info.title}</span>
             </div>
           </div>
