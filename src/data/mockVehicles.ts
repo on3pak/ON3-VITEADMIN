@@ -1,11 +1,11 @@
 import { Vehicle } from '../types';
 
-export const INITIAL_VEHICLE_TYPES: { id: string; name: string; type: import('../types').VehicleType }[] = [
-  { id: 'vt-1', name: 'RAVO', type: 'BARREDORA' },
-  { id: 'vt-2', name: 'Camión', type: 'CAMION' },
-  { id: 'vt-3', name: 'Furgoneta', type: 'FURGONETA' },
-  { id: 'vt-4', name: 'Turismo', type: 'TURISMO' },
-  { id: 'vt-5', name: 'Porter', type: 'PORTER' },
+export const INITIAL_VEHICLE_TYPES: { id: string; name: string; category: import('../types').VehicleType }[] = [
+  { id: 'vt-1', name: 'RAVO', category: 'BARREDORA' },
+  { id: 'vt-2', name: 'Camión', category: 'CAMION' },
+  { id: 'vt-3', name: 'Furgoneta', category: 'FURGONETA' },
+  { id: 'vt-4', name: 'Turismo', category: 'TURISMO' },
+  { id: 'vt-5', name: 'Porter', category: 'PORTER' },
 ];
 
 export const INITIAL_VEHICLES: Vehicle[] = [

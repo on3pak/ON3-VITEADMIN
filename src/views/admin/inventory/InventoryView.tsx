@@ -28,14 +28,14 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
-  { value: 'ropa', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
-  { value: 'epi', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
-  { value: 'maquinaria', label: 'Maquinaria', icon: <Wrench className="h-4 w-4" /> },
+  { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
+  { value: 'PPE', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
+  { value: 'MACHINERY', label: 'Maquinaria', icon: <Wrench className="h-4 w-4" /> },
 ];
 
 const getSubtypeName = (id: string) => INVENTORY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
 const statusNameCache = (() => {
-  const all = [...getStatusesForCategory('ropa'), ...getStatusesForCategory('epi'), ...getStatusesForCategory('maquinaria')];
+  const all = [...getStatusesForCategory('CLOTHING'), ...getStatusesForCategory('PPE'), ...getStatusesForCategory('MACHINERY')];
   return (id: string) => all.find((s) => s.id === id)?.name ?? id;
 })();
 const getStatusName = statusNameCache;
@@ -51,7 +51,7 @@ export const InventoryView: React.FC = () => {
   const { getOverviews, getById, create, update, remove } = useInventory();
   const { user: loggedInUser } = useAuth();
 
-  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('ropa');
+  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [subtypeFilter, setSubtypeFilter] = useState('ALL');
@@ -153,11 +153,11 @@ export const InventoryView: React.FC = () => {
     const full = getById(item.id);
     if (!full) return null;
     switch (activeCategory) {
-      case 'ropa':
+      case 'CLOTHING':
         return <span className="text-xs text-app-text-secondary">{full.attributes.size || '-'} / {full.attributes.color || '-'}</span>;
-      case 'epi':
+      case 'PPE':
         return <span className="text-xs text-app-text-secondary">{full.attributes.expiration_date ? `Cad: ${full.attributes.expiration_date}` : '-'}</span>;
-      case 'maquinaria':
+      case 'MACHINERY':
         return <span className="text-xs text-app-text-secondary">{full.attributes.brand ? `${full.attributes.brand} ${full.attributes.model || ''}` : '-'}</span>;
       default:
         return null;
@@ -218,7 +218,7 @@ export const InventoryView: React.FC = () => {
             </select>
           </div>
 
-          {activeCategory === 'maquinaria' && (
+          {activeCategory === 'MACHINERY' && (
           <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <select
               value={workCenterFilter}
@@ -301,8 +301,8 @@ export const InventoryView: React.FC = () => {
                           <td className="py-3.5 px-6">
                             <div className="flex items-center gap-3">
                               <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                                activeCategory === 'ropa' ? 'bg-primary-100 text-primary-600 border border-primary-200' :
-                                activeCategory === 'epi' ? 'bg-amber-100 text-amber-600 border border-amber-200' :
+                                activeCategory === 'CLOTHING' ? 'bg-primary-100 text-primary-600 border border-primary-200' :
+                                activeCategory === 'PPE' ? 'bg-amber-100 text-amber-600 border border-amber-200' :
                                 'bg-cyan-100 text-cyan-600 border border-cyan-200'
                               }`}>
                                 {CATEGORY_TABS.find((t) => t.value === activeCategory)?.icon}
@@ -415,7 +415,7 @@ export const InventoryView: React.FC = () => {
             );
           })()}
 
-          {activeCategory === 'maquinaria' && (() => {
+          {activeCategory === 'MACHINERY' && (() => {
             const open = openSections.centros;
             return (
             <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
