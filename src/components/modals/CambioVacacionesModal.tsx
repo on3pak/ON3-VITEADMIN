@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { X, Calendar, Sun, Check, Send, Loader2, Split } from 'lucide-react';
 
-const OPTIONS: Array<{ key: 'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT'; label: string; icon: React.ReactNode }> = [
-  { key: 'JULY', label: 'Julio', icon: <Sun className="w-6 h-6" /> },
-  { key: 'AUGUST', label: 'Agosto', icon: <Sun className="w-6 h-6" /> },
-  { key: 'SEPTEMBER', label: 'Septiembre', icon: <Sun className="w-6 h-6" /> },
+const OPTIONS: Array<{ key: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT'; label: string; icon: React.ReactNode }> = [
+  { key: 'JULIO', label: 'Julio', icon: <Sun className="w-6 h-6" /> },
+  { key: 'AGOSTO', label: 'Agosto', icon: <Sun className="w-6 h-6" /> },
+  { key: 'SEPTIEMBRE', label: 'Septiembre', icon: <Sun className="w-6 h-6" /> },
   { key: 'SPLIT', label: 'Partidas', icon: <Split className="w-6 h-6" /> },
 ];
 
@@ -13,11 +13,11 @@ interface CambioVacacionesModalProps {
   onClose: () => void;
   currentMonth: string | null;
   employeeId: string;
-  onSubmit: (data: { type: 'VACATION_CHANGE'; requested_month: 'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT' }) => void;
+  onSubmit: (data: { type: 'VACATION_CHANGE'; requested_month: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' }) => void;
 }
 
 export const CambioVacacionesModal: React.FC<CambioVacacionesModalProps> = ({ isOpen, onClose, currentMonth, employeeId, onSubmit }) => {
-  const [selected, setSelected] = useState<'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT' | null>(null);
+  const [selected, setSelected] = useState<'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = () => {
@@ -61,7 +61,7 @@ export const CambioVacacionesModal: React.FC<CambioVacacionesModalProps> = ({ is
 
             <div className="grid grid-cols-2 gap-3">
               {OPTIONS.map((opt) => {
-                const isCurrent = !['JULY', 'AUGUST', 'SEPTEMBER'].includes(opt.key)
+                const isCurrent = !['JULIO', 'AGOSTO', 'SEPTIEMBRE'].includes(opt.key)
                   ? false
                   : currentMonth === opt.key;
                 const isSelected = selected === opt.key;

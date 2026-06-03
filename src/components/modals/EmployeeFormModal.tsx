@@ -260,7 +260,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </div>
               <div className="col-span-2 md:col-span-1">
                 <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
-                <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'JULY' | 'AUGUST' | 'SEPTEMBER' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
                   <option value="">Sin asignar</option>
                   <option value="JULY">Julio</option>
                   <option value="AUGUST">Agosto</option>

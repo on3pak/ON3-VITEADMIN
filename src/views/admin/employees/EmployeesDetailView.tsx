@@ -143,7 +143,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
-                    <div className="text-sm font-bold text-emerald-600 capitalize">{(() => { const m = ['JULY','AUGUST','SEPTEMBER']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
+                    <div className="text-sm font-bold text-emerald-600 capitalize">{(() => { const m = ['JULIO','AGOSTO','SEPTIEMBRE']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
                   </div>
                 </div>
               </div>

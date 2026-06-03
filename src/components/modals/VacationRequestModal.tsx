@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { X, Calendar, Sun, Check, ChevronLeft, ChevronRight, Send, Loader2 } from 'lucide-react';
 
-const MONTHS: Array<{ key: 'JULY' | 'AUGUST' | 'SEPTEMBER'; label: string }> = [
-  { key: 'JULY', label: 'Julio' },
-  { key: 'AUGUST', label: 'Agosto' },
-  { key: 'SEPTEMBER', label: 'Septiembre' },
+const MONTHS: Array<{ key: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE'; label: string }> = [
+  { key: 'JULIO', label: 'Julio' },
+  { key: 'AGOSTO', label: 'Agosto' },
+  { key: 'SEPTIEMBRE', label: 'Septiembre' },
 ];
 
 type TabType = 'MONTH_CHANGE' | 'FREE_DAYS';
@@ -46,12 +46,12 @@ interface VacationRequestModalProps {
   onClose: () => void;
   currentMonth: string | null;
   employeeId: string;
-  onSubmit: (data: { type: 'MONTH_CHANGE' | 'FREE_DAYS'; requested_month?: 'JULY' | 'AUGUST' | 'SEPTEMBER'; requested_days?: string[] }) => void;
+  onSubmit: (data: { type: 'MONTH_CHANGE' | 'FREE_DAYS'; requested_month?: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE'; requested_days?: string[] }) => void;
 }
 
 export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOpen, onClose, currentMonth, employeeId, onSubmit }) => {
   const [tab, setTab] = useState<TabType>('FREE_DAYS');
-  const [selectedMonth, setSelectedMonth] = useState<'JULY' | 'AUGUST' | 'SEPTEMBER' | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | null>(null);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
   const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());

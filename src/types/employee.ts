@@ -1,4 +1,4 @@
-export type VacationMonth = 'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT';
+export type VacationMonth = 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT';
 
 export interface VacationRequest {
   id: string;

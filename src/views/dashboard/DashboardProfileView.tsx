@@ -18,7 +18,7 @@ import {
   Send, Sun,
 } from 'lucide-react';
 
-const VACATION_MONTHS = ['JULY', 'AUGUST', 'SEPTEMBER'] as const;
+const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
 
 function getCurrentVacationMonth(month: string | null, year: number | null): string | null {
   if (!month || !year) return null;
@@ -44,6 +44,12 @@ const statusMap = Object.fromEntries(INITIAL_EMPLOYEE_STATUSES.map((s) => [s.id,
 const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
 const wdMap = Object.fromEntries(INITIAL_WORK_DAYS.map((w) => [w.id, w.name]));
 const ctMap = Object.fromEntries(INITIAL_CONTRACT_TYPES.map((c) => [c.id, c.name]));
+
+const MONTH_LABELS: Record<string, string> = {
+  JULIO: 'Julio',
+  AGOSTO: 'Agosto',
+  SEPTIEMBRE: 'Septiembre',
+};
 
 const ROLE_STYLE: Record<string, string> = {
   ROOT: 'bg-violet-500/20 text-violet-200 border-violet-400/30',
@@ -214,7 +220,7 @@ export const DashboardProfileView: React.FC = () => {
     return true;
   };
 
-  const handleCambioVacaciones = (data: { type: 'VACATION_CHANGE'; requested_month: 'JULY' | 'AUGUST' | 'SEPTEMBER' | 'SPLIT' }) => {
+  const handleCambioVacaciones = (data: { type: 'VACATION_CHANGE'; requested_month: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' }) => {
     if (!myEmployee || isReadOnly) return;
     createVacationRequest({
       employee_id: myEmployee.id,
@@ -404,11 +410,11 @@ export const DashboardProfileView: React.FC = () => {
                     <div className="flex items-center justify-between p-3 bg-primary-50/60 rounded-xl border border-primary-100/50">
                       <div>
                         <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Mes asignado</div>
-                        <div className="text-sm font-bold text-primary-700 capitalize mt-0.5">{currentVacationMonth || 'Sin asignar'}</div>
+                        <div className="text-sm font-bold text-primary-700 mt-0.5">{MONTH_LABELS[currentVacationMonth || ''] || currentVacationMonth || 'Sin asignar'}</div>
                       </div>
                       <div className="text-right">
                         <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Próximo</div>
-                        <div className="text-sm font-bold text-emerald-600 capitalize mt-0.5">{nextVacationMonth || '—'}</div>
+                        <div className="text-sm font-bold text-emerald-600 mt-0.5">{MONTH_LABELS[nextVacationMonth || ''] || nextVacationMonth || '—'}</div>
                       </div>
                     </div>
 

@@ -425,7 +425,7 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
     id: 'inv_000035', name: 'Generador Honda EU30', description: 'Generador portátil Honda EU30i',
     category: 'MACHINERY', subtype_id: 'ist-27', status_id: 'ms-1', quantity: 1, min_stock: 1, unit: 'unidades',
     city_id: 'city-2', work_center_id: 'wc-11', location: 'Centro01 - Almacén',
-    assigned_to: 'emp_000011', notes: 'Asignado a Javier Ramos',
+    assigned_to: '000011', notes: 'Asignado a Javier Ramos',
     attributes: {
       size: null, color: 'Rojo/Negro', material: null, gender: null,
       certification: null, safety_standard: null, serial_number: 'HONDA-EU30-001',
