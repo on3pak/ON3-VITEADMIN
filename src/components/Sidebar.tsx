@@ -6,7 +6,7 @@ import {
   ShieldCheck, LogOut, KeyRound,
   Truck, Briefcase, Building2, ClipboardList, Package,
   Settings, ChevronDown, User, Shield,
-  Moon, Grid,
+  Moon, Grid, Wrench,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -54,7 +54,7 @@ const profileItems = [
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, triggerToast } = useAuth();
   const [activeSection, setActiveSection] = useState<'profile' | 'dashboard' | 'admin'>('profile');
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -177,10 +177,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           {/* Footer Icons + User */}
           <div className="flex flex-col items-center gap-3">
             <button
+              onClick={() => triggerToast('Apps — En desarrollo', 'info')}
               className="flex items-center justify-center size-9 rounded-md border border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border transition-all"
               title="Apps"
             >
               <Grid className="h-[18px] w-[18px]" />
+            </button>
+
+            <button
+              onClick={() => setView('UTILS')}
+              className="flex items-center justify-center size-9 rounded-md border border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border transition-all"
+              title="Utilidades"
+            >
+              <Wrench className="h-[18px] w-[18px]" />
             </button>
 
             <div className="w-6 h-px bg-app-border" />
@@ -254,7 +263,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                         <Moon className="h-4 w-4" />
                         Modo oscuro
                       </span>
-                      <div className="w-9 h-5 bg-app-border rounded-full relative cursor-pointer">
+                      <div
+                        onClick={() => triggerToast('Modo oscuro — En desarrollo', 'info')}
+                        className="w-9 h-5 bg-app-border rounded-full relative cursor-pointer"
+                      >
                         <div className="w-3.5 h-3.5 bg-white rounded-full shadow-xs absolute top-0.5 left-0.5" />
                       </div>
                     </div>
@@ -282,21 +294,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
             </div>
           </div>
 
-          {/* Section Dropdown (Metronic-style) */}
-          <div className="px-3 pt-3 pb-1">
-            <button className="w-full flex items-center justify-between px-2.5 py-2 rounded-md border border-app-border text-sm font-medium text-app-text hover:bg-app-bg transition-colors">
-              <span className="flex items-center gap-1.5">
-                {activeSection === 'profile' ? <User className="h-[14px] w-[14px] text-app-text-secondary" /> : activeSection === 'dashboard' ? <LayoutDashboard className="h-[14px] w-[14px] text-app-text-secondary" /> : <Shield className="h-[14px] w-[14px] text-app-text-secondary" />}
-                {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
-              </span>
-              <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />
-            </button>
-          </div>
+
 
           {/* Section Group Label */}
           <div className="px-[18px] pt-4 pb-1">
             <p className="text-[10px] font-semibold text-app-text-secondary uppercase tracking-[0.1em]">
-              {activeSection === 'profile' ? 'General' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
+              {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
             </p>
           </div>
 

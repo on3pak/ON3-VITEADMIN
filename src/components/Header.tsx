@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
-import { RefreshCw, Wrench, Menu, Search, User, Settings, LogOut, Moon, Grid } from 'lucide-react';
+import { Menu, Search, User, Settings, LogOut, Moon, Grid, Languages, Bell, Maximize2, Minimize2, Type, Star } from 'lucide-react';
 import { useUsers } from '../context/UserContext';
 
 interface HeaderProps {
@@ -67,6 +67,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
   };
 
   const info = viewBreadcrumb[currentView] || { title: 'Panel de Control' };
+  const [lang, setLang] = useState<'ES' | 'EN'>('ES');
 
   return (
     <>
@@ -81,7 +82,10 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
           </button>
 
           <div className="flex items-center gap-2">
-            <button className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all">
+            <button
+              onClick={() => triggerToast('Apps — En desarrollo', 'info')}
+              className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
+            >
               <Grid className="h-5 w-5" />
             </button>
             <div className="w-px h-6 bg-app-border" />
@@ -155,54 +159,78 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
       {/* Desktop Toolbar */}
       <div className="relative z-10 pb-5">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          {/* Left: Title + Breadcrumbs */}
-          <div className="pb-2">
-            <h1 className="font-medium text-base text-app-text">
-              {info.title}
-            </h1>
-            <div className="flex items-center flex-wrap gap-1 mt-0.5 text-xs text-app-text-secondary">
-              {info.section && (
-                <>
-                  <span className="hover:text-primary-600 transition-colors">{info.section}</span>
-                  <span className="text-app-text-secondary/50">/</span>
-                </>
+          {/* Left: Shortcut + Title */}
+          <div className="flex items-center gap-3 pb-2">
+            <button
+              onClick={() => triggerToast('Acceso directo — En desarrollo', 'info')}
+              className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
+              title="Acceso directo"
+            >
+              <Star className="h-[18px] w-[18px]" />
+            </button>
+            <div className="w-px h-6 bg-app-border" />
+            <div>
+              <h1 className="font-medium text-base text-app-text">
+                {info.title}
+              </h1>
+              {currentView !== 'PROFILE' && currentView !== 'PROFILE_CONFIG' && (
+              <div className="flex items-center flex-wrap gap-1 mt-0.5 text-xs text-app-text-secondary">
+                {info.section && (
+                  <>
+                    <span className="hover:text-primary-600 transition-colors">{info.section}</span>
+                    <span className="text-app-text-secondary/50">/</span>
+                  </>
+                )}
+                {info.parent && (
+                  <>
+                    <span className="hover:text-primary-600 transition-colors">{info.parent}</span>
+                    <span className="text-app-text-secondary/50">/</span>
+                  </>
+                )}
+                <span className="text-app-text font-medium">{info.title}</span>
+              </div>
               )}
-              {info.parent && (
-                <>
-                  <span className="hover:text-primary-600 transition-colors">{info.parent}</span>
-                  <span className="text-app-text-secondary/50">/</span>
-                </>
-              )}
-              <span className="text-app-text font-medium">{info.title}</span>
             </div>
           </div>
 
           {/* Right: Actions */}
           <div className="flex items-center flex-wrap gap-2">
             <button
+              onClick={() => { setLang(lang === 'ES' ? 'EN' : 'ES'); triggerToast(`Idioma cambiado a ${lang === 'ES' ? 'English' : 'Español'}`, 'info'); }}
+              className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200 text-xs font-semibold"
+              title="Idioma"
+            >
+              <Languages className="h-[18px] w-[18px] group-hover:text-primary-600" />
+              <span>{lang === 'ES' ? 'ES' : 'EN'}/{lang === 'ES' ? 'EN' : 'ES'}</span>
+            </button>
+            <button
+              onClick={() => triggerToast('Tamaño de texto — En desarrollo', 'info')}
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              title="Tamaño de texto"
+            >
+              <Type className="h-[18px] w-[18px] group-hover:text-primary-600" />
+            </button>
+            <button
+              onClick={() => triggerToast('Pantalla completa — En desarrollo', 'info')}
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              title="Pantalla completa"
+            >
+              <Maximize2 className="h-[18px] w-[18px] group-hover:text-primary-600" />
+            </button>
+            <button
+              onClick={() => triggerToast('Notificaciones — En desarrollo', 'info')}
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              title="Notificaciones"
+            >
+              <Bell className="h-[18px] w-[18px] group-hover:text-primary-600" />
+            </button>
+            <div className="w-px h-6 bg-app-border" />
+            <button
+              onClick={() => triggerToast('Búsqueda — En desarrollo', 'info')}
               className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
               title="Buscar"
             >
               <Search className="h-[18px] w-[18px] group-hover:text-primary-600" />
-            </button>
-
-            <button
-              onClick={() => setCurrentView('UTILS')}
-              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
-              title="Utilidades"
-            >
-              <Wrench className="h-[18px] w-[18px] group-hover:text-primary-600" />
-            </button>
-
-            <button
-              onClick={() => {
-                resetMockData();
-                triggerToast('Base de datos restaurada correctamente', 'success');
-              }}
-              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
-              title="Restaurar base de datos de prueba"
-            >
-              <RefreshCw className="h-[18px] w-[18px] group-hover:text-primary-600" />
             </button>
           </div>
         </div>
