@@ -152,8 +152,8 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       const matchesCityScope = !userCityId || emp.city_id === userCityId;
       if (!matchesCityScope) return false;
 
-      const name = `${emp.name} ${emp.lastName1} ${emp.lastName2}`.toLowerCase();
-      const matchesSearch = !q || name.includes(q) || emp.name.toLowerCase().includes(q) || emp.lastName1.toLowerCase().includes(q);
+      const name = `${emp.name} ${emp.last_name1} ${emp.last_name2}`.toLowerCase();
+      const matchesSearch = !q || name.includes(q) || emp.name.toLowerCase().includes(q) || emp.last_name1.toLowerCase().includes(q);
       const matchesStatus = statusFilter === 'ALL' || emp.status_id === statusFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || emp.work_center_id === workCenterFilter;
       return matchesSearch && matchesStatus && matchesWorkCenter;
@@ -438,10 +438,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-sm shadow-primary-500/20 relative overflow-hidden">
                               <User className="w-8 h-8 text-black/50 absolute" />
-                              <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.lastName1)}</span>
+                              <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.last_name1)}</span>
                             </div>
                             <div>
-                              <div className="font-bold text-app-text-secondary leading-tight">{emp.name} {emp.lastName1} {emp.lastName2}</div>
+                              <div className="font-bold text-app-text-secondary leading-tight">{emp.name} {emp.last_name1} {emp.last_name2}</div>
                               <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
                                 <span className="font-mono text-primary-600 font-semibold">ID: {emp.id}</span>
                                 <span>•</span>

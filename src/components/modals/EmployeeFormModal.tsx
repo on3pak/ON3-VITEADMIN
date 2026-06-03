@@ -13,8 +13,8 @@ interface EmployeeFormModalProps {
 
 export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, onClose, onSubmit, editingEmployee }) => {
   const [name, setName] = useState('');
-  const [lastName1, setLastName1] = useState('');
-  const [lastName2, setLastName2] = useState('');
+  const [last_name1, setLastName1] = useState('');
+  const [last_name2, setLastName2] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [personal_email, setPersonal_email] = useState('');
@@ -43,8 +43,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   useEffect(() => {
     if (editingEmployee) {
       setName(editingEmployee.name);
-      setLastName1(editingEmployee.lastName1);
-      setLastName2(editingEmployee.lastName2 || '');
+      setLastName1(editingEmployee.last_name1);
+      setLastName2(editingEmployee.last_name2 || '');
       setEmail(editingEmployee.email);
       setPhone(editingEmployee.phone);
       setPersonal_email(editingEmployee.personal_email || '');
@@ -105,7 +105,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     e.preventDefault();
     setFormError(null);
 
-    if (!name.trim() || !lastName1.trim() || !email.trim()) {
+    if (!name.trim() || !last_name1.trim() || !email.trim()) {
       setFormError('Los campos Nombre, Apellido y Email son obligatorios.');
       return;
     }
@@ -114,8 +114,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       user_id: editingEmployee?.user_id ?? null,
       city_id: editingEmployee?.city_id ?? null,
       name: name.trim(),
-      lastName1: lastName1.trim(),
-      lastName2: lastName2.trim(),
+      last_name1: last_name1.trim(),
+      last_name2: last_name2.trim(),
       email: email.trim(),
       phone: phone.trim(),
       category_id,
@@ -158,7 +158,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             </div>
             <div>
               <h3 className="font-bold text-app-text">
-                {editingEmployee ? `Editar: ${editingEmployee.name} ${editingEmployee.lastName1}` : 'Nuevo Empleado'}
+                {editingEmployee ? `Editar: ${editingEmployee.name} ${editingEmployee.last_name1}` : 'Nuevo Empleado'}
               </h3>
               <p className="text-xs text-app-text-secondary">Complete todos los datos</p>
             </div>
@@ -186,11 +186,11 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             </div>
             <div className="col-span-2 md:col-span-1">
               <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 1 *</label>
-              <input type="text" value={lastName1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              <input type="text" value={last_name1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
               <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 2</label>
-              <input type="text" value={lastName2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              <input type="text" value={last_name2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
             </div>
             <div>
               <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Empresa *</label>

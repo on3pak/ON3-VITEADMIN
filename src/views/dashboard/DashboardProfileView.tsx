@@ -271,7 +271,7 @@ export const DashboardProfileView: React.FC = () => {
 
                   <InfoCard icon={<User className="w-4 h-4" />} title="Datos Personales">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <DetailRow icon={<User className="w-4 h-4" />} label="Nombre" value={`${myEmployee.name} ${myEmployee.lastName1} ${myEmployee.lastName2 || ''}`} />
+                      <DetailRow icon={<User className="w-4 h-4" />} label="Nombre" value={`${myEmployee.name} ${myEmployee.last_name1} ${myEmployee.last_name2 || ''}`} />
                       <DetailRow icon={<Mail className="w-4 h-4" />} label="Email" value={myEmployee.email} />
                       <DetailRow icon={<Phone className="w-4 h-4" />} label="Teléfono" value={myEmployee.phone} />
                       <DetailRow icon={<Mail className="w-4 h-4" />} label="Email Personal" value={myEmployee.personal_email || '-'} />

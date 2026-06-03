@@ -3,8 +3,8 @@ export interface Employee {
   user_id: string | null;
   city_id: string | null;
   name: string;
-  lastName1: string;
-  lastName2: string;
+  last_name1: string;
+  last_name2: string;
   email: string;
   phone: string;
   category_id: string;
@@ -38,8 +38,8 @@ export interface EmployeeOverview {
   id: string;
   email: string;
   name: string;
-  lastName1: string;
-  lastName2: string;
+  last_name1: string;
+  last_name2: string;
   category_id: string;
   work_day_id: string;
   work_center_id: string;
