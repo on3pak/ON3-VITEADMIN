@@ -72,7 +72,7 @@ function generateTasks(serviceId: string): ServiceTask[] {
 export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService, workCenters }) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('BARRIDO MIXTO');
-  const [work_center_id, setWork_center_id] = useState('wc-1');
+  const [work_center_id, setWork_center_id] = useState('wc_1');
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {

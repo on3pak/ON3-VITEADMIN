@@ -3,6 +3,7 @@ import { useUsers } from '../../../context/UserContext';
 import { useAuth } from '../../../context/AuthContext';
 import { User, UserRole } from '../../types';
 import { UserFormModal } from '../../../components/modals/UserFormModal';
+import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { 
   Search, 
   UserPlus, 
@@ -31,8 +32,11 @@ export const UsersView: React.FC = () => {
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<User | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ rol: false, estado: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  const handleConfirmDelete = () => { if (deletingUserId) { deleteUser(deletingUserId); } setDeleteDialogOpen(false); setDeletingUserId(null); };
 
   React.useEffect(() => {
     setCurrentPage(1);
@@ -271,32 +275,15 @@ export const UsersView: React.FC = () => {
                             <Edit3 className="h-4 w-4" />
                           </button>
                         )}
-                        {u.role === 'ROOT' && loggedInUser?.role === 'ROOT' && u.id !== loggedInUser?.id && (
+                        {(u.role === 'ROOT' && loggedInUser?.role === 'ROOT' && u.id !== loggedInUser?.id) || (u.role !== 'ROOT' && u.id !== loggedInUser?.id) ? (
                           <button
-                            onClick={() => {
-                              if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
-                                deleteUser(u.id);
-                              }
-                            }}
+                            onClick={() => { setDeletingUserId(u.id); setDeleteDialogOpen(true); }}
                             title="Eliminar usuario del sistema"
                             className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
-                        )}
-                        {u.role !== 'ROOT' && u.id !== loggedInUser?.id && (
-                          <button
-                            onClick={() => {
-                              if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
-                                deleteUser(u.id);
-                              }
-                            }}
-                            title="Eliminar usuario del sistema"
-                            className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        )}
+                        ) : null}
                       </div>
                     </td>
 
@@ -403,6 +390,14 @@ export const UsersView: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleFormSubmit}
         editingUser={selectedUserForEdit}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        title="Eliminar Usuario"
+        message="¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => { setDeleteDialogOpen(false); setDeletingUserId(null); }}
       />
 
     </div>

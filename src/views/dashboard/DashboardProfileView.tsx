@@ -14,7 +14,7 @@ import {
   SunSnow,
   Sparkles,
   Send, Sun,
-  Briefcase, Shield, Hash, MapPin, Clock, Building2, IdCard, Clock3, Award,
+  Briefcase, Shield, Hash, MapPin, Clock, Building2, IdCard, Award,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
@@ -36,6 +36,26 @@ const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
 const wdMap = Object.fromEntries(INITIAL_WORK_DAYS.map((w) => [w.id, w.name]));
 const wcMap = Object.fromEntries(INITIAL_WORK_CENTERS.map((w) => [w.id, w.name]));
 const ctMap = Object.fromEntries(INITIAL_CONTRACT_TYPES.map((c) => [c.id, c.name]));
+
+const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | React.ReactNode }> = ({ icon, label, value }) => (
+  <div className="flex items-start gap-3">
+    <div className="text-app-text-secondary mt-0.5 shrink-0">{icon}</div>
+    <div>
+      <div className="text-xs text-app-text-secondary">{label}</div>
+      <div className="text-sm text-app-text">{value}</div>
+    </div>
+  </div>
+);
+
+const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+    <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
+      {icon}
+      <span>{title}</span>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{children}</div>
+  </div>
+);
 
 export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
@@ -159,23 +179,23 @@ export const DashboardProfileView: React.FC = () => {
                 <div className="text-sm text-app-text-secondary mt-0.5">{loggedInUser.email}</div>
               </div>
 
-              {/* Nav Tabs — segmented control style */}
+              {/* Nav Tabs — pill style */}
               <div className="mb-4 mt-5 lg:mb-0 lg:ml-auto lg:mt-0">
-                <div className="inline-flex rounded-lg border border-app-border overflow-hidden shadow-xs bg-app-border gap-px">
+                <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
                   {([
-                    { key: 'info' as const, label: 'Info' },
-                    { key: 'solicitar' as const, label: 'Solicitar' },
+                    { key: 'info' as const, label: 'Info', icon: <User className="h-4 w-4" /> },
+                    { key: 'solicitar' as const, label: 'Solicitar', icon: <Calendar className="h-4 w-4" /> },
                   ]).map((tab) => (
                     <button
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`px-4 py-1.5 text-sm font-medium transition-all ${
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
                         activeTab === tab.key
-                          ? 'bg-primary-500 text-white shadow-sm'
-                          : 'bg-white text-app-text-secondary hover:bg-gray-50'
+                          ? 'bg-white text-primary-700 shadow-xs'
+                          : 'text-app-text-secondary hover:text-app-text'
                       }`}
                     >
-                      {tab.label}
+                      {tab.icon} {tab.label}
                     </button>
                   ))}
                 </div>
@@ -186,139 +206,51 @@ export const DashboardProfileView: React.FC = () => {
           {/* Tab Content */}
           <div className="mx-auto flex w-full max-w-2xl flex-auto justify-center p-6 sm:p-8">
             {activeTab === 'info' && (
-              <div className="w-full flex flex-col gap-6">
+              <div className="w-full flex flex-col gap-5">
                 {myEmployee ? (
                   <>
-                    {/* User + Employee combined card */}
-                    <div className="w-full flex flex-col p-8 bg-white rounded-xl border border-app-border shadow-sm">
-                      <div className="text-base font-semibold text-app-text">Información Personal</div>
-                      <div className="mt-6 flex flex-col gap-5">
-                        <div className="flex items-center">
-                          <User className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Nombre completo</div>
-                            <div className="text-sm text-app-text">{fullName}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <Mail className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Email</div>
-                            <div className="text-sm text-app-text">{loggedInUser.email || '—'}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <Phone className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Teléfono</div>
-                            <div className="text-sm text-app-text">{myEmployee?.phone || '—'}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <Hash className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Usuario</div>
-                            <div className="text-sm text-app-text">{loggedInUser.username || '—'}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <Shield className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Rol</div>
-                            <div className="text-sm text-app-text">{loggedInUser.role || '—'}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <MapPin className="mr-3 h-5 w-5 text-primary-600 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Ciudad</div>
-                            <div className="text-sm text-app-text">{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</div>
-                          </div>
-                        </div>
-                      </div>
+                    <SectionCard icon={<User className="h-4 w-4" />} title="Información Personal">
+                      <InfoRow icon={<User className="h-4 w-4" />} label="Nombre completo" value={fullName} />
+                      <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={loggedInUser.email || '—'} />
+                      <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee?.phone || '—'} />
+                      <InfoRow icon={<Hash className="h-4 w-4" />} label="Usuario" value={loggedInUser.username || '—'} />
+                      <InfoRow icon={<Shield className="h-4 w-4" />} label="Rol" value={loggedInUser.role || '—'} />
+                      <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'} />
+                    </SectionCard>
 
-                      <div className="mt-8 pt-8 border-t border-app-border">
-                        <div className="text-base font-semibold text-app-text">Información del Empleado</div>
-                        <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5">
-                          <div>
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Categoría</div>
-                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                              <Award className="w-4 h-4 text-primary-500 shrink-0" />
-                              {categoryName || '—'}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Turno</div>
-                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                              <Clock className="w-4 h-4 text-primary-500 shrink-0" />
-                              {shiftName || '—'}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Horario</div>
-                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                              <Clock3 className="w-4 h-4 text-primary-500 shrink-0" />
-                              {scheduleDisplay}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Contrato</div>
-                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                              <IdCard className="w-4 h-4 text-primary-500 shrink-0" />
-                              {myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Centro de Trabajo</div>
-                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                              <Building2 className="w-4 h-4 text-primary-500 shrink-0" />
-                              {myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Días Laborables</div>
-                            <div className="mt-1.5 flex items-center gap-2 text-sm font-medium text-app-text">
-                              <Calendar className="w-4 h-4 text-primary-500 shrink-0" />
-                              {myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}
-                            </div>
-                          </div>
-                          <div className="col-span-2">
-                            <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Estado</div>
-                            <div className="mt-1.5">
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                                myEmployee.active
-                                  ? 'bg-emerald-50 text-emerald-700'
-                                  : 'bg-gray-100 text-gray-600'
-                              }`}>
-                                <span className={`mr-1.5 h-2 w-2 rounded-full ${
-                                  myEmployee.active ? 'bg-emerald-500' : 'bg-gray-400'
-                                }`} />
-                                {statusName || '—'}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <SectionCard icon={<Award className="h-4 w-4" />} title="Información del Empleado">
+                      <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
+                      <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
+                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
+                      <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
+                      <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
+                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
+                      <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                          myEmployee.active
+                            ? 'bg-emerald-50 text-emerald-700'
+                            : 'bg-gray-100 text-gray-600'
+                        }`}>
+                          <span className={`mr-1.5 h-2 w-2 rounded-full ${
+                            myEmployee.active ? 'bg-emerald-500' : 'bg-gray-400'
+                          }`} />
+                          {statusName || '—'}
+                        </span>
+                      } />
+                    </SectionCard>
 
-                    {/* Schedule card */}
-                    <div className="w-full flex flex-col p-8 bg-white rounded-xl border border-app-border shadow-sm">
-                      <div className="text-base font-semibold text-app-text">Jornada Laboral</div>
-                      <div className="mt-6 grid grid-cols-2 gap-6">
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Hora de Entrada</div>
-                          <div className="mt-1 text-lg font-bold text-app-text">{myEmployee.start_time || '—'}</div>
-                        </div>
-                        <div>
-                          <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider">Hora de Salida</div>
-                          <div className="mt-1 text-lg font-bold text-app-text">{myEmployee.end_time || '—'}</div>
-                        </div>
-                      </div>
-                    </div>
+                    <SectionCard icon={<Clock className="h-4 w-4" />} title="Jornada Laboral">
+                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Hora de Entrada" value={
+                        <span className="text-lg font-bold text-app-text">{myEmployee.start_time || '—'}</span>
+                      } />
+                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Hora de Salida" value={
+                        <span className="text-lg font-bold text-app-text">{myEmployee.end_time || '—'}</span>
+                      } />
+                    </SectionCard>
                   </>
                 ) : (
-                  <div className="w-full flex flex-col items-center py-12 text-center bg-white rounded-xl border border-app-border shadow-sm">
-                    <Briefcase className="w-12 h-12 text-gray-300 mb-3" />
+                  <div className="bg-app-card rounded-xl border border-app-card-border p-8 text-center">
+                    <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <p className="text-sm text-app-text-secondary">Sin información de empleado</p>
                     {!isReadOnly && (
                       <button
@@ -334,7 +266,7 @@ export const DashboardProfileView: React.FC = () => {
             )}
 
             {activeTab === 'solicitar' && (
-              <div className="w-full flex flex-col gap-6">
+              <div className="w-full flex flex-col gap-5">
                 {myEmployee ? (
                   <>
                     {pendingRequests > 0 && (
@@ -344,9 +276,12 @@ export const DashboardProfileView: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="w-full flex flex-col p-8 bg-white rounded-xl border border-app-border shadow-sm">
-                      <div className="text-base font-semibold text-app-text">Vacaciones</div>
-                      <div className="mt-5 grid grid-cols-3 gap-4">
+                    <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+                      <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
+                        <Calendar className="h-4 w-4" />
+                        <span>Vacaciones</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4">
                         <div className="flex flex-col items-center rounded-xl bg-primary-50 p-4">
                           <div className="text-3xl font-bold text-primary-600">{myEmployee.own_days ?? '—'}</div>
                           <div className="mt-1 text-center text-xs font-medium text-primary-700">Días Propios</div>
@@ -361,11 +296,13 @@ export const DashboardProfileView: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-6 border-t border-app-border">
-                        <div className="text-xs font-medium text-app-text-secondary uppercase tracking-wider mb-3">Mes de Vacaciones</div>
-                        <div className="flex items-center gap-2 text-sm font-medium text-app-text">
-                          <SunSnow className="w-4 h-4 text-primary-500 shrink-0" />
-                          {currentVacationMonth || 'No asignado'}
+                      <div className="mt-4 pt-4 border-t border-app-card-border">
+                        <div className="flex items-center gap-2">
+                          <SunSnow className="h-4 w-4 text-primary-500 shrink-0" />
+                          <div>
+                            <div className="text-xs text-app-text-secondary">Mes de Vacaciones</div>
+                            <div className="text-sm font-medium text-app-text">{currentVacationMonth || 'No asignado'}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -397,8 +334,8 @@ export const DashboardProfileView: React.FC = () => {
                     )}
                   </>
                 ) : (
-                  <div className="w-full flex flex-col items-center py-12 text-center bg-white rounded-xl border border-app-border shadow-sm">
-                    <SunSnow className="w-12 h-12 text-gray-300 mb-3" />
+                  <div className="bg-app-card rounded-xl border border-app-card-border p-8 text-center">
+                    <SunSnow className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <p className="text-sm text-app-text-secondary">Sin información de vacaciones</p>
                     {!isReadOnly && (
                       <button

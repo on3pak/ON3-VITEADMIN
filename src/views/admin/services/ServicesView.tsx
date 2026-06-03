@@ -4,7 +4,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { Service, ServiceOverview } from '../../types';
+import { Service, ServiceOverview } from '../../../types';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp,
@@ -75,13 +75,13 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
       const searchable = `${s.name} ${s.category}`.toLowerCase();
       const matchesSearch = !q || searchable.includes(q);
-      const matchesType = typeFilter === 'ALL' || s.category === typeFilter;
+      const matchesType = categoryFilter === 'ALL' || s.category === categoryFilter;
       const matchesWorkCenter = workCenterFilter === 'ALL' || s.work_center_id === workCenterFilter;
       return matchesSearch && matchesType && matchesWorkCenter;
     });
-  }, [serviceOverviews, searchQuery, typeFilter, workCenterFilter, userCityId]);
+  }, [serviceOverviews, searchQuery, categoryFilter, workCenterFilter, userCityId]);
 
-  useEffect(() => setCurrentPage(1), [searchQuery, typeFilter, workCenterFilter, itemsPerPage]);
+  useEffect(() => setCurrentPage(1), [searchQuery, categoryFilter, workCenterFilter, itemsPerPage]);
 
   const { totalPages, paginatedServices } = useMemo(() => {
     const t = Math.ceil(filteredServices.length / itemsPerPage);
@@ -109,7 +109,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
           <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
             <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
             <select
-              value={typeFilter}
+              value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
@@ -274,9 +274,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setCategoryFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
+              <button onClick={() => setCategoryFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categoryFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
               {['BARRIDO MIXTO', 'BARRIDO MANUAL', 'BARRIDO MECÁNICO', 'BALDEO', 'RECOGIDA', 'VACIADO'].map((t) => (
-                <button key={t} onClick={() => setCategoryFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${typeFilter === t ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
+                <button key={t} onClick={() => setCategoryFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categoryFilter === t ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
               ))}
             </div>
             )}

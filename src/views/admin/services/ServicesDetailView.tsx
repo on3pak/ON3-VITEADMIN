@@ -4,7 +4,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { Service } from '../../types';
+import { Service } from '../../../types';
 import {
   ArrowLeft, ClipboardList, CheckCircle2, Circle,
   Edit3, Trash2,

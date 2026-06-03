@@ -3,6 +3,7 @@ import { useWorkCenters } from '../../../context/WorkCenterContext';
 import { useAuth } from '../../../context/AuthContext';
 import { WorkCenter } from '../../../types';
 import { WorkCenterFormModal } from '../../../components/modals/WorkCenterFormModal';
+import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { INITIAL_CITIES } from '../../../data/mockEmployees';
 import { Search, Building2, Plus, Edit3, Trash2, Filter, ShieldAlert, MapPin, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -20,14 +21,17 @@ export const WorkCentersView: React.FC = () => {
   const [selectedForEdit, setSelectedForEdit] = useState<WorkCenter | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingWcId, setDeletingWcId] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ ciudad: false, estado: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  const handleConfirmDelete = () => { if (deletingWcId) { deleteWorkCenter(deletingWcId); } setDeleteDialogOpen(false); setDeletingWcId(null); };
 
   React.useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, cityFilter, statusFilter, itemsPerPage]);
 
-  const handleFormSubmit = (formData: Omit<WorkCenter, 'id'>) => {
+  const handleFormSubmit = (formData: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => {
     if (selectedForEdit) {
       const result = updateWorkCenter(selectedForEdit.id, formData);
       return result.success;
@@ -226,11 +230,7 @@ export const WorkCentersView: React.FC = () => {
                             </button>
 
                             <button
-                              onClick={() => {
-                                if (confirm(`¿Estás completamente seguro de eliminar el centro de trabajo "${wc.name}" del sistema?`)) {
-                                  deleteWorkCenter(wc.id);
-                                }
-                              }}
+                              onClick={() => { setDeletingWcId(wc.id); setDeleteDialogOpen(true); }}
                               title="Eliminar centro de trabajo"
                               className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
                             >
@@ -314,6 +314,15 @@ export const WorkCentersView: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleFormSubmit}
         editingWorkCenter={selectedForEdit}
+        scopedCities={scopeCities}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        title="Eliminar Centro de Trabajo"
+        message="¿Estás seguro de eliminar este centro de trabajo? Esta acción no se puede deshacer."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => { setDeleteDialogOpen(false); setDeletingWcId(null); }}
       />
 
     </div>

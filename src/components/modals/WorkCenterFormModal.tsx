@@ -9,14 +9,17 @@ interface WorkCenterFormModalProps {
   onClose: () => void;
   onSubmit: (data: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => boolean;
   editingWorkCenter?: WorkCenter;
+  scopedCities?: { id: string; name: string }[];
 }
 
-export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen, onClose, onSubmit, editingWorkCenter }) => {
+export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen, onClose, onSubmit, editingWorkCenter, scopedCities }) => {
   const { user: currentUser } = useAuth();
+
+  const cities = scopedCities || INITIAL_CITIES;
 
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [cityId, setCityId] = useState('city-1');
+  const [cityId, setCityId] = useState('city_1');
   const [status, setStatus] = useState<'ACTIVE' | 'INACTIVE'>('ACTIVE');
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -29,7 +32,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
     } else {
       setName('');
       setAddress('');
-      setCityId('city-1');
+      setCityId('city_1');
       setStatus('ACTIVE');
     }
     setFormError(null);
@@ -99,7 +102,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
             <div>
               <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">Ciudad</label>
               <select value={cityId} onChange={(e) => setCityId(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text">
-                {INITIAL_CITIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                {cities.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
               </select>
             </div>
 
