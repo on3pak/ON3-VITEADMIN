@@ -262,53 +262,40 @@ export const UsersView: React.FC = () => {
 
                     <td className="py-3.5 px-4">
                       <div className="flex justify-center gap-1.5">
-                        {u.role === 'ROOT' && loggedInUser?.role === 'ROOT' && (
-                          <>
-                            <button
-                              onClick={() => handleOpenEditModal(u)}
-                              title="Modificar registro de usuario"
-                              className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
-                            >
-                              <Edit3 className="h-4 w-4" />
-                            </button>
-
-                            {u.id !== loggedInUser?.id && (
-                              <button
-                                onClick={() => {
-                                  if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
-                                    deleteUser(u.id);
-                                  }
-                                }}
-                                title="Eliminar usuario del sistema"
-                                className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            )}
-                          </>
+                        {u.id === loggedInUser?.id && (
+                          <button
+                            onClick={() => handleOpenEditModal(u)}
+                            title="Editar mis datos"
+                            className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
                         )}
-                        {u.role !== 'ROOT' && (
-                          <>
-                            <button
-                              onClick={() => handleOpenEditModal(u)}
-                              title="Modificar registro de usuario"
-                              className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
-                            >
-                              <Edit3 className="h-4 w-4" />
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
-                                  deleteUser(u.id);
-                                }
-                              }}
-                              title="Eliminar usuario del sistema"
-                              className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </>
+                        {u.role === 'ROOT' && loggedInUser?.role === 'ROOT' && u.id !== loggedInUser?.id && (
+                          <button
+                            onClick={() => {
+                              if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
+                                deleteUser(u.id);
+                              }
+                            }}
+                            title="Eliminar usuario del sistema"
+                            className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                        {u.role !== 'ROOT' && u.id !== loggedInUser?.id && (
+                          <button
+                            onClick={() => {
+                              if (confirm(`¿Estás completamente seguro de dar de baja y remover al usuario "${u.full_name}" del sistema?`)) {
+                                deleteUser(u.id);
+                              }
+                            }}
+                            title="Eliminar usuario del sistema"
+                            className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         )}
                       </div>
                     </td>
