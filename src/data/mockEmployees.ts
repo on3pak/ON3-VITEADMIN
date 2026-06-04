@@ -195,26 +195,26 @@ for (const n of NIGHT) {
 
 // ---------- OTHER WORK CENTERS ----------
 
-interface OtherWc { wc: string; city: string; cat: string; afternoon?: number }
+interface OtherWc { wc: string; city: string; cat: string; afternoonCat?: string; evening?: boolean }
 
 const OTHER: OtherWc[] = [
-  { wc: 'wc_2',  city: 'city_1', cat: 'ec_7',  afternoon: 2 },
-  { wc: 'wc_3',  city: 'city_1', cat: 'ec_1' },
-  { wc: 'wc_4',  city: 'city_1', cat: 'ec_2' },
-  { wc: 'wc_5',  city: 'city_1', cat: 'ec_3' },
-  { wc: 'wc_6',  city: 'city_1', cat: 'ec_5' },
-  { wc: 'wc_7',  city: 'city_1', cat: 'ec_6' },
-  { wc: 'wc_8',  city: 'city_1', cat: 'ec_8' },
-  { wc: 'wc_9',  city: 'city_1', cat: 'ec_10' },
-  { wc: 'wc_11', city: 'city_2', cat: 'ec_1' },
-  { wc: 'wc_12', city: 'city_2', cat: 'ec_2' },
-  { wc: 'wc_13', city: 'city_2', cat: 'ec_3' },
-  { wc: 'wc_14', city: 'city_2', cat: 'ec_4' },
-  { wc: 'wc_15', city: 'city_2', cat: 'ec_9' },
-  { wc: 'wc_16', city: 'city_2', cat: 'ec_10' },
-  { wc: 'wc_18', city: 'city_2', cat: 'ec_1' },
-  { wc: 'wc_19', city: 'city_2', cat: 'ec_5' },
-  { wc: 'wc_21', city: 'city_2', cat: 'ec_10' },
+  { wc: 'wc_2',  city: 'city_1', cat: 'ec_7',  afternoonCat: 'pm_2' },
+  { wc: 'wc_3',  city: 'city_1', cat: 'ec_1',  afternoonCat: 'ec_3' },
+  { wc: 'wc_4',  city: 'city_1', cat: 'ec_2',  afternoonCat: 'ec_4' },
+  { wc: 'wc_5',  city: 'city_1', cat: 'ec_3',  afternoonCat: 'ec_7' },
+  { wc: 'wc_6',  city: 'city_1', cat: 'ec_5',  afternoonCat: 'ec_6' },
+  { wc: 'wc_7',  city: 'city_1', cat: 'ec_6',  afternoonCat: 'ec_5' },
+  { wc: 'wc_8',  city: 'city_1', cat: 'ec_8',  afternoonCat: 'ec_9' },
+  { wc: 'wc_9',  city: 'city_1', cat: 'ec_10', afternoonCat: 'ec_1' },
+  { wc: 'wc_11', city: 'city_2', cat: 'ec_1',  afternoonCat: 'ec_3' },
+  { wc: 'wc_12', city: 'city_2', cat: 'ec_2',  afternoonCat: 'ec_4' },
+  { wc: 'wc_13', city: 'city_2', cat: 'ec_3',  afternoonCat: 'ec_7' },
+  { wc: 'wc_14', city: 'city_2', cat: 'ec_4',  afternoonCat: 'ec_1' },
+  { wc: 'wc_15', city: 'city_2', cat: 'ec_9',  afternoonCat: 'ec_10' },
+  { wc: 'wc_16', city: 'city_2', cat: 'ec_10', afternoonCat: 'ec_1' },
+  { wc: 'wc_18', city: 'city_2', cat: 'ec_1',  afternoonCat: 'ec_3' },
+  { wc: 'wc_19', city: 'city_2', cat: 'ec_5',  afternoonCat: 'ec_6' },
+  { wc: 'wc_21', city: 'city_2', cat: 'ec_10', afternoonCat: 'ec_1' },
 ];
 
 for (const o of OTHER) {
@@ -225,16 +225,26 @@ for (const o of OTHER) {
     work_center_id: o.wc, city_id: o.city,
   }));
 
-  if (o.afternoon) {
-    for (let j = 0; j < o.afternoon; j++) {
+  // afternoon employees per work center (regular weekday shift)
+  if (o.afternoonCat === 'pm_2') {
+    // Puerta Madrid: 2 afternoon employees
+    for (let j = 0; j < 2; j++) {
       seq++;
       const nm2 = MALE_NAMES[(seq + 13) % MALE_NAMES.length];
       const ln2 = LAST_NAMES[(seq + 53) % LAST_NAMES.length];
-      employees.push(employee(seq, nm2, ln2, j === 0 ? 'ec_1' : 'ec_3', 's_2', 'wd_2', {
+      employees.push(employee(seq, nm2, ln2, j === 0 ? 'ec_1' : 'ec_3', 's_2', 'wd_1', {
         work_center_id: o.wc, city_id: o.city,
         start_time: '14:00', end_time: '22:00',
       }));
     }
+  } else if (o.afternoonCat) {
+    seq++;
+    const nm2 = MALE_NAMES[(seq + 13) % MALE_NAMES.length];
+    const ln2 = LAST_NAMES[(seq + 53) % LAST_NAMES.length];
+    employees.push(employee(seq, nm2, ln2, o.afternoonCat, 's_2', 'wd_1', {
+      work_center_id: o.wc, city_id: o.city,
+      start_time: '14:00', end_time: '22:00',
+    }));
   }
 }
 

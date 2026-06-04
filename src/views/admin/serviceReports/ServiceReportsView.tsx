@@ -7,7 +7,7 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_STATUSES } from '../../../data/mockEmployees';
 import { AttendanceStatus, ServiceAssignment } from '../../../types';
 import {
-  CalendarCheck, CalendarPlus, History, ClipboardList,
+  CalendarCheck, CalendarPlus, History,
   CheckCircle2, Circle, X, ChevronDown, ChevronRight,
   Building2, Clock, Users, Save, AlertTriangle,
 } from 'lucide-react';
@@ -74,12 +74,10 @@ export const ServiceReportsView: React.FC = () => {
       const r = getPrevioForTomorrow(userCityId);
       setReport({ id: r.id, warnings: [] });
       setActiveWC(null);
-      setActiveShift('s_1');
     } else if (activeTab === 'diario') {
       const { report: r } = getDiarioForToday(userCityId);
       setReport({ id: r.id, warnings: [] });
       setActiveWC(null);
-      setActiveShift('s_1');
     } else {
       setReport(null);
     }
@@ -114,47 +112,46 @@ export const ServiceReportsView: React.FC = () => {
     return scopeWorkCenters.filter((wc) => wcIdsWithServices.has(wc.id));
   }, [scopeWorkCenters, services]);
 
-  const activeWCData = workCentersWithServices.find((wc) => wc.id === activeWC);
-  const wcServices = useMemo(() => {
-    if (!activeWC) return [];
-    return services.filter((s) => s.work_center_id === activeWC);
-  }, [activeWC, services]);
+  const shiftWorkCenterIds = useMemo(() => {
+    const empInShift = employees.filter((e) => e.shift_id === activeShift && e.active && e.status_id === 'es_1');
+    return new Set(empInShift.map((e) => e.work_center_id));
+  }, [employees, activeShift]);
 
-  const availableEmployees = useMemo(() => {
-    if (!activeWC) return [];
+  const filteredWorkCenters = useMemo(() => {
+    return workCentersWithServices.filter((wc) => shiftWorkCenterIds.has(wc.id));
+  }, [workCentersWithServices, shiftWorkCenterIds]);
+
+  const getEmployeesForWC = (wcId: string) => {
     return employees.filter((e) => {
-      if (e.work_center_id !== activeWC) return false;
+      if (e.work_center_id !== wcId) return false;
+      if (e.shift_id !== activeShift) return false;
       if (e.status_id !== 'es_1') return false;
       if (!e.active) return false;
       if (!workDayIds.includes(e.work_day_id)) return false;
       return true;
     });
-  }, [activeWC, employees, workDayIds]);
+  };
 
-  const shiftEmployees = useMemo(() => {
-    return availableEmployees.filter((e) => e.shift_id === activeShift);
-  }, [availableEmployees, activeShift]);
-
-  const getAssignmentsForService = (serviceId: string): ServiceAssignment[] => {
+  const getAssignmentsForService = (wcId: string, serviceId: string): ServiceAssignment[] => {
     if (!currentReport) return [];
-    return currentReport.assignments.filter((a) => a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === activeWC);
+    return currentReport.assignments.filter((a) => a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId);
   };
 
-  const isEmployeeAssignedToService = (employeeId: string, serviceId: string): boolean => {
+  const isEmployeeAssignedToService = (employeeId: string, wcId: string, serviceId: string): boolean => {
     if (!currentReport) return false;
-    return currentReport.assignments.some((a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === activeWC);
+    return currentReport.assignments.some((a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId);
   };
 
-  const handleToggleAssign = (employeeId: string, serviceId: string) => {
-    if (!currentReport || !activeWC) return;
+  const handleToggleAssign = (wcId: string, employeeId: string, serviceId: string) => {
+    if (!currentReport) return;
     const existing = currentReport.assignments.find(
-      (a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === activeWC
+      (a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId
     );
     if (existing) {
       removeAssignment(currentReport.id, existing.id);
     } else {
       addAssignment(currentReport.id, {
-        work_center_id: activeWC,
+        work_center_id: wcId,
         shift_id: activeShift,
         employee_id: employeeId,
         service_id: serviceId,
@@ -203,9 +200,10 @@ export const ServiceReportsView: React.FC = () => {
     </button>
   );
 
-  const renderServiceCard = (service: { id: string; name: string; category: string }) => {
-    const assignments = getAssignmentsForService(service.id);
-    const dropdownId = `${activeWC}-${activeShift}-${service.id}`;
+  const renderServiceCard = (wcId: string, service: { id: string; name: string; category: string }, wcEmployees: ReturnType<typeof getEmployeesForWC>) => {
+    const assignments = getAssignmentsForService(wcId, service.id);
+    const dropdownId = `${wcId}-${activeShift}-${service.id}`;
+    const availableEmps = wcEmployees.filter((e) => e.shift_id === activeShift);
 
     return (
       <div key={service.id} className="bg-white rounded-xl border border-app-border p-4">
@@ -271,11 +269,11 @@ export const ServiceReportsView: React.FC = () => {
 
           {openDropdown === dropdownId && (
             <div className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto">
-              {shiftEmployees.length === 0 ? (
+              {availableEmps.length === 0 ? (
                 <p className="p-3 text-xs text-app-text-secondary text-center">No hay empleados disponibles para este turno</p>
               ) : (
-                shiftEmployees.map((emp) => {
-                  const checked = isEmployeeAssignedToService(emp.id, service.id);
+                availableEmps.map((emp) => {
+                  const checked = isEmployeeAssignedToService(emp.id, wcId, service.id);
                   const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
                   return (
                     <label
@@ -285,7 +283,7 @@ export const ServiceReportsView: React.FC = () => {
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={() => handleToggleAssign(emp.id, service.id)}
+                        onChange={() => handleToggleAssign(wcId, emp.id, service.id)}
                         className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0"
                       />
                       <div className="min-w-0 flex-1">
@@ -307,11 +305,12 @@ export const ServiceReportsView: React.FC = () => {
     const wc = scopeWorkCenters.find((w) => w.id === wcId);
     const wcSvc = services.filter((s) => s.work_center_id === wcId);
     const isOpen = activeWC === wcId;
+    const wcEmployees = getEmployeesForWC(wcId);
 
     return (
       <div key={wcId} className="bg-app-card rounded-2xl border border-app-card-border overflow-hidden">
         <button
-          onClick={() => { setActiveWC(isOpen ? null : wcId); setActiveShift('s_1'); setOpenDropdown(null); }}
+          onClick={() => { setActiveWC(isOpen ? null : wcId); setOpenDropdown(null); }}
           className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-app-bg transition-colors"
         >
           <div className="flex items-center gap-3">
@@ -331,44 +330,69 @@ export const ServiceReportsView: React.FC = () => {
           </div>
         </button>
 
-        {isOpen && (
+          {isOpen && (
           <div className="border-t border-app-card-border p-4 space-y-4">
-            <div className="flex gap-1 overflow-x-auto pb-1">
-              {SHIFTS.map((shift) => {
-                const shiftEmpCount = shiftEmployees.filter((e) => e.shift_id === shift.id).length;
-                return (
-                  <button
-                    key={shift.id}
-                    onClick={() => { setActiveShift(shift.id); setOpenDropdown(null); }}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all shrink-0 ${
-                      activeShift === shift.id
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-app-bg text-app-text-secondary hover:text-app-text'
-                    }`}
-                  >
-                    <Clock className="h-3 w-3" />
-                    {shift.name}
-                    <span className="opacity-70">({shiftEmpCount})</span>
-                  </button>
-                );
-              })}
-            </div>
-
             {wcSvc.length === 0 ? (
               <p className="text-sm text-app-text-secondary text-center py-4">No hay servicios en este centro de trabajo</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {wcSvc.map(renderServiceCard)}
+                {wcSvc.map((svc) => renderServiceCard(wcId, svc, wcEmployees))}
               </div>
             )}
 
-            {shiftEmployees.length === 0 && (
+            {wcEmployees.length === 0 && (
               <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                 No hay empleados disponibles (trabajando) para este turno en este centro de trabajo.
               </p>
             )}
           </div>
         )}
+      </div>
+    );
+  };
+
+  const renderShiftTabs = () => (
+    <div className="flex gap-1 overflow-x-auto py-2">
+      {SHIFTS.map((shift) => {
+        const shiftWcCount = activeTab !== 'historial'
+          ? workCentersWithServices.filter((wc) => {
+              const hasEmp = employees.some((e) => e.work_center_id === wc.id && e.shift_id === shift.id && e.active && e.status_id === 'es_1');
+              return hasEmp;
+            }).length
+          : 0;
+        return (
+          <button
+            key={shift.id}
+            onClick={() => { setActiveShift(shift.id); setActiveWC(null); setOpenDropdown(null); }}
+            className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+              activeShift === shift.id
+                ? 'bg-primary-600 text-white shadow-sm'
+                : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg border border-transparent hover:border-app-border'
+            }`}
+          >
+            <Clock className="h-4 w-4" />
+            {shift.name}
+            {shiftWcCount > 0 && (
+              <span className="text-[11px] opacity-75">({shiftWcCount})</span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const renderWcList = (isEmptyMsg: string) => {
+    if (filteredWorkCenters.length === 0) {
+      return (
+        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+          <Building2 className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
+          <p className="text-app-text-secondary">{isEmptyMsg}</p>
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-3">
+        {filteredWorkCenters.map((wc) => renderWorkCenterSection(wc.id))}
       </div>
     );
   };
@@ -389,16 +413,8 @@ export const ServiceReportsView: React.FC = () => {
         </button>
       </div>
 
-      {workCentersWithServices.length === 0 ? (
-        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
-          <CalendarPlus className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
-          <p className="text-app-text-secondary">No hay centros de trabajo con servicios activos en tu ciudad.</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {workCentersWithServices.map((wc) => renderWorkCenterSection(wc.id))}
-        </div>
-      )}
+      {renderShiftTabs()}
+      {renderWcList('No hay centros de trabajo para el turno seleccionado en tu ciudad.')}
     </div>
   );
 
@@ -428,16 +444,8 @@ export const ServiceReportsView: React.FC = () => {
         </div>
       )}
 
-      {workCentersWithServices.length === 0 ? (
-        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
-          <CalendarCheck className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
-          <p className="text-app-text-secondary">No hay centros de trabajo con servicios activos en tu ciudad.</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {workCentersWithServices.map((wc) => renderWorkCenterSection(wc.id))}
-        </div>
-      )}
+      {renderShiftTabs()}
+      {renderWcList('No hay centros de trabajo para el turno seleccionado en tu ciudad.')}
     </div>
   );
 
