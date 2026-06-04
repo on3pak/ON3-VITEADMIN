@@ -231,7 +231,7 @@ const MainLayout: React.FC = () => {
         <div className="h-16 lg:hidden" />
 
         {/* Main Content Card (Metronic-style) */}
-        <div className="flex grow rounded-xl bg-white border border-app-border lg:mt-5 mx-5 mb-5">
+        <div className="flex grow rounded-xl bg-white border border-app-border mt-3 lg:mt-5 mx-5 mb-5">
           <div className="flex flex-col grow overflow-y-auto pt-5" id="scrollable_content">
             <main className="grow">
               {/* Toolbar */}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
 import { Menu, Search, User, Settings, LogOut, Moon, Grid, Languages, Bell, Maximize2, Minimize2, Type, Star } from 'lucide-react';
@@ -68,6 +68,21 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
 
   const info = viewBreadcrumb[currentView] || { title: 'Panel de Control' };
   const [lang, setLang] = useState<'ES' | 'EN'>('ES');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handler);
+    return () => document.removeEventListener('fullscreenchange', handler);
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }, []);
 
   return (
     <>
@@ -211,11 +226,15 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
               <Type className="h-[18px] w-[18px] group-hover:text-primary-600" />
             </button>
             <button
-              onClick={() => triggerToast('Pantalla completa — En desarrollo', 'info')}
+              onClick={toggleFullscreen}
               className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
-              title="Pantalla completa"
+              title={isFullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'}
             >
-              <Maximize2 className="h-[18px] w-[18px] group-hover:text-primary-600" />
+              {isFullscreen ? (
+                <Minimize2 className="h-[18px] w-[18px] group-hover:text-primary-600" />
+              ) : (
+                <Maximize2 className="h-[18px] w-[18px] group-hover:text-primary-600" />
+              )}
             </button>
             <button
               onClick={() => triggerToast('Notificaciones — En desarrollo', 'info')}

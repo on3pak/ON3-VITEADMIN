@@ -26,12 +26,12 @@ const canSeeUserCrud = (role?: string): boolean => {
 
 const dashboardItems = (role?: string) => {
   const allItems = [
-    { id: 'USER_DASHBOARD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Estadísticas y métricas' },
-    { id: 'EMPLOYEE_DASHBOARD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Panel de empleados' },
-    { id: 'VEHICLE_DASHBOARD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Panel de vehículos' },
-    { id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Panel de centros' },
-    { id: 'SERVICES_DASHBOARD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Panel de servicios' },
-    { id: 'INVENTORY_DASHBOARD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Panel de inventario' },
+    { id: 'USER_DASHBOARD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Actividad, registros y KPIs' },
+    { id: 'EMPLOYEE_DASHBOARD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Jornada, asistencia y nómina' },
+    { id: 'VEHICLE_DASHBOARD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Estado, revisiones y carga' },
+    { id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Operaciones y ocupación' },
+    { id: 'SERVICES_DASHBOARD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Órdenes, progreso y planificación' },
+    { id: 'INVENTORY_DASHBOARD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Stock, bajas y alertas' },
   ];
   return allItems.filter((item) => (VIEW_ROLES[item.id] || []).includes(role || ''));
 };
@@ -39,11 +39,11 @@ const dashboardItems = (role?: string) => {
 const adminItems = (role?: string) => {
   if (!canSeeUserCrud(role)) return [];
   return [
-    { id: 'USERS_CRUD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'CRUD de cuentas', disabled: !canAccessUserCrud(role) },
-    { id: 'EMPLOYEES_CRUD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'CRUD de empleados', disabled: !canAccessUserCrud(role) },
-    { id: 'VEHICLES_CRUD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'CRUD de vehículos', disabled: !canAccessUserCrud(role) },
-    { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'CRUD de centros', disabled: !canAccessUserCrud(role) },
-    { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'CRUD de servicios', disabled: !canAccessUserCrud(role) },
+    { id: 'USERS_CRUD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Roles, permisos y acceso', disabled: !canAccessUserCrud(role) },
+    { id: 'EMPLOYEES_CRUD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Personal, contratos y turnos', disabled: !canAccessUserCrud(role) },
+    { id: 'VEHICLES_CRUD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Flota, mantenimiento y combustible', disabled: !canAccessUserCrud(role) },
+    { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Ubicaciones y áreas de trabajo', disabled: !canAccessUserCrud(role) },
+    { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Tareas, categorías y zonas', disabled: !canAccessUserCrud(role) },
     { id: 'INVENTORY_CRUD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Ropa, EPIs y Maquinaria', disabled: !canAccessUserCrud(role) },
   ];
 };
