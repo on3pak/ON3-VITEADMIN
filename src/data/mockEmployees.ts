@@ -46,219 +46,196 @@ export const INITIAL_CONTRACT_TYPES: ContractType[] = [
   { id: 'ct_3', name: 'Obra' },
 ];
 
-const VACATION_MONTHS: Array<'JULIO' | 'AGOSTO' | 'SEPTIEMBRE'> = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'];
+const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'category_id' | 'shift_id' | 'work_day_id' | 'email' | 'phone' | 'personal_email'> = {
+  user_id: null,
+  city_id: 'city_1',
+  work_center_id: 'wc_1',
+  status_id: 'es_1',
+  active: true,
+  start_time: '08:00',
+  end_time: '16:00',
+  vacation_month: null,
+  vacation_year: null,
+  vacation_days: 22,
+  own_days: 2,
+  accumulated_days: 5,
+  excess_days: 0,
+  created_at: '2025-01-01T08:00:00Z',
+  updated_at: '2025-01-01T08:00:00Z',
+  phone_fixed: '',
+  iban: 'ES7620770024003102570001',
+  locker: '',
+  medical_check: true,
+  works_holidays: false,
+  contract_type: 'ct_1',
+  contract_start_date: '2025-01-01',
+  contract_end_date: null,
+  irpf: 15,
+  last_name2: '',
+};
 
-const EMPLOYEES_SEED: Omit<Employee, 'id'>[] = [
-  {
-    user_id: 'usr_a1b2c3d4', city_id: 'city_1', name: 'Miguel Ángel', last_name1: 'Torres', last_name2: 'García',
-    email: 'm.torres@on3.com', phone: '612345678', category_id: 'ec_1', status_id: 'es_1', work_center_id: 'wc_1',
-    active: true, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-01-15T08:00:00Z', updated_at: '2024-01-15T08:00:00Z',
-    personal_email: 'm.torres@gmail.com', phone_fixed: '918765432', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571234', locker: 'L-001', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2023-06-01', contract_end_date: null, irpf: 15
-  },
-  {
-    user_id: 'usr_b2c3d4e5', city_id: 'city_1', name: 'Alejandro', last_name1: 'Mendoza', last_name2: '',
-    email: 'a.mendoza@on3.com', phone: '612345679', category_id: 'ec_2', status_id: 'es_1', work_center_id: 'wc_2',
-    active: true, shift_id: 's_2', start_time: '14:00', end_time: '22:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-02-10T09:00:00Z', updated_at: '2024-02-10T09:00:00Z',
-    personal_email: 'maria.rodriguez@gmail.com', phone_fixed: '918765433', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571235', locker: 'L-002', medical_check: true, works_holidays: false,
-    contract_type: 'ct_1', contract_start_date: '2023-09-15', contract_end_date: null, irpf: 12
-  },
-  {
-    user_id: 'usr_c3d4e5f6', city_id: 'city_1', name: 'Beatriz', last_name1: 'Salazar', last_name2: '',
-    email: 'b.salazar@on3.com', phone: '612345680', category_id: 'ec_3', status_id: 'es_2', work_center_id: 'wc_3',
-    active: true, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'SEPTIEMBRE', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-03-05T10:00:00Z', updated_at: '2024-03-05T10:00:00Z',
-    personal_email: 'carlos.martinez@gmail.com', phone_fixed: '918765434', work_day_id: 'wd_2',
-    iban: 'ES7620770024003102571236', locker: 'L-003', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2022-01-10', contract_end_date: null, irpf: 18
-  },
-  {
-    user_id: 'usr_d4e5f6g7', city_id: 'city_1', name: 'Carlos', last_name1: 'Fuentes', last_name2: '',
-    email: 'c.fuentes@on3.com', phone: '612345681', category_id: 'ec_4', status_id: 'es_1', work_center_id: 'wc_4',
-    active: true, shift_id: 's_3', start_time: '22:00', end_time: '06:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-01-20T11:00:00Z', updated_at: '2024-01-20T11:00:00Z',
-    personal_email: 'ana.lopez@gmail.com', phone_fixed: '918765435', work_day_id: 'wd_3',
-    iban: 'ES7620770024003102571237', locker: 'L-004', medical_check: true, works_holidays: true,
-    contract_type: 'ct_2', contract_start_date: '2024-01-01', contract_end_date: '2025-01-01', irpf: 14
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Pedro', last_name1: 'Hernández', last_name2: 'Díaz',
-    email: 'p.hernandez@on3.com', phone: '612345682', category_id: 'ec_5', status_id: 'es_3', work_center_id: 'wc_5',
-    active: false, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-11-08T08:00:00Z', updated_at: '2024-05-15T08:00:00Z',
-    personal_email: 'pedro.hernandez@gmail.com', phone_fixed: '918765436', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571238', locker: 'L-005', medical_check: false, works_holidays: false,
-    contract_type: 'ct_1', contract_start_date: '2022-05-20', contract_end_date: null, irpf: 16
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Laura', last_name1: 'Jiménez', last_name2: 'Ruiz',
-    email: 'l.jimenez@on3.com', phone: '612345683', category_id: 'ec_6', status_id: 'es_1', work_center_id: 'wc_7',
-    active: true, shift_id: 's_2', start_time: '14:00', end_time: '22:00',
-    vacation_month: 'SEPTIEMBRE', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-08-12T09:00:00Z', updated_at: '2023-08-12T09:00:00Z',
-    personal_email: 'laura.jimenez@gmail.com', phone_fixed: '918765437', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571239', locker: 'L-006', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2023-03-01', contract_end_date: null, irpf: 17
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Miguel', last_name1: 'Torres', last_name2: 'Navarro',
-    email: 'm.torres@on3.com', phone: '612345684', category_id: 'ec_7', status_id: 'es_4', work_center_id: 'wc_6',
-    active: true, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-04-18T10:00:00Z', updated_at: '2024-02-20T10:00:00Z',
-    personal_email: 'miguel.torres@gmail.com', phone_fixed: '918765438', work_day_id: 'wd_4',
-    iban: 'ES7620770024003102571240', locker: 'L-007', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2021-08-01', contract_end_date: null, irpf: 20
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Carmen', last_name1: 'Morales', last_name2: 'Serrano',
-    email: 'c.morales@on3.com', phone: '612345685', category_id: 'ec_8', status_id: 'es_1', work_center_id: 'wc_8',
-    active: true, shift_id: 's_1', start_time: '09:00', end_time: '17:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2022-06-25T08:00:00Z', updated_at: '2022-06-25T08:00:00Z',
-    personal_email: 'carmen.morales@gmail.com', phone_fixed: '918765439', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571241', locker: 'L-008', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2020-01-15', contract_end_date: null, irpf: 22
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Javier', last_name1: 'Ramos', last_name2: 'Castro',
-    email: 'j.ramos@on3.com', phone: '612345686', category_id: 'ec_9', status_id: 'es_5', work_center_id: 'wc_1',
-    active: true, shift_id: 's_2', start_time: '14:00', end_time: '22:00',
-    vacation_month: 'SEPTIEMBRE', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-09-30T09:00:00Z', updated_at: '2024-04-10T09:00:00Z',
-    personal_email: 'javier.ramos@gmail.com', phone_fixed: '918765440', work_day_id: 'wd_2',
-    iban: 'ES7620770024003102571242', locker: 'L-009', medical_check: true, works_holidays: false,
-    contract_type: 'ct_1', contract_start_date: '2019-05-01', contract_end_date: null, irpf: 25
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Sofia', last_name1: 'Vega', last_name2: 'Ortega',
-    email: 's.vega@on3.com', phone: '612345687', category_id: 'ec_10', status_id: 'es_1', work_center_id: 'wc_8',
-    active: true, shift_id: 's_1', start_time: '09:00', end_time: '17:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-01-08T08:00:00Z', updated_at: '2024-01-08T08:00:00Z',
-    personal_email: 'sofia.vega@gmail.com', phone_fixed: '918765441', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571243', locker: 'L-010', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2023-11-01', contract_end_date: null, irpf: 15
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Antonio', last_name1: 'Molina', last_name2: 'Delgado',
-    email: 'a.molina@on3.com', phone: '612345688', category_id: 'ec_1', status_id: 'es_6', work_center_id: 'wc_2',
-    active: true, shift_id: 's_3', start_time: '22:00', end_time: '06:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-02-22T10:00:00Z', updated_at: '2024-06-01T10:00:00Z',
-    personal_email: 'antonio.molina@gmail.com', phone_fixed: '918765442', work_day_id: 'wd_3',
-    iban: 'ES7620770024003102571244', locker: 'L-011', medical_check: true, works_holidays: true,
-    contract_type: 'ct_3', contract_start_date: '2024-02-15', contract_end_date: '2024-12-31', irpf: 10
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Isabel', last_name1: 'Romero', last_name2: 'Aguilar',
-    email: 'i.romero@on3.com', phone: '612345689', category_id: 'ec_2', status_id: 'es_1', work_center_id: 'wc_3',
-    active: true, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'SEPTIEMBRE', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-12-05T09:00:00Z', updated_at: '2023-12-05T09:00:00Z',
-    personal_email: 'isabel.romero@gmail.com', phone_fixed: '918765443', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571245', locker: 'L-012', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2023-06-01', contract_end_date: null, irpf: 13
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'David', last_name1: 'Cortés', last_name2: 'Garrido',
-    email: 'd.cortes@on3.com', phone: '612345690', category_id: 'ec_3', status_id: 'es_1', work_center_id: 'wc_4',
-    active: true, shift_id: 's_2', start_time: '14:00', end_time: '22:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-03-18T08:00:00Z', updated_at: '2024-03-18T08:00:00Z',
-    personal_email: 'david.cortes@gmail.com', phone_fixed: '918765444', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571246', locker: 'L-013', medical_check: true, works_holidays: true,
-    contract_type: 'ct_2', contract_start_date: '2024-03-01', contract_end_date: '2025-03-01', irpf: 14
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Elena', last_name1: 'Soto', last_name2: 'Pérez',
-    email: 'e.soto@on3.com', phone: '612345691', category_id: 'ec_4', status_id: 'es_2', work_center_id: 'wc_5',
-    active: true, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-10-12T10:00:00Z', updated_at: '2024-05-20T10:00:00Z',
-    personal_email: 'elena.soto@gmail.com', phone_fixed: '918765445', work_day_id: 'wd_2',
-    iban: 'ES7620770024003102571247', locker: 'L-014', medical_check: true, works_holidays: false,
-    contract_type: 'ct_1', contract_start_date: '2022-09-01', contract_end_date: null, irpf: 15
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Francisco', last_name1: 'Ruiz', last_name2: 'Guerrero',
-    email: 'f.ruiz@on3.com', phone: '612345692', category_id: 'ec_5', status_id: 'es_1', work_center_id: 'wc_7',
-    active: true, shift_id: 's_2', start_time: '14:00', end_time: '22:00',
-    vacation_month: 'SEPTIEMBRE', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-07-22T09:00:00Z', updated_at: '2023-07-22T09:00:00Z',
-    personal_email: 'francisco.ruiz@gmail.com', phone_fixed: '918765446', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571248', locker: 'L-015', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2022-02-15', contract_end_date: null, irpf: 17
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Patricia', last_name1: 'Flores', last_name2: 'Moreno',
-    email: 'p.flores@on3.com', phone: '612345693', category_id: 'ec_6', status_id: 'es_1', work_center_id: 'wc_7',
-    active: true, shift_id: 's_1', start_time: '08:00', end_time: '16:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-01-30T08:00:00Z', updated_at: '2024-01-30T08:00:00Z',
-    personal_email: 'patricia.flores@gmail.com', phone_fixed: '918765447', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571249', locker: 'L-016', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2023-10-01', contract_end_date: null, irpf: 16
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Roberto', last_name1: 'Gil', last_name2: 'Santos',
-    email: 'r.gil@on3.com', phone: '612345694', category_id: 'ec_7', status_id: 'es_3', work_center_id: 'wc_6',
-    active: false, shift_id: 's_3', start_time: '22:00', end_time: '06:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-05-14T10:00:00Z', updated_at: '2024-04-05T10:00:00Z',
-    personal_email: 'roberto.gil@gmail.com', phone_fixed: '918765448', work_day_id: 'wd_4',
-    iban: 'ES7620770024003102571250', locker: 'L-017', medical_check: false, works_holidays: false,
-    contract_type: 'ct_1', contract_start_date: '2021-03-01', contract_end_date: null, irpf: 19
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Sandra', last_name1: 'Núñez', last_name2: 'Herrera',
-    email: 's.nunez@on3.com', phone: '612345695', category_id: 'ec_8', status_id: 'es_1', work_center_id: 'wc_8',
-    active: true, shift_id: 's_1', start_time: '09:00', end_time: '17:00',
-    vacation_month: 'SEPTIEMBRE', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2022-11-20T08:00:00Z', updated_at: '2022-11-20T08:00:00Z',
-    personal_email: 'sandra.nunez@gmail.com', phone_fixed: '918765449', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571251', locker: 'L-018', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2020-08-01', contract_end_date: null, irpf: 21
-  },
-  {
-    user_id: null, city_id: 'city_2', name: 'Alberto', last_name1: 'Castillo', last_name2: 'Jiménez',
-    email: 'a.castillo@on3.com', phone: '612345696', category_id: 'ec_9', status_id: 'es_1', work_center_id: 'wc_1',
-    active: true, shift_id: 's_2', start_time: '14:00', end_time: '22:00',
-    vacation_month: 'JULIO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2023-03-08T09:00:00Z', updated_at: '2023-03-08T09:00:00Z',
-    personal_email: 'alberto.castillo@gmail.com', phone_fixed: '918765450', work_day_id: 'wd_1',
-    iban: 'ES7620770024003102571252', locker: 'L-019', medical_check: true, works_holidays: true,
-    contract_type: 'ct_1', contract_start_date: '2018-06-01', contract_end_date: null, irpf: 24
-  },
-  {
-    user_id: null, city_id: 'city_1', name: 'Natalia', last_name1: 'Domínguez', last_name2: 'Vargas',
-    email: 'n.dominguez@on3.com', phone: '612345697', category_id: 'ec_10', status_id: 'es_4', work_center_id: 'wc_8',
-    active: true, shift_id: 's_1', start_time: '09:00', end_time: '17:00',
-    vacation_month: 'AGOSTO', vacation_year: 2024, vacation_days: 22, own_days: 2, accumulated_days: 5, excess_days: 0,
-    created_at: '2024-02-28T08:00:00Z', updated_at: '2024-06-10T08:00:00Z',
-    personal_email: 'natalia.dominguez@gmail.com', phone_fixed: '918765451', work_day_id: 'wd_2',
-    iban: 'ES7620770024003102571253', locker: 'L-020', medical_check: true, works_holidays: false,
-    contract_type: 'ct_1', contract_start_date: '2023-04-15', contract_end_date: null, irpf: 14
+const MALE_NAMES = [
+  'Antonio', 'Manuel', 'José', 'David', 'Francisco', 'Javier',
+  'Daniel', 'Carlos', 'Jesús', 'Rafael', 'Miguel Ángel', 'Pedro',
+  'Juan', 'Alejandro', 'Sergio', 'Ramón', 'Félix', 'Víctor',
+  'Raúl', 'Alberto', 'Jorge', 'Rubén', 'Álvaro', 'Andrés',
+];
+const FEMALE_NAMES = [
+  'María', 'Ana', 'Laura', 'Carmen', 'Isabel', 'Patricia',
+  'Sandra', 'Elena', 'Rosa', 'Natalia', 'Marta', 'Lucía',
+];
+const LAST_NAMES = [
+  'García', 'Rodríguez', 'Martínez', 'López', 'Sánchez', 'Pérez',
+  'González', 'Fernández', 'Moreno', 'Jiménez', 'Ruiz', 'Díaz',
+  'Torres', 'Muñoz', 'Romero', 'Navarro', 'Gutiérrez', 'Gil',
+  'Vázquez', 'Morales', 'Ortega', 'Delgado', 'Castro', 'Santos',
+];
+
+function employee(
+  idNum: number,
+  name: string,
+  last1: string,
+  cat: string,
+  shift: string,
+  wd: string,
+  extra: Partial<Omit<Employee, 'id'>> = {},
+): Employee {
+  const id = String(idNum).padStart(6, '0');
+  const slug = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '');
+  return {
+    ...BASE,
+    ...extra,
+    id,
+    name,
+    last_name1: last1,
+    category_id: cat,
+    shift_id: shift,
+    work_day_id: wd,
+    email: `${slug(name).slice(0, 1)}.${slug(last1)}@on3.com`,
+    phone: `6123${String(idNum).padStart(4, '0')}`,
+    personal_email: `${slug(name)}.${slug(last1)}@gmail.com`,
+  };
+}
+
+const employees: Employee[] = [];
+let seq = 0;
+
+// ---------- 30 employees in Nave (wc_1) ----------
+
+// 20 MORNING (s_1)
+const MORNING = [
+  { i: 0, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 1, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 2, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 3, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 4, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 5, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 6, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 7, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 8, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 9, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 10, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 11, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 12, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 13, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 14, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 15, cat: 'ec_4', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 16, cat: 'ec_4', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 17, cat: 'ec_4', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 18, cat: 'ec_4', wd: 'wd_3', t: '07:00', e: '15:00' },
+  { i: 19, cat: 'ec_4', wd: 'wd_4', t: '07:00', e: '15:00' },
+];
+
+for (const m of MORNING) {
+  const nm = seq < 12 ? MALE_NAMES[seq] : FEMALE_NAMES[seq - 12];
+  const ln = LAST_NAMES[seq * 3 % LAST_NAMES.length];
+  const ln2 = seq % 4 === 0 ? LAST_NAMES[(seq + 7) % LAST_NAMES.length] : '';
+  seq++;
+  employees.push(employee(seq, nm, ln, m.cat, 's_1', m.wd, {
+    start_time: m.t, end_time: m.e, last_name2: ln2,
+  }));
+}
+
+// 5 AFTERNOON (s_2)
+const AFTERNOON = [
+  { cat: 'ec_1', wd: 'wd_2' },
+  { cat: 'ec_1', wd: 'wd_1' },
+  { cat: 'ec_2', wd: 'wd_2' },
+  { cat: 'ec_3', wd: 'wd_2' },
+  { cat: 'ec_4', wd: 'wd_1' },
+];
+
+for (const a of AFTERNOON) {
+  const nm = seq % 2 === 0 ? MALE_NAMES[seq % MALE_NAMES.length] : FEMALE_NAMES[seq % FEMALE_NAMES.length];
+  const ln = LAST_NAMES[(seq + 17) % LAST_NAMES.length];
+  seq++;
+  employees.push(employee(seq, nm, ln, a.cat, 's_2', a.wd, {
+    start_time: '14:00', end_time: '22:00',
+  }));
+}
+
+// 5 NIGHT (s_3)
+const NIGHT = [
+  { cat: 'ec_1', wd: 'wd_1' },
+  { cat: 'ec_1', wd: 'wd_1' },
+  { cat: 'ec_2', wd: 'wd_1' },
+  { cat: 'ec_3', wd: 'wd_3' },
+  { cat: 'ec_4', wd: 'wd_1' },
+];
+
+for (const n of NIGHT) {
+  const nm = seq % 2 === 0 ? MALE_NAMES[(seq + 3) % MALE_NAMES.length] : FEMALE_NAMES[(seq + 5) % FEMALE_NAMES.length];
+  const ln = LAST_NAMES[(seq + 31) % LAST_NAMES.length];
+  const ln2 = seq % 3 === 0 ? LAST_NAMES[(seq + 11) % LAST_NAMES.length] : '';
+  seq++;
+  employees.push(employee(seq, nm, ln, n.cat, 's_3', n.wd, {
+    start_time: '22:00', end_time: '06:00', last_name2: ln2,
+  }));
+}
+
+// ---------- OTHER WORK CENTERS ----------
+
+interface OtherWc { wc: string; city: string; cat: string; afternoon?: number }
+
+const OTHER: OtherWc[] = [
+  { wc: 'wc_2',  city: 'city_1', cat: 'ec_7',  afternoon: 2 },
+  { wc: 'wc_3',  city: 'city_1', cat: 'ec_1' },
+  { wc: 'wc_4',  city: 'city_1', cat: 'ec_2' },
+  { wc: 'wc_5',  city: 'city_1', cat: 'ec_3' },
+  { wc: 'wc_6',  city: 'city_1', cat: 'ec_5' },
+  { wc: 'wc_7',  city: 'city_1', cat: 'ec_6' },
+  { wc: 'wc_8',  city: 'city_1', cat: 'ec_8' },
+  { wc: 'wc_9',  city: 'city_1', cat: 'ec_10' },
+  { wc: 'wc_11', city: 'city_2', cat: 'ec_1' },
+  { wc: 'wc_12', city: 'city_2', cat: 'ec_2' },
+  { wc: 'wc_13', city: 'city_2', cat: 'ec_3' },
+  { wc: 'wc_14', city: 'city_2', cat: 'ec_4' },
+  { wc: 'wc_15', city: 'city_2', cat: 'ec_9' },
+  { wc: 'wc_16', city: 'city_2', cat: 'ec_10' },
+  { wc: 'wc_18', city: 'city_2', cat: 'ec_1' },
+  { wc: 'wc_19', city: 'city_2', cat: 'ec_5' },
+  { wc: 'wc_21', city: 'city_2', cat: 'ec_10' },
+];
+
+for (const o of OTHER) {
+  seq++;
+  const nm = seq % 2 === 0 ? MALE_NAMES[(seq + 7) % MALE_NAMES.length] : FEMALE_NAMES[(seq + 3) % FEMALE_NAMES.length];
+  const ln = LAST_NAMES[(seq + 41) % LAST_NAMES.length];
+  employees.push(employee(seq, nm, ln, o.cat, 's_1', 'wd_1', {
+    work_center_id: o.wc, city_id: o.city,
+  }));
+
+  if (o.afternoon) {
+    for (let j = 0; j < o.afternoon; j++) {
+      seq++;
+      const nm2 = MALE_NAMES[(seq + 13) % MALE_NAMES.length];
+      const ln2 = LAST_NAMES[(seq + 53) % LAST_NAMES.length];
+      employees.push(employee(seq, nm2, ln2, j === 0 ? 'ec_1' : 'ec_3', 's_2', 'wd_2', {
+        work_center_id: o.wc, city_id: o.city,
+        start_time: '14:00', end_time: '22:00',
+      }));
+    }
   }
-];
+}
 
-const PADDED_IDS = [
-  '000001', '000002', '000003', '000004', '000005',
-  '000006', '000007', '000008', '000009', '000011',
-  '000012', '000013', '000014', '000015', '000016',
-  '000017', '000018', '000019', '000020', '000021'
-];
-
-export const INITIAL_EMPLOYEES: Employee[] = EMPLOYEES_SEED.map((emp, i) => ({
-  ...emp,
-  id: PADDED_IDS[i]
-}));
+export const INITIAL_EMPLOYEES: Employee[] = employees;
