@@ -6,7 +6,7 @@ import {
   ShieldCheck, LogOut, KeyRound,
   Truck, Briefcase, Building2, ClipboardList, Package,
   Settings, ChevronDown, User, Shield,
-  Moon, Grid, Wrench,
+  Moon, Grid, Wrench, CalendarCheck,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -48,6 +48,14 @@ const adminItems = (role?: string) => {
   ];
 };
 
+const appsItems = (role?: string) => {
+  const canAccess = ['ROOT', 'ADMIN', 'MANAGER'].includes(role || '');
+  if (!canAccess) return [];
+  return [
+    { id: 'SERVICE_REPORT' as DashboardViewType, label: 'Parte de Servicio', icon: <CalendarCheck className="h-5 w-5" />, description: 'Planificación y control diario' },
+  ];
+};
+
 const profileItems = [
   { id: 'PROFILE' as DashboardViewType, label: 'Mi Perfil', icon: <User className="h-5 w-5" />, description: 'Información personal' },
   { id: 'PROFILE_CONFIG' as DashboardViewType, label: 'Configuración', icon: <Settings className="h-5 w-5" />, description: 'Ajustes del sistema' },
@@ -55,7 +63,7 @@ const profileItems = [
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
   const { user, logout, triggerToast } = useAuth();
-  const [activeSection, setActiveSection] = useState<'profile' | 'dashboard' | 'admin'>('profile');
+  const [activeSection, setActiveSection] = useState<'profile' | 'dashboard' | 'admin' | 'apps'>('profile');
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -69,17 +77,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const items = activeSection === 'profile' ? profileItems : activeSection === 'dashboard' ? dashboardItems(user?.role) : adminItems(user?.role);
+  const items = activeSection === 'profile' ? profileItems : activeSection === 'dashboard' ? dashboardItems(user?.role) : activeSection === 'apps' ? appsItems(user?.role) : adminItems(user?.role);
 
-  const getItemSection = (id: DashboardViewType): 'profile' | 'dashboard' | 'admin' => {
+  const getItemSection = (id: DashboardViewType): 'profile' | 'dashboard' | 'admin' | 'apps' => {
     if (profileItems.some((i) => i.id === id)) return 'profile';
     if (dashboardItems(user?.role).some((i) => i.id === id)) return 'dashboard';
+    if (appsItems(user?.role).some((i) => i.id === id)) return 'apps';
     return 'admin';
   };
 
-  const handleSectionChange = (section: 'dashboard' | 'admin') => {
+  const handleSectionChange = (section: 'dashboard' | 'admin' | 'apps') => {
     setActiveSection(section);
-    const sectionItems = section === 'dashboard' ? dashboardItems(user?.role) : adminItems(user?.role);
+    let sectionItems: { id: DashboardViewType; disabled?: boolean }[];
+    if (section === 'dashboard') sectionItems = dashboardItems(user?.role);
+    else if (section === 'apps') sectionItems = appsItems(user?.role);
+    else sectionItems = adminItems(user?.role);
     const target = sectionItems[0];
     if (target && !target.disabled) {
       setView(target.id);
@@ -177,8 +189,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           {/* Footer Icons + User */}
           <div className="flex flex-col items-center gap-3">
             <button
-              onClick={() => triggerToast('Apps — En desarrollo', 'info')}
-              className="flex items-center justify-center size-9 rounded-md border border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border transition-all"
+              onClick={() => handleSectionChange('apps')}
+              className={`flex items-center justify-center size-9 rounded-md border transition-all ${
+                activeSection === 'apps'
+                  ? 'bg-white text-primary-600 border-app-border shadow-xs'
+                  : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+              }`}
               title="Apps"
             >
               <Grid className="h-[18px] w-[18px]" />
@@ -299,7 +315,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
           {/* Section Group Label */}
           <div className="px-[18px] pt-4 pb-1">
             <p className="text-[10px] font-semibold text-app-text-secondary uppercase tracking-[0.1em]">
-              {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : 'Administración'}
+              {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : activeSection === 'apps' ? 'Apps' : 'Administración'}
             </p>
           </div>
 

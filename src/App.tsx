@@ -36,6 +36,8 @@ import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
 import { DashboardConfigView } from './views/dashboard/DashboardConfigView';
 import { UtilsView } from './views/utils/UtilsView';
 import { InventoryProvider } from './context/InventoryContext';
+import { ServiceReportProvider } from './context/ServiceReportContext';
+import { ServiceReportsView } from './views/admin/serviceReports/ServiceReportsView';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
   USER_DASHBOARD: '/',
@@ -53,6 +55,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   SERVICE_DETAIL: '/admin/services/:id',
   INVENTORY_CRUD: '/admin/inventory',
   INVENTORY_DASHBOARD: '/dashboard/inventory',
+  SERVICE_REPORT: '/apps/service-report',
   PROFILE: '/profile',
   PROFILE_CONFIG: '/profile/config',
   TESTS_AUTH: '/tests/auth',
@@ -202,6 +205,8 @@ const MainLayout: React.FC = () => {
       case 'LOGS_USERS':
       case 'LOGS_EMPLOYEES':
         return <LogsView logType={currentView} />;
+      case 'SERVICE_REPORT':
+        return <ServiceReportsView />;
       case 'INVENTORY_CRUD':
         return <InventoryView />;
       case 'INVENTORY_DASHBOARD':
@@ -267,9 +272,11 @@ export default function App() {
           <VehicleProvider>
             <WorkCenterProvider>
             <ServiceProvider>
+              <ServiceReportProvider>
               <InventoryProvider>
               <MainLayout />
               </InventoryProvider>
+              </ServiceReportProvider>
             </ServiceProvider>
             </WorkCenterProvider>
           </VehicleProvider>
