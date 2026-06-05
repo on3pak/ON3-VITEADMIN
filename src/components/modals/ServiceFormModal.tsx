@@ -4,7 +4,8 @@ import { INITIAL_SERVICE_CATEGORIES } from '../../data/mockServices';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { INITIAL_SHIFTS } from '../../data/mockEmployees';
 import { WorkCenter } from '../../types';
-import { X, ClipboardList, Save } from 'lucide-react';
+import { generateId } from '../../utils/id';
+import { X, ClipboardList, Save, Plus, Trash2 } from 'lucide-react';
 
 interface ServiceFormModalProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ interface ServiceFormModalProps {
   editingService?: Service;
   workCenters?: WorkCenter[];
 }
+
+const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 const TASK_TEMPLATES: string[] = [
   'Barrido manual de aceras y calzada',
@@ -79,6 +82,8 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
   const [shift_id, setShift_id] = useState('s_1');
   const [required_employees, setRequired_employees] = useState(1);
   const [formError, setFormError] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<ServiceTask[]>([]);
+  const [taskDay, setTaskDay] = useState(0);
 
   useEffect(() => {
     if (editingService) {
@@ -87,14 +92,46 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       setWork_center_id(editingService.work_center_id);
       setShift_id(editingService.shift_id);
       setRequired_employees(editingService.required_employees);
+      setTasks(editingService.tasks);
     } else {
       setName('');
       setCategory('BARRIDO MIXTO');
       setWork_center_id('wc_1');
       setShift_id('s_1');
       setRequired_employees(1);
+      setTasks([]);
     }
+    setTaskDay(0);
   }, [editingService, isOpen]);
+
+  const handleTaskDescriptionChange = (taskId: string, description: string) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, description } : t))
+    );
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+  };
+
+  const handleAddTask = () => {
+    const dayTasks = tasks.filter((t) => t.day_index === taskDay);
+    const maxIndex = dayTasks.reduce((max, t) => Math.max(max, t.task_index), -1);
+    const now = new Date().toISOString();
+    const newTask: ServiceTask = {
+      id: generateId('task'),
+      service_id: editingService?.id ?? '',
+      day_index: taskDay,
+      task_index: maxIndex + 1,
+      description: '',
+      status: 'PENDING',
+      zone: null,
+      assigned_to: null,
+      created_at: now,
+      updated_at: now,
+    };
+    setTasks((prev) => [...prev, newTask]);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +150,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
         shift_id,
         required_employees,
         week_start: editingService.week_start,
-        tasks: editingService.tasks,
+        tasks,
       });
       if (success) onClose();
     } else {
@@ -133,11 +170,13 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
 
   if (!isOpen) return null;
 
+  const dayTasks = editingService ? tasks.filter((t) => t.day_index === taskDay) : [];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-sidebar/80" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-app-border">
+      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-app-border shrink-0">
           <div className="flex items-center gap-2">
             <ClipboardList className="h-5 w-5 text-indigo-600" />
             <h2 className="text-lg font-bold text-app-text">
@@ -149,7 +188,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto grow">
           {formError && (
             <div className="p-3 bg-rose-50 text-rose-700 rounded-lg text-sm">{formError}</div>
           )}
@@ -192,39 +231,99 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
             </select>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Turno *</label>
-            <select
-              value={shift_id}
-              onChange={(e) => setShift_id(e.target.value)}
-              className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
-            >
-              {shifts.map((s) => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
-            </select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Turno *</label>
+              <select
+                value={shift_id}
+                onChange={(e) => setShift_id(e.target.value)}
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+              >
+                {shifts.map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Personal necesario *</label>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setRequired_employees(n)}
+                    className={`w-10 h-10 rounded-lg text-base font-bold transition-all ${
+                      required_employees === n
+                        ? 'bg-primary-600 text-white shadow-sm'
+                        : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Personal necesario *</label>
-            <div className="flex items-center gap-3">
-              {[1, 2, 3].map((n) => (
+          {editingService && (
+            <div className="border-t border-app-border pt-4">
+              <label className="block text-xs font-semibold text-app-text-secondary mb-3">Tareas del servicio</label>
+
+              <div className="flex gap-1 overflow-x-auto mb-4">
+                {DAYS.map((day, idx) => {
+                  const count = tasks.filter((t) => t.day_index === idx).length;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setTaskDay(idx)}
+                      className={`relative flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition-all shrink-0 ${
+                        taskDay === idx
+                          ? 'bg-primary-600 text-white shadow-sm'
+                          : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg border border-transparent hover:border-app-border'
+                      }`}
+                    >
+                      <span>{day}</span>
+                      <span className="text-[10px] opacity-75">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {dayTasks.length === 0 && (
+                  <p className="text-sm text-app-text-secondary text-center py-4">No hay tareas para este día.</p>
+                )}
+                {dayTasks.map((task) => (
+                  <div key={task.id} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={task.description}
+                      onChange={(e) => handleTaskDescriptionChange(task.id, e.target.value)}
+                      placeholder="Descripción de la tarea"
+                      className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTask(task.id)}
+                      className="p-2 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
                 <button
-                  key={n}
                   type="button"
-                  onClick={() => setRequired_employees(n)}
-                  className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
-                    required_employees === n
-                      ? 'bg-primary-600 text-white shadow-sm'
-                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
-                  }`}
+                  onClick={handleAddTask}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition-colors w-full justify-center"
                 >
-                  {n}
+                  <Plus className="h-3.5 w-3.5" />
+                  Añadir tarea
                 </button>
-              ))}
+              </div>
             </div>
-            <p className="text-xs text-app-text-secondary mt-1">¿Cuántos empleados se necesitan para este servicio?</p>
-          </div>
+          )}
 
           <div className="flex justify-end gap-2 pt-4 border-t border-app-border">
             <button

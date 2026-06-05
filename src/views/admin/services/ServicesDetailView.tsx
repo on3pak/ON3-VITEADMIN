@@ -7,8 +7,8 @@ import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Service } from '../../../types';
 import { INITIAL_SHIFTS } from '../../../data/mockEmployees';
 import {
-  ArrowLeft, ClipboardList, CheckCircle2, Circle,
-  Edit3, Trash2,
+  ArrowLeft, ClipboardList,
+  Edit3, Trash2, ListChecks,
 } from 'lucide-react';
 
 interface ServicesDetailViewProps {
@@ -38,7 +38,7 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find((w) => w.id === id)?.name ?? id;
 
 export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceId, onBack }) => {
-  const { getServiceById, updateService, deleteService, updateServiceTask } = useServices();
+  const { getServiceById, updateService, deleteService } = useServices();
   const { user: loggedInUser } = useAuth();
   const service = getServiceById(serviceId);
 
@@ -65,12 +65,6 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
   }
 
   const dayTasks = service.tasks.filter((t) => t.day_index === activeDay);
-  const dayCompleted = dayTasks.filter((t) => t.status === 'COMPLETED').length;
-  const totalCompleted = service.tasks.filter((t) => t.status === 'COMPLETED').length;
-
-  const handleToggleTask = (taskId: string, currentStatus: string) => {
-    updateServiceTask(serviceId, taskId, currentStatus === 'COMPLETED' ? 'PENDING' : 'COMPLETED');
-  };
 
   const handleEdit = () => setModalOpen(true);
 
@@ -95,28 +89,13 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
       </button>
 
       <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
-        <div className="px-6 py-5 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">
-              <ClipboardList className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-white">{service.name}</h1>
-              <p className="text-primary-200 text-sm">{service.category}</p>
-            </div>
+        <div className="px-6 py-5 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center gap-4">
+          <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+            <ClipboardList className="w-7 h-7 text-white" />
           </div>
-          <div className="text-right text-white">
-            <div className="text-2xl font-bold">{totalCompleted}/{service.tasks.length}</div>
-            <div className="text-xs text-primary-200">tareas completadas</div>
-          </div>
-        </div>
-
-        <div className="px-6 py-4 border-b border-app-border">
-          <div className="w-full h-2 bg-app-bg rounded-full overflow-hidden">
-            <div
-              className="h-full bg-emerald-500 rounded-full transition-all"
-              style={{ width: `${(totalCompleted / service.tasks.length) * 100}%` }}
-            />
+          <div>
+            <h1 className="text-xl font-bold text-white">{service.name}</h1>
+            <p className="text-primary-200 text-sm">{service.category}</p>
           </div>
         </div>
 
@@ -134,10 +113,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
         <div className="border-b border-app-border">
           <div className="flex overflow-x-auto">
             {DAYS.map((day, idx) => {
-              const dayTaskCount = service.tasks.filter((t) => t.day_index === idx);
-              const dayDone = dayTaskCount.filter((t) => t.status === 'COMPLETED').length;
-              const isAllDone = dayDone === dayTaskCount.length && dayTaskCount.length > 0;
-
+              const count = service.tasks.filter((t) => t.day_index === idx).length;
               return (
                 <button
                   key={idx}
@@ -149,14 +125,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                   }`}
                 >
                   <span>{day}</span>
-                  <span className="flex items-center gap-1">
-                    {isAllDone ? (
-                      <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-                    ) : (
-                      <Circle className="h-3 w-3 text-app-text-secondary" />
-                    )}
-                    <span className="text-[10px]">{dayDone}/{dayTaskCount.length}</span>
-                  </span>
+                  <span className="text-[10px]">{count} tareas</span>
                   {activeDay === idx && (
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />
                   )}
@@ -167,34 +136,23 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
         </div>
 
         <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-app-text">{DAYS[activeDay]} — {dayCompleted}/{dayTasks.length} completadas</h3>
-            <div className="w-32 h-1.5 bg-app-bg rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary-500 rounded-full transition-all"
-                style={{ width: `${dayTasks.length > 0 ? (dayCompleted / dayTasks.length) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
+          <h3 className="text-sm font-bold text-app-text mb-3">{DAYS[activeDay]}</h3>
 
-          <div className="divide-y divide-slate-100">
-            {dayTasks.map((task) => (
-              <div
-                key={task.id}
-                className="flex items-center gap-3 py-2.5 px-2 rounded-lg hover:bg-app-bg transition-colors cursor-pointer"
-                onClick={() => handleToggleTask(task.id, task.status)}
-              >
-                {task.status === 'COMPLETED' ? (
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
-                ) : (
-                  <Circle className="h-5 w-5 text-app-text-secondary hover:text-app-text-secondary shrink-0" />
-                )}
-                <span className={`text-sm ${task.status === 'COMPLETED' ? 'text-app-text-secondary line-through' : 'text-app-text'}`}>
-                  {task.description}
-                </span>
-              </div>
-            ))}
-          </div>
+          {dayTasks.length === 0 ? (
+            <p className="text-sm text-app-text-secondary text-center py-4">No hay tareas para este día.</p>
+          ) : (
+            <div className="divide-y divide-slate-100">
+              {dayTasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-start gap-3 py-2.5 px-2 rounded-lg"
+                >
+                  <ListChecks className="h-4 w-4 text-app-text-secondary shrink-0 mt-0.5" />
+                  <span className="text-sm text-app-text">{task.description}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
