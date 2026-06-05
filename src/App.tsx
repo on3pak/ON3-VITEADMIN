@@ -38,6 +38,8 @@ import { UtilsView } from './views/utils/UtilsView';
 import { InventoryProvider } from './context/InventoryContext';
 import { ServiceReportProvider } from './context/ServiceReportContext';
 import { ServiceReportsView } from './views/admin/serviceReports/ServiceReportsView';
+import { WorkReportProvider } from './context/WorkReportContext';
+import { WorkReportsView } from './views/admin/workReports/WorkReportsView';
 
 const VIEW_ROUTES: Record<DashboardViewType, string> = {
   USER_DASHBOARD: '/',
@@ -56,6 +58,7 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   INVENTORY_CRUD: '/admin/inventory',
   INVENTORY_DASHBOARD: '/dashboard/inventory',
   SERVICE_REPORT: '/apps/service-report',
+  WORK_REPORT: '/apps/work-report',
   PROFILE: '/profile',
   PROFILE_CONFIG: '/profile/config',
   TESTS_AUTH: '/tests/auth',
@@ -210,6 +213,8 @@ const MainLayout: React.FC = () => {
         return <LogsView logType={currentView} />;
       case 'SERVICE_REPORT':
         return <ServiceReportsView onTabChange={setServiceReportTab} />;
+      case 'WORK_REPORT':
+        return <WorkReportsView />;
       case 'INVENTORY_CRUD':
         return <InventoryView />;
       case 'INVENTORY_DASHBOARD':
@@ -279,7 +284,9 @@ export default function App() {
             <ServiceProvider>
               <ServiceReportProvider>
               <InventoryProvider>
+              <WorkReportProvider>
               <MainLayout />
+              </WorkReportProvider>
               </InventoryProvider>
               </ServiceReportProvider>
             </ServiceProvider>

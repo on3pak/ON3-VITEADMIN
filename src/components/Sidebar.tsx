@@ -6,7 +6,7 @@ import {
   ShieldCheck, LogOut, KeyRound,
   Truck, Briefcase, Building2, ClipboardList, Package,
   Settings, ChevronDown, User, Shield,
-  Moon, Grid, Wrench, CalendarCheck, FileText, FlaskConical,
+  Moon, Grid, Wrench, CalendarCheck, ClipboardCheck, FileText, FlaskConical,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -49,10 +49,14 @@ const adminItems = (role?: string) => {
 };
 
 const appsItems = (role?: string) => {
-  if (role !== 'MANAGER') return [];
-  return [
-    { id: 'SERVICE_REPORT' as DashboardViewType, label: 'Parte de Servicio', icon: <CalendarCheck className="h-5 w-5" />, description: 'Planificación y control diario' },
-  ];
+  const items: { id: DashboardViewType; label: string; icon: React.ReactNode; description: string }[] = [];
+  if (role === 'MANAGER') {
+    items.push({ id: 'SERVICE_REPORT' as DashboardViewType, label: 'Parte de Servicio', icon: <CalendarCheck className="h-5 w-5" />, description: 'Planificación y control diario' });
+  }
+  if (['ROOT', 'ADMIN', 'MANAGER', 'USER'].includes(role || '')) {
+    items.push({ id: 'WORK_REPORT' as DashboardViewType, label: 'Parte de Trabajo', icon: <ClipboardCheck className="h-5 w-5" />, description: 'Registro de tareas y servicios' });
+  }
+  return items;
 };
 
 const utilsItems = (role?: string) => {

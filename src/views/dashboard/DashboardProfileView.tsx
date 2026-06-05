@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
+import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
 import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
@@ -13,7 +14,7 @@ import {
   Mail, Phone,
   SunSnow,
   Sparkles,
-  Send, Sun,
+  Send, Sun, ClipboardCheck,
   Briefcase, Shield, Hash, MapPin, Clock, Building2, IdCard, Award,
 } from 'lucide-react';
 
@@ -63,7 +64,7 @@ export const DashboardProfileView: React.FC = () => {
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  type ProfileTab = 'info' | 'solicitar';
+  type ProfileTab = 'info' | 'solicitar' | 'parte';
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
@@ -185,6 +186,7 @@ export const DashboardProfileView: React.FC = () => {
                   {([
                     { key: 'info' as const, label: 'Info', icon: <User className="h-4 w-4" /> },
                     { key: 'solicitar' as const, label: 'Solicitar', icon: <Calendar className="h-4 w-4" /> },
+                    { key: 'parte' as const, label: 'Parte de Trabajo', icon: <ClipboardCheck className="h-4 w-4" /> },
                   ]).map((tab) => (
                     <button
                       key={tab.key}
@@ -347,6 +349,12 @@ export const DashboardProfileView: React.FC = () => {
                     )}
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === 'parte' && (
+              <div className="w-full">
+                <WorkReportsView />
               </div>
             )}
           </div>

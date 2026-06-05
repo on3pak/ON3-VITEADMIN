@@ -7,4 +7,5 @@ export * from './workCenter';
 export * from './vehicle';
 export * from './service';
 export * from './serviceReport';
+export * from './workReport';
 export * from './inventory';

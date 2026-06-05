@@ -26,6 +26,7 @@ export interface Vehicle {
   
   fuel_type: FuelType;
   kilometers: number;
+  hour_meter: number;
   last_review_date: string | null;
   next_review_kilometers: number | null;
   
@@ -46,4 +47,5 @@ export interface VehicleOverview {
   status: VehicleStatus;
   work_center_id: string;
   kilometers: number;
+  hour_meter: number;
 }

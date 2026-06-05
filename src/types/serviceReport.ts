@@ -8,6 +8,7 @@ export interface ServiceAssignment {
   shift_id: string;
   employee_id: string;
   service_id: string;
+  vehicle_id?: string;
   note?: string;
 }
 

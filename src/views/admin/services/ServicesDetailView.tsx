@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useServices } from '../../../context/ServiceContext';
 import { useAuth } from '../../../context/AuthContext';
+import { useWorkReports } from '../../../context/WorkReportContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
@@ -9,6 +10,7 @@ import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockE
 import {
   ArrowLeft, ClipboardList,
   Edit3, Trash2, ListChecks, UserCog, Users,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface ServicesDetailViewProps {
@@ -48,6 +50,25 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
     () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
     [userCityId]
   );
+
+  const { reports: workReports } = useWorkReports();
+
+  const serviceProgress = useMemo(() => {
+    if (!service) return { completed: 0, total: 0 };
+    const relevantReports = workReports.filter((r) =>
+      r.services.some((s) => s.service_id === serviceId) && r.status === 'CONFIRMED'
+    );
+    const completedTasks = new Set<string>();
+    let totalTasks = service.tasks.length;
+    for (const report of relevantReports) {
+      const entry = report.services.find((s) => s.service_id === serviceId);
+      if (!entry) continue;
+      for (const task of entry.tasks) {
+        if (task.completed) completedTasks.add(task.task_id);
+      }
+    }
+    return { completed: completedTasks.size, total: totalTasks };
+  }, [service, workReports, serviceId]);
 
   const [activeDay, setActiveDay] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -114,6 +135,31 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                 : service.staff_requirement.oficial ? '' : 'Ninguno')
             } />
           </SectionCard>
+
+          {serviceProgress.total > 0 && (
+            <SectionCard icon={<CheckCircle2 className="h-4 w-4" />} title="Progreso de Tareas">
+              <div className="col-span-2 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-app-text-secondary">
+                    {serviceProgress.completed} de {serviceProgress.total} tareas completadas
+                  </span>
+                  <span className="text-sm font-bold text-app-text">
+                    {Math.round((serviceProgress.completed / serviceProgress.total) * 100)}%
+                  </span>
+                </div>
+                <div className="h-2.5 bg-app-bg rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      serviceProgress.completed === serviceProgress.total
+                        ? 'bg-emerald-500'
+                        : 'bg-gradient-to-r from-primary-500 to-emerald-500'
+                    }`}
+                    style={{ width: `${(serviceProgress.completed / serviceProgress.total) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </SectionCard>
+          )}
         </div>
       </div>
 

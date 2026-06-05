@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useServices } from '../../../context/ServiceContext';
 import { useEmployees } from '../../../context/EmployeeContext';
+import { useVehicles } from '../../../context/VehicleContext';
 import { useServiceReports, getWorkDayIdsForDate, getTomorrowDateString, getTodayDateString } from '../../../context/ServiceReportContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_STATUSES, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
@@ -48,9 +49,10 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const { user } = useAuth();
   const { services } = useServices();
   const { employees } = useEmployees();
+  const { vehicles } = useVehicles();
   const {
     getPrevioForTomorrow, getDiarioForToday, getHistorial,
-    addAssignment, removeAssignment, setAttendance, saveReport, getReportById
+    addAssignment, updateAssignmentVehicle, removeAssignment, setAttendance, saveReport, getReportById
   } = useServiceReports();
 
   const userCityId = user?.role === 'ROOT' ? undefined : user?.city_id;
@@ -269,21 +271,40 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
               const emp = employees.find((e) => e.id === a.employee_id);
               if (!emp) return null;
               const attendance = getAttendanceFor(a.employee_id);
-              const isOficial = emp.category_id === 'ec_3' || emp.category_id === 'ec_4';
-              return (
-                <div key={a.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-app-bg/50 border border-app-border/50">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div className={`size-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
-                      isOficial ? 'bg-amber-100 text-amber-700' : 'bg-primary-100 text-primary-600'
-                    }`}>
-                      {emp.name.charAt(0)}{emp.last_name1.charAt(0)}
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</span>
-                      {isOficial && <UserCog className="h-3 w-3 text-amber-500 shrink-0" title="Oficial" />}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  const isOficial = emp.category_id === 'ec_3' || emp.category_id === 'ec_4';
+                  const wcVehicles = vehicles.filter((v) => v.work_center_id === wcId && v.status === 'ACTIVE');
+                  return (
+                    <div key={a.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-app-bg/50 border border-app-border/50">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className={`size-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                          isOficial ? 'bg-amber-100 text-amber-700' : 'bg-primary-100 text-primary-600'
+                        }`}>
+                          {emp.name.charAt(0)}{emp.last_name1.charAt(0)}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</span>
+                          {isOficial && <UserCog className="h-3 w-3 text-amber-500 shrink-0" title="Oficial" />}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {isOficial && wcVehicles.length > 0 && (
+                          <select
+                            value={a.vehicle_id ?? ''}
+                            onChange={(e) => {
+                              const vId = e.target.value || null;
+                              updateAssignmentVehicle(currentReport!.id, a.id, vId);
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[11px] font-medium border border-app-border rounded-md px-1.5 py-0.5 bg-white text-app-text max-w-[140px] truncate cursor-pointer"
+                          >
+                            <option value="">Sin vehículo</option>
+                            {wcVehicles.map((v) => (
+                              <option key={v.id} value={v.id}>
+                                {v.license_plate} — {v.brand} {v.model}
+                              </option>
+                            ))}
+                          </select>
+                        )}
                     {currentReport?.type === 'DIARIO' && (
                       <select
                         value={attendance}

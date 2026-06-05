@@ -8,7 +8,20 @@ const STORAGE_KEY = 'on3_mock_service_reports';
 function loadReports(): ServiceReport[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed: ServiceReport[] = JSON.parse(raw);
+      const today = getTodayDateString();
+      const existingDiario = parsed.find((r) => r.date === today && r.type === 'DIARIO');
+      const fresh = INITIAL_SERVICE_REPORTS.filter((r) => r.date === today);
+      if (existingDiario) {
+        if (existingDiario.assignments.length === 0 && fresh.length > 0) {
+          return parsed.map((r) => r.id === existingDiario.id ? fresh[0] : r);
+        }
+        return parsed;
+      }
+      if (fresh.length > 0) return [...parsed, ...fresh].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      return parsed;
+    }
   } catch { /* ignore */ }
   return INITIAL_SERVICE_REPORTS;
 }
@@ -48,7 +61,8 @@ interface ServiceReportContextType {
   getPrevioForTomorrow: (cityId: string) => ServiceReport;
   getDiarioForToday: (cityId: string) => { report: ServiceReport; warnings: string[] };
   getHistorial: (cityId: string) => ServiceReport[];
-  addAssignment: (reportId: string, data: { work_center_id: string; shift_id: string; employee_id: string; service_id: string }) => void;
+  addAssignment: (reportId: string, data: { work_center_id: string; shift_id: string; employee_id: string; service_id: string; vehicle_id?: string }) => void;
+  updateAssignmentVehicle: (reportId: string, assignmentId: string, vehicleId: string | null) => void;
   removeAssignment: (reportId: string, assignmentId: string) => void;
   setAttendance: (reportId: string, employeeId: string, status: AttendanceStatus, note?: string) => void;
   saveReport: (reportId: string) => { success: boolean; error?: string };
@@ -129,7 +143,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
     return reports.filter((r) => r.type === 'DIARIO' && r.city_id === cityId && r.date < cutoff);
   }, [reports]);
 
-  const addAssignment = useCallback((reportId: string, data: { work_center_id: string; shift_id: string; employee_id: string; service_id: string }) => {
+  const addAssignment = useCallback((reportId: string, data: { work_center_id: string; shift_id: string; employee_id: string; service_id: string; vehicle_id?: string }) => {
     persist((prev) =>
       prev.map((r) => {
         if (r.id !== reportId) return r;
@@ -143,6 +157,21 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
             : [...r.attendance, { employee_id: data.employee_id, status: 'PRESENT' as AttendanceStatus }])
           : r.attendance;
         return { ...r, assignments: [...r.assignments, newAssignment], attendance, updated_at: new Date().toISOString() };
+      })
+    );
+  }, [persist]);
+
+  const updateAssignmentVehicle = useCallback((reportId: string, assignmentId: string, vehicleId: string | null) => {
+    persist((prev) =>
+      prev.map((r) => {
+        if (r.id !== reportId) return r;
+        return {
+          ...r,
+          assignments: r.assignments.map((a) =>
+            a.id === assignmentId ? { ...a, vehicle_id: vehicleId ?? undefined } : a
+          ),
+          updated_at: new Date().toISOString(),
+        };
       })
     );
   }, [persist]);
@@ -199,6 +228,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         getDiarioForToday,
         getHistorial,
         addAssignment,
+        updateAssignmentVehicle,
         removeAssignment,
         setAttendance,
         saveReport,
