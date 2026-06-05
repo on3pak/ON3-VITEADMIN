@@ -200,29 +200,31 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
             <div className="p-3 bg-rose-50 text-rose-700 rounded-lg text-sm">{formError}</div>
           )}
 
-          <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Nombre *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value.toUpperCase())}
-              placeholder="Ej: BMIX1"
-              className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
-              required
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Nombre *</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value.toUpperCase())}
+                placeholder="Ej: BMIX1"
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Categoría *</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
-            >
-              {INITIAL_SERVICE_CATEGORIES.map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
-            </select>
+            <div>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Categoría *</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+              >
+                {INITIAL_SERVICE_CATEGORIES.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
