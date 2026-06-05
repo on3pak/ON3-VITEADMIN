@@ -341,7 +341,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                       key={idx}
                       type="button"
                       onClick={() => setTaskDay(idx)}
-                      className={`relative flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition-all shrink-0 ${
+                      className={`relative flex flex-col items-center px-3 py-2 text-xs font-semibold rounded-lg transition-all shrink-0 ${
                         taskDay === idx
                           ? 'bg-primary-600 text-white shadow-sm'
                           : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg border border-transparent hover:border-app-border'
@@ -352,6 +352,39 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                     </button>
                   );
                 })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAddTask}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition-colors w-full justify-center mb-3"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Añadir tarea
+                </button>
+
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {dayTasks.length === 0 && (
+                  <p className="text-sm text-app-text-secondary text-center py-4">No hay tareas para este día.</p>
+                )}
+                {dayTasks.map((task) => (
+                  <div key={task.id} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={task.description}
+                      onChange={(e) => handleTaskDescriptionChange(task.id, e.target.value)}
+                      placeholder="Descripción de la tarea"
+                      className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTask(task.id)}
+                      className="p-2 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
 
               <div className="space-y-2 max-h-64 overflow-y-auto">
