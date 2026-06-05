@@ -200,13 +200,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
               <Grid className="h-[18px] w-[18px]" />
             </button>
 
-            <button
-              onClick={() => setView('UTILS')}
-              className="flex items-center justify-center size-9 rounded-md border border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border transition-all"
-              title="Utilidades"
-            >
-              <Wrench className="h-[18px] w-[18px]" />
-            </button>
+            {['ROOT', 'ADMIN'].includes(user?.role || '') && (
+              <button
+                onClick={() => setView('UTILS')}
+                className="flex items-center justify-center size-9 rounded-md border border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border transition-all"
+                title="Utilidades"
+              >
+                <Wrench className="h-[18px] w-[18px]" />
+              </button>
+            )}
 
             <div className="w-6 h-px bg-app-border" />
 
