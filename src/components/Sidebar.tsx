@@ -49,8 +49,7 @@ const adminItems = (role?: string) => {
 };
 
 const appsItems = (role?: string) => {
-  const canAccess = ['ROOT', 'ADMIN', 'MANAGER'].includes(role || '');
-  if (!canAccess) return [];
+  if (role !== 'MANAGER') return [];
   return [
     { id: 'SERVICE_REPORT' as DashboardViewType, label: 'Parte de Servicio', icon: <CalendarCheck className="h-5 w-5" />, description: 'Planificación y control diario' },
   ];
