@@ -31,6 +31,8 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
   PROFILE: { title: 'Mi Perfil', parent: 'Dashboard' },
   PROFILE_CONFIG: { title: 'Configuración', parent: 'Mi Perfil' },
   UTILS: { title: 'Utilidades' },
+  UTILS_LOGS: { title: 'Logs', parent: 'Utilidades' },
+  UTILS_TESTS: { title: 'Tests', parent: 'Utilidades' },
   LOGS_AUTH: { title: 'Logs Auth', parent: 'Utilidades' },
   LOGS_LOGOUT: { title: 'Logs Logout', parent: 'Utilidades' },
   LOGS_USERS: { title: 'Logs Usuarios', parent: 'Utilidades' },

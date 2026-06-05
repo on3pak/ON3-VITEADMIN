@@ -5,11 +5,13 @@ import { JwtTestsView } from './tests/JwtTestsView';
 import { CrudTestsView } from './tests/CrudTestsView';
 import { RbacTestsView } from './tests/RbacTestsView';
 import { RolesTestsView } from './tests/RolesTestsView';
-import { FileText, FlaskConical, ChevronDown } from 'lucide-react';
 
-type Tab = 'logs' | 'tests';
 type TestType = 'auth' | 'jwt' | 'crud' | 'rbac' | 'roles';
 type LogType = 'LOGS_AUTH' | 'LOGS_LOGOUT' | 'LOGS_USERS' | 'LOGS_EMPLOYEES';
+
+interface UtilsViewProps {
+  initialTab?: 'logs' | 'tests';
+}
 
 const LOGS_TABS: { value: LogType; label: string }[] = [
   { value: 'LOGS_AUTH', label: 'Auth' },
@@ -26,8 +28,8 @@ const TESTS_TABS: { value: TestType; label: string }[] = [
   { value: 'roles', label: 'Roles' },
 ];
 
-export const UtilsView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('logs');
+export const UtilsView: React.FC<UtilsViewProps> = ({ initialTab = 'logs' }) => {
+  const [activeTab] = useState<'logs' | 'tests'>(initialTab);
   const [selectedLogType, setSelectedLogType] = useState<LogType>('LOGS_AUTH');
   const [selectedTestType, setSelectedTestType] = useState<TestType>('auth');
 
@@ -85,33 +87,6 @@ export const UtilsView: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-4 rounded-2xl border border-app-border shadow-xs">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setActiveTab('logs')}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all ${
-              activeTab === 'logs'
-                ? 'bg-slate-800 text-white'
-                : 'text-app-text-secondary hover:bg-app-bg'
-            }`}
-          >
-            <FileText className="h-4 w-4" />
-            Logs
-          </button>
-          <button
-            onClick={() => setActiveTab('tests')}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all ${
-              activeTab === 'tests'
-                ? 'bg-slate-800 text-white'
-                : 'text-app-text-secondary hover:bg-app-bg'
-            }`}
-          >
-            <FlaskConical className="h-4 w-4" />
-            Tests
-          </button>
-        </div>
-      </div>
-
       <div className="bg-white p-6 rounded-2xl border border-app-border shadow-xs min-h-[500px]">
         {activeTab === 'logs' ? renderLogsContent() : renderTestsContent()}
       </div>

@@ -9,7 +9,9 @@ export type DashboardViewType =
   | 'PROFILE' | 'PROFILE_CONFIG'
   | 'TESTS_AUTH' | 'TESTS_JWT' | 'TESTS_CRUD' | 'TESTS_RBAC' | 'TESTS_ROLES'
   | 'LOGS_AUTH' | 'LOGS_LOGOUT' | 'LOGS_USERS' | 'LOGS_EMPLOYEES'
-  | 'UTILS';
+  | 'UTILS'
+  | 'UTILS_LOGS'
+  | 'UTILS_TESTS';
 
 export const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   USER_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
@@ -40,4 +42,6 @@ export const VIEW_ROLES: Record<DashboardViewType, string[]> = {
   LOGS_USERS: ['ROOT', 'ADMIN'],
   LOGS_EMPLOYEES: ['ROOT', 'ADMIN'],
   UTILS: ['ROOT', 'ADMIN', 'MANAGER'],
+  UTILS_LOGS: ['ROOT', 'ADMIN'],
+  UTILS_TESTS: ['ROOT', 'ADMIN'],
 };

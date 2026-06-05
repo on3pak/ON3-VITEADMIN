@@ -68,6 +68,8 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   LOGS_USERS: '/logs/users',
   LOGS_EMPLOYEES: '/logs/employees',
   UTILS: '/utils',
+  UTILS_LOGS: '/utils/logs',
+  UTILS_TESTS: '/utils/tests',
 };
 
 
@@ -216,8 +218,10 @@ const MainLayout: React.FC = () => {
         return <DashboardProfileView />;
       case 'PROFILE_CONFIG':
         return <DashboardConfigView />;
-      case 'UTILS':
-        return <UtilsView />;
+      case 'UTILS_LOGS':
+        return <UtilsView initialTab="logs" />;
+      case 'UTILS_TESTS':
+        return <UtilsView initialTab="tests" />;
       default:
         return <DashboardUsersView />;
     }
