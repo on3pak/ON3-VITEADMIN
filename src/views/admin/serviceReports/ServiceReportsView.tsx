@@ -4,12 +4,12 @@ import { useServices } from '../../../context/ServiceContext';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useServiceReports, getWorkDayIdsForDate, getTomorrowDateString, getTodayDateString } from '../../../context/ServiceReportContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
-import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_STATUSES } from '../../../data/mockEmployees';
-import { AttendanceStatus, ServiceAssignment } from '../../../types';
+import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_STATUSES, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
+import { AttendanceStatus, ServiceAssignment, StaffRequirement } from '../../../types';
 import {
   CalendarCheck, CalendarPlus, History,
   CheckCircle2, X, ChevronDown, ChevronRight,
-  Building2, Clock, Users, Save, AlertTriangle,
+  Building2, Clock, Users, Save, AlertTriangle, UserCog,
 } from 'lucide-react';
 
 type Tab = 'previo' | 'diario' | 'historial';
@@ -142,7 +142,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
     return currentReport.assignments.some((a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId);
   };
 
-  const handleToggleAssign = (wcId: string, employeeId: string, serviceId: string, maxEmps: number) => {
+  const handleToggleAssign = (wcId: string, employeeId: string, serviceId: string, staffReq: StaffRequirement) => {
     if (!currentReport) return;
     const existing = currentReport.assignments.find(
       (a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId
@@ -150,10 +150,26 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
     if (existing) {
       removeAssignment(currentReport.id, existing.id);
     } else {
-      const currentCount = currentReport.assignments.filter(
+      const emp = employees.find((e) => e.id === employeeId);
+      if (!emp) return;
+      const isOficial = emp.category_id === 'ec_3' || emp.category_id === 'ec_4';
+      const serviceAssignments = currentReport.assignments.filter(
         (a) => a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId
-      ).length;
-      if (currentCount >= maxEmps) return;
+      );
+      if (isOficial) {
+        if (!staffReq.oficial) return;
+        const assignedOficiales = serviceAssignments.filter((a) => {
+          const e = employees.find((ee) => ee.id === a.employee_id);
+          return e && (e.category_id === 'ec_3' || e.category_id === 'ec_4');
+        });
+        if (assignedOficiales.length >= 1) return;
+      } else {
+        const assignedPeones = serviceAssignments.filter((a) => {
+          const e = employees.find((ee) => ee.id === a.employee_id);
+          return e && (e.category_id === 'ec_1' || e.category_id === 'ec_2');
+        });
+        if (assignedPeones.length >= staffReq.peones) return;
+      }
       addAssignment(currentReport.id, {
         work_center_id: wcId,
         shift_id: activeShift,
@@ -205,10 +221,26 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
     </button>
   );
 
-  const renderServiceCard = (wcId: string, service: { id: string; name: string; category: string; required_employees: number }, wcEmployees: ReturnType<typeof getEmployeesForWC>) => {
+  const renderServiceCard = (wcId: string, service: { id: string; name: string; category: string; staff_requirement: StaffRequirement }, wcEmployees: ReturnType<typeof getEmployeesForWC>) => {
     const assignments = getAssignmentsForService(wcId, service.id);
     const dropdownId = `${wcId}-${activeShift}-${service.id}`;
-    const maxEmps = service.required_employees;
+    const staffReq = service.staff_requirement;
+
+    const assignedOficiales = assignments.filter((a) => {
+      const e = employees.find((ee) => ee.id === a.employee_id);
+      return e && (e.category_id === 'ec_3' || e.category_id === 'ec_4');
+    });
+    const assignedPeones = assignments.filter((a) => {
+      const e = employees.find((ee) => ee.id === a.employee_id);
+      return e && (e.category_id === 'ec_1' || e.category_id === 'ec_2');
+    });
+
+    const oficiales = staffReq.oficial
+      ? wcEmployees.filter((e) => e.category_id === staffReq.oficial)
+      : [];
+    const peones = staffReq.peones > 0
+      ? wcEmployees.filter((e) => e.category_id === 'ec_1' || e.category_id === 'ec_2')
+      : [];
 
     return (
       <div key={service.id} className="bg-white rounded-xl border border-app-border p-4">
@@ -217,9 +249,18 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
             <h4 className="text-sm font-bold text-app-text">{service.name}</h4>
             <p className="text-[11px] text-app-text-secondary">{service.category}</p>
           </div>
-          <span className="text-[11px] text-app-text-secondary font-mono bg-app-bg px-2 py-0.5 rounded-full">
-            {assignments.length}/{maxEmps} emp.
-          </span>
+          <div className="flex items-center gap-2">
+            {staffReq.oficial && (
+              <span className="text-[11px] text-app-text-secondary font-mono bg-amber-50 px-2 py-0.5 rounded-full">
+                {assignedOficiales.length}/1 of.
+              </span>
+            )}
+            {staffReq.peones > 0 && (
+              <span className="text-[11px] text-app-text-secondary font-mono bg-sky-50 px-2 py-0.5 rounded-full">
+                {assignedPeones.length}/{staffReq.peones} peón{staffReq.peones !== 1 ? 'es' : ''}
+              </span>
+            )}
+          </div>
         </div>
 
         {assignments.length > 0 && (
@@ -228,13 +269,19 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
               const emp = employees.find((e) => e.id === a.employee_id);
               if (!emp) return null;
               const attendance = getAttendanceFor(a.employee_id);
+              const isOficial = emp.category_id === 'ec_3' || emp.category_id === 'ec_4';
               return (
                 <div key={a.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-app-bg/50 border border-app-border/50">
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="size-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-[10px] font-bold shrink-0">
+                    <div className={`size-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                      isOficial ? 'bg-amber-100 text-amber-700' : 'bg-primary-100 text-primary-600'
+                    }`}>
                       {emp.name.charAt(0)}{emp.last_name1.charAt(0)}
                     </div>
-                    <span className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</span>
+                      {isOficial && <UserCog className="h-3 w-3 text-amber-500 shrink-0" title="Oficial" />}
+                    </div>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
                     {currentReport?.type === 'DIARIO' && (
@@ -275,39 +322,65 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
           {openDropdown === dropdownId && (
             <div
               onMouseDown={(e) => e.stopPropagation()}
-              className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto"
+              className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
             >
-              {wcEmployees.length === 0 ? (
+              {oficiales.length === 0 && peones.length === 0 ? (
                 <p className="p-3 text-xs text-app-text-secondary text-center">No hay empleados disponibles para este turno</p>
               ) : (
-                wcEmployees.map((emp) => {
-                  const checked = isEmployeeAssignedToService(emp.id, wcId, service.id);
-                  const atLimit = !checked && assignments.length >= maxEmps;
-                  const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
-                  return (
-                    <label
-                      key={emp.id}
-                      className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 last:border-b-0 transition-colors ${
-                        atLimit ? 'opacity-40 pointer-events-none' : ''
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        disabled={atLimit}
-                        onChange={() => handleToggleAssign(wcId, emp.id, service.id, maxEmps)}
-                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0"
-                      />
-                      <div className="size-7 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-[10px] font-bold shrink-0">
-                        {emp.name.charAt(0)}{emp.last_name1.charAt(0)}
+                <>
+                  {staffReq.oficial && (
+                    <div>
+                      <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-amber-700 uppercase tracking-wider border-b border-app-border/50">
+                        Oficial — {INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === staffReq.oficial)?.name ?? ''} ({assignedOficiales.length}/1)
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</p>
-                        <p className="text-[10px] text-app-text-secondary">{statusName}</p>
+                      {oficiales.length === 0 ? (
+                        <p className="px-3 py-2 text-xs text-app-text-secondary">No hay oficiales disponibles</p>
+                      ) : (
+                        oficiales.map((emp) => {
+                          const checked = isEmployeeAssignedToService(emp.id, wcId, service.id);
+                          const atLimit = !checked && assignedOficiales.length >= 1;
+                          const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
+                          return (
+                            <label key={emp.id} className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${atLimit ? 'opacity-40 pointer-events-none' : ''}`}>
+                              <input type="checkbox" checked={checked} disabled={atLimit} onChange={() => handleToggleAssign(wcId, emp.id, service.id, staffReq)} className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0" />
+                              <div className="size-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[10px] font-bold shrink-0">{emp.name.charAt(0)}{emp.last_name1.charAt(0)}</div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</p>
+                                <p className="text-[10px] text-app-text-secondary">{statusName}</p>
+                              </div>
+                            </label>
+                          );
+                        })
+                      )}
+                    </div>
+                  )}
+                  {staffReq.peones > 0 && (
+                    <div>
+                      <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-sky-700 uppercase tracking-wider border-b border-app-border/50">
+                        Peones ({assignedPeones.length}/{staffReq.peones})
                       </div>
-                    </label>
-                  );
-                })
+                      {peones.length === 0 ? (
+                        <p className="px-3 py-2 text-xs text-app-text-secondary">No hay peones disponibles</p>
+                      ) : (
+                        peones.map((emp) => {
+                          const checked = isEmployeeAssignedToService(emp.id, wcId, service.id);
+                          const atLimit = !checked && assignedPeones.length >= staffReq.peones;
+                          const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
+                          return (
+                            <label key={emp.id} className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${atLimit ? 'opacity-40 pointer-events-none' : ''}`}>
+                              <input type="checkbox" checked={checked} disabled={atLimit} onChange={() => handleToggleAssign(wcId, emp.id, service.id, staffReq)} className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0" />
+                              <div className="size-7 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-[10px] font-bold shrink-0">{emp.name.charAt(0)}{emp.last_name1.charAt(0)}</div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</p>
+                                <p className="text-[10px] text-app-text-secondary">{statusName}</p>
+                              </div>
+                            </label>
+                          );
+                        })
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}

@@ -5,11 +5,11 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Service, ServiceOverview } from '../../../types';
-import { INITIAL_SHIFTS } from '../../../data/mockEmployees';
+import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp,
-  ClipboardList, Clock, Users,
+  ClipboardList, Clock, Users, UserCog,
 } from 'lucide-react';
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -161,15 +161,14 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                     <th className="py-3 px-6">Servicio</th>
                     <th className="py-3 px-4 w-20 text-center">Turno</th>
                     <th className="py-3 px-4 w-28 text-center">Tipo</th>
-                    <th className="py-3 px-4 w-20 text-center">Personal</th>
-                    <th className="py-3 px-4 w-20 text-center">Progreso</th>
+                    <th className="py-3 px-4 w-32 text-center">Personal</th>
                     <th className="py-3 px-4 w-20 text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-app-text text-sm">
                   {paginatedServices.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-12 text-center text-app-text-secondary font-medium">
+                      <td colSpan={5} className="py-12 text-center text-app-text-secondary font-medium">
                         No se encontraron servicios.
                       </td>
                     </tr>
@@ -208,25 +207,19 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                         </td>
 
                         <td className="py-3.5 px-4">
-                          <div className="flex justify-center">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-sky-100 text-sky-700">
-                              <Users className="h-3 w-3" />
-                              {s.required_employees}
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="py-3.5 px-4">
                           <div className="flex flex-col items-center gap-1">
-                            <span className="text-xs font-mono font-semibold text-app-text">
-                              {s.completedTasks}/{s.totalTasks}
-                            </span>
-                            <div className="w-full max-w-[80px] h-1.5 bg-app-bg rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-primary-500 rounded-full transition-all"
-                                style={{ width: `${(s.completedTasks / s.totalTasks) * 100}%` }}
-                              />
-                            </div>
+                            {s.staff_requirement.oficial ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-amber-100 text-amber-700">
+                                <UserCog className="h-3 w-3" />
+                                {INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === s.staff_requirement.oficial)?.name ?? 'Oficial'}
+                              </span>
+                            ) : null}
+                            {s.staff_requirement.peones > 0 ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-sky-100 text-sky-700">
+                                <Users className="h-3 w-3" />
+                                {s.staff_requirement.peones} peón{s.staff_requirement.peones !== 1 ? 'es' : ''}
+                              </span>
+                            ) : null}
                           </div>
                         </td>
 

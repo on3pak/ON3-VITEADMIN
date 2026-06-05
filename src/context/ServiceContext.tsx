@@ -25,7 +25,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
       shift_id: s.shift_id,
       name: s.name,
       category: s.category,
-      required_employees: s.required_employees,
+      staff_requirement: s.staff_requirement,
       totalTasks: s.tasks.length,
       completedTasks: s.tasks.filter((t) => t.status === 'COMPLETED').length,
     }));

@@ -5,10 +5,10 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Service } from '../../../types';
-import { INITIAL_SHIFTS } from '../../../data/mockEmployees';
+import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
 import {
   ArrowLeft, ClipboardList,
-  Edit3, Trash2, ListChecks,
+  Edit3, Trash2, ListChecks, UserCog, Users,
 } from 'lucide-react';
 
 interface ServicesDetailViewProps {
@@ -104,7 +104,15 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
             <InfoRow label="Centro de Trabajo" value={resolveWorkCenter(service.work_center_id)} highlight />
             <InfoRow label="Tipo" value={service.category} highlight />
             <InfoRow label="Turno" value={INITIAL_SHIFTS.find((sh) => sh.id === service.shift_id)?.name ?? service.shift_id} />
-            <InfoRow label="Personal necesario" value={`${service.required_employees} empleado${service.required_employees !== 1 ? 's' : ''}`} />
+            <InfoRow label="Personal necesario" value={
+              (service.staff_requirement.oficial
+                ? '1 ' + (INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === service.staff_requirement.oficial)?.name ?? 'Oficial')
+                : '') +
+              (service.staff_requirement.oficial && service.staff_requirement.peones > 0 ? ' + ' : '') +
+              (service.staff_requirement.peones > 0
+                ? service.staff_requirement.peones + ' peón' + (service.staff_requirement.peones !== 1 ? 'es' : '')
+                : service.staff_requirement.oficial ? '' : 'Ninguno')
+            } />
           </SectionCard>
         </div>
       </div>

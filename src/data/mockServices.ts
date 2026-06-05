@@ -69,9 +69,12 @@ function generateTasks(serviceId: string): ServiceTask[] {
 const services: Service[] = [];
 let svcIdx = 1;
 
-function requiredEmps(i: number): number {
-  const n = (i % 3) + 1;
-  return n;
+function staffReq(i: number): { oficial: string | null; peones: number } {
+  const n = (i % 3);
+  if (n === 1) return { oficial: null, peones: 1 };
+  const oficial = (i % 2 === 0) ? 'ec_3' : 'ec_4';
+  if (n === 2) return { oficial, peones: 1 };
+  return { oficial, peones: 2 };
 }
 
 // 10 BMIX (Barrido Mixto) in Nave
@@ -84,7 +87,7 @@ for (let i = 0; i < 10; i++) {
     shift_id: bmixShift(i),
     name: `BMIX${i + 1}`,
     category: 'BARRIDO MIXTO',
-    required_employees: requiredEmps(i),
+    staff_requirement: staffReq(i),
     tasks: generateTasks(id),
     week_start: '2026-06-01',
     created_at: '2025-01-01T08:00:00Z',
@@ -102,7 +105,7 @@ for (let i = 0; i < 5; i++) {
     shift_id: bmecShift(i),
     name: `BMEC${i + 1}`,
     category: 'BARRIDO MECÁNICO',
-    required_employees: requiredEmps(i + 10),
+    staff_requirement: staffReq(i + 10),
     tasks: generateTasks(id),
     week_start: '2026-06-01',
     created_at: '2025-01-01T08:00:00Z',
@@ -120,7 +123,7 @@ for (let i = 0; i < 5; i++) {
     shift_id: rvolShift(i),
     name: `RVOL${i + 1}`,
     category: 'RECOGIDA',
-    required_employees: requiredEmps(i + 15),
+    staff_requirement: staffReq(i + 15),
     tasks: generateTasks(id),
     week_start: '2026-06-01',
     created_at: '2025-01-01T08:00:00Z',
@@ -136,7 +139,7 @@ services.push({
   shift_id: 's_1',
   name: 'BALD1',
   category: 'BALDEO',
-  required_employees: 2,
+  staff_requirement: { oficial: 'ec_3', peones: 1 },
   tasks: generateTasks(pmId),
   week_start: '2026-06-01',
   created_at: '2025-01-01T08:00:00Z',

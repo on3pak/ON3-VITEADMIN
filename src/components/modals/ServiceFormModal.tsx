@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Service, ServiceTask } from '../../types';
+import { Service, ServiceTask, StaffRequirement } from '../../types';
 import { INITIAL_SERVICE_CATEGORIES } from '../../data/mockServices';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { INITIAL_SHIFTS } from '../../data/mockEmployees';
 import { WorkCenter } from '../../types';
 import { generateId } from '../../utils/id';
-import { X, ClipboardList, Save, Plus, Trash2 } from 'lucide-react';
+import { X, ClipboardList, Save, Plus, Trash2, UserCog, Users } from 'lucide-react';
 
 interface ServiceFormModalProps {
   isOpen: boolean;
@@ -80,10 +80,13 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
   const [category, setCategory] = useState('BARRIDO MIXTO');
   const [work_center_id, setWork_center_id] = useState('wc_1');
   const [shift_id, setShift_id] = useState('s_1');
-  const [required_employees, setRequired_employees] = useState(1);
+  const [oficial, setOficial] = useState<string | null>(null);
+  const [peones, setPeones] = useState(0);
   const [formError, setFormError] = useState<string | null>(null);
   const [tasks, setTasks] = useState<ServiceTask[]>([]);
   const [taskDay, setTaskDay] = useState(0);
+
+  const peonMax = oficial ? 2 : 1;
 
   useEffect(() => {
     if (editingService) {
@@ -91,14 +94,16 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       setCategory(editingService.category);
       setWork_center_id(editingService.work_center_id);
       setShift_id(editingService.shift_id);
-      setRequired_employees(editingService.required_employees);
+      setOficial(editingService.staff_requirement.oficial);
+      setPeones(editingService.staff_requirement.peones);
       setTasks(editingService.tasks);
     } else {
       setName('');
       setCategory('BARRIDO MIXTO');
       setWork_center_id('wc_1');
       setShift_id('s_1');
-      setRequired_employees(1);
+      setOficial(null);
+      setPeones(0);
       setTasks([]);
     }
     setTaskDay(0);
@@ -142,13 +147,15 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       return;
     }
 
+    const staffReq: StaffRequirement = { oficial, peones };
+
     if (editingService) {
       const success = onSubmit({
         name,
         category,
         work_center_id,
         shift_id,
-        required_employees,
+        staff_requirement: staffReq,
         week_start: editingService.week_start,
         tasks,
       });
@@ -160,7 +167,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
         category,
         work_center_id,
         shift_id,
-        required_employees,
+        staff_requirement: staffReq,
         week_start: new Date().toISOString().slice(0, 10),
         tasks: generateTasks(tempId),
       });
@@ -246,24 +253,72 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Personal necesario *</label>
-              <div className="flex items-center gap-2">
-                {[1, 2, 3].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setRequired_employees(n)}
-                    className={`w-10 h-10 rounded-lg text-base font-bold transition-all ${
-                      required_employees === n
-                        ? 'bg-primary-600 text-white shadow-sm'
-                        : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Oficial *</label>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => { setOficial(null); if (peones > 1) setPeones(1); }}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    oficial === null
+                      ? 'bg-primary-600 text-white shadow-sm'
+                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
+                  }`}
+                >
+                  <UserCog className="h-3.5 w-3.5" />
+                  Ninguno
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOficial('ec_3')}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    oficial === 'ec_3'
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-amber-300'
+                  }`}
+                >
+                  <UserCog className="h-3.5 w-3.5" />
+                  1ª
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOficial('ec_4')}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    oficial === 'ec_4'
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-amber-300'
+                  }`}
+                >
+                  <UserCog className="h-3.5 w-3.5" />
+                  2ª
+                </button>
               </div>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Peones</label>
+            <div className="flex items-center gap-2">
+              {[0, 1, 2].filter((n) => n <= peonMax).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setPeones(n)}
+                  className={`w-10 h-10 rounded-lg text-base font-bold transition-all ${
+                    peones === n
+                      ? 'bg-primary-600 text-white shadow-sm'
+                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-app-text-secondary mt-1">
+              Total: <strong>{(oficial ? 1 : 0) + peones} empleado{(oficial ? 1 : 0) + peones !== 1 ? 's' : ''}</strong>
+              {oficial ? ' (1 oficial + ' + peones + ' peón' + (peones !== 1 ? 'es' : '') + ')' : ''}
+              {!oficial && peones > 0 ? ' (1 peón)' : ''}
+              {!oficial && peones === 0 ? ' — sin personal' : ''}
+            </p>
           </div>
 
           {editingService && (

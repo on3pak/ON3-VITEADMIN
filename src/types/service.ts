@@ -1,5 +1,10 @@
 export type TaskStatus = 'PENDING' | 'COMPLETED';
 
+export interface StaffRequirement {
+  oficial: string | null;
+  peones: number;
+}
+
 export interface ServiceTask {
   id: string;
   service_id: string;
@@ -19,7 +24,7 @@ export interface Service {
   shift_id: string;
   name: string;
   category: string;
-  required_employees: number;
+  staff_requirement: StaffRequirement;
   tasks: ServiceTask[];
   week_start: string;
   created_at: string;
@@ -32,7 +37,7 @@ export interface ServiceOverview {
   shift_id: string;
   name: string;
   category: string;
-  required_employees: number;
+  staff_requirement: StaffRequirement;
   totalTasks: number;
   completedTasks: number;
 }
