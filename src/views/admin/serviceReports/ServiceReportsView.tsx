@@ -17,10 +17,14 @@ type Tab = 'previo' | 'diario' | 'historial';
 const SHIFTS = INITIAL_SHIFTS;
 const STATUSES = INITIAL_EMPLOYEE_STATUSES;
 
-const SHIFT_WC_FILTER: Record<string, string[] | null> = {
+const SHIFT_WC_INCLUDE: Record<string, string[] | null> = {
   's_1': null,
   's_2': ['wc_1', 'wc_2'],
   's_3': ['wc_1'],
+};
+
+const SHIFT_EXCLUDED_WCS: Record<string, string[]> = {
+  's_1': ['wc_7', 'wc_8', 'wc_9'],
 };
 
 function formatEmployeeName(emp: { name: string; last_name1: string; last_name2: string }): string {
@@ -109,11 +113,10 @@ export const ServiceReportsView: React.FC = () => {
   const workDayIds = getWorkDayIdsForDate(targetDateObj);
 
   const filteredWorkCenters = useMemo(() => {
-    const allowedIds = SHIFT_WC_FILTER[activeShift];
-    if (allowedIds) {
-      return scopeWorkCenters.filter((wc) => allowedIds.includes(wc.id));
-    }
-    return scopeWorkCenters;
+    const allowedIds = SHIFT_WC_INCLUDE[activeShift];
+    const excluded = SHIFT_EXCLUDED_WCS[activeShift] ?? [];
+    let wcs = allowedIds ? scopeWorkCenters.filter((wc) => allowedIds.includes(wc.id)) : scopeWorkCenters;
+    return wcs.filter((wc) => !excluded.includes(wc.id));
   }, [scopeWorkCenters, activeShift]);
 
   const getEmployeesForWC = (wcId: string) => {
