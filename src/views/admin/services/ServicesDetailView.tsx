@@ -70,7 +70,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
     return { completed: completedTasks.size, total: totalTasks };
   }, [service, workReports, serviceId]);
 
-  const [activeDay, setActiveDay] = useState(0);
+  const todayIndex = (new Date().getDay() + 6) % 7;
+  const [activeDay, setActiveDay] = useState(todayIndex);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
