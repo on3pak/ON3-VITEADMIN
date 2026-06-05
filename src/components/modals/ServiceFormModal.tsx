@@ -225,20 +225,20 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
             </select>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Centro de Trabajo *</label>
-            <select
-              value={work_center_id}
-              onChange={(e) => setWork_center_id(e.target.value)}
-              className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
-            >
-              {(workCenters ?? INITIAL_WORK_CENTERS).map((wc) => (
-                <option key={wc.id} value={wc.id}>{wc.name}</option>
-              ))}
-            </select>
-          </div>
-
           <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Centro de Trabajo *</label>
+              <select
+                value={work_center_id}
+                onChange={(e) => setWork_center_id(e.target.value)}
+                className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+              >
+                {(workCenters ?? INITIAL_WORK_CENTERS).map((wc) => (
+                  <option key={wc.id} value={wc.id}>{wc.name}</option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-xs font-semibold text-app-text-secondary mb-1">Turno *</label>
               <select
@@ -251,7 +251,9 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 ))}
               </select>
             </div>
+          </div>
 
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-app-text-secondary mb-1">Oficial *</label>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -293,32 +295,32 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 </button>
               </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Peones</label>
-            <div className="flex items-center gap-2">
-              {[0, 1, 2].filter((n) => n <= peonMax).map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setPeones(n)}
-                  className={`w-10 h-10 rounded-lg text-base font-bold transition-all ${
-                    peones === n
-                      ? 'bg-primary-600 text-white shadow-sm'
-                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
+            <div>
+              <label className="block text-xs font-semibold text-app-text-secondary mb-1">Peones</label>
+              <div className="flex items-center gap-2">
+                {[0, 1, 2].filter((n) => n <= peonMax).map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setPeones(n)}
+                    className={`w-10 h-10 rounded-lg text-base font-bold transition-all ${
+                      peones === n
+                        ? 'bg-primary-600 text-white shadow-sm'
+                        : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-app-text-secondary mt-1">
+                Total: <strong>{(oficial ? 1 : 0) + peones} emp.</strong>
+                {oficial ? ` (1 of. + ${peones} peón${peones !== 1 ? 'es' : ''})` : ''}
+                {!oficial && peones > 0 ? ' (1 peón)' : ''}
+                {!oficial && peones === 0 ? ' — sin personal' : ''}
+              </p>
             </div>
-            <p className="text-xs text-app-text-secondary mt-1">
-              Total: <strong>{(oficial ? 1 : 0) + peones} empleado{(oficial ? 1 : 0) + peones !== 1 ? 's' : ''}</strong>
-              {oficial ? ' (1 oficial + ' + peones + ' peón' + (peones !== 1 ? 'es' : '') + ')' : ''}
-              {!oficial && peones > 0 ? ' (1 peón)' : ''}
-              {!oficial && peones === 0 ? ' — sin personal' : ''}
-            </p>
           </div>
 
           {editingService && (
