@@ -84,6 +84,7 @@ const MainLayout: React.FC = () => {
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [serviceReportTab, setServiceReportTab] = useState<'previo' | 'diario' | 'historial'>('previo');
 
   if (loading) {
     return (
@@ -206,7 +207,7 @@ const MainLayout: React.FC = () => {
       case 'LOGS_EMPLOYEES':
         return <LogsView logType={currentView} />;
       case 'SERVICE_REPORT':
-        return <ServiceReportsView />;
+        return <ServiceReportsView onTabChange={setServiceReportTab} />;
       case 'INVENTORY_CRUD':
         return <InventoryView />;
       case 'INVENTORY_DASHBOARD':
@@ -241,7 +242,7 @@ const MainLayout: React.FC = () => {
             <main className="grow">
               {/* Toolbar */}
               <div className="px-5">
-                <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                <Header currentView={currentView} setCurrentView={setCurrentView} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} serviceReportTab={serviceReportTab} />
               </div>
 
               {/* Page Content */}

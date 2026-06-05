@@ -44,7 +44,7 @@ const ATTENDANCE_COLORS: Record<AttendanceStatus, string> = {
   JUSTIFIED_ABSENCE: 'text-amber-600 bg-amber-50 border-amber-200',
 };
 
-export const ServiceReportsView: React.FC = () => {
+export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diario' | 'historial') => void }> = ({ onTabChange }) => {
   const { user } = useAuth();
   const { services } = useServices();
   const { employees } = useEmployees();
@@ -63,6 +63,8 @@ export const ServiceReportsView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('previo');
   const [activeWC, setActiveWC] = useState<string | null>(null);
   const [activeShift, setActiveShift] = useState<string>('s_1');
+
+  useEffect(() => { onTabChange?.(activeTab); }, []);
   const [report, setReport] = useState<{ id: string; warnings: string[] } | null>(null);
   const [saveMsg, setSaveMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -178,6 +180,7 @@ export const ServiceReportsView: React.FC = () => {
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
+    onTabChange?.(tab);
     setSaveMsg(null);
     setOpenDropdown(null);
   };

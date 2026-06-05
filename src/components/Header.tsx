@@ -9,6 +9,7 @@ interface HeaderProps {
   setCurrentView: (view: DashboardViewType) => void;
   sidebarOpen?: boolean;
   setSidebarOpen?: (open: boolean) => void;
+  serviceReportTab?: 'previo' | 'diario' | 'historial';
 }
 
 const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string; section?: string }> = {
@@ -67,7 +68,19 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
       .slice(0, 2);
   };
 
-  const info = viewBreadcrumb[currentView] || { title: 'Panel de Control' };
+  const getBreadcrumbInfo = () => {
+    if (currentView === 'SERVICE_REPORT' && serviceReportTab) {
+      const titles: Record<string, { title: string; parent: string }> = {
+        previo: { title: 'Parte Previo', parent: 'Servicios' },
+        diario: { title: 'Parte Diario', parent: 'Servicios' },
+        historial: { title: 'Historial', parent: 'Servicios' },
+      };
+      return titles[serviceReportTab] || { title: 'Parte de Servicio', parent: 'Servicios' };
+    }
+    return viewBreadcrumb[currentView] || { title: 'Panel de Control' };
+  };
+
+  const info = getBreadcrumbInfo();
   const [lang, setLang] = useState<'ES' | 'EN'>('ES');
   const [isFullscreen, setIsFullscreen] = useState(false);
 
