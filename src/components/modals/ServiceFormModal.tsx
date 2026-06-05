@@ -300,18 +300,19 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
 
             <div>
               <label className="block text-xs font-semibold text-app-text-secondary mb-1">Peones</label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 {[0, 1, 2].filter((n) => n <= peonMax).map((n) => (
                   <button
                     key={n}
                     type="button"
                     onClick={() => setPeones(n)}
-                    className={`w-10 h-10 rounded-lg text-base font-bold transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
                       peones === n
-                        ? 'bg-primary-600 text-white shadow-sm'
-                        : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
+                        ? 'bg-emerald-600 text-white shadow-sm'
+                        : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-emerald-300'
                     }`}
                   >
+                    <Users className="h-3.5 w-3.5" />
                     {n}
                   </button>
                 ))}
