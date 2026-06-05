@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Service, ServiceTask } from '../../types';
 import { INITIAL_SERVICE_CATEGORIES } from '../../data/mockServices';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
+import { INITIAL_SHIFTS } from '../../data/mockEmployees';
 import { WorkCenter } from '../../types';
 import { X, ClipboardList, Save } from 'lucide-react';
 
@@ -70,9 +71,13 @@ function generateTasks(serviceId: string): ServiceTask[] {
 }
 
 export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService, workCenters }) => {
+  const shifts = INITIAL_SHIFTS;
+
   const [name, setName] = useState('');
   const [category, setCategory] = useState('BARRIDO MIXTO');
   const [work_center_id, setWork_center_id] = useState('wc_1');
+  const [shift_id, setShift_id] = useState('s_1');
+  const [required_employees, setRequired_employees] = useState(1);
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -80,15 +85,21 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
       setName(editingService.name);
       setCategory(editingService.category);
       setWork_center_id(editingService.work_center_id);
+      setShift_id(editingService.shift_id);
+      setRequired_employees(editingService.required_employees);
     } else {
       setName('');
       setCategory('BARRIDO MIXTO');
-      setWork_center_id('wc-1');
+      setWork_center_id('wc_1');
+      setShift_id('s_1');
+      setRequired_employees(1);
     }
   }, [editingService, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
     if (!name || !category) {
       setFormError('Completa todos los campos obligatorios');
       return;
@@ -99,6 +110,8 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
         name,
         category,
         work_center_id,
+        shift_id,
+        required_employees,
         week_start: editingService.week_start,
         tasks: editingService.tasks,
       });
@@ -109,6 +122,8 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
         name,
         category,
         work_center_id,
+        shift_id,
+        required_employees,
         week_start: new Date().toISOString().slice(0, 10),
         tasks: generateTasks(tempId),
       });
@@ -175,6 +190,40 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 <option key={wc.id} value={wc.id}>{wc.name}</option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Turno *</label>
+            <select
+              value={shift_id}
+              onChange={(e) => setShift_id(e.target.value)}
+              className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
+            >
+              {shifts.map((s) => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-app-text-secondary mb-1">Personal necesario *</label>
+            <div className="flex items-center gap-3">
+              {[1, 2, 3].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setRequired_employees(n)}
+                  className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
+                    required_employees === n
+                      ? 'bg-primary-600 text-white shadow-sm'
+                      : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-primary-300'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-app-text-secondary mt-1">¿Cuántos empleados se necesitan para este servicio?</p>
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-app-border">

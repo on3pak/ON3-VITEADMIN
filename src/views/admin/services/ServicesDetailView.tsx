@@ -5,6 +5,7 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Service } from '../../../types';
+import { INITIAL_SHIFTS } from '../../../data/mockEmployees';
 import {
   ArrowLeft, ClipboardList, CheckCircle2, Circle,
   Edit3, Trash2,
@@ -123,6 +124,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
           <SectionCard icon={<ClipboardList className="h-4 w-4" />} title="Información">
             <InfoRow label="Centro de Trabajo" value={resolveWorkCenter(service.work_center_id)} highlight />
             <InfoRow label="Tipo" value={service.category} highlight />
+            <InfoRow label="Turno" value={INITIAL_SHIFTS.find((sh) => sh.id === service.shift_id)?.name ?? service.shift_id} />
+            <InfoRow label="Personal necesario" value={`${service.required_employees} empleado${service.required_employees !== 1 ? 's' : ''}`} />
           </SectionCard>
         </div>
       </div>

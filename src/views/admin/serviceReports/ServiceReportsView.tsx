@@ -112,14 +112,12 @@ export const ServiceReportsView: React.FC = () => {
     return scopeWorkCenters.filter((wc) => wcIdsWithServices.has(wc.id));
   }, [scopeWorkCenters, services]);
 
-  const shiftWorkCenterIds = useMemo(() => {
-    const empInShift = employees.filter((e) => e.shift_id === activeShift && e.active && e.status_id === 'es_1');
-    return new Set(empInShift.map((e) => e.work_center_id));
-  }, [employees, activeShift]);
-
   const filteredWorkCenters = useMemo(() => {
-    return workCentersWithServices.filter((wc) => shiftWorkCenterIds.has(wc.id));
-  }, [workCentersWithServices, shiftWorkCenterIds]);
+    const wcIdsWithShiftServices = new Set(
+      services.filter((s) => s.shift_id === activeShift).map((s) => s.work_center_id)
+    );
+    return workCentersWithServices.filter((wc) => wcIdsWithShiftServices.has(wc.id));
+  }, [workCentersWithServices, services, activeShift]);
 
   const getEmployeesForWC = (wcId: string) => {
     return employees.filter((e) => {
@@ -142,7 +140,7 @@ export const ServiceReportsView: React.FC = () => {
     return currentReport.assignments.some((a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId);
   };
 
-  const handleToggleAssign = (wcId: string, employeeId: string, serviceId: string) => {
+  const handleToggleAssign = (wcId: string, employeeId: string, serviceId: string, maxEmps: number) => {
     if (!currentReport) return;
     const existing = currentReport.assignments.find(
       (a) => a.employee_id === employeeId && a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId
@@ -150,6 +148,10 @@ export const ServiceReportsView: React.FC = () => {
     if (existing) {
       removeAssignment(currentReport.id, existing.id);
     } else {
+      const currentCount = currentReport.assignments.filter(
+        (a) => a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId
+      ).length;
+      if (currentCount >= maxEmps) return;
       addAssignment(currentReport.id, {
         work_center_id: wcId,
         shift_id: activeShift,
@@ -200,10 +202,10 @@ export const ServiceReportsView: React.FC = () => {
     </button>
   );
 
-  const renderServiceCard = (wcId: string, service: { id: string; name: string; category: string }, wcEmployees: ReturnType<typeof getEmployeesForWC>) => {
+  const renderServiceCard = (wcId: string, service: { id: string; name: string; category: string; required_employees: number }, wcEmployees: ReturnType<typeof getEmployeesForWC>) => {
     const assignments = getAssignmentsForService(wcId, service.id);
     const dropdownId = `${wcId}-${activeShift}-${service.id}`;
-    const availableEmps = wcEmployees.filter((e) => e.shift_id === activeShift);
+    const maxEmps = service.required_employees;
 
     return (
       <div key={service.id} className="bg-white rounded-xl border border-app-border p-4">
@@ -213,7 +215,7 @@ export const ServiceReportsView: React.FC = () => {
             <p className="text-[11px] text-app-text-secondary">{service.category}</p>
           </div>
           <span className="text-[11px] text-app-text-secondary font-mono bg-app-bg px-2 py-0.5 rounded-full">
-            {assignments.length} emp.
+            {assignments.length}/{maxEmps} emp.
           </span>
         </div>
 
@@ -263,29 +265,36 @@ export const ServiceReportsView: React.FC = () => {
             className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
           >
             <Users className="h-3.5 w-3.5" />
-            Añadir empleados
+            Asignar empleados
             <ChevronDown className={`h-3 w-3 transition-transform ${openDropdown === dropdownId ? 'rotate-180' : ''}`} />
           </button>
 
           {openDropdown === dropdownId && (
             <div className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto">
-              {availableEmps.length === 0 ? (
+              {wcEmployees.length === 0 ? (
                 <p className="p-3 text-xs text-app-text-secondary text-center">No hay empleados disponibles para este turno</p>
               ) : (
-                availableEmps.map((emp) => {
+                wcEmployees.map((emp) => {
                   const checked = isEmployeeAssignedToService(emp.id, wcId, service.id);
+                  const atLimit = !checked && assignments.length >= maxEmps;
                   const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
                   return (
                     <label
                       key={emp.id}
-                      className="flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 last:border-b-0"
+                      className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 last:border-b-0 transition-colors ${
+                        atLimit ? 'opacity-40 pointer-events-none' : ''
+                      }`}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={() => handleToggleAssign(wcId, emp.id, service.id)}
+                        disabled={atLimit}
+                        onChange={() => handleToggleAssign(wcId, emp.id, service.id, maxEmps)}
                         className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0"
                       />
+                      <div className="size-7 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-[10px] font-bold shrink-0">
+                        {emp.name.charAt(0)}{emp.last_name1.charAt(0)}
+                      </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</p>
                         <p className="text-[10px] text-app-text-secondary">{statusName}</p>
@@ -303,7 +312,7 @@ export const ServiceReportsView: React.FC = () => {
 
   const renderWorkCenterSection = (wcId: string) => {
     const wc = scopeWorkCenters.find((w) => w.id === wcId);
-    const wcSvc = services.filter((s) => s.work_center_id === wcId);
+    const wcSvc = services.filter((s) => s.work_center_id === wcId && s.shift_id === activeShift);
     const isOpen = activeWC === wcId;
     const wcEmployees = getEmployeesForWC(wcId);
 
@@ -333,14 +342,14 @@ export const ServiceReportsView: React.FC = () => {
           {isOpen && (
           <div className="border-t border-app-card-border p-4 space-y-4">
             {wcSvc.length === 0 ? (
-              <p className="text-sm text-app-text-secondary text-center py-4">No hay servicios en este centro de trabajo</p>
+              <p className="text-sm text-app-text-secondary text-center py-4">No hay servicios en este centro de trabajo para el turno seleccionado</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {wcSvc.map((svc) => renderServiceCard(wcId, svc, wcEmployees))}
               </div>
             )}
 
-            {wcEmployees.length === 0 && (
+            {wcEmployees.length === 0 && wcSvc.length > 0 && (
               <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                 No hay empleados disponibles (trabajando) para este turno en este centro de trabajo.
               </p>
@@ -354,12 +363,7 @@ export const ServiceReportsView: React.FC = () => {
   const renderShiftTabs = () => (
     <div className="flex gap-1 overflow-x-auto py-2">
       {SHIFTS.map((shift) => {
-        const shiftWcCount = activeTab !== 'historial'
-          ? workCentersWithServices.filter((wc) => {
-              const hasEmp = employees.some((e) => e.work_center_id === wc.id && e.shift_id === shift.id && e.active && e.status_id === 'es_1');
-              return hasEmp;
-            }).length
-          : 0;
+        const shiftSvcCount = services.filter((s) => s.shift_id === shift.id).length;
         return (
           <button
             key={shift.id}
@@ -372,8 +376,8 @@ export const ServiceReportsView: React.FC = () => {
           >
             <Clock className="h-4 w-4" />
             {shift.name}
-            {shiftWcCount > 0 && (
-              <span className="text-[11px] opacity-75">({shiftWcCount})</span>
+            {shiftSvcCount > 0 && (
+              <span className="text-[11px] opacity-75">({shiftSvcCount} servicios)</span>
             )}
           </button>
         );

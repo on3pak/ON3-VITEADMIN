@@ -5,10 +5,11 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Service, ServiceOverview } from '../../../types';
+import { INITIAL_SHIFTS } from '../../../data/mockEmployees';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp,
-  ClipboardList,
+  ClipboardList, Clock, Users,
 } from 'lucide-react';
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -158,7 +159,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                 <thead>
                   <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                     <th className="py-3 px-6">Servicio</th>
+                    <th className="py-3 px-4 w-20 text-center">Turno</th>
                     <th className="py-3 px-4 w-28 text-center">Tipo</th>
+                    <th className="py-3 px-4 w-20 text-center">Personal</th>
                     <th className="py-3 px-4 w-20 text-center">Progreso</th>
                     <th className="py-3 px-4 w-20 text-center">Acciones</th>
                   </tr>
@@ -166,7 +169,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                 <tbody className="divide-y divide-slate-100 text-app-text text-sm">
                   {paginatedServices.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="py-12 text-center text-app-text-secondary font-medium">
+                      <td colSpan={6} className="py-12 text-center text-app-text-secondary font-medium">
                         No se encontraron servicios.
                       </td>
                     </tr>
@@ -189,8 +192,26 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-slate-100 text-slate-700">
+                              <Clock className="h-3 w-3" />
+                              {INITIAL_SHIFTS.find((sh) => sh.id === s.shift_id)?.name ?? s.shift_id}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex justify-center">
                             <span className={`inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-md border text-center ${CATEGORY_COLORS[s.category] || 'bg-app-bg'}`}>
                               {s.category}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex justify-center">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-sky-100 text-sky-700">
+                              <Users className="h-3 w-3" />
+                              {s.required_employees}
                             </span>
                           </div>
                         </td>

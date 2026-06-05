@@ -22,8 +22,10 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
     return services.map((s) => ({
       id: s.id,
       work_center_id: s.work_center_id,
+      shift_id: s.shift_id,
       name: s.name,
       category: s.category,
+      required_employees: s.required_employees,
       totalTasks: s.tasks.length,
       completedTasks: s.tasks.filter((t) => t.status === 'COMPLETED').length,
     }));

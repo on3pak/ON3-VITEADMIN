@@ -16,8 +16,10 @@ export interface ServiceTask {
 export interface Service {
   id: string;
   work_center_id: string;
+  shift_id: string;
   name: string;
   category: string;
+  required_employees: number;
   tasks: ServiceTask[];
   week_start: string;
   created_at: string;
@@ -27,8 +29,10 @@ export interface Service {
 export interface ServiceOverview {
   id: string;
   work_center_id: string;
+  shift_id: string;
   name: string;
   category: string;
+  required_employees: number;
   totalTasks: number;
   completedTasks: number;
 }

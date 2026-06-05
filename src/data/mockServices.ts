@@ -69,14 +69,22 @@ function generateTasks(serviceId: string): ServiceTask[] {
 const services: Service[] = [];
 let svcIdx = 1;
 
+function requiredEmps(i: number): number {
+  const n = (i % 3) + 1;
+  return n;
+}
+
 // 10 BMIX (Barrido Mixto) in Nave
+const bmixShift = (i: number) => i < 7 ? 's_1' : i < 9 ? 's_2' : 's_3';
 for (let i = 0; i < 10; i++) {
   const id = `svc_${svcIdx++}`;
   services.push({
     id,
     work_center_id: 'wc_1',
+    shift_id: bmixShift(i),
     name: `BMIX${i + 1}`,
     category: 'BARRIDO MIXTO',
+    required_employees: requiredEmps(i),
     tasks: generateTasks(id),
     week_start: '2026-06-01',
     created_at: '2025-01-01T08:00:00Z',
@@ -85,13 +93,16 @@ for (let i = 0; i < 10; i++) {
 }
 
 // 5 BMEC (Barrido Mecánico) in Nave
+const bmecShift = (i: number) => i < 3 ? 's_1' : i === 3 ? 's_2' : 's_3';
 for (let i = 0; i < 5; i++) {
   const id = `svc_${svcIdx++}`;
   services.push({
     id,
     work_center_id: 'wc_1',
+    shift_id: bmecShift(i),
     name: `BMEC${i + 1}`,
     category: 'BARRIDO MECÁNICO',
+    required_employees: requiredEmps(i + 10),
     tasks: generateTasks(id),
     week_start: '2026-06-01',
     created_at: '2025-01-01T08:00:00Z',
@@ -100,13 +111,16 @@ for (let i = 0; i < 5; i++) {
 }
 
 // 5 RVOL (Recogida) in Nave
+const rvolShift = (i: number) => i < 3 ? 's_1' : i === 3 ? 's_2' : 's_3';
 for (let i = 0; i < 5; i++) {
   const id = `svc_${svcIdx++}`;
   services.push({
     id,
     work_center_id: 'wc_1',
+    shift_id: rvolShift(i),
     name: `RVOL${i + 1}`,
     category: 'RECOGIDA',
+    required_employees: requiredEmps(i + 15),
     tasks: generateTasks(id),
     week_start: '2026-06-01',
     created_at: '2025-01-01T08:00:00Z',
@@ -119,8 +133,10 @@ const pmId = `svc_${svcIdx++}`;
 services.push({
   id: pmId,
   work_center_id: 'wc_2',
+  shift_id: 's_1',
   name: 'BALD1',
   category: 'BALDEO',
+  required_employees: 2,
   tasks: generateTasks(pmId),
   week_start: '2026-06-01',
   created_at: '2025-01-01T08:00:00Z',
