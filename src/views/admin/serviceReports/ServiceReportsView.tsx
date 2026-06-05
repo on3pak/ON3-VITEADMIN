@@ -194,10 +194,10 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const renderTabButton = (tab: Tab, icon: React.ReactNode, label: string) => (
     <button
       onClick={() => handleTabChange(tab)}
-      className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg transition-all ${
+      className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 transition-all ${
         activeTab === tab
-          ? 'bg-primary-600 text-white shadow-sm'
-          : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
+          ? 'text-primary-600 border-primary-600'
+          : 'text-app-text-secondary border-transparent hover:text-app-text hover:border-app-text-secondary/30'
       }`}
     >
       {icon}
@@ -409,20 +409,6 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
 
   const renderPrevioTab = () => (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-bold text-app-text">Parte Previo</h2>
-          <p className="text-sm text-app-text-secondary">Planificación para mañana ({getTomorrowDateString()})</p>
-        </div>
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-xl font-semibold text-sm transition-colors shadow-sm"
-        >
-          <Save className="h-4 w-4" />
-          Guardar
-        </button>
-      </div>
-
       {renderShiftTabs()}
       {renderWcList('No hay centros de trabajo para el turno seleccionado en tu ciudad.')}
     </div>
@@ -430,20 +416,6 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
 
   const renderDiarioTab = () => (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-bold text-app-text">Parte Diario</h2>
-          <p className="text-sm text-app-text-secondary">Registro de hoy ({getTodayDateString()})</p>
-        </div>
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-xl font-semibold text-sm transition-colors shadow-sm"
-        >
-          <Save className="h-4 w-4" />
-          Guardar
-        </button>
-      </div>
-
       {currentReport && currentReport.assignments.length === 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
@@ -461,11 +433,6 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
 
   const renderHistorialTab = () => (
     <div className="space-y-4">
-      <div>
-        <h2 className="text-lg font-bold text-app-text">Historial</h2>
-        <p className="text-sm text-app-text-secondary">Partes diarios de los últimos días</p>
-      </div>
-
       {historial.length === 0 ? (
         <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
           <History className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
@@ -500,10 +467,21 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-2 border-b border-app-border pb-3">
-        {renderTabButton('previo', <CalendarPlus className="h-4 w-4" />, 'Parte Previo')}
-        {renderTabButton('diario', <CalendarCheck className="h-4 w-4" />, 'Parte Diario')}
-        {renderTabButton('historial', <History className="h-4 w-4" />, 'Historial')}
+      <div className="flex items-center justify-between border-b border-app-border">
+        <div className="flex items-center gap-2">
+          {renderTabButton('previo', <CalendarPlus className="h-4 w-4" />, 'Parte Previo')}
+          {renderTabButton('diario', <CalendarCheck className="h-4 w-4" />, 'Parte Diario')}
+          {renderTabButton('historial', <History className="h-4 w-4" />, 'Historial')}
+        </div>
+        {(activeTab === 'previo' || activeTab === 'diario') && (
+          <button
+            onClick={handleSave}
+            className="flex items-center justify-center size-9 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-colors border border-emerald-200 shrink-0"
+            title="Guardar parte"
+          >
+            <Save className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {saveMsg && (

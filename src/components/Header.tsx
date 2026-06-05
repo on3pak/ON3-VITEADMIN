@@ -43,7 +43,7 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
   SERVICE_REPORT: { title: 'Parte Previo', parent: 'Servicios' },
 };
 
-export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sidebarOpen, setSidebarOpen }) => {
+export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sidebarOpen, setSidebarOpen, serviceReportTab }) => {
   const { user, triggerToast, logout } = useAuth();
   const { resetMockData } = useUsers();
   const [mobileUserOpen, setMobileUserOpen] = useState(false);
