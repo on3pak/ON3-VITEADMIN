@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useServices } from '../../../context/ServiceContext';
 import { useEmployees } from '../../../context/EmployeeContext';
@@ -8,7 +8,7 @@ import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_STATUSES } from '../../../data/mockEmp
 import { AttendanceStatus, ServiceAssignment } from '../../../types';
 import {
   CalendarCheck, CalendarPlus, History,
-  CheckCircle2, Circle, X, ChevronDown, ChevronRight,
+  CheckCircle2, X, ChevronDown, ChevronRight,
   Building2, Clock, Users, Save, AlertTriangle,
 } from 'lucide-react';
 
@@ -16,6 +16,12 @@ type Tab = 'previo' | 'diario' | 'historial';
 
 const SHIFTS = INITIAL_SHIFTS;
 const STATUSES = INITIAL_EMPLOYEE_STATUSES;
+
+const SHIFT_WC_FILTER: Record<string, string[] | null> = {
+  's_1': null,
+  's_2': ['wc_1', 'wc_2'],
+  's_3': ['wc_1'],
+};
 
 function formatEmployeeName(emp: { name: string; last_name1: string; last_name2: string }): string {
   const parts = [emp.name, emp.last_name1, emp.last_name2].filter(Boolean);
@@ -56,14 +62,9 @@ export const ServiceReportsView: React.FC = () => {
   const [report, setReport] = useState<{ id: string; warnings: string[] } | null>(null);
   const [saveMsg, setSaveMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpenDropdown(null);
-      }
-    };
+    const handleClick = () => setOpenDropdown(null);
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
@@ -107,17 +108,13 @@ export const ServiceReportsView: React.FC = () => {
   const targetDateObj = new Date(targetDate + 'T12:00:00');
   const workDayIds = getWorkDayIdsForDate(targetDateObj);
 
-  const workCentersWithServices = useMemo(() => {
-    const wcIdsWithServices = new Set(services.map((s) => s.work_center_id));
-    return scopeWorkCenters.filter((wc) => wcIdsWithServices.has(wc.id));
-  }, [scopeWorkCenters, services]);
-
   const filteredWorkCenters = useMemo(() => {
-    const wcIdsWithShiftServices = new Set(
-      services.filter((s) => s.shift_id === activeShift).map((s) => s.work_center_id)
-    );
-    return workCentersWithServices.filter((wc) => wcIdsWithShiftServices.has(wc.id));
-  }, [workCentersWithServices, services, activeShift]);
+    const allowedIds = SHIFT_WC_FILTER[activeShift];
+    if (allowedIds) {
+      return scopeWorkCenters.filter((wc) => allowedIds.includes(wc.id));
+    }
+    return scopeWorkCenters;
+  }, [scopeWorkCenters, activeShift]);
 
   const getEmployeesForWC = (wcId: string) => {
     return employees.filter((e) => {
@@ -259,7 +256,7 @@ export const ServiceReportsView: React.FC = () => {
           </div>
         )}
 
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative">
           <button
             onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === dropdownId ? null : dropdownId); }}
             className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
@@ -270,7 +267,10 @@ export const ServiceReportsView: React.FC = () => {
           </button>
 
           {openDropdown === dropdownId && (
-            <div className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto">
+            <div
+              onMouseDown={(e) => e.stopPropagation()}
+              className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto"
+            >
               {wcEmployees.length === 0 ? (
                 <p className="p-3 text-xs text-app-text-secondary text-center">No hay empleados disponibles para este turno</p>
               ) : (
@@ -317,7 +317,7 @@ export const ServiceReportsView: React.FC = () => {
     const wcEmployees = getEmployeesForWC(wcId);
 
     return (
-      <div key={wcId} className="bg-app-card rounded-2xl border border-app-card-border overflow-hidden">
+      <div key={wcId} className="bg-app-card rounded-2xl border border-app-card-border">
         <button
           onClick={() => { setActiveWC(isOpen ? null : wcId); setOpenDropdown(null); }}
           className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-app-bg transition-colors"
@@ -344,7 +344,7 @@ export const ServiceReportsView: React.FC = () => {
             {wcSvc.length === 0 ? (
               <p className="text-sm text-app-text-secondary text-center py-4">No hay servicios en este centro de trabajo para el turno seleccionado</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3">
                 {wcSvc.map((svc) => renderServiceCard(wcId, svc, wcEmployees))}
               </div>
             )}
