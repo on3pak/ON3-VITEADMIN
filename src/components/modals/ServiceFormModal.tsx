@@ -50,12 +50,14 @@ const DAY_ZONES: string[] = [
   'Zona Verde - Parques Periurbanos',
 ];
 
+const TASKS_PER_DAY = 20;
+
 function generateTasks(serviceId: string): ServiceTask[] {
   const tasks: ServiceTask[] = [];
   let taskId = 0;
   const now = new Date().toISOString();
   for (let day = 0; day < 7; day++) {
-    for (let t = 0; t < 20; t++) {
+    for (let t = 0; t < TASKS_PER_DAY; t++) {
       tasks.push({
         id: `${serviceId}-task-${taskId++}`,
         service_id: serviceId,
@@ -317,14 +319,15 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-app-text-secondary mt-1">
-                Total: <strong>{(oficial ? 1 : 0) + peones} emp.</strong>
-                {oficial ? ` (1 of. + ${peones} peón${peones !== 1 ? 'es' : ''})` : ''}
-                {!oficial && peones > 0 ? ' (1 peón)' : ''}
-                {!oficial && peones === 0 ? ' — sin personal' : ''}
-              </p>
             </div>
           </div>
+
+          <p className="text-xs text-app-text-secondary -mt-2">
+            Total: <strong>{(oficial ? 1 : 0) + peones} emp.</strong>
+            {oficial ? ` (1 of. + ${peones} peón${peones !== 1 ? 'es' : ''})` : ''}
+            {!oficial && peones > 0 ? ' (1 peón)' : ''}
+            {!oficial && peones === 0 ? ' — sin personal' : ''}
+          </p>
 
           {editingService && (
             <div className="border-t border-app-border pt-4">
@@ -345,7 +348,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                       }`}
                     >
                       <span>{day}</span>
-                      <span className="text-[10px] opacity-75">({count})</span>
+                      <span className="text-[10px] opacity-75">({count}/{TASKS_PER_DAY})</span>
                     </button>
                   );
                 })}
