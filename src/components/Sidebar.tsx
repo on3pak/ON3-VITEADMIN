@@ -45,6 +45,7 @@ const adminItems = (role?: string) => {
     { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Ubicaciones y áreas de trabajo', disabled: !canAccessUserCrud(role) },
     { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Tareas, categorías y zonas', disabled: !canAccessUserCrud(role) },
     { id: 'INVENTORY_CRUD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Ropa, EPIs y Maquinaria', disabled: !canAccessUserCrud(role) },
+    { id: 'UTILS' as DashboardViewType, label: 'Utilidades', icon: <Wrench className="h-5 w-5" />, description: 'Tests y logs del sistema' },
   ];
 };
 
@@ -201,8 +202,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
 
             {['ROOT', 'ADMIN'].includes(user?.role || '') && (
               <button
-                onClick={() => setView('UTILS')}
-                className="flex items-center justify-center size-9 rounded-md border border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border transition-all"
+                onClick={() => { setActiveSection('admin'); setView('UTILS'); }}
+                className={`flex items-center justify-center size-9 rounded-md border transition-all ${
+                  activeSection === 'admin'
+                    ? 'bg-white text-primary-600 border-app-border shadow-xs'
+                    : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+                }`}
                 title="Utilidades"
               >
                 <Wrench className="h-[18px] w-[18px]" />
