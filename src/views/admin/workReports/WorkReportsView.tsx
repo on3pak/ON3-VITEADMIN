@@ -27,6 +27,7 @@ interface AssignMachineryType {
 }
 
 const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
+const todayIndex = (new Date().getDay() + 6) % 7;
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
   <div className="bg-app-card rounded-xl border border-app-card-border p-4">
@@ -112,7 +113,7 @@ export const WorkReportsView: React.FC = () => {
   const prefillServices = useMemo(() => {
     return myServices.map((s) => ({
       service_id: s.id,
-      tasks: s.tasks.map((t) => ({ task_id: t.id, completed: false })),
+      tasks: s.tasks.filter((t) => t.day_index === todayIndex).map((t) => ({ task_id: t.id, completed: false })),
     }));
   }, [myServices]);
 
@@ -202,7 +203,7 @@ export const WorkReportsView: React.FC = () => {
     if (!service) return;
     const entry: import('../../../types').WorkServiceEntry = {
       service_id: serviceId,
-      tasks: service.tasks.map((t) => ({ task_id: t.id, completed: false })),
+      tasks: service.tasks.filter((t) => t.day_index === todayIndex).map((t) => ({ task_id: t.id, completed: false })),
     };
     updateServices(workReport.id, [...workReport.services, entry]);
     setShowServicePicker(false);
@@ -509,13 +510,15 @@ export const WorkReportsView: React.FC = () => {
 
                     {isExpanded && (
                       <div className="border-t border-app-border px-4 py-3 space-y-2">
-                        {service.tasks.length === 0 ? (
-                          <p className="text-xs text-app-text-secondary text-center py-2">Este servicio no tiene tareas</p>
-                        ) : (
-                          service.tasks.map((task) => {
-                            const taskCompletion = entry.tasks.find((t) => t.task_id === task.id);
-                            const isCompleted = taskCompletion?.completed ?? false;
-                            return (
+                        {(() => {
+                          const todayTasks = service.tasks.filter((t) => t.day_index === todayIndex);
+                          return todayTasks.length === 0 ? (
+                            <p className="text-xs text-app-text-secondary text-center py-2">Este servicio no tiene tareas</p>
+                          ) : (
+                            todayTasks.map((task) => {
+                              const taskCompletion = entry.tasks.find((t) => t.task_id === task.id);
+                              const isCompleted = taskCompletion?.completed ?? false;
+                              return (
                               <label
                                 key={task.id}
                                 className={`flex items-start gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
@@ -539,9 +542,10 @@ export const WorkReportsView: React.FC = () => {
                                 </div>
                               </label>
                             );
-                          })
-                        )}
-                      </div>
+                            })
+                          )
+                        })()}
+                        </div>
                     )}
                   </div>
                 );
