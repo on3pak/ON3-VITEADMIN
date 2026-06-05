@@ -39,6 +39,7 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
   TESTS_CRUD: { title: 'Tests CRUD', parent: 'Utilidades' },
   TESTS_RBAC: { title: 'Tests RBAC', parent: 'Utilidades' },
   TESTS_ROLES: { title: 'Tests Roles', parent: 'Utilidades' },
+  SERVICE_REPORT: { title: 'Parte Previo', parent: 'Servicios' },
 };
 
 export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sidebarOpen, setSidebarOpen }) => {
