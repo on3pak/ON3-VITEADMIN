@@ -29,11 +29,12 @@ interface AssignMachineryType {
 const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
 const todayIndex = (new Date().getDay() + 6) % 7;
 
-const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ icon, title, action, children }) => (
   <div className="bg-app-card rounded-xl border border-app-card-border p-4">
     <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
-      <span>{title}</span>
+      <span className="flex-1">{title}</span>
+      {action}
     </div>
     {children}
   </div>
@@ -70,6 +71,11 @@ export const WorkReportsView: React.FC = () => {
   const [machineryBreakdownType, setMachineryBreakdownType] = useState<string>('');
   const [machineryBreakdownNotes, setMachineryBreakdownNotes] = useState('');
   const [breakdownNotes, setBreakdownNotes] = useState('');
+  const [expandedVehicle, setExpandedVehicle] = useState(false);
+  const [expandedReplacement, setExpandedReplacement] = useState(false);
+  const [showFuelLiters, setShowFuelLiters] = useState(false);
+  const [showReplacementFuelLiters, setShowReplacementFuelLiters] = useState(false);
+  const [isSavedMode, setIsSavedMode] = useState(false);
 
   const BREAKDOWN_TYPES = [
     { id: 'mecanica', label: 'Avería mecánica' },
@@ -145,7 +151,7 @@ export const WorkReportsView: React.FC = () => {
     return getWorkReportById(workReportId);
   }, [workReportId, getWorkReportById]);
 
-  const canEdit = workReport ? workReport.status !== 'CONFIRMED' : true;
+  const canEdit = workReport ? workReport.status !== 'CONFIRMED' && !isSavedMode : true;
   const isVehicleBroken = workReport ? !!workReport.vehicle_breakdown_type : false;
 
   const wcVehicles = useMemo(() => {
@@ -317,24 +323,24 @@ export const WorkReportsView: React.FC = () => {
 
   const handleSave = () => {
     if (!workReport) return;
+    if (workReport.services.length === 0) {
+      setSaveMsg({ type: 'error', text: 'Debe haber al menos un servicio para guardar el parte.' });
+      return;
+    }
     if (notes !== workReport.notes) {
       updateNotes(workReport.id, notes);
     }
-    const result = saveReport(workReport.id);
-    if (result.success) {
-      setSaveMsg({ type: 'success', text: 'Parte de trabajo guardado correctamente.' });
-    } else {
-      setSaveMsg({ type: 'error', text: result.error ?? 'Error al guardar.' });
-    }
+    const d = new Date();
+    const dateStr = `${d.getDate().toString().padStart(2, '0')}${(d.getMonth() + 1).toString().padStart(2, '0')}${d.getFullYear()}`;
+    setSaveMsg({ type: 'success', text: `Parte confirmado pt${workReport.employee_id}_${dateStr}` });
+    setIsSavedMode(true);
   };
 
   const getServiceProgress = (serviceId: string): { completed: number; total: number } => {
-    const service = services.find((s) => s.id === serviceId);
-    if (!service) return { completed: 0, total: 0 };
     const entry = workReport?.services.find((e) => e.service_id === serviceId);
-    if (!entry) return { completed: 0, total: service.tasks.length };
+    if (!entry) return { completed: 0, total: 0 };
     const completed = entry.tasks.filter((t) => t.completed).length;
-    return { completed, total: service.tasks.length };
+    return { completed, total: entry.tasks.length };
   };
 
   const getProgressPercent = (serviceId: string): number => {
@@ -383,7 +389,7 @@ export const WorkReportsView: React.FC = () => {
           }`}>
             {saveMsg.type === 'success' ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertTriangle className="h-4 w-4 shrink-0" />}
             {saveMsg.text}
-            <button onClick={() => setSaveMsg(null)} className="ml-auto p-0.5 hover:opacity-70"><X className="h-3.5 w-3.5" /></button>
+            <button onClick={() => { setSaveMsg(null); setIsSavedMode(false); }} className="ml-auto p-0.5 hover:opacity-70"><X className="h-3.5 w-3.5" /></button>
           </div>
         )}
 
@@ -411,7 +417,7 @@ export const WorkReportsView: React.FC = () => {
         </div>
 
         {/* Employee card */}
-        <div className="bg-app-card rounded-xl border border-app-card-border p-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="bg-app-bg rounded-xl border border-app-border p-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <User className="h-4 w-4 text-primary-500 shrink-0" />
             <div className="min-w-0">
@@ -459,7 +465,45 @@ export const WorkReportsView: React.FC = () => {
         )}
 
         {/* Services section */}
-        <SectionCard icon={<ClipboardList className="h-4 w-4" />} title="Servicios">
+        <SectionCard
+          icon={<ClipboardList className="h-4 w-4" />}
+          title="Servicios"
+          action={canEdit ? (
+            <div className="relative">
+              <button
+                onMouseDown={(e) => { e.stopPropagation(); setShowServicePicker(!showServicePicker); }}
+                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Añadir servicio
+              </button>
+              {showServicePicker && (
+                <div
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="absolute top-full right-0 mt-1 w-72 bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
+                >
+                  {(() => {
+                    const available = services.filter((s) => !workReport.services.some((e) => e.service_id === s.id));
+                    return available.length === 0 ? (
+                      <p className="p-3 text-xs text-app-text-secondary text-center">No hay más servicios disponibles</p>
+                    ) : (
+                      available.map((s) => (
+                        <button
+                          key={s.id}
+                          onClick={() => handleAddService(s.id)}
+                          className="w-full text-left px-3 py-2.5 hover:bg-app-bg border-b border-app-border/50 transition-colors"
+                        >
+                          <p className="text-sm font-medium text-app-text">{s.name}</p>
+                          <p className="text-[11px] text-app-text-secondary">{s.category}</p>
+                        </button>
+                      ))
+                    );
+                  })()}
+                </div>
+              )}
+            </div>
+          ) : undefined}
+        >
           {workReport.services.length === 0 ? (
             <div className="text-center py-6">
               <ClipboardCheck className="h-10 w-10 text-app-text-secondary mx-auto mb-2" />
@@ -478,17 +522,18 @@ export const WorkReportsView: React.FC = () => {
                   <div key={entry.service_id} className="border border-app-border rounded-xl overflow-hidden">
                     <button
                       onClick={() => handleToggleExpand(entry.service_id)}
-                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-app-bg transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-gray-100/50 transition-colors"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="flex-1 min-w-0 text-left">
+                        <ClipboardList className="h-4 w-4 text-primary-500 shrink-0" />
+                        <div className="min-w-0 text-left">
                           <p className="text-sm font-semibold text-app-text truncate">{service.name}</p>
                           <p className="text-[11px] text-app-text-secondary">{service.category}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 shrink-0">
                         <div className="flex items-center gap-1.5">
-                          <div className="h-1.5 w-16 bg-app-bg rounded-full overflow-hidden">
+                          <div className="h-1.5 w-16 bg-gray-200 rounded-full overflow-hidden">
                             <div className={`h-full rounded-full transition-all duration-300 ${
                               progress === 100 ? 'bg-emerald-500' : 'bg-primary-500'
                             }`} style={{ width: `${progress}%` }} />
@@ -523,12 +568,12 @@ export const WorkReportsView: React.FC = () => {
                                 key={task.id}
                                 className={`flex items-start gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
                                   isCompleted ? 'bg-emerald-50/50' : 'hover:bg-app-bg'
-                                } ${isConfirmed || !canEdit ? 'cursor-default' : ''}`}
+                                } ${isSavedMode || isConfirmed || !canEdit ? 'cursor-default' : ''}`}
                               >
                                 <input
                                   type="checkbox"
                                   checked={isCompleted}
-                                  disabled={isConfirmed || !canEdit}
+                                  disabled={isSavedMode || isConfirmed || !canEdit}
                                   onChange={() => handleToggleCompleted(entry.service_id, task.id)}
                                   className="mt-0.5 rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0 disabled:opacity-50"
                                 />
@@ -552,54 +597,61 @@ export const WorkReportsView: React.FC = () => {
               })}
             </div>
           )}
-          {canEdit && (
-            <div className="relative mt-3">
-              <button
-                onMouseDown={(e) => { e.stopPropagation(); setShowServicePicker(!showServicePicker); }}
-                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Añadir servicio
-              </button>
-              {showServicePicker && (
-                <div
-                  onMouseDown={(e) => e.stopPropagation()}
-                  className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
-                >
-                  {(() => {
-                    const available = services.filter((s) => !workReport.services.some((e) => e.service_id === s.id));
-                    return available.length === 0 ? (
-                      <p className="p-3 text-xs text-app-text-secondary text-center">No hay más servicios disponibles</p>
-                    ) : (
-                      available.map((s) => (
-                        <button
-                          key={s.id}
-                          onClick={() => handleAddService(s.id)}
-                          className="w-full text-left px-3 py-2.5 hover:bg-app-bg border-b border-app-border/50 transition-colors"
-                        >
-                          <p className="text-sm font-medium text-app-text">{s.name}</p>
-                          <p className="text-[11px] text-app-text-secondary">{s.category}</p>
-                        </button>
-                      ))
-                    );
-                  })()}
-                </div>
-              )}
-            </div>
-          )}
         </SectionCard>
 
         {/* Vehicle section */}
-        <SectionCard icon={<Truck className="h-4 w-4" />} title="Vehículo">
-          <div className="space-y-6">
+        <SectionCard
+          icon={<Truck className="h-4 w-4" />}
+          title="Vehículo"
+          action={canEdit ? (
+            <div className="relative flex gap-1">
+              {!workReport.vehicle_id && !workReport.replacement_vehicle_id && (
+                <button
+                  onMouseDown={(e) => { e.stopPropagation(); setVehiclePickerMode('primary'); setShowVehiclePicker(!showVehiclePicker); }}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Añadir vehículo
+                </button>
+              )}
+              {isVehicleBroken && !workReport.replacement_vehicle_id && (
+                <button
+                  onMouseDown={(e) => { e.stopPropagation(); setVehiclePickerMode('replacement'); setShowVehiclePicker(!showVehiclePicker); }}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Añadir vehículo de reemplazo
+                </button>
+              )}
+              {showVehiclePicker && vehiclePickerMode === 'primary' && (
+                <VehiclePicker
+                  vehicles={wcVehicles}
+                  assignedIds={[workReport.vehicle_id, workReport.replacement_vehicle_id].filter(Boolean) as string[]}
+                  onSelect={(id) => { handleVehicleChange(id, false); setShowVehiclePicker(false); }}
+                />
+              )}
+              {showVehiclePicker && vehiclePickerMode === 'replacement' && (
+                <VehiclePicker
+                  vehicles={wcVehicles}
+                  assignedIds={[workReport.vehicle_id, workReport.replacement_vehicle_id].filter(Boolean) as string[]}
+                  onSelect={(id) => { handleVehicleChange(id, true); setShowVehiclePicker(false); }}
+                />
+              )}
+            </div>
+          ) : undefined}
+        >
+          <div className="space-y-3">
 
             {/* ===== Primary vehicle ===== */}
             {workReport.vehicle_id && (
-              <div className="space-y-3">
-                <div className={`flex items-center justify-between rounded-lg px-3 py-2 border ${isVehicleBroken ? 'bg-amber-50 border-amber-200' : 'bg-app-bg border-app-border'}`}>
+              <div className="border border-app-border rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setExpandedVehicle(!expandedVehicle)}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-gray-100/50 transition-colors"
+                >
                   <div className="flex items-center gap-3 min-w-0">
                     <Truck className={`h-4 w-4 shrink-0 ${isVehicleBroken ? 'text-amber-500' : 'text-primary-500'}`} />
-                    <div className="min-w-0">
+                    <div className="min-w-0 text-left">
                       <p className={`text-sm font-semibold truncate ${isVehicleBroken ? 'text-amber-800' : 'text-app-text'}`}>
                         {(() => {
                           const v = vehicles.find((x) => x.id === workReport.vehicle_id);
@@ -614,124 +666,144 @@ export const WorkReportsView: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  {canEdit && !isVehicleBroken && (
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={handleOpenBreakdownModal}
-                        className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
-                        title="Avería"
-                      >
-                        <AlertTriangle className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        onClick={() => { handleVehicleChange(''); setShowVehiclePicker(false); }}
-                        className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
-                        title="Quitar vehículo"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  )}
-                </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    {canEdit && !isVehicleBroken && (
+                      <>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleOpenBreakdownModal(); }}
+                          className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
+                          title="Avería"
+                        >
+                          <AlertTriangle className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleVehicleChange(''); setShowVehiclePicker(false); }}
+                          className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                          title="Quitar vehículo"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </>
+                    )}
+                    {expandedVehicle ? <ChevronDown className="h-4 w-4 text-app-text-secondary" /> : <ChevronRight className="h-4 w-4 text-app-text-secondary" />}
+                  </div>
+                </button>
 
                 {isVehicleBroken && (
-                  <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-amber-50 text-amber-700 text-xs font-medium">
-                    <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                    <div className="flex-1 min-w-0">
-                      <p>Avería registrada: {workReport.vehicle_breakdown_type}</p>
-                      {workReport.vehicle_breakdown_notes && (
-                        <p className="text-[11px] text-amber-600 mt-0.5 leading-relaxed">{workReport.vehicle_breakdown_notes}</p>
+                  <div className="px-4 py-2 bg-amber-50 border-b border-app-border">
+                    <div className="flex items-start gap-2 text-amber-700 text-xs font-medium">
+                      <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p>Avería registrada: {workReport.vehicle_breakdown_type}</p>
+                        {workReport.vehicle_breakdown_notes && (
+                          <p className="text-[11px] text-amber-600 mt-0.5 leading-relaxed">{workReport.vehicle_breakdown_notes}</p>
+                        )}
+                      </div>
+                      {canEdit && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleRemoveBreakdown(); }}
+                          className="shrink-0 p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-amber-600 transition-colors"
+                          title="Quitar avería"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
                       )}
                     </div>
-                    {canEdit && (
-                      <button
-                        onClick={handleRemoveBreakdown}
-                        className="shrink-0 p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-amber-600 transition-colors"
-                        title="Quitar avería"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    )}
                   </div>
                 )}
 
-                <div className="grid grid-cols-4 gap-2">
-                  <div>
-                    <label className={`text-[11px] font-medium mb-1 block ${isVehicleBroken ? 'text-amber-600' : 'text-app-text-secondary'}`}>Km inicio</label>
-                    <input
-                      type="number"
-                      value={workReport.km_start ?? ''}
-                      onChange={(e) => handleFieldChange('km_start', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit || isVehicleBroken}
-                      className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:opacity-60 ${isVehicleBroken ? 'bg-amber-50 border-amber-200 text-amber-700 placeholder:text-amber-300' : 'border-app-border bg-white text-app-text'}`}
-                      placeholder="0"
-                    />
+                {expandedVehicle && (
+                  <div className="border-t border-app-border px-4 py-3 space-y-3">
+                    <div className="grid grid-cols-4 gap-2">
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">Km inicio</label>
+                        <input
+                          type="number"
+                          value={workReport.km_start ?? ''}
+                          onChange={(e) => handleFieldChange('km_start', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">Km fin</label>
+                        <input
+                          type="number"
+                          value={workReport.km_end ?? ''}
+                          onChange={(e) => handleFieldChange('km_end', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">H. inicio</label>
+                        <input
+                          type="number"
+                          value={workReport.hour_meter_start ?? ''}
+                          onChange={(e) => handleFieldChange('hour_meter_start', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">H. fin</label>
+                        <input
+                          type="number"
+                          value={workReport.hour_meter_end ?? ''}
+                          onChange={(e) => handleFieldChange('hour_meter_end', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showFuelLiters || !!workReport.fuel_liters}
+                        onChange={(e) => setShowFuelLiters(e.target.checked)}
+                        disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
+                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 disabled:opacity-50"
+                      />
+                      <span className="text-xs font-medium text-app-text">Repostar</span>
+                    </label>
+
+                    {(showFuelLiters || !!workReport.fuel_liters) && (
+                      <div className="max-w-[200px]">
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">
+                          <Fuel className="h-3 w-3 inline mr-1" />
+                          Litros de combustible
+                        </label>
+                        <input
+                          type="number"
+                          value={workReport.fuel_liters ?? ''}
+                          onChange={(e) => handleFieldChange('fuel_liters', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                          step="0.1"
+                        />
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <label className={`text-[11px] font-medium mb-1 block ${isVehicleBroken ? 'text-amber-600' : 'text-app-text-secondary'}`}>Km fin</label>
-                    <input
-                      type="number"
-                      value={workReport.km_end ?? ''}
-                      onChange={(e) => handleFieldChange('km_end', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit || isVehicleBroken}
-                      className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:opacity-60 ${isVehicleBroken ? 'bg-amber-50 border-amber-200 text-amber-700 placeholder:text-amber-300' : 'border-app-border bg-white text-app-text'}`}
-                      placeholder="0"
-                    />
-                  </div>
-                  <div>
-                    <label className={`text-[11px] font-medium mb-1 block ${isVehicleBroken ? 'text-amber-600' : 'text-app-text-secondary'}`}>H. inicio</label>
-                    <input
-                      type="number"
-                      value={workReport.hour_meter_start ?? ''}
-                      onChange={(e) => handleFieldChange('hour_meter_start', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit || isVehicleBroken}
-                      className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:opacity-60 ${isVehicleBroken ? 'bg-amber-50 border-amber-200 text-amber-700 placeholder:text-amber-300' : 'border-app-border bg-white text-app-text'}`}
-                      placeholder="0"
-                    />
-                  </div>
-                  <div>
-                    <label className={`text-[11px] font-medium mb-1 block ${isVehicleBroken ? 'text-amber-600' : 'text-app-text-secondary'}`}>H. fin</label>
-                    <input
-                      type="number"
-                      value={workReport.hour_meter_end ?? ''}
-                      onChange={(e) => handleFieldChange('hour_meter_end', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit || isVehicleBroken}
-                      className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:opacity-60 ${isVehicleBroken ? 'bg-amber-50 border-amber-200 text-amber-700 placeholder:text-amber-300' : 'border-app-border bg-white text-app-text'}`}
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-                <div className="max-w-[200px]">
-                  <label className={`text-[11px] font-medium mb-1 block ${isVehicleBroken ? 'text-amber-600' : 'text-app-text-secondary'}`}>
-                    <Fuel className="h-3 w-3 inline mr-1" />
-                    Litros de combustible
-                  </label>
-                  <input
-                    type="number"
-                    value={workReport.fuel_liters ?? ''}
-                    onChange={(e) => handleFieldChange('fuel_liters', e.target.value ? Number(e.target.value) : undefined)}
-                    disabled={isConfirmed || !canEdit || isVehicleBroken}
-                    className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:opacity-60 ${isVehicleBroken ? 'bg-amber-50 border-amber-200 text-amber-700 placeholder:text-amber-300' : 'border-app-border bg-white text-app-text'}`}
-                    placeholder="0"
-                    step="0.1"
-                  />
-                </div>
+                )}
               </div>
             )}
 
             {/* ===== Replacement vehicle ===== */}
             {workReport.replacement_vehicle_id && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="h-px flex-1 bg-app-border" />
-                  <span className="text-[10px] font-bold uppercase text-app-text-secondary tracking-wider">Vehículo de reemplazo</span>
-                  <div className="h-px flex-1 bg-app-border" />
-                </div>
-
-                <div className="flex items-center justify-between bg-app-bg rounded-lg px-3 py-2 border border-app-border">
+              <div className="border border-app-border rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setExpandedReplacement(!expandedReplacement)}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-gray-100/50 transition-colors"
+                >
                   <div className="flex items-center gap-3 min-w-0">
                     <Truck className="h-4 w-4 text-primary-500 shrink-0" />
-                    <div className="min-w-0">
+                    <div className="min-w-0 text-left">
                       <p className="text-sm font-semibold text-app-text truncate">
                         {(() => {
                           const v = vehicles.find((x) => x.id === workReport.replacement_vehicle_id);
@@ -746,116 +818,98 @@ export const WorkReportsView: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  {canEdit && (
-                    <button
-                      onClick={handleRemoveReplacement}
-                      className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
-                      title="Quitar vehículo de reemplazo"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-4 gap-2">
-                  <div>
-                    <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">Km inicio</label>
-                    <input
-                      type="number"
-                      value={workReport.replacement_km_start ?? ''}
-                      onChange={(e) => handleFieldChange('replacement_km_start', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit}
-                      className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
-                      placeholder="0"
-                    />
+                  <div className="flex items-center gap-1 shrink-0">
+                    {canEdit && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleRemoveReplacement(); }}
+                        className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                        title="Quitar vehículo de reemplazo"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                    {expandedReplacement ? <ChevronDown className="h-4 w-4 text-app-text-secondary" /> : <ChevronRight className="h-4 w-4 text-app-text-secondary" />}
                   </div>
-                  <div>
-                    <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">Km fin</label>
-                    <input
-                      type="number"
-                      value={workReport.replacement_km_end ?? ''}
-                      onChange={(e) => handleFieldChange('replacement_km_end', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit}
-                      className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">H. inicio</label>
-                    <input
-                      type="number"
-                      value={workReport.replacement_hour_meter_start ?? ''}
-                      onChange={(e) => handleFieldChange('replacement_hour_meter_start', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit}
-                      className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">H. fin</label>
-                    <input
-                      type="number"
-                      value={workReport.replacement_hour_meter_end ?? ''}
-                      onChange={(e) => handleFieldChange('replacement_hour_meter_end', e.target.value ? Number(e.target.value) : undefined)}
-                      disabled={isConfirmed || !canEdit}
-                      className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-                <div className="max-w-[200px]">
-                  <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">
-                    <Fuel className="h-3 w-3 inline mr-1" />
-                    Litros de combustible
-                  </label>
-                  <input
-                    type="number"
-                    value={workReport.replacement_fuel_liters ?? ''}
-                    onChange={(e) => handleFieldChange('replacement_fuel_liters', e.target.value ? Number(e.target.value) : undefined)}
-                    disabled={isConfirmed || !canEdit}
-                    className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
-                    placeholder="0"
-                    step="0.1"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* ===== Add vehicle buttons ===== */}
-            {canEdit && !workReport.vehicle_id && !workReport.replacement_vehicle_id && (
-              <div className="relative">
-                <button
-                  onMouseDown={(e) => { e.stopPropagation(); setVehiclePickerMode('primary'); setShowVehiclePicker(!showVehiclePicker); }}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Añadir vehículo
                 </button>
-                {showVehiclePicker && vehiclePickerMode === 'primary' && (
-                  <VehiclePicker
-                    vehicles={wcVehicles}
-                    assignedIds={[workReport.vehicle_id, workReport.replacement_vehicle_id].filter(Boolean) as string[]}
-                    onSelect={(id) => { handleVehicleChange(id, false); setShowVehiclePicker(false); }}
-                  />
-                )}
-              </div>
-            )}
 
-            {canEdit && isVehicleBroken && !workReport.replacement_vehicle_id && (
-              <div className="relative">
-                <button
-                  onMouseDown={(e) => { e.stopPropagation(); setVehiclePickerMode('replacement'); setShowVehiclePicker(!showVehiclePicker); }}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Añadir vehículo de reemplazo
-                </button>
-                {showVehiclePicker && vehiclePickerMode === 'replacement' && (
-                  <VehiclePicker
-                    vehicles={wcVehicles}
-                    assignedIds={[workReport.vehicle_id, workReport.replacement_vehicle_id].filter(Boolean) as string[]}
-                    onSelect={(id) => { handleVehicleChange(id, true); setShowVehiclePicker(false); }}
-                  />
+                {expandedReplacement && (
+                  <div className="border-t border-app-border px-4 py-3 space-y-3">
+                    <div className="grid grid-cols-4 gap-2">
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">Km inicio</label>
+                        <input
+                          type="number"
+                          value={workReport.replacement_km_start ?? ''}
+                          onChange={(e) => handleFieldChange('replacement_km_start', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">Km fin</label>
+                        <input
+                          type="number"
+                          value={workReport.replacement_km_end ?? ''}
+                          onChange={(e) => handleFieldChange('replacement_km_end', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">H. inicio</label>
+                        <input
+                          type="number"
+                          value={workReport.replacement_hour_meter_start ?? ''}
+                          onChange={(e) => handleFieldChange('replacement_hour_meter_start', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">H. fin</label>
+                        <input
+                          type="number"
+                          value={workReport.replacement_hour_meter_end ?? ''}
+                          onChange={(e) => handleFieldChange('replacement_hour_meter_end', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showReplacementFuelLiters || !!workReport.replacement_fuel_liters}
+                        onChange={(e) => setShowReplacementFuelLiters(e.target.checked)}
+                        disabled={isSavedMode || isConfirmed || !canEdit}
+                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 disabled:opacity-50"
+                      />
+                      <span className="text-xs font-medium text-app-text">Repostar</span>
+                    </label>
+
+                    {(showReplacementFuelLiters || !!workReport.replacement_fuel_liters) && (
+                      <div className="max-w-[200px]">
+                        <label className="text-[11px] font-medium text-app-text-secondary mb-1 block">
+                          <Fuel className="h-3 w-3 inline mr-1" />
+                          Litros de combustible
+                        </label>
+                        <input
+                          type="number"
+                          value={workReport.replacement_fuel_liters ?? ''}
+                          onChange={(e) => handleFieldChange('replacement_fuel_liters', e.target.value ? Number(e.target.value) : undefined)}
+                          disabled={isSavedMode || isConfirmed || !canEdit}
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          placeholder="0"
+                          step="0.1"
+                        />
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             )}
@@ -922,106 +976,129 @@ export const WorkReportsView: React.FC = () => {
         )}
 
         {/* Tools section */}
-        <SectionCard icon={<Wrench className="h-4 w-4" />} title="Herramientas / Maquinaria">
-          <div className="space-y-3">
+        <SectionCard
+          icon={<Wrench className="h-4 w-4" />}
+          title="Herramientas / Maquinaria"
+          action={canEdit && workReport.status !== 'CONFIRMED' ? (
+            <div className="relative">
+              <button
+                onMouseDown={(e) => { e.stopPropagation(); setShowToolPicker(!showToolPicker); }}
+                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <Wrench className="h-3.5 w-3.5" />
+                Añadir herramienta
+              </button>
+
+              {showToolPicker && (
+                <div
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="absolute top-full right-0 mt-1 w-72 bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
+                >
+                  {machineryItems.length === 0 ? (
+                    <p className="p-3 text-xs text-app-text-secondary text-center">No hay maquinaria disponible</p>
+                  ) : (
+                    Array.from(machinerySubtypes.entries()).map(([subtypeId, group]) => (
+                      <div key={subtypeId}>
+                        <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-app-text-secondary uppercase tracking-wider border-b border-app-border/50">
+                          {group.name}
+                        </div>
+                        {group.items.map((item) => {
+                          const isBroken = !!workReport.machinery_breakdowns?.[item.id];
+                          return (
+                            <label
+                              key={item.id}
+                              className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${
+                                workReport.tools.includes(item.id) ? (isBroken ? 'bg-amber-50' : 'bg-primary-50') : ''
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={workReport.tools.includes(item.id)}
+                                onChange={() => handleToggleTool(item.id)}
+                                disabled={isBroken}
+                                className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0 disabled:opacity-50"
+                              />
+                              <div className="min-w-0 flex-1">
+                                <p className={`text-sm truncate ${isBroken ? 'text-amber-700' : 'text-app-text'}`}>
+                                  {item.name}
+                                  {isBroken && (
+                                    <span className="ml-1.5 text-[10px] text-amber-500 font-medium">(avería)</span>
+                                  )}
+                                </p>
+                                {(item.brand || item.model) && (
+                                  <p className="text-[10px] text-app-text-secondary">{[item.brand, item.model].filter(Boolean).join(' ')}</p>
+                                )}
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          ) : undefined}
+        >
+          <div className="space-y-2">
             {workReport.tools.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-2">
                 {workReport.tools.map((toolId) => {
                   const item = inventoryItems.find((i) => i.id === toolId);
                   const breakdown = workReport.machinery_breakdowns?.[toolId];
                   const isBroken = !!breakdown;
                   return (
-                    <span
-                      key={toolId}
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
-                        isBroken
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : isConfirmed || !canEdit
-                            ? 'bg-app-bg text-app-text-secondary'
-                            : 'bg-primary-50 text-primary-700'
-                      }`}
-                    >
-                      {item?.name ?? toolId}
-                      {!isBroken && !(isConfirmed || !canEdit) && (
-                        <>
-                          <button onClick={() => handleOpenMachineryBreakdown(toolId)} className="ml-0.5 hover:text-amber-600" title="Marcar como averiado">
-                            <AlertTriangle className="h-3 w-3" />
+                    <div key={toolId} className={`flex items-center justify-between rounded-lg px-3 py-2 border ${isBroken ? 'bg-amber-50 border-amber-200' : 'bg-app-bg border-app-border'}`}>
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Wrench className={`h-4 w-4 shrink-0 ${isBroken ? 'text-amber-500' : 'text-primary-500'}`} />
+                        <div className="min-w-0">
+                          <p className={`text-sm font-semibold truncate ${isBroken ? 'text-amber-800' : 'text-app-text'}`}>
+                            {item?.name ?? toolId}
+                            {isBroken && (
+                              <span className="ml-1.5 text-[10px] text-amber-600 font-medium">(avería: {breakdown?.type})</span>
+                            )}
+                          </p>
+                          {(item?.brand || item?.model) && (
+                            <p className="text-[11px] text-app-text-secondary">{[item.brand, item.model].filter(Boolean).join(' ')}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {!isBroken && !(isSavedMode || isConfirmed || !canEdit) && (
+                          <>
+                            <button
+                              onClick={() => handleOpenMachineryBreakdown(toolId)}
+                              className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
+                              title="Marcar como averiado"
+                            >
+                              <AlertTriangle className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleToggleTool(toolId)}
+                              className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                              title="Quitar herramienta"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </>
+                        )}
+                        {isBroken && canEdit && workReport.status !== 'CONFIRMED' && (
+                          <button
+                            onClick={() => handleRemoveMachineryBreakdown(toolId)}
+                            className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
+                            title="Quitar avería"
+                          >
+                            <X className="h-3.5 w-3.5" />
                           </button>
-                          <button onClick={() => handleToggleTool(toolId)} className="ml-0.5 hover:text-rose-500">
-                            <X className="h-3 w-3" />
-                          </button>
-                        </>
-                      )}
-                      {isBroken && canEdit && workReport.status !== 'CONFIRMED' && (
-                        <button onClick={() => handleRemoveMachineryBreakdown(toolId)} className="ml-0.5 hover:text-amber-600" title="Quitar avería">
-                          <X className="h-3 w-3" />
-                        </button>
-                      )}
-                    </span>
+                        )}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
             )}
-
-            {canEdit && workReport.status !== 'CONFIRMED' && (
-              <div className="relative">
-                <button
-                  onMouseDown={(e) => { e.stopPropagation(); setShowToolPicker(!showToolPicker); }}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
-                >
-                  <Wrench className="h-3.5 w-3.5" />
-                  Añadir herramienta
-                </button>
-
-                {showToolPicker && (
-                  <div
-                    onMouseDown={(e) => e.stopPropagation()}
-                    className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
-                  >
-                    {machineryItems.length === 0 ? (
-                      <p className="p-3 text-xs text-app-text-secondary text-center">No hay maquinaria disponible</p>
-                    ) : (
-                      Array.from(machinerySubtypes.entries()).map(([subtypeId, group]) => (
-                        <div key={subtypeId}>
-                          <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-app-text-secondary uppercase tracking-wider border-b border-app-border/50">
-                            {group.name}
-                          </div>
-                          {group.items.map((item) => {
-                            const isBroken = !!workReport.machinery_breakdowns?.[item.id];
-                            return (
-                              <label
-                                key={item.id}
-                                className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${
-                                  workReport.tools.includes(item.id) ? (isBroken ? 'bg-amber-50' : 'bg-primary-50') : ''
-                                }`}
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={workReport.tools.includes(item.id)}
-                                  onChange={() => handleToggleTool(item.id)}
-                                  disabled={isBroken}
-                                  className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0 disabled:opacity-50"
-                                />
-                                <div className="min-w-0 flex-1">
-                                  <p className={`text-sm truncate ${isBroken ? 'text-amber-700' : 'text-app-text'}`}>
-                                    {item.name}
-                                    {isBroken && (
-                                      <span className="ml-1.5 text-[10px] text-amber-500 font-medium">(avería)</span>
-                                    )}
-                                  </p>
-                                  {(item.brand || item.model) && (
-                                    <p className="text-[10px] text-app-text-secondary">{[item.brand, item.model].filter(Boolean).join(' ')}</p>
-                                  )}
-                                </div>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
+            {workReport.tools.length === 0 && (
+              <p className="text-xs text-app-text-secondary text-center py-4">No hay herramientas añadidas</p>
             )}
           </div>
         </SectionCard>
@@ -1089,7 +1166,7 @@ export const WorkReportsView: React.FC = () => {
           <textarea
             value={notes}
             onChange={(e) => handleNotesChange(e.target.value)}
-            disabled={isConfirmed || !canEdit}
+            disabled={isSavedMode || isConfirmed || !canEdit}
             rows={3}
             className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-white text-app-text resize-none disabled:opacity-50 disabled:cursor-not-allowed"
             placeholder="Incidencias, observaciones, ..."
@@ -1295,13 +1372,13 @@ export const WorkReportsView: React.FC = () => {
             Historial
           </button>
         </div>
-        {activeTab === 'hoy' && workReport && workReport.status !== 'CONFIRMED' && canEdit && (
+        {activeTab === 'hoy' && workReport && workReport.status !== 'CONFIRMED' && canEdit && !isSavedMode && !saveMsg && (
           <button
             onClick={handleSave}
-            className="flex items-center justify-center size-9 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-colors border border-emerald-200 shrink-0"
-            title="Guardar parte de trabajo"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold text-xs hover:bg-emerald-700 transition-colors shadow-sm shrink-0"
           >
-            <Save className="h-4 w-4" />
+            <Save className="h-3.5 w-3.5" />
+            Guardar
           </button>
         )}
       </div>
