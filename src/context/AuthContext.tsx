@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               if (appUser) {
                 setState({
                   isAuthenticated: true,
-                  user: { ...appUser, avatar_url: session.user?.avatar_url },
+                  user: { ...appUser },
                   token: session.token,
                   loading: false,
                   error: null,
@@ -125,14 +125,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       full_name: appUser.full_name,
     });
 
-    const avatar_url = `https://api.dicebear.com/7.x/bottts/svg?seed=${appUser.username}`;
-    const userWithAvatar = { ...appUser, avatar_url };
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token, user: userWithAvatar }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token, user: appUser }));
 
     setState({
       isAuthenticated: true,
-      user: userWithAvatar,
+      user: appUser,
       token,
       loading: false,
       error: null,

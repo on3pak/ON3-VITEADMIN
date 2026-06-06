@@ -248,4 +248,15 @@ for (const o of OTHER) {
   }
 }
 
+// Override test account employees to match INITIAL_USERS names
+([
+  { id: '000001', name: 'Miguel Ángel', last_name1: 'Torres', email: 'm.torres@on3.com', phone: '612300001' },
+  { id: '000002', name: 'Alejandro', last_name1: 'Mendoza', email: 'a.mendoza@on3.com', phone: '612300002' },
+  { id: '000003', name: 'Beatriz', last_name1: 'Salazar', email: 'b.salazar@on3.com', phone: '612300003' },
+  { id: '000004', name: 'Carlos', last_name1: 'Fuentes', email: 'c.fuentes@on3.com', phone: '612300004' },
+]).forEach((o) => {
+  const emp = employees.find((e) => e.id === o.id);
+  if (emp) Object.assign(emp, o);
+});
+
 export const INITIAL_EMPLOYEES: Employee[] = employees;

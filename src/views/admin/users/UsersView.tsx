@@ -212,11 +212,9 @@ export const UsersView: React.FC = () => {
                   <tr key={u.id} className="hover:bg-app-bg/70 transition-colors">
                     <td className="py-3.5 px-6">
                       <div className="flex items-center gap-3">
-                        <img 
-                          src={`https://api.dicebear.com/7.x/bottts/svg?seed=${u.username}`} 
-                          alt={u.full_name} 
-                          className="w-9 h-9 rounded-lg bg-app-bg border p-0.5"
-                        />
+                        <div className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold border border-gray-200">
+                          {u.full_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                        </div>
                         <div>
                           <div className="font-bold text-app-text-secondary leading-tight">{u.full_name}</div>
                           <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">

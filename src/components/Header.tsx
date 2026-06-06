@@ -125,28 +125,16 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
                 onClick={() => setMobileUserOpen(!mobileUserOpen)}
                 className="shrink-0 cursor-pointer"
               >
-                <div className="size-8 rounded-full ring-2 ring-white overflow-hidden border-2 border-green-500">
-                  {user?.avatar_url ? (
-                    <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold">
-                      {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
-                    </div>
-                  )}
+                <div className="size-8 rounded-full ring-2 ring-white overflow-hidden border-2 border-green-500 bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                  {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
                 </div>
               </button>
 
               {mobileUserOpen && (
                 <div className="absolute right-0 top-full mt-2 w-[220px] bg-white rounded-xl shadow-lg border border-app-border overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="flex items-center gap-2.5 px-3 py-3">
-                    <div className="size-8 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-white">
-                      {user?.avatar_url ? (
-                        <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold">
-                          {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
-                        </div>
-                      )}
+                    <div className="size-8 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-white bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                      {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
                     </div>
                     <div className="flex flex-col gap-0.5 min-w-0">
                       <span className="text-sm text-app-text font-semibold leading-none truncate">{user?.full_name}</span>

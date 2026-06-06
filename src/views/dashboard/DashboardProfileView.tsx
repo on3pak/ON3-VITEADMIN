@@ -5,7 +5,7 @@ import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
 import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_SHIFTS, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_CITIES } from '../../data/mockEmployees';
+import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_SHIFTS, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_CITIES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
   User, Calendar,
@@ -32,7 +32,6 @@ function getCurrentVacationMonth(month: string | null, year: number | null): str
 
 const cityMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
 const catMap = Object.fromEntries(INITIAL_EMPLOYEE_CATEGORIES.map((c) => [c.id, c.name]));
-const statusMap = Object.fromEntries(INITIAL_EMPLOYEE_STATUSES.map((s) => [s.id, s.name]));
 const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
 const wdMap = Object.fromEntries(INITIAL_WORK_DAYS.map((w) => [w.id, w.name]));
 const wcMap = Object.fromEntries(INITIAL_WORK_CENTERS.map((w) => [w.id, w.name]));
@@ -82,15 +81,9 @@ export const DashboardProfileView: React.FC = () => {
     [myEmployee]
   );
 
-  const fullName = useMemo(() => {
-    if (myEmployee) {
-      return [myEmployee.name, myEmployee.last_name1, myEmployee.last_name2].filter(Boolean).join(' ');
-    }
-    return loggedInUser?.full_name || '';
-  }, [myEmployee, loggedInUser]);
+  const fullName = loggedInUser?.full_name || '';
 
   const categoryName = myEmployee ? catMap[myEmployee.category_id] || myEmployee.category_id : '';
-  const statusName = myEmployee ? statusMap[myEmployee.status_id] || myEmployee.status_id : '';
   const shiftName = myEmployee ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id : '';
   const scheduleDisplay = myEmployee ? `${myEmployee.start_time || '—'} — ${myEmployee.end_time || '—'}` : '—';
 
@@ -145,70 +138,92 @@ export const DashboardProfileView: React.FC = () => {
       {loggedInUser && (
         <>
           {/* Cover + Header Bar */}
-          <div className="bg-white flex flex-col shadow-sm border-b border-app-border">
-            {/* Cover Image */}
-            <div>
-              <img
-                className="h-40 object-cover lg:h-56 w-full"
-                src="/cover.jpg"
-                alt="Cover image"
-              />
-            </div>
+            <div className="bg-white flex flex-col shadow-sm border-b border-app-border">
+              {/* Cover Image */}
+              <div>
+                <img
+                  className="h-40 object-cover lg:h-56 w-full"
+                  src="/cover.jpg"
+                  alt="Cover image"
+                />
+              </div>
 
-            {/* Bar with Avatar + Name + Nav */}
-            <div className="bg-white mx-auto flex w-full max-w-5xl flex-col items-center px-6 lg:h-20 lg:flex-row lg:px-8">
-              {/* Avatar */}
-              <div className="-mt-16 rounded-full lg:-mt-20">
-                {loggedInUser.avatar_url ? (
-                  <div className="flex h-24 w-24 items-center justify-center rounded-full ring-4 ring-green-500 bg-gray-50 overflow-hidden shadow-md">
-                    <img
-                      src={loggedInUser.avatar_url}
-                      alt={fullName}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                ) : (
-                  <span className="flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold uppercase tracking-wide text-app-text ring-4 ring-green-500 bg-gray-50 shadow-md">
-                    {fullName.charAt(0)}
+              {/* Bar with Avatar + Name + Nav */}
+              <div className="bg-white mx-auto flex w-full max-w-5xl flex-col items-center px-6 lg:h-20 lg:flex-row lg:px-8">
+                {/* Avatar */}
+                <div className="-mt-16 rounded-full lg:-mt-20">
+                  <span className="flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold uppercase tracking-wide text-app-text ring-4 ring-green-500 bg-gray-100 shadow-md">
+                    {fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
                   </span>
-                )}
-              </div>
+                </div>
 
-              {/* Name + Email */}
-              <div className="mt-2 flex flex-col items-center lg:ml-6 lg:mt-0 lg:items-start">
-                <div className="text-xl font-bold leading-none text-app-text">{fullName}</div>
-                <div className="text-sm text-app-text-secondary mt-0.5">{loggedInUser.email}</div>
-              </div>
+                {/* Name + Email */}
+                <div className="mt-2 flex flex-col items-center lg:ml-6 lg:mt-0 lg:items-start">
+                  <div className="text-xl font-bold leading-none text-app-text">{fullName}</div>
+                  <div className="text-sm text-app-text-secondary mt-0.5">{loggedInUser.email}</div>
+                </div>
 
-              {/* Nav Tabs — pill style */}
-              <div className="mb-4 mt-5 lg:mb-0 lg:ml-auto lg:mt-0">
-                <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
-                  {([
-                    { key: 'info' as const, label: 'Info', icon: <User className="h-4 w-4" /> },
-                    { key: 'solicitar' as const, label: 'Solicitar', icon: <Calendar className="h-4 w-4" /> },
-                    { key: 'parte' as const, label: 'Parte de Trabajo', icon: <ClipboardCheck className="h-4 w-4" /> },
-                  ]).map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setActiveTab(tab.key)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-                        activeTab === tab.key
-                          ? 'bg-white text-primary-700 shadow-xs'
-                          : 'text-app-text-secondary hover:text-app-text'
-                      }`}
-                    >
-                      {tab.icon} {tab.label}
-                    </button>
-                  ))}
+                {/* Nav Tabs — pill style */}
+                <div className="mb-4 mt-5 lg:mb-0 lg:ml-auto lg:mt-0">
+                  <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
+                    {([
+                      { key: 'info' as const, label: 'Info', icon: <User className="h-4 w-4" /> },
+                      { key: 'solicitar' as const, label: 'Solicitar', icon: <Calendar className="h-4 w-4" /> },
+                      { key: 'parte' as const, label: 'Parte de Trabajo', icon: <ClipboardCheck className="h-4 w-4" /> },
+                    ]).map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() => setActiveTab(tab.key)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
+                          activeTab === tab.key
+                            ? 'bg-white text-primary-700 shadow-xs'
+                            : 'text-app-text-secondary hover:text-app-text'
+                        }`}
+                      >
+                        {tab.icon} {tab.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
           {/* Tab Content */}
-          <div className="mx-auto flex w-full max-w-2xl flex-auto justify-center p-6 sm:p-8">
+          <div className="mx-auto flex w-full max-w-4xl flex-auto justify-center p-6">
             {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-5">
+                {/* Compact employee card — WorkReportsView style */}
+                <div className="bg-app-card rounded-xl border border-app-card-border p-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <User className="h-4 w-4 text-primary-500 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Empleado</p>
+                      <p className="text-sm font-semibold text-app-text truncate">{fullName}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Mail className="h-4 w-4 text-primary-500 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Email</p>
+                      <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.email || '—'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Shield className="h-4 w-4 text-primary-500 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Rol</p>
+                      <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.role || '—'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <MapPin className="h-4 w-4 text-primary-500 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Ciudad</p>
+                      <p className="text-sm font-semibold text-app-text truncate">{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</p>
+                    </div>
+                  </div>
+                </div>
+
                 {myEmployee ? (
                   <>
                     <SectionCard icon={<User className="h-4 w-4" />} title="Información Personal">
@@ -227,26 +242,11 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
                       <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
-                      <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                          myEmployee.active
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-gray-100 text-gray-600'
-                        }`}>
-                          <span className={`mr-1.5 h-2 w-2 rounded-full ${
-                            myEmployee.active ? 'bg-emerald-500' : 'bg-gray-400'
-                          }`} />
-                          {statusName || '—'}
-                        </span>
-                      } />
-                    </SectionCard>
-
-                    <SectionCard icon={<Clock className="h-4 w-4" />} title="Jornada Laboral">
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Hora de Entrada" value={
-                        <span className="text-lg font-bold text-app-text">{myEmployee.start_time || '—'}</span>
+                        <span>{myEmployee.start_time || '—'}</span>
                       } />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Hora de Salida" value={
-                        <span className="text-lg font-bold text-app-text">{myEmployee.end_time || '—'}</span>
+                        <span>{myEmployee.end_time || '—'}</span>
                       } />
                     </SectionCard>
                   </>
