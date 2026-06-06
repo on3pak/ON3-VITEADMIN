@@ -16,6 +16,7 @@ import {
   Sparkles,
   Send, Sun, ClipboardCheck,
   Briefcase, Shield, Hash, MapPin, Clock, Building2, IdCard, Award,
+  Plus, X, Check, AlertTriangle,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
@@ -47,18 +48,19 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | 
   </div>
 );
 
-const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ icon, title, action, children }) => (
   <div className="bg-app-card rounded-xl border border-app-card-border p-4">
     <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
-      <span>{title}</span>
+      <span className="flex-1">{title}</span>
+      {action}
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{children}</div>
   </div>
 );
 
 export const DashboardProfileView: React.FC = () => {
-  const { user: loggedInUser } = useAuth();
+  const { user: loggedInUser, triggerToast } = useAuth();
   const { employees, createEmployee, updateEmployee, createVacationRequest, vacationRequests, getVacationRequestsByEmployee } = useEmployees();
 
   const isReadOnly = loggedInUser?.role === 'USER';
@@ -70,6 +72,8 @@ export const DashboardProfileView: React.FC = () => {
   const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
   const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
+  const [requestModalCard, setRequestModalCard] = useState<'personal' | 'employee' | null>(null);
+  const [requestText, setRequestText] = useState('');
 
   const myEmployee = useMemo(
     () => (loggedInUser ? employees.find((e) => e.id === loggedInUser.employee_id) : undefined),
@@ -153,7 +157,7 @@ export const DashboardProfileView: React.FC = () => {
                 {/* Avatar */}
                 <div className="-mt-16 rounded-full lg:-mt-20">
                   <span className="flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold uppercase tracking-wide text-app-text ring-4 ring-green-500 bg-gray-100 shadow-md">
-                    {fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+                    {((myEmployee?.name?.[0] ?? '') + (myEmployee?.last_name1?.[0] ?? '')).toUpperCase()}
                   </span>
                 </div>
 
@@ -226,7 +230,19 @@ export const DashboardProfileView: React.FC = () => {
 
                 {myEmployee ? (
                   <>
-                    <SectionCard icon={<User className="h-4 w-4" />} title="Información Personal">
+                    <SectionCard
+                      icon={<User className="h-4 w-4" />}
+                      title="Información Personal"
+                      action={
+                        <button
+                          onClick={() => setRequestModalCard('personal')}
+                          className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          Solicitar cambio
+                        </button>
+                      }
+                    >
                       <InfoRow icon={<User className="h-4 w-4" />} label="Nombre completo" value={fullName} />
                       <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={loggedInUser.email || '—'} />
                       <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee?.phone || '—'} />
@@ -235,19 +251,25 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'} />
                     </SectionCard>
 
-                    <SectionCard icon={<Award className="h-4 w-4" />} title="Información del Empleado">
+                    <SectionCard
+                      icon={<Award className="h-4 w-4" />}
+                      title="Información del Empleado"
+                      action={
+                        <button
+                          onClick={() => setRequestModalCard('employee')}
+                          className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          Solicitar cambio
+                        </button>
+                      }
+                    >
                       <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
                       <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
                       <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
                       <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
-                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Hora de Entrada" value={
-                        <span>{myEmployee.start_time || '—'}</span>
-                      } />
-                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Hora de Salida" value={
-                        <span>{myEmployee.end_time || '—'}</span>
-                      } />
                     </SectionCard>
                   </>
                 ) : (
@@ -384,6 +406,104 @@ export const DashboardProfileView: React.FC = () => {
         disableWeekends={myEmployee?.work_day_id === 'wd_1'}
         onSubmit={handleSolicitarDias}
       />
+
+      {requestModalCard && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-lg border border-app-card-border overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="px-5 py-4 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/20 text-white">
+                  <User className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Solicitar cambio</h3>
+                  <p className="text-xs text-white/70">
+                    {requestModalCard === 'personal' ? 'Información Personal' : 'Información del Empleado'}
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => { setRequestModalCard(null); setRequestText(''); }} className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              <div>
+                <h4 className="text-sm font-bold text-app-text mb-1">Describe qué dato necesita ser modificado</h4>
+                <p className="text-[11px] text-app-text-secondary">
+                  Indica el campo y el nuevo valor. Un administrador revisará tu solicitud y hará el cambio en el panel correspondiente.
+                </p>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                  <div className="text-xs text-amber-800">
+                    <p className="font-semibold mb-0.5">Campos actuales:</p>
+                    <ul className="space-y-0.5 text-amber-700">
+                      {requestModalCard === 'personal' ? (
+                        <>
+                          <li>• Nombre: <strong>{fullName}</strong></li>
+                          <li>• Email: <strong>{loggedInUser.email || '—'}</strong></li>
+                          <li>• Teléfono: <strong>{myEmployee?.phone || '—'}</strong></li>
+                          <li>• Ciudad: <strong>{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</strong></li>
+                        </>
+                      ) : (
+                        <>
+                          <li>• Categoría: <strong>{categoryName || '—'}</strong></li>
+                          <li>• Turno: <strong>{shiftName || '—'}</strong></li>
+                          <li>• Contrato: <strong>{myEmployee?.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}</strong></li>
+                          <li>• Centro: <strong>{myEmployee?.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}</strong></li>
+                          <li>• Días Laborables: <strong>{myEmployee?.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}</strong></li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Describe el cambio solicitado</label>
+                <textarea
+                  value={requestText}
+                  onChange={(e) => setRequestText(e.target.value)}
+                  placeholder="Ej: Cambiar teléfono a 612345678"
+                  rows={4}
+                  className="w-full rounded-xl border border-app-border px-4 py-3 text-sm bg-white text-app-text resize-none placeholder:text-app-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="px-5 py-4 border-t border-app-border flex items-center justify-between shrink-0 bg-app-bg/50">
+              <span className="text-[11px] text-app-text-secondary">
+                {requestText.trim() ? 'Solicitud lista para enviar' : 'Escribe tu solicitud'}
+              </span>
+              <div className="flex items-center gap-2">
+                <button onClick={() => { setRequestModalCard(null); setRequestText(''); }} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors">
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    if (!requestText.trim()) return;
+                    triggerToast('Solicitud enviada correctamente. Un administrador revisará los cambios.', 'success');
+                    setRequestModalCard(null);
+                    setRequestText('');
+                  }}
+                  disabled={!requestText.trim()}
+                  className={`inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold rounded-xl shadow-xs transition-all ${
+                    requestText.trim()
+                      ? 'text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 active:scale-95'
+                      : 'text-app-text-secondary bg-app-bg cursor-not-allowed'
+                  }`}
+                >
+                  <Send className="w-4 h-4" />
+                  Enviar Solicitud
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

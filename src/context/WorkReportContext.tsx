@@ -1,14 +1,64 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { WorkReport, WorkReportStatus, WorkServiceEntry } from '../types';
-import { generateId } from '../utils/id';
 
 const STORAGE_KEY = 'on3_mock_work_reports';
 
 function loadReports(): WorkReport[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed: WorkReport[] = JSON.parse(raw);
+      // Ensure seed reports for Miguel Ángel Torres exist
+      const hasSeeds = parsed.some((r) => r.id === 'pt000001_2026-06-02');
+      if (hasSeeds) return parsed;
+
+      const taskDay = (dayIdx: number) =>
+        Array.from({ length: 5 }, (_, i) => ({
+          task_id: `svc_1-task-${dayIdx * 20 + i}`,
+          completed: true,
+        }));
+
+      const seed: WorkReport[] = [
+        {
+          id: 'pt000001_2026-06-02',
+          employee_id: '000001',
+          date: '2026-06-02',
+          status: 'CONFIRMED',
+          services: [{ service_id: 'svc_1', tasks: taskDay(2) }],
+          vehicle_id: 'veh_v001',
+          km_start: 4500,
+          km_end: 4600,
+          hour_meter_start: 1250,
+          hour_meter_end: 1265,
+          fuel_liters: 40,
+          tools: ['inv_000028', 'inv_000032'],
+          notes: 'Jornada completada sin incidencias',
+          created_at: '2026-06-02T07:00:00Z',
+          updated_at: '2026-06-02T15:30:00Z',
+        },
+        {
+          id: 'pt000001_2026-05-28',
+          employee_id: '000001',
+          date: '2026-05-28',
+          status: 'CONFIRMED',
+          services: [{ service_id: 'svc_1', tasks: taskDay(4) }],
+          vehicle_id: 'veh_v001',
+          km_start: 4400,
+          km_end: 4500,
+          hour_meter_start: 1235,
+          hour_meter_end: 1250,
+          fuel_liters: 45,
+          tools: ['inv_000028', 'inv_000029'],
+          notes: 'Limpieza extraordinaria en Zona Norte por obras',
+          created_at: '2026-05-28T07:00:00Z',
+          updated_at: '2026-05-28T15:30:00Z',
+        },
+      ];
+
+      return [...seed, ...parsed];
+    }
   } catch { /* ignore */ }
+
   return [];
 }
 
@@ -65,7 +115,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
 
     const now = new Date().toISOString();
     const newReport: WorkReport = {
-      id: generateId('wr'),
+      id: `pt${employeeId}_${today}`,
       employee_id: employeeId,
       date: today,
       status: 'DRAFT',

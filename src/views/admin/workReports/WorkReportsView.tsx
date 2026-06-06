@@ -9,6 +9,7 @@ import { useWorkReports } from '../../../context/WorkReportContext';
 import { INVENTORY_SUBTYPES } from '../../../data/mockInventory';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_SHIFTS } from '../../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
+import { Calendar } from '../../../components/Calendar';
 import {
   ClipboardCheck, History, ClipboardList,
   Truck, Wrench, FileText, Save,
@@ -914,6 +915,13 @@ export const WorkReportsView: React.FC = () => {
               </div>
             )}
 
+            {!workReport.vehicle_id && !workReport.replacement_vehicle_id && (
+              <div className="text-center py-6">
+                <Truck className="h-10 w-10 text-app-text-secondary mx-auto mb-2" />
+                <p className="text-sm text-app-text-secondary">No hay vehículo asignado para hoy.</p>
+              </div>
+            )}
+
           </div>
         </SectionCard>
 
@@ -985,7 +993,7 @@ export const WorkReportsView: React.FC = () => {
                 onMouseDown={(e) => { e.stopPropagation(); setShowToolPicker(!showToolPicker); }}
                 className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
               >
-                <Wrench className="h-3.5 w-3.5" />
+                <Plus className="h-3.5 w-3.5" />
                 Añadir herramienta
               </button>
 
@@ -1098,7 +1106,10 @@ export const WorkReportsView: React.FC = () => {
               </div>
             )}
             {workReport.tools.length === 0 && (
-              <p className="text-xs text-app-text-secondary text-center py-4">No hay herramientas añadidas</p>
+              <div className="text-center py-6">
+                <Wrench className="h-10 w-10 text-app-text-secondary mx-auto mb-2" />
+                <p className="text-sm text-app-text-secondary">No hay herramientas añadidas.</p>
+              </div>
             )}
           </div>
         </SectionCard>
@@ -1177,169 +1188,156 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const renderHistorialTab = () => {
+    /** Show detail modal */
     if (selectedHistoryReport) {
       return (
-        <div className="space-y-5">
-          <button
-            onClick={() => setSelectedHistoryId(null)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 mb-2"
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40" onClick={() => setSelectedHistoryId(null)}>
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4"
+            onClick={(e) => e.stopPropagation()}
           >
-            <ChevronRight className="h-3.5 w-3.5 rotate-180" />
-            Volver al historial
-          </button>
-
-          <div className="flex items-center gap-2 mb-3">
-            <CalendarClock className="h-5 w-5 text-app-text-secondary" />
-            <span className="text-sm font-semibold text-app-text">
-              Parte del {selectedHistoryReport.date}
-            </span>
-            <span className="text-[11px] font-mono text-app-text-secondary bg-app-bg px-2 py-0.5 rounded-full">
-              Confirmado
-            </span>
-          </div>
-
-          {/* Services from history */}
-          <SectionCard icon={<ClipboardList className="h-4 w-4" />} title="Servicios">
-            <div className="space-y-3">
-              {selectedHistoryReport.services.map((entry) => {
-                const service = services.find((s) => s.id === entry.service_id);
-                if (!service) return null;
-                const completed = entry.tasks.filter((t) => t.completed).length;
-                const total = entry.tasks.length;
-                const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-                return (
-                  <div key={entry.service_id} className="border border-app-border rounded-xl overflow-hidden">
-                    <div className="px-4 py-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <p className="text-sm font-semibold text-app-text">{service.name}</p>
-                          <p className="text-[11px] text-app-text-secondary">{service.category}</p>
-                        </div>
-                        <span className="text-[11px] font-mono text-app-text-secondary">{completed}/{total}</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-app-bg rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${progress === 100 ? 'bg-emerald-500' : 'bg-primary-500'}`} style={{ width: `${progress}%` }} />
-                      </div>
-                      {entry.tasks.filter((t) => t.completed).length > 0 && (
-                        <div className="mt-3 space-y-1">
-                          {service.tasks.filter((t) => entry.tasks.find((et) => et.task_id === t.id)?.completed).map((t) => (
-                            <div key={t.id} className="flex items-center gap-2 text-xs text-app-text-secondary">
-                              <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
-                              {t.description}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="sticky top-0 bg-white border-b border-app-border px-5 py-3 flex items-center gap-2 z-10">
+              <CalendarClock className="h-5 w-5 text-app-text-secondary" />
+              <span className="text-sm font-semibold text-app-text flex-1">
+                Parte del {selectedHistoryReport.date}
+              </span>
+              <span className="text-[11px] font-mono text-app-text-secondary bg-app-bg px-2 py-0.5 rounded-full">
+                Confirmado
+              </span>
+              <button onClick={() => setSelectedHistoryId(null)} className="p-1 hover:bg-app-bg rounded-lg ml-1">
+                <X className="h-4 w-4 text-app-text-secondary" />
+              </button>
             </div>
-          </SectionCard>
-
-          {/* Vehicle from history */}
-          {selectedHistoryReport.vehicle_id && (
-            <SectionCard icon={<Truck className="h-4 w-4" />} title="Vehículo">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div>
-                  <span className="text-[11px] font-medium text-app-text-secondary block">Vehículo</span>
-                  <span className="text-sm text-app-text">
-                    {(() => {
-                      const v = vehicles.find((v) => v.id === selectedHistoryReport.vehicle_id);
-                      return v ? `${v.license_plate} — ${v.brand} ${v.model}` : selectedHistoryReport.vehicle_id;
-                    })()}
-                  </span>
+            <div className="p-5 space-y-4">
+              {/* Services */}
+              <SectionCard icon={<ClipboardList className="h-4 w-4" />} title="Servicios">
+                <div className="space-y-3">
+                  {selectedHistoryReport.services.map((entry) => {
+                    const service = services.find((s) => s.id === entry.service_id);
+                    if (!service) return null;
+                    const completed = entry.tasks.filter((t) => t.completed).length;
+                    const total = entry.tasks.length;
+                    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+                    return (
+                      <div key={entry.service_id} className="border border-app-border rounded-xl overflow-hidden">
+                        <div className="px-4 py-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <p className="text-sm font-semibold text-app-text">{service.name}</p>
+                              <p className="text-[11px] text-app-text-secondary">{service.category}</p>
+                            </div>
+                            <span className="text-[11px] font-mono text-app-text-secondary">{completed}/{total}</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-app-bg rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${progress === 100 ? 'bg-emerald-500' : 'bg-primary-500'}`} style={{ width: `${progress}%` }} />
+                          </div>
+                          {entry.tasks.filter((t) => t.completed).length > 0 && (
+                            <div className="mt-3 space-y-1">
+                              {service.tasks.filter((t) => entry.tasks.find((et) => et.task_id === t.id)?.completed).map((t) => (
+                                <div key={t.id} className="flex items-center gap-2 text-xs text-app-text-secondary">
+                                  <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
+                                  {t.description}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                {selectedHistoryReport.km_start !== undefined && (
-                  <div>
-                    <span className="text-[11px] font-medium text-app-text-secondary block">Km inicio</span>
-                    <span className="text-sm text-app-text">{selectedHistoryReport.km_start}</span>
-                  </div>
-                )}
-                {selectedHistoryReport.km_end !== undefined && (
-                  <div>
-                    <span className="text-[11px] font-medium text-app-text-secondary block">Km fin</span>
-                    <span className="text-sm text-app-text">{selectedHistoryReport.km_end}</span>
-                  </div>
-                )}
-                {selectedHistoryReport.hour_meter_start !== undefined && (
-                  <div>
-                    <span className="text-[11px] font-medium text-app-text-secondary block">Horómetro inicio</span>
-                    <span className="text-sm text-app-text">{selectedHistoryReport.hour_meter_start}</span>
-                  </div>
-                )}
-                {selectedHistoryReport.hour_meter_end !== undefined && (
-                  <div>
-                    <span className="text-[11px] font-medium text-app-text-secondary block">Horómetro fin</span>
-                    <span className="text-sm text-app-text">{selectedHistoryReport.hour_meter_end}</span>
-                  </div>
-                )}
-                {selectedHistoryReport.fuel_liters !== undefined && (
-                  <div>
-                    <span className="text-[11px] font-medium text-app-text-secondary block">Combustible</span>
-                    <span className="text-sm text-app-text">{selectedHistoryReport.fuel_liters} L</span>
-                  </div>
-                )}
-              </div>
-            </SectionCard>
-          )}
+              </SectionCard>
 
-          {/* Tools from history */}
-          {selectedHistoryReport.tools.length > 0 && (
-            <SectionCard icon={<Wrench className="h-4 w-4" />} title="Herramientas / Maquinaria">
-              <div className="flex flex-wrap gap-2">
-                {selectedHistoryReport.tools.map((toolId) => {
-                  const item = inventoryItems.find((i) => i.id === toolId);
-                  return (
-                    <span key={toolId} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-app-bg text-app-text-secondary">
-                      {item?.name ?? toolId}
-                    </span>
-                  );
-                })}
-              </div>
-            </SectionCard>
-          )}
+              {/* Vehicle */}
+              {selectedHistoryReport.vehicle_id && (
+                <SectionCard icon={<Truck className="h-4 w-4" />} title="Vehículo">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                      <span className="text-[11px] font-medium text-app-text-secondary block">Vehículo</span>
+                      <span className="text-sm text-app-text">
+                        {(() => {
+                          const v = vehicles.find((v) => v.id === selectedHistoryReport.vehicle_id);
+                          return v ? `${v.license_plate} — ${v.brand} ${v.model}` : selectedHistoryReport.vehicle_id;
+                        })()}
+                      </span>
+                    </div>
+                    {selectedHistoryReport.km_start !== undefined && (
+                      <div>
+                        <span className="text-[11px] font-medium text-app-text-secondary block">Km inicio</span>
+                        <span className="text-sm text-app-text">{selectedHistoryReport.km_start}</span>
+                      </div>
+                    )}
+                    {selectedHistoryReport.km_end !== undefined && (
+                      <div>
+                        <span className="text-[11px] font-medium text-app-text-secondary block">Km fin</span>
+                        <span className="text-sm text-app-text">{selectedHistoryReport.km_end}</span>
+                      </div>
+                    )}
+                    {selectedHistoryReport.hour_meter_start !== undefined && (
+                      <div>
+                        <span className="text-[11px] font-medium text-app-text-secondary block">Horómetro inicio</span>
+                        <span className="text-sm text-app-text">{selectedHistoryReport.hour_meter_start}</span>
+                      </div>
+                    )}
+                    {selectedHistoryReport.hour_meter_end !== undefined && (
+                      <div>
+                        <span className="text-[11px] font-medium text-app-text-secondary block">Horómetro fin</span>
+                        <span className="text-sm text-app-text">{selectedHistoryReport.hour_meter_end}</span>
+                      </div>
+                    )}
+                    {selectedHistoryReport.fuel_liters !== undefined && (
+                      <div>
+                        <span className="text-[11px] font-medium text-app-text-secondary block">Combustible</span>
+                        <span className="text-sm text-app-text">{selectedHistoryReport.fuel_liters} L</span>
+                      </div>
+                    )}
+                  </div>
+                </SectionCard>
+              )}
 
-          {selectedHistoryReport.notes && (
-            <SectionCard icon={<FileText className="h-4 w-4" />} title="Observaciones">
-              <p className="text-sm text-app-text whitespace-pre-wrap">{selectedHistoryReport.notes}</p>
-            </SectionCard>
-          )}
+              {/* Tools */}
+              {selectedHistoryReport.tools.length > 0 && (
+                <SectionCard icon={<Wrench className="h-4 w-4" />} title="Herramientas / Maquinaria">
+                  <div className="flex flex-wrap gap-2">
+                    {selectedHistoryReport.tools.map((toolId) => {
+                      const item = inventoryItems.find((i) => i.id === toolId);
+                      return (
+                        <span key={toolId} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-app-bg text-app-text-secondary">
+                          {item?.name ?? toolId}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </SectionCard>
+              )}
+
+              {selectedHistoryReport.notes && (
+                <SectionCard icon={<FileText className="h-4 w-4" />} title="Observaciones">
+                  <p className="text-sm text-app-text whitespace-pre-wrap">{selectedHistoryReport.notes}</p>
+                </SectionCard>
+              )}
+            </div>
+          </div>
         </div>
       );
     }
 
+    const markedDates = new Set(history.map((r) => r.date));
+
     return (
       <div className="space-y-3">
-        {history.length === 0 ? (
+        <Calendar
+          markedDates={markedDates}
+          onDayClick={(dateStr) => {
+            const report = history.find((r) => r.date === dateStr);
+            if (report) setSelectedHistoryId(report.id);
+          }}
+        />
+        {history.length === 0 && (
           <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
             <History className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
             <p className="text-app-text-secondary">No hay partes de trabajo anteriores registrados.</p>
           </div>
-        ) : (
-          history.map((r) => {
-            const completed = r.services.reduce((acc, e) => acc + e.tasks.filter((t) => t.completed).length, 0);
-            const total = r.services.reduce((acc, e) => acc + e.tasks.length, 0);
-            return (
-              <button
-                key={r.id}
-                onClick={() => setSelectedHistoryId(r.id)}
-                className="w-full bg-app-card rounded-xl border border-app-card-border p-4 flex items-center justify-between hover:bg-app-bg transition-colors text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <CalendarClock className="h-5 w-5 text-app-text-secondary" />
-                  <div>
-                    <p className="text-sm font-semibold text-app-text">Parte del {r.date}</p>
-                    <p className="text-xs text-app-text-secondary">
-                      {r.services.length} servicios · {completed}/{total} tareas{r.vehicle_id ? ' · Con vehículo' : ''}
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-app-text-secondary shrink-0" />
-              </button>
-            );
-          })
         )}
       </div>
     );

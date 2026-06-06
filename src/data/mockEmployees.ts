@@ -36,6 +36,7 @@ export const INITIAL_WORK_DAYS: WorkDay[] = [
 
 export const INITIAL_SHIFTS: Shift[] = [
   { id: 's_1', name: 'Mañana' },
+  { id: 's_4', name: 'Mañana esp' },
   { id: 's_2', name: 'Tarde' },
   { id: 's_3', name: 'Noche' },
 ];
@@ -52,8 +53,8 @@ const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'catego
   work_center_id: 'wc_1',
   status_id: 'es_1',
   active: true,
-  start_time: '08:00',
-  end_time: '16:00',
+  start_time: '06:00',
+  end_time: '13:00',
   vacation_month: null,
   vacation_year: null,
   vacation_days: 22,
@@ -124,24 +125,24 @@ let seq = 0;
 
 // 20 MORNING (s_1)
 const MORNING = [
-  { i: 0, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 1, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 2, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 3, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 4, cat: 'ec_1', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 5, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 6, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 7, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 8, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 9, cat: 'ec_2', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 10, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 11, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 12, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 13, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 14, cat: 'ec_3', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 15, cat: 'ec_4', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 16, cat: 'ec_4', wd: 'wd_1', t: '08:00', e: '16:00' },
-  { i: 17, cat: 'ec_4', wd: 'wd_1', t: '08:00', e: '16:00' },
+  { i: 0, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 1, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 2, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 3, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 4, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 5, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 6, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 7, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 8, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 9, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 10, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 11, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 12, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 13, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 14, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 15, cat: 'ec_4', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 16, cat: 'ec_4', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 17, cat: 'ec_4', wd: 'wd_1', t: '06:00', e: '13:00' },
   { i: 18, cat: 'ec_4', wd: 'wd_3', t: '07:00', e: '15:00' },
   { i: 19, cat: 'ec_4', wd: 'wd_4', t: '07:00', e: '15:00' },
 ];
@@ -170,7 +171,7 @@ for (const a of AFTERNOON) {
   const ln = LAST_NAMES[(seq + 17) % LAST_NAMES.length];
   seq++;
   employees.push(employee(seq, nm, ln, a.cat, 's_2', a.wd, {
-    start_time: '14:00', end_time: '22:00',
+    start_time: '14:00', end_time: '21:00',
   }));
 }
 
@@ -189,7 +190,7 @@ for (const n of NIGHT) {
   const ln2 = seq % 3 === 0 ? LAST_NAMES[(seq + 11) % LAST_NAMES.length] : '';
   seq++;
   employees.push(employee(seq, nm, ln, n.cat, 's_3', n.wd, {
-    start_time: '22:00', end_time: '06:00', last_name2: ln2,
+    start_time: '22:00', end_time: '05:00', last_name2: ln2,
   }));
 }
 
@@ -234,7 +235,7 @@ for (const o of OTHER) {
       const ln2 = LAST_NAMES[(seq + 53) % LAST_NAMES.length];
       employees.push(employee(seq, nm2, ln2, j === 0 ? 'ec_1' : 'ec_3', 's_2', 'wd_1', {
         work_center_id: o.wc, city_id: o.city,
-        start_time: '14:00', end_time: '22:00',
+        start_time: '14:00', end_time: '21:00',
       }));
     }
   } else if (o.afternoonCat) {
@@ -243,7 +244,7 @@ for (const o of OTHER) {
     const ln2 = LAST_NAMES[(seq + 53) % LAST_NAMES.length];
     employees.push(employee(seq, nm2, ln2, o.afternoonCat, 's_2', 'wd_1', {
       work_center_id: o.wc, city_id: o.city,
-      start_time: '14:00', end_time: '22:00',
+      start_time: '14:00', end_time: '21:00',
     }));
   }
 }
