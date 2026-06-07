@@ -19,14 +19,6 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const { user, triggerToast } = useAuth();
 
   useEffect(() => {
-    const stored = localStorage.getItem('on3_mock_workcenters');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as WorkCenter[];
-        setWorkCenters(parsed);
-        return;
-      } catch { /* fall through */ }
-    }
     setWorkCenters(INITIAL_WORK_CENTERS);
     localStorage.setItem('on3_mock_workcenters', JSON.stringify(INITIAL_WORK_CENTERS));
   }, []);

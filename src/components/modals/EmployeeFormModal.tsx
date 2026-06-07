@@ -20,9 +20,9 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [phone, setPhone] = useState('');
   const [personal_email, setPersonal_email] = useState('');
   const [phone_fixed, setPhone_fixed] = useState('');
-  const [category_id, setCategory_id] = useState('ec_1');
+  const [category_id, setCategory_id] = useState('ec_000001');
   const [status_id, setStatus_id] = useState('es_1');
-  const [work_center_id, setWork_center_id] = useState('wc_1');
+  const [work_center_id, setWork_center_id] = useState('wc_000001');
   const [work_day_id, setWork_day_id] = useState('wd_1');
   const [start_time, setStart_time] = useState('');
   const [end_time, setEnd_time] = useState('');
@@ -79,9 +79,9 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setPhone('');
       setPersonal_email('');
       setPhone_fixed('');
-      setCategory_id('ec_1');
+      setCategory_id('ec_000001');
       setStatus_id('es_1');
-      setWork_center_id('wc_1');
+      setWork_center_id('wc_000001');
       setWork_day_id('wd_1');
       setStart_time('');
       setEnd_time('');

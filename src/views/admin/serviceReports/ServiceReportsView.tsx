@@ -20,12 +20,12 @@ const STATUSES = INITIAL_EMPLOYEE_STATUSES;
 
 const SHIFT_WC_INCLUDE: Record<string, string[] | null> = {
   's_1': null,
-  's_2': ['wc_1', 'wc_2'],
-  's_3': ['wc_1'],
+  's_2': ['wc_000001', 'wc_000002'],
+  's_3': ['wc_000001'],
 };
 
 const SHIFT_EXCLUDED_WCS: Record<string, string[]> = {
-  's_1': ['wc_7', 'wc_8', 'wc_9'],
+  's_1': ['wc_000007', 'wc_000008', 'wc_000009'],
 };
 
 function formatEmployeeName(emp: { name: string; last_name1: string; last_name2: string }): string {
@@ -154,7 +154,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
     } else {
       const emp = employees.find((e) => e.id === employeeId);
       if (!emp) return;
-      const isOficial = emp.category_id === 'ec_3' || emp.category_id === 'ec_4';
+      const isOficial = emp.category_id === 'ec_000003' || emp.category_id === 'ec_000004';
       const serviceAssignments = currentReport.assignments.filter(
         (a) => a.service_id === serviceId && a.shift_id === activeShift && a.work_center_id === wcId
       );
@@ -162,13 +162,13 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
         if (!staffReq.oficial) return;
         const assignedOficiales = serviceAssignments.filter((a) => {
           const e = employees.find((ee) => ee.id === a.employee_id);
-          return e && (e.category_id === 'ec_3' || e.category_id === 'ec_4');
+          return e && (e.category_id === 'ec_000003' || e.category_id === 'ec_000004');
         });
         if (assignedOficiales.length >= 1) return;
       } else {
         const assignedPeones = serviceAssignments.filter((a) => {
           const e = employees.find((ee) => ee.id === a.employee_id);
-          return e && (e.category_id === 'ec_1' || e.category_id === 'ec_2');
+          return e && (e.category_id === 'ec_000001' || e.category_id === 'ec_000002');
         });
         if (assignedPeones.length >= staffReq.peones) return;
       }
@@ -230,18 +230,18 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
 
     const assignedOficiales = assignments.filter((a) => {
       const e = employees.find((ee) => ee.id === a.employee_id);
-      return e && (e.category_id === 'ec_3' || e.category_id === 'ec_4');
+      return e && (e.category_id === 'ec_000003' || e.category_id === 'ec_000004');
     });
     const assignedPeones = assignments.filter((a) => {
       const e = employees.find((ee) => ee.id === a.employee_id);
-      return e && (e.category_id === 'ec_1' || e.category_id === 'ec_2');
+      return e && (e.category_id === 'ec_000001' || e.category_id === 'ec_000002');
     });
 
     const oficiales = staffReq.oficial
       ? wcEmployees.filter((e) => e.category_id === staffReq.oficial)
       : [];
     const peones = staffReq.peones > 0
-      ? wcEmployees.filter((e) => e.category_id === 'ec_1' || e.category_id === 'ec_2')
+      ? wcEmployees.filter((e) => e.category_id === 'ec_000001' || e.category_id === 'ec_000002')
       : [];
 
     return (
@@ -271,7 +271,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
               const emp = employees.find((e) => e.id === a.employee_id);
               if (!emp) return null;
               const attendance = getAttendanceFor(a.employee_id);
-                  const isOficial = emp.category_id === 'ec_3' || emp.category_id === 'ec_4';
+                  const isOficial = emp.category_id === 'ec_000003' || emp.category_id === 'ec_000004';
                   const wcVehicles = vehicles.filter((v) => v.work_center_id === wcId && v.status === 'ACTIVE');
                   return (
                     <div key={a.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-app-bg/50 border border-app-border/50">

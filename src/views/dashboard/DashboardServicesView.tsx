@@ -315,7 +315,7 @@ export const DashboardServicesView: React.FC = () => {
                   {svc.staff_requirement.oficial ? (
                     <span className="flex items-center gap-1 text-amber-600 font-medium">
                       <UserCog className="h-3 w-3" />
-                      {svc.staff_requirement.oficial === 'ec_3' ? '1ª' : '2ª'}
+                      {svc.staff_requirement.oficial === 'ec_000003' ? '1ª' : '2ª'}
                     </span>
                   ) : (
                     <span className="text-app-text-secondary text-[10px]">Sin oficial</span>

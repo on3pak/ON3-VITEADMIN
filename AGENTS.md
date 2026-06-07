@@ -44,6 +44,30 @@ Two context patterns:
 - **Simple** (`UserContext`): exposes full entity array + direct CRUD
 - **Overview** (`EmployeeContext`, `VehicleContext`): exposes `getOverviews()` (lightweight) + `getById()` (full entity) + CRUD
 
+### ID Format Convention
+
+All entity IDs follow a consistent pattern — `{prefix}_{6-digit-zero-padded}`:
+
+| Entity | Prefix | Example | Notes |
+|--------|--------|---------|-------|
+| User | (none) | `a1b2c3d4-e5f6-47a7-b8i9-0k1l2m3n4o5p` | Raw UUID, no prefix |
+| Employee | (none) | `000001` | Bare 6-digit number |
+| Work Report | (none) | `crypto.randomUUID()` | UUID generated at runtime |
+| Vehicle | `vh_` | `vh_000001` | |
+| Service | `sv_` | `sv_000001` | |
+| WorkCenter | `wc_` | `wc_000001` | |
+| City | `ci_` | `ci_000001` | |
+| EmployeeCategory | `ec_` | `ec_000001` | |
+| EmployeeStatus | `es_` | `es_1` | **Not zero-padded** (unchanged) |
+| Shift | `s_` | `s_1` | **Not zero-padded** (unchanged) |
+| WorkDay | `wd_` | `wd_1` | **Not zero-padded** (unchanged) |
+| ContractType | `ct_` | `ct_1` | **Not zero-padded** (unchanged) |
+| VehicleType | `vt-` | `vt-1` | **Not zero-padded** (unchanged) |
+| InventoryItem | `inv_` | `inv_000001` | |
+| InventoryCategory | `ic-` | `ic-1` | **Not zero-padded** (unchanged) |
+| InventorySubtype | `ist-` | `ist-1` | **Not zero-padded** (unchanged) |
+| InventoryStatus | `rs-`/`es-`/`ms-` | `rs-1` | **Not zero-padded** (unchanged) |
+
 ### Mock Data
 
 `src/data/mock{Entity}s.ts` — each exports `INITIAL_ENTITIES` + lookup arrays (statuses, categories, work centers, etc.)

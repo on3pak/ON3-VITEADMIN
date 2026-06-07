@@ -27,8 +27,8 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
   const [quantity, setQuantity] = useState(1);
   const [min_stock, setMin_stock] = useState(0);
   const [unit, setUnit] = useState('unidades');
-  const [city_id, setCity_id] = useState('city_1');
-  const [work_center_id, setWork_center_id] = useState('wc_9');
+  const [city_id, setCity_id] = useState('ci_000001');
+  const [work_center_id, setWork_center_id] = useState('wc_000009');
   const [location, setLocation] = useState('');
   const [assigned_to, setAssigned_to] = useState('');
   const [notes, setNotes] = useState('');
@@ -76,8 +76,8 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
       setQuantity(1);
       setMin_stock(0);
       setUnit('unidades');
-      setCity_id('city_1');
-      setWork_center_id('wc_9');
+      setCity_id('ci_000001');
+      setWork_center_id('wc_000009');
       setLocation('');
       setAssigned_to('');
       setNotes('');

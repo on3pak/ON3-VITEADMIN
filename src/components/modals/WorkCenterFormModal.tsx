@@ -19,7 +19,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
 
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [cityId, setCityId] = useState('city_1');
+  const [cityId, setCityId] = useState('ci_000001');
   const [status, setStatus] = useState<'ACTIVE' | 'INACTIVE'>('ACTIVE');
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -32,7 +32,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
     } else {
       setName('');
       setAddress('');
-      setCityId('city_1');
+      setCityId('ci_000001');
       setStatus('ACTIVE');
     }
     setFormError(null);

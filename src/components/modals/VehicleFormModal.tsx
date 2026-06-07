@@ -26,7 +26,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
   const [kilometers, setKilometers] = useState(0);
   const [lastReviewDate, setLastReviewDate] = useState('');
   const [nextReviewKilometers, setNextReviewKilometers] = useState(0);
-  const [workCenter, setWorkCenter] = useState('wc_1');
+  const [workCenter, setWorkCenter] = useState('wc_000001');
   const [assignedEmployee, setAssignedEmployee] = useState('');
   const [observations, setObservations] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setKilometers(0);
       setLastReviewDate('');
       setNextReviewKilometers(0);
-      setWorkCenter('wc_1');
+      setWorkCenter('wc_000001');
       setAssignedEmployee('');
       setObservations('');
     }

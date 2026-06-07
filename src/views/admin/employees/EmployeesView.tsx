@@ -25,16 +25,16 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'ec_1': 'bg-primary-100 text-primary-700 border-primary-200',
-  'ec_2': 'bg-purple-100 text-purple-700 border-purple-200',
-  'ec_3': 'bg-violet-100 text-violet-700 border-violet-200',
-  'ec_4': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
-  'ec_5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-  'ec_6': 'bg-teal-100 text-teal-700 border-teal-200',
-  'ec_7': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'ec_8': 'bg-amber-100 text-amber-700 border-amber-200',
-  'ec_9': 'bg-orange-100 text-orange-700 border-orange-200',
-  'ec_10': 'bg-app-bg text-app-text border-app-border',
+  'ec_000001': 'bg-primary-100 text-primary-700 border-primary-200',
+  'ec_000002': 'bg-purple-100 text-purple-700 border-purple-200',
+  'ec_000003': 'bg-violet-100 text-violet-700 border-violet-200',
+  'ec_000004': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
+  'ec_000005': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+  'ec_000006': 'bg-teal-100 text-teal-700 border-teal-200',
+  'ec_000007': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'ec_000008': 'bg-amber-100 text-amber-700 border-amber-200',
+  'ec_000009': 'bg-orange-100 text-orange-700 border-orange-200',
+  'ec_000010': 'bg-app-bg text-app-text border-app-border',
 };
 
 const getInitials = (name: string, last1: string) => {

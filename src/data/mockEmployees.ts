@@ -1,21 +1,21 @@
 import { Employee, EmployeeCategory, EmployeeStatus, WorkDay, Shift, ContractType, City } from '../types';
 
 export const INITIAL_CITIES: City[] = [
-  { id: 'city_1', name: 'Alcalá de Henares' },
-  { id: 'city_2', name: 'Guadalajara' },
+  { id: 'ci_000001', name: 'Alcalá de Henares' },
+  { id: 'ci_000002', name: 'Guadalajara' },
 ];
 
 export const INITIAL_EMPLOYEE_CATEGORIES: EmployeeCategory[] = [
-  { id: 'ec_1', name: 'Peón Limpieza' },
-  { id: 'ec_2', name: 'Peón Recogida' },
-  { id: 'ec_3', name: 'Oficial' },
-  { id: 'ec_4', name: 'Oficial 2ª' },
-  { id: 'ec_5', name: 'Mantenimiento' },
-  { id: 'ec_6', name: 'Mecánico' },
-  { id: 'ec_7', name: 'Encargado' },
-  { id: 'ec_8', name: 'Encargado General' },
-  { id: 'ec_9', name: 'Jefe de Servicio' },
-  { id: 'ec_10', name: 'Administrativo' },
+  { id: 'ec_000001', name: 'Peón Limpieza' },
+  { id: 'ec_000002', name: 'Peón Recogida' },
+  { id: 'ec_000003', name: 'Oficial' },
+  { id: 'ec_000004', name: 'Oficial 2ª' },
+  { id: 'ec_000005', name: 'Mantenimiento' },
+  { id: 'ec_000006', name: 'Mecánico' },
+  { id: 'ec_000007', name: 'Encargado' },
+  { id: 'ec_000008', name: 'Encargado General' },
+  { id: 'ec_000009', name: 'Jefe de Servicio' },
+  { id: 'ec_000010', name: 'Administrativo' },
 ];
 
 export const INITIAL_EMPLOYEE_STATUSES: EmployeeStatus[] = [
@@ -48,9 +48,8 @@ export const INITIAL_CONTRACT_TYPES: ContractType[] = [
 ];
 
 const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'category_id' | 'shift_id' | 'work_day_id' | 'email' | 'phone' | 'personal_email'> = {
-  user_id: null,
-  city_id: 'city_1',
-  work_center_id: 'wc_1',
+  city_id: 'ci_000001',
+  work_center_id: 'wc_000001',
   status_id: 'es_1',
   active: true,
   start_time: '06:00',
@@ -115,6 +114,7 @@ function employee(
     email: `${slug(name).slice(0, 1)}.${slug(last1)}@on3.com`,
     phone: `6123${String(idNum).padStart(4, '0')}`,
     personal_email: `${slug(name)}.${slug(last1)}@gmail.com`,
+    last_name2: '',
   };
 }
 
@@ -125,26 +125,26 @@ let seq = 0;
 
 // 20 MORNING (s_1)
 const MORNING = [
-  { i: 0, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 1, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 2, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 3, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 4, cat: 'ec_1', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 5, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 6, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 7, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 8, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 9, cat: 'ec_2', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 10, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 11, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 12, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 13, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 14, cat: 'ec_3', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 15, cat: 'ec_4', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 16, cat: 'ec_4', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 17, cat: 'ec_4', wd: 'wd_1', t: '06:00', e: '13:00' },
-  { i: 18, cat: 'ec_4', wd: 'wd_3', t: '07:00', e: '15:00' },
-  { i: 19, cat: 'ec_4', wd: 'wd_4', t: '07:00', e: '15:00' },
+  { i: 0, cat: 'ec_000001', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 1, cat: 'ec_000001', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 2, cat: 'ec_000001', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 3, cat: 'ec_000001', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 4, cat: 'ec_000001', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 5, cat: 'ec_000002', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 6, cat: 'ec_000002', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 7, cat: 'ec_000002', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 8, cat: 'ec_000002', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 9, cat: 'ec_000002', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 10, cat: 'ec_000003', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 11, cat: 'ec_000003', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 12, cat: 'ec_000003', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 13, cat: 'ec_000003', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 14, cat: 'ec_000003', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 15, cat: 'ec_000004', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 16, cat: 'ec_000004', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 17, cat: 'ec_000004', wd: 'wd_1', t: '06:00', e: '13:00' },
+  { i: 18, cat: 'ec_000004', wd: 'wd_3', t: '07:00', e: '15:00' },
+  { i: 19, cat: 'ec_000004', wd: 'wd_4', t: '07:00', e: '15:00' },
 ];
 
 for (const m of MORNING) {
@@ -159,11 +159,11 @@ for (const m of MORNING) {
 
 // 5 AFTERNOON (s_2)
 const AFTERNOON = [
-  { cat: 'ec_1', wd: 'wd_2' },
-  { cat: 'ec_1', wd: 'wd_1' },
-  { cat: 'ec_2', wd: 'wd_2' },
-  { cat: 'ec_3', wd: 'wd_2' },
-  { cat: 'ec_4', wd: 'wd_1' },
+  { cat: 'ec_000001', wd: 'wd_2' },
+  { cat: 'ec_000001', wd: 'wd_1' },
+  { cat: 'ec_000002', wd: 'wd_2' },
+  { cat: 'ec_000003', wd: 'wd_2' },
+  { cat: 'ec_000004', wd: 'wd_1' },
 ];
 
 for (const a of AFTERNOON) {
@@ -177,11 +177,11 @@ for (const a of AFTERNOON) {
 
 // 5 NIGHT (s_3)
 const NIGHT = [
-  { cat: 'ec_1', wd: 'wd_1' },
-  { cat: 'ec_1', wd: 'wd_1' },
-  { cat: 'ec_2', wd: 'wd_1' },
-  { cat: 'ec_3', wd: 'wd_3' },
-  { cat: 'ec_4', wd: 'wd_1' },
+  { cat: 'ec_000001', wd: 'wd_1' },
+  { cat: 'ec_000001', wd: 'wd_1' },
+  { cat: 'ec_000002', wd: 'wd_1' },
+  { cat: 'ec_000003', wd: 'wd_3' },
+  { cat: 'ec_000004', wd: 'wd_1' },
 ];
 
 for (const n of NIGHT) {
@@ -199,23 +199,23 @@ for (const n of NIGHT) {
 interface OtherWc { wc: string; city: string; cat: string; afternoonCat?: string; evening?: boolean }
 
 const OTHER: OtherWc[] = [
-  { wc: 'wc_2',  city: 'city_1', cat: 'ec_7',  afternoonCat: 'pm_2' },
-  { wc: 'wc_3',  city: 'city_1', cat: 'ec_1',  afternoonCat: 'ec_3' },
-  { wc: 'wc_4',  city: 'city_1', cat: 'ec_2',  afternoonCat: 'ec_4' },
-  { wc: 'wc_5',  city: 'city_1', cat: 'ec_3',  afternoonCat: 'ec_7' },
-  { wc: 'wc_6',  city: 'city_1', cat: 'ec_5',  afternoonCat: 'ec_6' },
-  { wc: 'wc_7',  city: 'city_1', cat: 'ec_6',  afternoonCat: 'ec_5' },
-  { wc: 'wc_8',  city: 'city_1', cat: 'ec_8',  afternoonCat: 'ec_9' },
-  { wc: 'wc_9',  city: 'city_1', cat: 'ec_10', afternoonCat: 'ec_1' },
-  { wc: 'wc_11', city: 'city_2', cat: 'ec_1',  afternoonCat: 'ec_3' },
-  { wc: 'wc_12', city: 'city_2', cat: 'ec_2',  afternoonCat: 'ec_4' },
-  { wc: 'wc_13', city: 'city_2', cat: 'ec_3',  afternoonCat: 'ec_7' },
-  { wc: 'wc_14', city: 'city_2', cat: 'ec_4',  afternoonCat: 'ec_1' },
-  { wc: 'wc_15', city: 'city_2', cat: 'ec_9',  afternoonCat: 'ec_10' },
-  { wc: 'wc_16', city: 'city_2', cat: 'ec_10', afternoonCat: 'ec_1' },
-  { wc: 'wc_18', city: 'city_2', cat: 'ec_1',  afternoonCat: 'ec_3' },
-  { wc: 'wc_19', city: 'city_2', cat: 'ec_5',  afternoonCat: 'ec_6' },
-  { wc: 'wc_21', city: 'city_2', cat: 'ec_10', afternoonCat: 'ec_1' },
+  { wc: 'wc_000002',  city: 'ci_000001', cat: 'ec_000007',  afternoonCat: 'pm_2' },
+  { wc: 'wc_000003',  city: 'ci_000001', cat: 'ec_000001',  afternoonCat: 'ec_000003' },
+  { wc: 'wc_000004',  city: 'ci_000001', cat: 'ec_000002',  afternoonCat: 'ec_000004' },
+  { wc: 'wc_000005',  city: 'ci_000001', cat: 'ec_000003',  afternoonCat: 'ec_000007' },
+  { wc: 'wc_000006',  city: 'ci_000001', cat: 'ec_000005',  afternoonCat: 'ec_000006' },
+  { wc: 'wc_000007',  city: 'ci_000001', cat: 'ec_000006',  afternoonCat: 'ec_000005' },
+  { wc: 'wc_000008',  city: 'ci_000001', cat: 'ec_000008',  afternoonCat: 'ec_000009' },
+  { wc: 'wc_000009',  city: 'ci_000001', cat: 'ec_000010', afternoonCat: 'ec_000001' },
+  { wc: 'wc_000011', city: 'ci_000002', cat: 'ec_000001',  afternoonCat: 'ec_000003' },
+  { wc: 'wc_000012', city: 'ci_000002', cat: 'ec_000002',  afternoonCat: 'ec_000004' },
+  { wc: 'wc_000013', city: 'ci_000002', cat: 'ec_000003',  afternoonCat: 'ec_000007' },
+  { wc: 'wc_000014', city: 'ci_000002', cat: 'ec_000004',  afternoonCat: 'ec_000001' },
+  { wc: 'wc_000015', city: 'ci_000002', cat: 'ec_000009',  afternoonCat: 'ec_000010' },
+  { wc: 'wc_000016', city: 'ci_000002', cat: 'ec_000010', afternoonCat: 'ec_000001' },
+  { wc: 'wc_000018', city: 'ci_000002', cat: 'ec_000001',  afternoonCat: 'ec_000003' },
+  { wc: 'wc_000019', city: 'ci_000002', cat: 'ec_000005',  afternoonCat: 'ec_000006' },
+  { wc: 'wc_000021', city: 'ci_000002', cat: 'ec_000010', afternoonCat: 'ec_000001' },
 ];
 
 for (const o of OTHER) {
@@ -233,7 +233,7 @@ for (const o of OTHER) {
       seq++;
       const nm2 = MALE_NAMES[(seq + 13) % MALE_NAMES.length];
       const ln2 = LAST_NAMES[(seq + 53) % LAST_NAMES.length];
-      employees.push(employee(seq, nm2, ln2, j === 0 ? 'ec_1' : 'ec_3', 's_2', 'wd_1', {
+      employees.push(employee(seq, nm2, ln2, j === 0 ? 'ec_000001' : 'ec_000003', 's_2', 'wd_1', {
         work_center_id: o.wc, city_id: o.city,
         start_time: '14:00', end_time: '21:00',
       }));

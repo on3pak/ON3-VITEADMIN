@@ -80,7 +80,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('BARRIDO MIXTO');
-  const [work_center_id, setWork_center_id] = useState('wc_1');
+  const [work_center_id, setWork_center_id] = useState('wc_000001');
   const [shift_id, setShift_id] = useState('s_1');
   const [oficial, setOficial] = useState<string | null>(null);
   const [peones, setPeones] = useState(0);
@@ -102,7 +102,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
     } else {
       setName('');
       setCategory('BARRIDO MIXTO');
-      setWork_center_id('wc_1');
+      setWork_center_id('wc_000001');
       setShift_id('s_1');
       setOficial(null);
       setPeones(0);
@@ -275,9 +275,9 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 </button>
                 <button
                   type="button"
-                  onClick={() => setOficial('ec_3')}
+                  onClick={() => setOficial('ec_000003')}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                    oficial === 'ec_3'
+                    oficial === 'ec_000003'
                       ? 'bg-amber-600 text-white shadow-sm'
                       : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-amber-300'
                   }`}
@@ -287,9 +287,9 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 </button>
                 <button
                   type="button"
-                  onClick={() => setOficial('ec_4')}
+                  onClick={() => setOficial('ec_000004')}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                    oficial === 'ec_4'
+                    oficial === 'ec_000004'
                       ? 'bg-amber-600 text-white shadow-sm'
                       : 'bg-app-bg text-app-text-secondary border border-app-border hover:border-amber-300'
                   }`}

@@ -9,23 +9,23 @@ function loadReports(): WorkReport[] {
     if (raw) {
       const parsed: WorkReport[] = JSON.parse(raw);
       // Ensure seed reports for Miguel Ángel Torres exist
-      const hasSeeds = parsed.some((r) => r.id === 'pt000001_2026-06-02');
+      const hasSeeds = parsed.some((r) => r.id === '550e8400-e29b-41d4-a716-446655440001');
       if (hasSeeds) return parsed;
 
       const taskDay = (dayIdx: number) =>
         Array.from({ length: 5 }, (_, i) => ({
-          task_id: `svc_1-task-${dayIdx * 20 + i}`,
+          task_id: `sv_000001-task-${dayIdx * 20 + i}`,
           completed: true,
         }));
 
       const seed: WorkReport[] = [
         {
-          id: 'pt000001_2026-06-02',
+          id: '550e8400-e29b-41d4-a716-446655440001',
           employee_id: '000001',
           date: '2026-06-02',
           status: 'CONFIRMED',
-          services: [{ service_id: 'svc_1', tasks: taskDay(2) }],
-          vehicle_id: 'veh_v001',
+          services: [{ service_id: 'sv_000001', tasks: taskDay(2) }],
+          vehicle_id: 'vh_000001',
           km_start: 4500,
           km_end: 4600,
           hour_meter_start: 1250,
@@ -37,12 +37,12 @@ function loadReports(): WorkReport[] {
           updated_at: '2026-06-02T15:30:00Z',
         },
         {
-          id: 'pt000001_2026-05-28',
+          id: '550e8400-e29b-41d4-a716-446655440002',
           employee_id: '000001',
           date: '2026-05-28',
           status: 'CONFIRMED',
-          services: [{ service_id: 'svc_1', tasks: taskDay(4) }],
-          vehicle_id: 'veh_v001',
+          services: [{ service_id: 'sv_000001', tasks: taskDay(4) }],
+          vehicle_id: 'vh_000001',
           km_start: 4400,
           km_end: 4500,
           hour_meter_start: 1235,
@@ -115,7 +115,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
 
     const now = new Date().toISOString();
     const newReport: WorkReport = {
-      id: `pt${employeeId}_${today}`,
+      id: crypto.randomUUID(),
       employee_id: employeeId,
       date: today,
       status: 'DRAFT',
