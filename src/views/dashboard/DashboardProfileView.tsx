@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
+import { useUsers } from '../../context/UserContext';
 import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
+import { UserFormModal } from '../../components/modals/UserFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
 import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_SHIFTS, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_CITIES } from '../../data/mockEmployees';
@@ -15,8 +17,8 @@ import {
   SunSnow,
   Sparkles,
   Send, Sun, ClipboardCheck,
-  Briefcase, Shield, Hash, MapPin, Clock, Building2, IdCard, Award,
-  Plus, X, Check, AlertTriangle,
+  Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
+  Plus, X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
@@ -62,6 +64,7 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser, triggerToast } = useAuth();
   const { employees, createEmployee, updateEmployee, createVacationRequest, vacationRequests, getVacationRequestsByEmployee } = useEmployees();
+  const { updateUser } = useUsers();
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
@@ -69,6 +72,7 @@ export const DashboardProfileView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
+  const [userFormModalOpen, setUserFormModalOpen] = useState(false);
   const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
   const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
@@ -123,6 +127,17 @@ export const DashboardProfileView: React.FC = () => {
       requested_days: data.requested_days,
     });
     setSolicitarDiasOpen(false);
+  };
+
+  const handleUserSubmit = (data: Omit<import('../../types').User, 'id' | 'created_at' | 'updated_at'>) => {
+    if (!loggedInUser) return false;
+    const result = updateUser(loggedInUser.id, data);
+    if (result.success) {
+      triggerToast('Usuario actualizado correctamente', 'success');
+      setUserFormModalOpen(false);
+      return true;
+    }
+    return false;
   };
 
   const pendingRequests = useMemo(
@@ -196,34 +211,46 @@ export const DashboardProfileView: React.FC = () => {
           <div className="mx-auto flex w-full max-w-4xl flex-auto justify-center p-6">
             {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-5">
-                {/* Compact employee card — WorkReportsView style */}
-                <div className="bg-app-card rounded-xl border border-app-card-border p-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <User className="h-4 w-4 text-primary-500 shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Empleado</p>
-                      <p className="text-sm font-semibold text-app-text truncate">{fullName}</p>
-                    </div>
+                {/* Compact employee card — same layout as SectionCard */}
+                <div className="bg-gray-50 rounded-xl border border-app-card-border p-4">
+                  <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
+                    <User className="h-4 w-4" />
+                    <span className="flex-1">Información del Usuario</span>
+                    <button
+                      onClick={() => {
+                        if (loggedInUser.role === 'MANAGER' || loggedInUser.role === 'USER') {
+                          setRequestModalCard('personal');
+                        } else {
+                          setUserFormModalOpen(true);
+                        }
+                      }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-500 hover:bg-primary-400 text-white shadow-xs transition-all active:scale-95"
+                      title="Editar perfil"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
                   </div>
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <Mail className="h-4 w-4 text-primary-500 shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Email</p>
-                      <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.email || '—'}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <User className="h-4 w-4 text-primary-500 shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Empleado</p>
+                        <p className="text-sm font-semibold text-app-text truncate">{fullName}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <Shield className="h-4 w-4 text-primary-500 shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Rol</p>
-                      <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.role || '—'}</p>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Mail className="h-4 w-4 text-primary-500 shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Email</p>
+                        <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.email || '—'}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <MapPin className="h-4 w-4 text-primary-500 shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Ciudad</p>
-                      <p className="text-sm font-semibold text-app-text truncate">{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</p>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Shield className="h-4 w-4 text-primary-500 shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Rol</p>
+                        <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.role || '—'}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -231,45 +258,52 @@ export const DashboardProfileView: React.FC = () => {
                 {myEmployee ? (
                   <>
                     <SectionCard
-                      icon={<User className="h-4 w-4" />}
-                      title="Información Personal"
-                      action={
-                        <button
-                          onClick={() => setRequestModalCard('personal')}
-                          className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
-                        >
-                          <Plus className="h-3.5 w-3.5" />
-                          Solicitar cambio
-                        </button>
-                      }
-                    >
-                      <InfoRow icon={<User className="h-4 w-4" />} label="Nombre completo" value={fullName} />
-                      <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={loggedInUser.email || '—'} />
-                      <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee?.phone || '—'} />
-                      <InfoRow icon={<Hash className="h-4 w-4" />} label="Usuario" value={loggedInUser.username || '—'} />
-                      <InfoRow icon={<Shield className="h-4 w-4" />} label="Rol" value={loggedInUser.role || '—'} />
-                      <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'} />
-                    </SectionCard>
-
-                    <SectionCard
                       icon={<Award className="h-4 w-4" />}
                       title="Información del Empleado"
                       action={
                         <button
                           onClick={() => setRequestModalCard('employee')}
-                          className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                          className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-500 hover:bg-primary-400 text-white shadow-xs transition-all active:scale-95"
+                          title="Solicitar cambio"
                         >
-                          <Plus className="h-3.5 w-3.5" />
-                          Solicitar cambio
+                          <Pencil className="h-4 w-4" />
                         </button>
                       }
                     >
+                      {/* Contacto */}
+                      <div className="col-span-2">
+                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Contacto</div>
+                      </div>
+                      <InfoRow icon={<User className="h-4 w-4" />} label="Nombre completo" value={fullName} />
+                      <InfoRow icon={<Mail className="h-4 w-4" />} label="Email Personal" value={myEmployee?.personal_email || '—'} />
+                      <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee?.phone || '—'} />
+                      <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'} />
+
+                      {/* Separator */}
+                      <div className="col-span-2 border-t border-app-card-border my-1" />
+
+                      {/* Laboral */}
+                      <div className="col-span-2">
+                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Datos Laborales</div>
+                      </div>
                       <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
                       <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
                       <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
                       <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
+
+                      {/* Separator */}
+                      <div className="col-span-2 border-t border-app-card-border my-1" />
+
+                      {/* Administración */}
+                      <div className="col-span-2">
+                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Administración</div>
+                      </div>
+                      <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={myEmployee?.iban || '—'} />
+                      <InfoRow icon={<Package className="h-4 w-4" />} label="Taquilla" value={myEmployee?.locker || '—'} />
+                      <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={myEmployee ? `${myEmployee.irpf}%` : '—'} />
+                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
                     </SectionCard>
                   </>
                 ) : (
@@ -407,6 +441,13 @@ export const DashboardProfileView: React.FC = () => {
         onSubmit={handleSolicitarDias}
       />
 
+      <UserFormModal
+        isOpen={userFormModalOpen}
+        onClose={() => setUserFormModalOpen(false)}
+        onSubmit={handleUserSubmit}
+        editingUser={loggedInUser}
+      />
+
       {requestModalCard && (
         <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
           <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-lg border border-app-card-border overflow-hidden max-h-[90vh] flex flex-col">
@@ -443,10 +484,11 @@ export const DashboardProfileView: React.FC = () => {
                     <ul className="space-y-0.5 text-amber-700">
                       {requestModalCard === 'personal' ? (
                         <>
-                          <li>• Nombre: <strong>{fullName}</strong></li>
+                          <li>• Nombre completo: <strong>{fullName}</strong></li>
                           <li>• Email: <strong>{loggedInUser.email || '—'}</strong></li>
-                          <li>• Teléfono: <strong>{myEmployee?.phone || '—'}</strong></li>
+                          <li>• Rol: <strong>{loggedInUser.role || '—'}</strong></li>
                           <li>• Ciudad: <strong>{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</strong></li>
+                          <li>• Idioma: <strong>{loggedInUser.language === 'ES' ? 'Español' : loggedInUser.language === 'EN' ? 'Inglés' : loggedInUser.language || '—'}</strong></li>
                         </>
                       ) : (
                         <>
