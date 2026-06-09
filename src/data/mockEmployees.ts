@@ -85,7 +85,6 @@ const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'catego
   contract_start_date: '2025-01-01',
   contract_end_date: null,
   irpf: 15,
-  last_name2: '',
 };
 
 const MALE_NAMES = [
@@ -128,7 +127,7 @@ function employee(
     email: `${slug(name).slice(0, 1)}.${slug(last1)}@on3.com`,
     phone: `6123${String(idNum).padStart(4, '0')}`,
     personal_email: `${slug(name)}.${slug(last1)}@gmail.com`,
-    last_name2: '',
+    last_name2: extra.last_name2 || LAST_NAMES[(idNum + 31) % LAST_NAMES.length],
   };
 }
 
@@ -265,10 +264,10 @@ for (const o of OTHER) {
 
 // Override test account employees to match INITIAL_USERS names
 ([
-  { id: '000001', name: 'Miguel Ángel', last_name1: 'Torres', email: 'm.torres@on3.com', phone: '612300001' },
-  { id: '000002', name: 'Alejandro', last_name1: 'Mendoza', email: 'a.mendoza@on3.com', phone: '612300002' },
-  { id: '000003', name: 'Beatriz', last_name1: 'Salazar', email: 'b.salazar@on3.com', phone: '612300003' },
-  { id: '000004', name: 'Carlos', last_name1: 'Fuentes', email: 'c.fuentes@on3.com', phone: '612300004' },
+  { id: '000001', name: 'Miguel Ángel', last_name1: 'Torres', last_name2: 'López', email: 'm.torres1@on3.com', phone: '612300001' },
+  { id: '000002', name: 'Alejandro', last_name1: 'Mendoza', last_name2: 'García', email: 'a.mendoza2@on3.com', phone: '612300002' },
+  { id: '000003', name: 'Beatriz', last_name1: 'Salazar', last_name2: 'Ruiz', email: 'b.salazar3@on3.com', phone: '612300003' },
+  { id: '000004', name: 'Carlos', last_name1: 'Fuentes', last_name2: 'Martínez', email: 'c.fuentes4@on3.com', phone: '612300004' },
 ]).forEach((o) => {
   const emp = employees.find((e) => e.id === o.id);
   if (emp) Object.assign(emp, o);
