@@ -4,13 +4,13 @@ import { useAuth } from '../../../context/AuthContext';
 import { User, UserRole } from '../../types';
 import { UserFormModal } from '../../../components/modals/UserFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { 
-  Search, 
-  UserPlus, 
-  Edit3, 
-  Trash2, 
-  Filter, 
-  ShieldAlert, 
+import {
+  Search,
+  UserPlus,
+  Edit3,
+  Trash2,
+  Filter,
+  ShieldAlert,
   Mail,
   ChevronLeft,
   ChevronRight,
@@ -18,29 +18,30 @@ import {
   ChevronsRight,
   ChevronDown,
   ChevronUp,
+  UserX,
+  RotateCcw,
+  ArrowLeft,
 } from 'lucide-react';
 
 export const UsersView: React.FC = () => {
-  const { users, createUser, updateUser, deleteUser } = useUsers();
+  const { users, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser } = useUsers();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<User | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ rol: false, estado: false });
+  const [showDeleted, setShowDeleted] = useState(false);
+  const [hardDeleteDialog, setHardDeleteDialog] = useState<{ open: boolean; userId: string | null }>({ open: false, userId: null });
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ rol: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
-  const handleConfirmDelete = () => { if (deletingUserId) { deleteUser(deletingUserId); } setDeleteDialogOpen(false); setDeletingUserId(null); };
 
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, roleFilter, statusFilter, itemsPerPage]);
+  }, [searchQuery, roleFilter, itemsPerPage, showDeleted]);
 
   const handleFormSubmit = (formData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
     if (selectedUserForEdit) {
@@ -66,25 +67,44 @@ export const UsersView: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const filteredUsers = useMemo(() => {
+  const activeUsers = useMemo(() => {
+    return users.filter((u) => u.status !== 'DELETED');
+  }, [users]);
+
+  const deletedUsers = useMemo(() => {
+    return users.filter((u) => u.status === 'DELETED');
+  }, [users]);
+
+  const filteredActiveUsers = useMemo(() => {
     const q = searchQuery.toLowerCase();
-    return users.filter((u) => {
+    return activeUsers.filter((u) => {
       const matchesSearch =
         u.full_name.toLowerCase().includes(q) ||
         u.username.toLowerCase().includes(q) ||
         u.email.toLowerCase().includes(q);
 
       const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
-      const matchesStatus = statusFilter === 'ALL' || u.status === statusFilter;
 
-      return matchesSearch && matchesRole && matchesStatus;
+      return matchesSearch && matchesRole;
     });
-  }, [users, searchQuery, roleFilter, statusFilter]);
+  }, [activeUsers, searchQuery, roleFilter]);
 
-  const totalPages = useMemo(() => Math.ceil(filteredUsers.length / itemsPerPage), [filteredUsers, itemsPerPage]);
+  const filteredDeletedUsers = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    return deletedUsers.filter((u) => {
+      return (
+        u.full_name.toLowerCase().includes(q) ||
+        u.username.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q)
+      );
+    });
+  }, [deletedUsers, searchQuery]);
+
+  const currentList = showDeleted ? filteredDeletedUsers : filteredActiveUsers;
+  const totalPages = useMemo(() => Math.ceil(currentList.length / itemsPerPage), [currentList, itemsPerPage]);
   const paginatedUsers = useMemo(
-    () => filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
-    [filteredUsers, currentPage, itemsPerPage]
+    () => currentList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [currentList, currentPage, itemsPerPage]
   );
 
   const getRoleBadgeStyle = (role: UserRole) => {
@@ -96,24 +116,89 @@ export const UsersView: React.FC = () => {
     }
   };
 
-  const getStatusBadgeStyle = (status: string) => {
-    switch (status) {
-      case 'ACTIVE': return 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-600/10';
-      case 'INACTIVE': return 'bg-app-bg text-app-text-secondary ring-1 ring-slate-600/10';
-      default: return 'bg-app-bg text-app-text';
-    }
-  };
-
-  const handleToggleStatus = (user: User) => {
-    const newStatus = user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    updateUser(user.id, { status: newStatus });
-  };
-
   const isReadOnlyOperator = loggedInUser?.role === 'USER';
+
+  const canModifyUser = (targetUser: User): boolean => {
+    if (isReadOnlyOperator) return false;
+    if (targetUser.id === loggedInUser?.id) return false;
+    if (targetUser.role === 'ROOT' && loggedInUser?.role !== 'ROOT') return false;
+    return true;
+  };
+
+  const renderUserRow = (u: User, isDeletedView: boolean) => (
+    <tr key={u.id} className="hover:bg-app-bg/70 transition-colors">
+      <td className="py-3.5 px-6">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold border border-gray-200">
+            {u.full_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+          </div>
+          <div>
+            <div className="font-bold text-app-text-secondary leading-tight">{u.full_name}</div>
+            <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
+              <span className="font-mono text-primary-600 font-semibold">@{u.username}</span>
+              <span>•</span>
+              <Mail className="h-3 w-3 text-app-text-secondary inline" />
+              <span className="truncate max-w-[140px]">{u.email}</span>
+            </div>
+          </div>
+        </div>
+      </td>
+
+      <td className="py-3.5 px-4">
+        <div className="flex justify-center">
+          <span className={`inline-flex px-2 py-0.5 text-[10px] font-extrabold rounded-md border ${getRoleBadgeStyle(u.role)}`}>
+            {u.role}
+          </span>
+        </div>
+      </td>
+
+      <td className="py-3.5 px-4">
+        <div className="flex justify-center gap-1.5">
+          {u.id === loggedInUser?.id && (
+            <button
+              onClick={() => handleOpenEditModal(u)}
+              title="Editar mis datos"
+              className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
+            >
+              <Edit3 className="h-4 w-4" />
+            </button>
+          )}
+          {isDeletedView ? (
+            <>
+              <button
+                onClick={() => restoreUser(u.id)}
+                title="Recuperar usuario"
+                className="p-1.5 text-app-text-secondary hover:text-emerald-600 hover:bg-emerald-50 rounded-lg border border-transparent hover:border-emerald-200 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setHardDeleteDialog({ open: true, userId: u.id })}
+                title="Borrar definitivamente"
+                className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </>
+          ) : (
+            canModifyUser(u) && (
+              <button
+                onClick={() => deleteUser(u.id)}
+                title="Dar de baja"
+                className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+              >
+                <UserX className="h-4 w-4" />
+              </button>
+            )
+          )}
+        </div>
+      </td>
+    </tr>
+  );
 
   return (
     <div className="space-y-5">
-      
+
       {isReadOnlyOperator && (
         <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
           <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0" />
@@ -132,58 +217,75 @@ export const UsersView: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por nombre, @username o correo..."
+            placeholder={showDeleted ? "Buscar en usuarios dados de baja..." : "Buscar por nombre, @username o correo..."}
             className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 xl:hidden">
-          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
-            <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
-            >
-              <option value="ALL">Roles</option>
-              <option value="ROOT">ROOT</option>
-              <option value="ADMIN">ADMIN</option>
-              <option value="MANAGER">MANAGER</option>
-              <option value="USER">USER</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
-            >
-              <option value="ALL">Estados</option>
-              <option value="ACTIVE">Activos</option>
-              <option value="INACTIVE">Inactivos</option>
-            </select>
-          </div>
-
+          {!showDeleted && (
+            <div className="flex items-center gap-1.5 bg-app-bg border border-app-border rounded-xl px-2.5 py-1.5">
+              <Filter className="h-3.5 w-3.5 text-app-text-secondary" />
+              <select
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
+              >
+                <option value="ALL">Roles</option>
+                <option value="ROOT">ROOT</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="MANAGER">MANAGER</option>
+                <option value="USER">USER</option>
+              </select>
+            </div>
+          )}
           <button
-            onClick={handleOpenCreateModal}
-            disabled={isReadOnlyOperator}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
+            onClick={() => { setShowDeleted(!showDeleted); setCurrentPage(1); }}
+            className={`flex items-center gap-1.5 px-3 py-2 border font-semibold text-xs rounded-xl transition-colors ${showDeleted ? 'bg-rose-50 text-rose-700 border-rose-200' : 'text-rose-700 border-rose-200 bg-rose-50 hover:bg-rose-100'}`}
           >
-            <UserPlus className="h-4 w-4" />
-            <span>Crear</span>
+            {showDeleted ? <ArrowLeft className="h-4 w-4" /> : <UserX className="h-4 w-4" />}
+            <span>{showDeleted ? 'Volver' : `Baja (${deletedUsers.length})`}</span>
           </button>
+          {!showDeleted && (
+            <button
+              onClick={handleOpenCreateModal}
+              disabled={isReadOnlyOperator}
+              className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
+            >
+              <UserPlus className="h-4 w-4" />
+              <span>Crear</span>
+            </button>
+          )}
         </div>
 
         <div className="hidden xl:flex items-center gap-2.5">
-          <button
-            onClick={handleOpenCreateModal}
-            disabled={isReadOnlyOperator}
-            className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
-          >
-            <UserPlus className="h-4 w-4" />
-            <span>Crear Usuario</span>
-          </button>
+          {showDeleted ? (
+            <button
+              onClick={() => { setShowDeleted(false); setCurrentPage(1); }}
+              className="flex items-center gap-1.5 px-4 py-2 text-app-text border border-app-border bg-white hover:bg-app-bg font-semibold text-xs rounded-xl shadow-xs transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Volver a usuarios activos</span>
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => { setShowDeleted(true); setCurrentPage(1); }}
+                className="flex items-center gap-1.5 px-4 py-2 text-rose-700 border border-rose-200 bg-rose-50 hover:bg-rose-100 font-semibold text-xs rounded-xl shadow-xs transition-colors"
+              >
+                <UserX className="h-4 w-4" />
+                <span>Ver dados de baja</span>
+              </button>
+              <button
+                onClick={handleOpenCreateModal}
+                disabled={isReadOnlyOperator}
+                className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnlyOperator ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>Crear Usuario</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -196,97 +298,20 @@ export const UsersView: React.FC = () => {
               <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                 <th className="py-3 px-6">Identidad / Cuenta</th>
                 <th className="py-3 px-4 w-28 text-center">Rol</th>
-                <th className="py-3 px-4 w-20 text-center">Estado</th>
                 <th className="py-3 px-4 w-24 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-app-text text-sm">
               {paginatedUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-12 text-center text-app-text-secondary font-medium">
-                    No se encontraron usuarios que coincidan con los criterios de búsqueda o filtros seleccionados.
+                  <td colSpan={3} className="py-12 text-center text-app-text-secondary font-medium">
+                    {showDeleted
+                      ? 'No hay usuarios dados de baja.'
+                      : 'No se encontraron usuarios que coincidan con los criterios de búsqueda o filtros seleccionados.'}
                   </td>
                 </tr>
               ) : (
-                paginatedUsers.map((u) => (
-                  <tr key={u.id} className="hover:bg-app-bg/70 transition-colors">
-                    <td className="py-3.5 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold border border-gray-200">
-                          {u.full_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
-                        </div>
-                        <div>
-                          <div className="font-bold text-app-text-secondary leading-tight">{u.full_name}</div>
-                          <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-                            <span className="font-mono text-primary-600 font-semibold">@{u.username}</span>
-                            <span>•</span>
-                            <Mail className="h-3 w-3 text-app-text-secondary inline" />
-                            <span className="truncate max-w-[140px]">{u.email}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div className="flex justify-center">
-                        <span className={`inline-flex px-2 py-0.5 text-[10px] font-extrabold rounded-md border ${getRoleBadgeStyle(u.role)}`}>
-                          {u.role}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div className="flex justify-center">
-                        {u.role === 'ROOT' && loggedInUser?.role !== 'ROOT' ? (
-                          <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full ${
-                            u.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-800' : 'bg-app-bg text-app-text-secondary'
-                          }`}>
-                            {u.status}
-                          </span>
-                        ) : (
-                          <button
-                            onClick={() => handleToggleStatus(u)}
-                            disabled={loggedInUser?.role === 'USER'}
-                            title={u.status === 'ACTIVE' ? 'Desactivar' : 'Activar'}
-                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-all cursor-pointer ${
-                              u.status === 'ACTIVE' 
-                                ? 'bg-emerald-500 hover:bg-emerald-600 shadow-sm shadow-emerald-500/30' 
-                                : 'bg-app-border hover:bg-app-text-secondary'
-                            } ${loggedInUser?.role === 'USER' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          >
-                            <span className={`inline-block h-3 w-3 transform rounded-full bg-white shadow-sm transition-transform ${
-                              u.status === 'ACTIVE' ? 'translate-x-4' : 'translate-x-1'
-                            }`} />
-                          </button>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div className="flex justify-center gap-1.5">
-                        {u.id === loggedInUser?.id && (
-                          <button
-                            onClick={() => handleOpenEditModal(u)}
-                            title="Editar mis datos"
-                            className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
-                          >
-                            <Edit3 className="h-4 w-4" />
-                          </button>
-                        )}
-                        {(u.role === 'ROOT' && loggedInUser?.role === 'ROOT' && u.id !== loggedInUser?.id) || (u.role !== 'ROOT' && u.id !== loggedInUser?.id) ? (
-                          <button
-                            onClick={() => { setDeletingUserId(u.id); setDeleteDialogOpen(true); }}
-                            title="Eliminar usuario del sistema"
-                            className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        ) : null}
-                      </div>
-                    </td>
-
-                  </tr>
-                ))
+                paginatedUsers.map((u) => renderUserRow(u, showDeleted))
               )}
             </tbody>
           </table>
@@ -309,33 +334,33 @@ export const UsersView: React.FC = () => {
 
           <div className="flex items-center gap-1">
             <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-            <button 
-              onClick={() => setCurrentPage(1)} 
-              disabled={currentPage === 1 || totalPages === 0} 
+            <button
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1 || totalPages === 0}
               className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Primera página"
             >
               <ChevronsLeft className="h-4 w-4" />
             </button>
-            <button 
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} 
-              disabled={currentPage === 1 || totalPages === 0} 
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1 || totalPages === 0}
               className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Página anterior"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <button 
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} 
-              disabled={currentPage === totalPages || totalPages === 0} 
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
               className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Página siguiente"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
-            <button 
-              onClick={() => setCurrentPage(totalPages)} 
-              disabled={currentPage === totalPages || totalPages === 0} 
+            <button
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages || totalPages === 0}
               className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Última página"
             >
@@ -364,22 +389,15 @@ export const UsersView: React.FC = () => {
           </div>
           )})()}
 
-          {(() => { const o = openSections.estado; return (
-          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
-            <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
-              Estado
-              {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
+          {!showDeleted && (
+            <button
+              onClick={() => { setShowDeleted(true); setCurrentPage(1); }}
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-rose-700 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-200 hover:border-rose-300 transition-colors"
+            >
+              <UserX className="h-4 w-4" />
+              Ver dados de baja ({deletedUsers.length})
             </button>
-            {o && (
-            <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
-              {(['ACTIVE', 'INACTIVE'] as const).map((status) => (
-                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
-              ))}
-            </div>
-            )}
-          </div>
-          )})()}
+          )}
         </div>
       </div>
 
@@ -391,14 +409,16 @@ export const UsersView: React.FC = () => {
       />
 
       <ConfirmDialog
-        isOpen={deleteDialogOpen}
-        title="Eliminar Usuario"
-        message="¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer."
-        onConfirm={handleConfirmDelete}
-        onCancel={() => { setDeleteDialogOpen(false); setDeletingUserId(null); }}
+        isOpen={hardDeleteDialog.open}
+        title="Borrar definitivamente"
+        message="¿Estás seguro de borrar este usuario definitivamente? Esta acción no se puede deshacer."
+        onConfirm={() => {
+          if (hardDeleteDialog.userId) hardDeleteUser(hardDeleteDialog.userId);
+          setHardDeleteDialog({ open: false, userId: null });
+        }}
+        onCancel={() => setHardDeleteDialog({ open: false, userId: null })}
       />
 
     </div>
   );
 };
-

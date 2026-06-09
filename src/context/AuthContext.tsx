@@ -118,6 +118,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
+    if (appUser.status === 'DELETED') {
+      setState({
+        isAuthenticated: false,
+        user: null,
+        token: null,
+        loading: false,
+        error: 'Cuenta dada de baja. Contacta al administrador.',
+      });
+      triggerToast('Cuenta dada de baja. No puedes iniciar sesión.', 'error');
+      return false;
+    }
+
     const token = signMockToken({
       sub: appUser.id,
       username: appUser.username,

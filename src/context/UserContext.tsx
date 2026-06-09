@@ -9,6 +9,8 @@ interface UserContextProps {
   createUser: (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => { success: boolean; message: string };
   updateUser: (id: string, userData: Partial<User>) => { success: boolean; message: string };
   deleteUser: (id: string) => { success: boolean; message: string };
+  hardDeleteUser: (id: string) => { success: boolean; message: string };
+  restoreUser: (id: string) => { success: boolean; message: string };
   resetMockData: () => void;
 }
 
@@ -132,19 +134,53 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     if (user && user.username === targetUser.username) {
-      const msg = 'No puedes eliminar tu propio usuario activo actual.';
+      const msg = 'No puedes dar de baja tu propio usuario activo actual.';
       triggerToast(msg, 'error');
       return { success: false, message: msg };
     }
 
+    const updated = users.map(u => {
+      if (u.id === id) {
+        return { ...u, status: 'DELETED' as const, updated_at: new Date().toISOString() };
+      }
+      return u;
+    });
+    saveUsersToStorage(updated);
+    triggerToast(`Usuario ${targetUser.full_name} dado de baja.`, 'info');
+    return { success: true, message: 'Usuario dado de baja.' };
+  };
+
+  const hardDeleteUser = (id: string) => {
+    const targetUser = users.find(u => u.id === id);
+    if (!targetUser) {
+      return { success: false, message: 'Usuario no encontrado' };
+    }
+
     const updated = users.filter(u => u.id !== id);
     saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.full_name} eliminado del sistema.`, 'success');
+    triggerToast(`Usuario ${targetUser.full_name} eliminado definitivamente.`, 'success');
     return { success: true, message: 'Usuario eliminado.' };
   };
 
+  const restoreUser = (id: string) => {
+    const targetUser = users.find(u => u.id === id);
+    if (!targetUser) {
+      return { success: false, message: 'Usuario no encontrado' };
+    }
+
+    const updated = users.map(u => {
+      if (u.id === id) {
+        return { ...u, status: 'ACTIVE' as const, updated_at: new Date().toISOString() };
+      }
+      return u;
+    });
+    saveUsersToStorage(updated);
+    triggerToast(`Usuario ${targetUser.full_name} recuperado.`, 'success');
+    return { success: true, message: 'Usuario recuperado.' };
+  };
+
   return (
-    <UserContext.Provider value={{ users, createUser, updateUser, deleteUser, resetMockData }}>
+    <UserContext.Provider value={{ users, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser, resetMockData }}>
       {children}
     </UserContext.Provider>
   );

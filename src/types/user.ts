@@ -8,7 +8,7 @@ export interface User {
   full_name: string;
   password: string;
   role: UserRole;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: 'ACTIVE' | 'INACTIVE' | 'DELETED';
   language: 'EN' | 'ES';
   created_at: string;
   updated_at: string;
