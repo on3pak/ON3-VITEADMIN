@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { User, UserRole } from '../../types';
 import { useAuth } from '../../context/AuthContext';
-import { X, ShieldAlert, UserPlus, Save } from 'lucide-react';
+import { useUsers } from '../../context/UserContext';
+import { useEmployees } from '../../context/EmployeeContext';
+import { X, ShieldAlert, UserPlus, Save, Search, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -12,13 +14,21 @@ interface UserFormModalProps {
 
 export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, onSubmit, editingUser }) => {
   const { user: currentLoggedUser } = useAuth();
-  
+  const { users } = useUsers();
+  const { employees, getEmployeeById } = useEmployees();
+
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<UserRole>('USER');
   const [status, setStatus] = useState<'ACTIVE' | 'INACTIVE'>('ACTIVE');
+  const [employeeId, setEmployeeId] = useState('');
+  const [employeeLookupStatus, setEmployeeLookupStatus] = useState<'idle' | 'found' | 'taken' | 'not_found'>('idle');
   const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
+
+  const employeeNameMap = new Map(employees.map((e) => [e.id, `${e.name} ${e.last_name1} ${e.last_name2}`.replace(/\s+$/, '')]));
+  const usersEmployeeSet = new Set(users.map((u) => u.employee_id));
 
   useEffect(() => {
     if (editingUser) {
@@ -27,24 +37,73 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setEmail(editingUser.email);
       setRole(editingUser.role);
       setStatus(editingUser.status);
+      setEmployeeId(editingUser.employee_id || '');
     } else {
       setFullName('');
       setUsername('');
       setEmail('');
       setRole('USER');
       setStatus('ACTIVE');
+      setEmployeeId('');
     }
     setFormError(null);
+    setFormSuccess(null);
+    setEmployeeLookupStatus('idle');
   }, [editingUser, isOpen]);
+
+  const handleEmployeeSearch = () => {
+    if (!employeeId.trim() || editingUser) { setEmployeeLookupStatus('idle'); return; }
+    const eid = employeeId.trim();
+
+    setFormError(null);
+    setFormSuccess(null);
+
+    if (usersEmployeeSet.has(eid)) {
+      setEmployeeLookupStatus('taken');
+      setFormError(`El empleado con ID "${eid}" ya tiene un usuario asignado.`);
+      setUsername(''); setFullName(''); setEmail('');
+      return;
+    }
+
+    const emp = getEmployeeById(eid);
+    if (emp) {
+      setEmployeeLookupStatus('found');
+      setFormError(null);
+      setFormSuccess(`Empleado ${emp.name} ${emp.last_name1} encontrado. Datos autocompletados.`);
+      setFullName(`${emp.name} ${emp.last_name1} ${emp.last_name2}`.replace(/\s+$/, ''));
+      const initial = emp.name.charAt(0);
+      const rawUsername = `${initial}${emp.last_name1}`;
+      setUsername(rawUsername.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase());
+      setEmail(`${eid}@on3.com`);
+    } else {
+      setEmployeeLookupStatus('not_found');
+      setFormError(`No se encontró un empleado con ID "${eid}".`);
+      setUsername(''); setFullName(''); setEmail('');
+    }
+  };
+
+  const handleEmployeeIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmployeeId(e.target.value);
+    setEmployeeLookupStatus('idle');
+    setFormError(null);
+    setFormSuccess(null);
+    setUsername(''); setFullName(''); setEmail('');
+  };
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+    setFormSuccess(null);
 
-    if (!fullName.trim() || !username.trim() || !email.trim()) {
-      setFormError('Todos los campos con (*) son de carácter obligatorio.');
+    if (employeeLookupStatus === 'taken') {
+      setFormError('Este empleado ya tiene un usuario asignado.');
+      return;
+    }
+
+    if (employeeLookupStatus !== 'found') {
+      setFormError('Debes buscar un empleado válido antes de crear el usuario.');
       return;
     }
 
@@ -71,7 +130,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       role,
       status,
       language: 'ES',
-      employee_id: null,
+      employee_id: employeeId.trim() || null,
     });
 
     if (success) {
@@ -130,12 +189,68 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
               <span>{formError}</span>
             </div>
           )}
+          {formSuccess && (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2 font-medium">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+              <span>{formSuccess}</span>
+            </div>
+          )}
 
           {/* Form fields layout */}
           <div className="grid grid-cols-2 gap-4">
             
-            {/* Full Name */}
-            <div className="col-span-2">
+            {/* Employee ID (first field, full width) */}
+            {!editingUser && (
+              <div className="col-span-2">
+                <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
+                  ID de Empleado
+                </label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
+                      <Search className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      value={employeeId}
+                      onChange={handleEmployeeIdChange}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleEmployeeSearch(); } }}
+                      placeholder="Ej. 000001"
+                      className="w-full pl-9 pr-10 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                    />
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      {employeeLookupStatus === 'found' && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+                      {employeeLookupStatus === 'taken' && <AlertCircle className="h-4 w-4 text-rose-500" />}
+                      {employeeLookupStatus === 'not_found' && <AlertCircle className="h-4 w-4 text-amber-500" />}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleEmployeeSearch}
+                    disabled={!employeeId.trim()}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-app-text-secondary/40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors shrink-0"
+                  >
+                    <Search className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Username 50% + Full Name 50% (both disabled) */}
+            <div>
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
+                Nombre de Usuario *
+              </label>
+              <input
+                type="text"
+                value={username ? `@${username}` : ''}
+                onChange={(e) => setUsername(e.target.value.replace(/^@/, ''))}
+                disabled
+                placeholder="@usuario"
+                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-bg opacity-70 cursor-not-allowed text-app-text"
+              />
+            </div>
+            <div>
               <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Nombre Completo *
               </label>
@@ -143,30 +258,14 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                disabled
                 placeholder="Ej. Juan Pérez González"
-                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-bg opacity-70 cursor-not-allowed text-app-text"
               />
             </div>
 
-            {/* Username */}
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
-                Nombre de Usuario *
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                disabled={!!editingUser}
-                placeholder="ej. jperez"
-                className={`w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden text-app-text ${
-                  editingUser ? 'bg-app-bg cursor-not-allowed opacity-70' : 'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all'
-                }`}
-              />
-            </div>
-
-            {/* Email */}
-            <div>
+            {/* Email (disabled) */}
+            <div className="col-span-2">
               <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Correo Electrónico *
               </label>
@@ -174,13 +273,14 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled
                 placeholder="correo@on3.com"
-                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-bg opacity-70 cursor-not-allowed text-app-text"
               />
             </div>
 
             {/* Role Assignment Dropdown */}
-            <div>
+            <div className="col-span-2">
               <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
                 Rol de Privilegio (RBAC)
               </label>
@@ -193,21 +293,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 <option value="MANAGER" disabled={isRoleSelectionDisabled('MANAGER')}>MANAGER (Gestión Media)</option>
                 <option value="ADMIN" disabled={isRoleSelectionDisabled('ADMIN')}>ADMIN (Alto Control)</option>
                 <option value="ROOT" disabled={isRoleSelectionDisabled('ROOT')}>ROOT (Acceso Total)</option>
-              </select>
-            </div>
-
-            {/* Status Dropdown */}
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
-                Estado Cuenta
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE')}
-                className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
-              >
-                <option value="ACTIVE">Activo</option>
-                <option value="INACTIVE">Inactivo</option>
               </select>
             </div>
 
