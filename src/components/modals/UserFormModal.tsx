@@ -72,7 +72,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setFormSuccess(`Empleado ${emp.name} ${emp.last_name1} encontrado. Datos autocompletados.`);
       setFullName(`${emp.name} ${emp.last_name1} ${emp.last_name2}`.replace(/\s+$/, ''));
       const initial = emp.name.charAt(0);
-      const rawUsername = `${initial}${emp.last_name1}`;
+      const rawUsername = `${initial}.${emp.last_name1}`;
       setUsername(rawUsername.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase());
       setEmail(`${eid}@on3.com`);
     } else {
