@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { User, UserRole } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useUsers } from '../../context/UserContext';
 import { useEmployees } from '../../context/EmployeeContext';
-import { X, ShieldAlert, UserPlus, Save, Search, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, ShieldAlert, UserPlus, Save, Search, CheckCircle2, AlertCircle, Eye, EyeOff, Key } from 'lucide-react';
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -26,6 +26,25 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
   const [employeeLookupStatus, setEmployeeLookupStatus] = useState<'idle' | 'found' | 'taken' | 'not_found'>('idle');
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const generateSecurePassword = useCallback(() => {
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const digits = '0123456789';
+    const symbols = '!@#$%&*';
+    const all = upper + lower + digits + symbols;
+    let pwd = '';
+    pwd += upper[Math.floor(Math.random() * upper.length)];
+    pwd += lower[Math.floor(Math.random() * lower.length)];
+    pwd += digits[Math.floor(Math.random() * digits.length)];
+    pwd += symbols[Math.floor(Math.random() * symbols.length)];
+    for (let i = 0; i < 4; i++) {
+      pwd += all[Math.floor(Math.random() * all.length)];
+    }
+    return pwd.split('').sort(() => Math.random() - 0.5).join('');
+  }, []);
 
   const employeeNameMap = new Map(employees.map((e) => [e.id, `${e.name} ${e.last_name1} ${e.last_name2}`.replace(/\s+$/, '')]));
   const usersEmployeeSet = new Set(users.map((u) => u.employee_id));
@@ -38,6 +57,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setRole(editingUser.role);
       setStatus(editingUser.status);
       setEmployeeId(editingUser.employee_id || '');
+      setPassword(editingUser.password || '');
     } else {
       setFullName('');
       setUsername('');
@@ -49,6 +69,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
     setFormError(null);
     setFormSuccess(null);
     setEmployeeLookupStatus('idle');
+    setPassword('');
   }, [editingUser, isOpen]);
 
   const handleEmployeeSearch = () => {
@@ -73,8 +94,10 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setFullName(`${emp.name} ${emp.last_name1} ${emp.last_name2}`.replace(/\s+$/, ''));
       const initial = emp.name.charAt(0);
       const rawUsername = `${initial}.${emp.last_name1}`;
-      setUsername(rawUsername.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase());
-      setEmail(`${eid}@on3.com`);
+      const usernameValue = rawUsername.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+      const idNumber = String(parseInt(eid, 10) || '');
+      setUsername(`${usernameValue}${idNumber}`);
+      setEmail(`${usernameValue}${idNumber}@on3.com`);
     } else {
       setEmployeeLookupStatus('not_found');
       setFormError(`No se encontró un empleado con ID "${eid}".`);
@@ -96,6 +119,21 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
     e.preventDefault();
     setFormError(null);
     setFormSuccess(null);
+
+    if (editingUser) {
+      const success = onSubmit({
+        full_name: fullName.trim(),
+        username: username.trim(),
+        email: email.trim(),
+        password: password.trim(),
+        role,
+        status,
+        language: 'ES',
+        employee_id: employeeId.trim() || null,
+      });
+      if (success) onClose();
+      return;
+    }
 
     if (employeeLookupStatus === 'taken') {
       setFormError('Este empleado ya tiene un usuario asignado.');
@@ -123,10 +161,21 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       return;
     }
 
+    if (!password.trim()) {
+      setFormError('La contraseña es obligatoria.');
+      return;
+    }
+
+    if (password.trim().length < 8) {
+      setFormError('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
     const success = onSubmit({
       full_name: fullName.trim(),
       username: username.trim(),
       email: email.trim(),
+      password: password.trim(),
       role,
       status,
       language: 'ES',
@@ -279,6 +328,40 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
               />
             </div>
 
+            {/* Password */}
+            <div className="col-span-2">
+              <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
+                Contraseña *
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Mín. 8 caracteres"
+                    className="w-full px-3 py-2 pr-10 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-app-text-secondary hover:text-app-text transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPassword(generateSecurePassword())}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-app-text text-sm font-semibold rounded-xl transition-colors shrink-0 border border-app-border"
+                  title="Generar contraseña segura"
+                >
+                  <Key className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
             {/* Role Assignment Dropdown */}
             <div className="col-span-2">
               <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">
@@ -296,12 +379,6 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
               </select>
             </div>
 
-          </div>
-
-          {/* Role hierarchy disclaimer */}
-          <div className="p-3 rounded-xl bg-app-bg border border-app-border text-[11px] text-app-text-secondary space-y-1">
-            <span className="font-bold text-app-text block">ℹ️ Restricciones jerárquicas en ejecución:</span>
-            <p>Los mánagers solo crean/editan mánagers y usuarios comunes. Los administradores controlan todos excepto cuentas del ROOT supremo.</p>
           </div>
 
           {/* Action buttons footer */}
