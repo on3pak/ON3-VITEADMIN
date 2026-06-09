@@ -268,6 +268,10 @@ for (const o of OTHER) {
   { id: '000002', name: 'Alejandro', last_name1: 'Mendoza', last_name2: 'García', email: 'a.mendoza2@on3.com', phone: '612300002' },
   { id: '000003', name: 'Beatriz', last_name1: 'Salazar', last_name2: 'Ruiz', email: 'b.salazar3@on3.com', phone: '612300003' },
   { id: '000004', name: 'Carlos', last_name1: 'Fuentes', last_name2: 'Martínez', email: 'c.fuentes4@on3.com', phone: '612300004' },
+  { id: '000005', name: 'Diana', last_name1: 'Reyes', last_name2: 'Morales', email: 'd.reyes5@on3.com', phone: '612300005' },
+  { id: '000006', name: 'Eduardo', last_name1: 'Gómez', last_name2: 'Fernández', email: 'e.gomez6@on3.com', phone: '612300006' },
+  { id: '000007', name: 'Gabriela', last_name1: 'Vaca', last_name2: 'Rodríguez', email: 'g.vaca7@on3.com', phone: '612300007' },
+  { id: '000008', name: 'Hugo', last_name1: 'Pérez', last_name2: 'López', email: 'h.perez8@on3.com', phone: '612300008' },
 ]).forEach((o) => {
   const emp = employees.find((e) => e.id === o.id);
   if (emp) Object.assign(emp, o);
