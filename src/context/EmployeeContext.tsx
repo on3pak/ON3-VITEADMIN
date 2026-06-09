@@ -7,7 +7,8 @@ interface EmployeeContextType {
   employees: Employee[];
   getEmployeeOverviews: () => EmployeeOverview[];
   getEmployeeById: (id: string) => Employee | undefined;
-  createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
+  getNextEmployeeId: () => string;
+  createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => { success: boolean };
   updateEmployee: (id: string, data: Partial<Employee>) => { success: boolean };
   deleteEmployee: (id: string) => void;
   vacationRequests: VacationRequest[];
@@ -42,11 +43,22 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     return employees.find((emp) => emp.id === id);
   }, [employees]);
 
-  const createEmployee = useCallback((data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
+  const getNextEmployeeId = useCallback(() => {
+    const max = employees.reduce((maxId, emp) => {
+      const num = parseInt(emp.id, 10);
+      return isNaN(num) ? maxId : Math.max(maxId, num);
+    }, 0);
+    return String(max + 1).padStart(6, '0');
+  }, [employees]);
+
+  const createEmployee = useCallback((
+    data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>,
+    employeeId?: string
+  ) => {
     const now = new Date().toISOString();
     const newEmployee: Employee = {
       ...data,
-      id: generateId('emp'),
+      id: employeeId || generateId('emp'),
       created_at: now,
       updated_at: now,
     };
@@ -92,7 +104,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
     <EmployeeContext.Provider
       value={{
-        employees, getEmployeeOverviews, getEmployeeById,
+        employees, getEmployeeOverviews, getEmployeeById, getNextEmployeeId,
         createEmployee, updateEmployee, deleteEmployee,
         vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
       }}

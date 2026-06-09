@@ -126,11 +126,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const handleDelete = (id: string) => { setDeletingEmployeeId(id); setDeleteDialogOpen(true); };
   const handleConfirmDelete = () => { if (deletingEmployeeId) { deleteEmployee(deletingEmployeeId); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
 
-  const handleModalSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleModalSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => {
     if (modalMode === 'edit' && selectedEmployeeId) {
       updateEmployee(selectedEmployeeId, data);
     } else {
-      createEmployee(data);
+      createEmployee(data, employeeId);
     }
     setModalOpen(false);
     return true;

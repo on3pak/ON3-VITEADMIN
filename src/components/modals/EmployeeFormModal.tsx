@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Employee, VacationMonth, ClothingSizes } from '../../types';
-import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
+import { Employee, VacationMonth, ClothingSizes, ClothingSize, ShoeSize } from '../../types';
+import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
-import { X, ShieldAlert, UserPlus, Save, CreditCard, Calendar, Clock, Phone, Mail, Award, Shirt, Plus, Minus } from 'lucide-react';
+import { X, ShieldAlert, UserPlus, Save, CreditCard, Mail, Award, Shirt, Plus, Minus, Search, CheckCircle2, AlertCircle, FileText } from 'lucide-react';
+import { useEmployees } from '../../context/EmployeeContext';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => boolean;
+  onSubmit: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => boolean;
   editingEmployee?: Employee;
   profileMode?: boolean;
 }
 
+const CLOTHING_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const SHOE_SIZES = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
+
 export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, onClose, onSubmit, editingEmployee, profileMode = false }) => {
+  const { employees, getNextEmployeeId } = useEmployees();
   const [name, setName] = useState('');
   const [last_name1, setLastName1] = useState('');
   const [last_name2, setLastName2] = useState('');
-  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [personal_email, setPersonal_email] = useState('');
   const [phone_fixed, setPhone_fixed] = useState('');
   const [category_id, setCategory_id] = useState('ec_000001');
-  const [status_id, setStatus_id] = useState('es_1');
   const [work_center_id, setWork_center_id] = useState('wc_000001');
   const [work_day_id, setWork_day_id] = useState('wd_1');
   const [start_time, setStart_time] = useState('');
@@ -29,38 +32,34 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [vacation_month, setVacation_month] = useState<'' | VacationMonth>('');
   const [vacation_days, setVacation_days] = useState(22);
   const [own_days, setOwn_days] = useState(0);
-  const [accumulated_days, setAccumulated_days] = useState(0);
-  const [excess_days, setExcess_days] = useState(0);
   const [irpf, setIrpf] = useState(0);
   const [iban, setIban] = useState('');
   const [lockers, setLockers] = useState<string[]>(['']);
-  const [clothingSizes, setClothingSizes] = useState<ClothingSizes>({
-    summer_shirt: null, winter_shirt: null,
-    summer_pants: null, winter_pants: null,
-    summer_jacket: null, winter_jacket: null,
-    winter_coat: null,
-    cap: 'ESTANDAR',
-    summer_shoe: null, winter_shoe: null,
-  });
+  const [shirtSize, setShirtSize] = useState('');
+  const [pantsSize, setPantsSize] = useState('');
+  const [jacketSize, setJacketSize] = useState('');
+  const [winter_coat, setWinter_coat] = useState('');
+  const [shoeSize, setShoeSize] = useState('');
   const [medical_check, setMedical_check] = useState(true);
   const [works_holidays, setWorks_holidays] = useState(true);
-  const [active, setActive] = useState(true);
   const [contract_type, setContract_type] = useState('');
   const [contract_start_date, setContract_start_date] = useState('');
   const [contract_end_date, setContract_end_date] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
+
+  const [employeeId, setEmployeeId] = useState('');
+  const [idStatus, setIdStatus] = useState<'idle' | 'valid' | 'taken'>('idle');
 
   useEffect(() => {
     if (editingEmployee) {
       setName(editingEmployee.name);
       setLastName1(editingEmployee.last_name1);
       setLastName2(editingEmployee.last_name2 || '');
-      setEmail(editingEmployee.email);
       setPhone(editingEmployee.phone);
       setPersonal_email(editingEmployee.personal_email || '');
       setPhone_fixed(editingEmployee.phone_fixed || '');
       setCategory_id(editingEmployee.category_id);
-      setStatus_id(editingEmployee.status_id);
       setWork_center_id(editingEmployee.work_center_id);
       setWork_day_id(editingEmployee.work_day_id);
       setStart_time(editingEmployee.start_time || '');
@@ -68,22 +67,19 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setVacation_month(editingEmployee.vacation_month || '');
       setVacation_days(editingEmployee.vacation_days);
       setOwn_days(editingEmployee.own_days);
-      setAccumulated_days(editingEmployee.accumulated_days);
-      setExcess_days(editingEmployee.excess_days);
       setIrpf(editingEmployee.irpf);
       setIban(editingEmployee.iban || '');
       setLockers(editingEmployee.lockers?.length ? editingEmployee.lockers : ['']);
-      setClothingSizes(editingEmployee.clothing_sizes || {
-        summer_shirt: null, winter_shirt: null,
-        summer_pants: null, winter_pants: null,
-        summer_jacket: null, winter_jacket: null,
-        winter_coat: null,
-        cap: 'ESTANDAR',
-        summer_shoe: null, winter_shoe: null,
-      });
+      setEmployeeId(editingEmployee.id);
+      setIdStatus('valid');
+      const cs = editingEmployee.clothing_sizes;
+      setShirtSize(cs?.summer_shirt || '');
+      setPantsSize(cs?.summer_pants || '');
+      setJacketSize(cs?.summer_jacket || '');
+      setWinter_coat(cs?.winter_coat || '');
+      setShoeSize(cs?.summer_shoe ? String(cs.summer_shoe) : '');
       setMedical_check(editingEmployee.medical_check);
       setWorks_holidays(editingEmployee.works_holidays);
-      setActive(editingEmployee.active);
       setContract_type(editingEmployee.contract_type || '');
       setContract_start_date(editingEmployee.contract_start_date || '');
       setContract_end_date(editingEmployee.contract_end_date || '');
@@ -91,12 +87,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setName('');
       setLastName1('');
       setLastName2('');
-      setEmail('');
       setPhone('');
       setPersonal_email('');
       setPhone_fixed('');
       setCategory_id('ec_000001');
-      setStatus_id('es_1');
       setWork_center_id('wc_000001');
       setWork_day_id('wd_1');
       setStart_time('');
@@ -104,51 +98,86 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setVacation_month('');
       setVacation_days(22);
       setOwn_days(0);
-      setAccumulated_days(0);
-      setExcess_days(0);
       setIrpf(0);
       setIban('');
       setLockers(['']);
-      setClothingSizes({
-        summer_shirt: null, winter_shirt: null,
-        summer_pants: null, winter_pants: null,
-        summer_jacket: null, winter_jacket: null,
-        winter_coat: null,
-        cap: 'ESTANDAR',
-        summer_shoe: null, winter_shoe: null,
-      });
+      setShirtSize('');
+      setPantsSize('');
+      setJacketSize('');
+      setWinter_coat('');
+      setShoeSize('');
       setMedical_check(true);
       setWorks_holidays(true);
-      setActive(true);
       setContract_type('');
-      setContract_start_date('');
+      setContract_start_date(new Date().toISOString().split('T')[0]);
       setContract_end_date('');
+      setEmployeeId('');
+      setIdStatus('idle');
     }
     setFormError(null);
+    setFormSuccess(null);
   }, [editingEmployee, isOpen]);
 
   if (!isOpen) return null;
+
+  const handleIdCheck = (value: string) => {
+    setEmployeeId(value);
+    if (!value.trim()) { setIdStatus('idle'); return; }
+    const exists = employees.find((e) => e.id === value.trim());
+    if (exists) {
+      setIdStatus('taken');
+      setFormError(`El ID "${value}" ya está en uso. Sugerencia: ${getNextEmployeeId()}`);
+    } else {
+      setIdStatus('valid');
+      setFormError(null);
+    }
+  };
+
+  const handleSuggestId = () => {
+    const next = getNextEmployeeId();
+    setEmployeeId(next);
+    setIdStatus('valid');
+    setFormError(null);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
-    if (!name.trim() || !last_name1.trim() || !email.trim()) {
-      setFormError('Los campos Nombre, Apellido y Email son obligatorios.');
+    if (!name.trim() || !last_name1.trim()) {
+      setFormError('Los campos Nombre y Primer Apellido son obligatorios.');
       return;
     }
+
+    if (!editingEmployee && !employeeId.trim()) {
+      setFormError('Debes asignar un ID de empleado.');
+      return;
+    }
+
+    const clothingSizesRecord: ClothingSizes = {
+      summer_shirt: (shirtSize || null) as ClothingSize,
+      winter_shirt: (shirtSize || null) as ClothingSize,
+      summer_pants: (pantsSize || null) as ClothingSize,
+      winter_pants: (pantsSize || null) as ClothingSize,
+      summer_jacket: (jacketSize || null) as ClothingSize,
+      winter_jacket: (jacketSize || null) as ClothingSize,
+      winter_coat: (winter_coat || null) as ClothingSize,
+      cap: 'ESTANDAR',
+      summer_shoe: shoeSize ? Number(shoeSize) as ShoeSize : null,
+      winter_shoe: shoeSize ? Number(shoeSize) as ShoeSize : null,
+    };
 
     const success = onSubmit({
       city_id: editingEmployee?.city_id ?? null,
       name: name.trim(),
       last_name1: last_name1.trim(),
       last_name2: last_name2.trim(),
-      email: email.trim(),
+      email: '',
       phone: phone.trim(),
       category_id,
-      status_id,
+      status_id: 'es_1',
       work_center_id,
-      active,
+      active: true,
       shift_id: editingEmployee?.shift_id ?? '',
       start_time,
       end_time,
@@ -156,21 +185,21 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       vacation_year: vacation_month ? new Date().getFullYear() : null,
       vacation_days,
       own_days,
-      accumulated_days,
-      excess_days,
+      accumulated_days: 0,
+      excess_days: 0,
       personal_email: personal_email.trim(),
       phone_fixed: phone_fixed.trim(),
       work_day_id,
       iban: iban.trim(),
       lockers: lockers.filter((l) => l.trim() !== ''),
-      clothing_sizes: clothingSizes,
+      clothing_sizes: clothingSizesRecord,
       medical_check,
       works_holidays,
       contract_type,
       contract_start_date,
       contract_end_date: contract_end_date || null,
       irpf,
-    });
+    }, editingEmployee ? undefined : employeeId.trim());
 
     if (success) {
       onClose();
@@ -204,38 +233,66 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               <span>{formError}</span>
             </div>
           )}
+          {formSuccess && (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2 font-medium">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+              <span>{formSuccess}</span>
+            </div>
+          )}
+
+          {!editingEmployee && (
+            <div className="flex items-end gap-2">
+              <div className="flex-1">
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">ID de Empleado</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={employeeId}
+                    onChange={(e) => handleIdCheck(e.target.value)}
+                    placeholder="000009"
+                    className={`w-full px-3 py-2 border rounded-xl text-sm ${idStatus === 'taken' ? 'border-rose-400 bg-rose-50' : idStatus === 'valid' ? 'border-emerald-400 bg-emerald-50' : 'border-app-border'}`}
+                  />
+                  {idStatus === 'valid' && <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />}
+                  {idStatus === 'taken' && <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-rose-500" />}
+                </div>
+              </div>
+              <button type="button" onClick={handleSuggestId} className="px-3 py-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl flex items-center justify-center" title="Sugerir ID">
+                <Search className="h-4 w-4" />
+              </button>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Mail className="h-3 w-3"/> Datos Personales</h4>
             </div>
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Nombre *</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 1 *</label>
-              <input type="text" value={last_name1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 2</label>
-              <input type="text" value={last_name2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Empresa *</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Móvil</label>
-              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Personal</label>
-              <input type="email" value={personal_email} onChange={(e) => setPersonal_email(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Fijo</label>
-              <input type="text" value={phone_fixed} onChange={(e) => setPhone_fixed(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+            <div className="col-span-2">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Nombre *</label>
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 1 *</label>
+                  <input type="text" value={last_name1} onChange={(e) => setLastName1(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Apellido 2</label>
+                  <input type="text" value={last_name2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Móvil</label>
+                  <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Fijo</label>
+                  <input type="text" value={phone_fixed} onChange={(e) => setPhone_fixed(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Personal</label>
+                  <input type="email" value={personal_email} onChange={(e) => setPersonal_email(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+              </div>
             </div>
 
             {!profileMode && (
@@ -243,190 +300,82 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               <div className="col-span-2">
                 <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
               </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
-                <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                  {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
-                <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                  {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
-                <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                  {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
-                <select value={work_day_id} onChange={(e) => setWork_day_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                  {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
-                </select>
-              </div>
-
               <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Clock className="h-3 w-3"/> Horario</h4>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Entrada</label>
-                <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Salida</label>
-                <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-
-              <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Calendar className="h-3 w-3"/> Vacaciones</h4>
-              </div>
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
-                <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                  <option value="">Sin asignar</option>
-                  <option value="JULY">Julio</option>
-                  <option value="AUGUST">Agosto</option>
-                  <option value="SEPTEMBER">Septiembre</option>
-                </select>
-                <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año: julio → agosto → septiembre → julio...</p>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Vacaciones</label>
-                <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Propios</label>
-                <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Acumulados</label>
-                <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Días Extras</label>
-                <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-
-              <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
-              </div>
-              <div className="col-span-2">
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
-                <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
-                <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
-                <div className="space-y-2">
-                  {lockers.map((l, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={l}
-                        onChange={(e) => {
-                          const next = [...lockers];
-                          next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
-                          setLockers(next);
-                        }}
-                        placeholder="001"
-                        maxLength={3}
-                        className="w-full px-3 py-2 border border-app-border rounded-xl text-sm"
-                      />
-                      {lockers.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => setLockers(lockers.filter((_, j) => j !== i))}
-                          className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                  {lockers.length < 2 && (
-                    <button
-                      type="button"
-                      onClick={() => setLockers([...lockers, ''])}
-                      className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500"
-                    >
-                      <Plus className="h-3 w-3" /> Añadir otra taquilla
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Shirt className="h-3 w-3"/> Uniformidad</h4>
-              </div>
-              {([
-                { label: 'Camisa Verano', field: 'summer_shirt' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Camisa Invierno', field: 'winter_shirt' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Pantalón Verano', field: 'summer_pants' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Pantalón Invierno', field: 'winter_pants' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Chaqueta Verano', field: 'summer_jacket' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Chaqueta Invierno', field: 'winter_jacket' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Chaquetón', field: 'winter_coat' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
-                { label: 'Gorra', field: 'cap' as const, values: ['ESTANDAR'], fixed: true },
-                { label: 'Zapatos/Botas Verano', field: 'summer_shoe' as const, values: [36,37,38,39,40,41,42,43,44,45,46] },
-                { label: 'Zapatos/Botas Invierno', field: 'winter_shoe' as const, values: [36,37,38,39,40,41,42,43,44,45,46] },
-              ]).map(({ label, field, values, fixed }) => (
-                <div key={field}>
-                  <label className="block text-xs font-bold text-app-text uppercase mb-1">{label}</label>
-                  {fixed ? (
-                    <input
-                      type="text"
-                      value="ESTÁNDAR"
-                      disabled
-                      className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-gray-50 text-app-text-secondary"
-                    />
-                  ) : (
-                    <select
-                      value={clothingSizes[field] ?? ''}
-                      onChange={(e) => setClothingSizes({ ...clothingSizes, [field]: e.target.value || null })}
-                      className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm"
-                    >
-                      <option value="">—</option>
-                      {values.map((v) => (
-                        <option key={String(v)} value={String(v)}>{v}</option>
-                      ))}
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
+                    <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                     </select>
-                  )}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
+                    <select value={work_day_id} onChange={(e) => setWork_day_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
+                    <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
+                    </select>
+                  </div>
                 </div>
-              ))}
-
-              <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Contrato</h4>
               </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
-                <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
-                  <option value="">Seleccionar...</option>
-                  {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
-                </select>
+              <div className="col-span-2 flex gap-4">
+                <div className="w-1/2">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Entrada</label>
+                  <input type="time" value={start_time} onChange={(e) => setStart_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div className="w-1/2">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Salida</label>
+                  <input type="time" value={end_time} onChange={(e) => setEnd_time(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
               </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
-                <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+              <div className="col-span-2 flex gap-4 items-end">
+                <div className="w-1/2">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
+                  <div className="space-y-2">
+                    {lockers.map((l, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={l}
+                          onChange={(e) => {
+                            const next = [...lockers];
+                            next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+                            setLockers(next);
+                          }}
+                          placeholder="001"
+                          maxLength={3}
+                          className="w-full px-3 py-2 border border-app-border rounded-xl text-sm"
+                        />
+                        {lockers.length > 1 && (
+                          <button type="button" onClick={() => setLockers(lockers.filter((_, j) => j !== i))} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg">
+                            <Minus className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    {lockers.length < 2 && (
+                      <button type="button" onClick={() => setLockers([...lockers, ''])} className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500">
+                        <Plus className="h-3 w-3" /> Añadir otra taquilla
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="w-1/2">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
+                  <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as VacationMonth | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <option value="">Sin asignar</option>
+                    <option value="JULIO">Julio</option>
+                    <option value="AGOSTO">Agosto</option>
+                    <option value="SEPTIEMBRE">Septiembre</option>
+                  </select>
+                  <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año</p>
+                </div>
               </div>
-              <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Fin</label>
-                <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
-              </div>
-
-              <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Extras</h4>
-              </div>
-              <div className="col-span-2 flex flex-wrap gap-4">
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="rounded" />
-                  <span>Activo</span>
-                </label>
+              <div className="col-span-2 flex flex-wrap gap-6">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={medical_check} onChange={(e) => setMedical_check(e.target.checked)} className="rounded" />
                   <span>Revisión Médica</span>
@@ -435,6 +384,86 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                   <input type="checkbox" checked={works_holidays} onChange={(e) => setWorks_holidays(e.target.checked)} className="rounded" />
                   <span>Trabaja Festivos</span>
                 </label>
+              </div>
+
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
+              </div>
+              <div className="col-span-2 flex gap-4">
+                <div className="w-[80%]">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
+                  <input type="text" value={iban} onChange={(e) => setIban(e.target.value)} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono" />
+                </div>
+                <div className="w-[20%]">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
+                  <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+              </div>
+
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><FileText className="h-3 w-3"/> Contrato</h4>
+              </div>
+              <div className="col-span-2">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
+                    <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      <option value="">Seleccionar...</option>
+                      {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
+                    <input type="date" value={contract_start_date} onChange={(e) => setContract_start_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Fin</label>
+                    <input type="date" value={contract_end_date} onChange={(e) => setContract_end_date(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Shirt className="h-3 w-3"/> Uniformidad</h4>
+              </div>
+              <div className="col-span-2">
+                <div className="grid grid-cols-5 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Camisa</label>
+                    <select value={shirtSize} onChange={(e) => setShirtSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      <option value="">—</option>
+                      {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Pantalón</label>
+                    <select value={pantsSize} onChange={(e) => setPantsSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      <option value="">—</option>
+                      {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Chaqueta</label>
+                    <select value={jacketSize} onChange={(e) => setJacketSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      <option value="">—</option>
+                      {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Chaquetón</label>
+                    <select value={winter_coat} onChange={(e) => setWinter_coat(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      <option value="">—</option>
+                      {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Zapatos</label>
+                    <select value={shoeSize} onChange={(e) => setShoeSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                      <option value="">—</option>
+                      {SHOE_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
+                    </select>
+                  </div>
+                </div>
               </div>
               </>
             )}
