@@ -6,14 +6,13 @@ import { INVENTORY_SUBTYPES, getStatusesForCategory, getSubtypesForCategory } fr
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { INITIAL_CITIES } from '../../data/mockEmployees';
 import {
-  Shirt, Shield, Wrench, TrendingUp,
+  Shirt, Shield, TrendingUp,
   AlertTriangle, MapPin, Calendar, Box, Ruler,
 } from 'lucide-react';
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
   { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
   { value: 'PPE', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
-  { value: 'MACHINERY', label: 'Maquinaria', icon: <Wrench className="h-4 w-4" /> },
 ];
 
 const stNameMap = Object.fromEntries(INVENTORY_SUBTYPES.map((st) => [st.id, st.name]));
@@ -21,7 +20,7 @@ const wcNameMap = Object.fromEntries(INITIAL_WORK_CENTERS.map((w) => [w.id, w.na
 const cityNameMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
 
 const statusNameMap: Record<string, string> = {};
-for (const cat of ['CLOTHING', 'PPE', 'MACHINERY'] as const) {
+for (const cat of ['CLOTHING', 'PPE'] as const) {
   for (const s of getStatusesForCategory(cat)) {
     statusNameMap[s.id] = s.name;
   }

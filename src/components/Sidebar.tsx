@@ -32,6 +32,7 @@ const dashboardItems = (role?: string) => {
     { id: 'WORK_CENTERS_DASHBOARD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Operaciones y ocupación' },
     { id: 'SERVICES_DASHBOARD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Órdenes, progreso y planificación' },
     { id: 'INVENTORY_DASHBOARD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Stock, bajas y alertas' },
+    { id: 'MACHINERY_DASHBOARD' as DashboardViewType, label: 'Maquinaria', icon: <Wrench className="h-5 w-5" />, description: 'Estado y mantenimiento' },
   ];
   return allItems.filter((item) => (VIEW_ROLES[item.id] || []).includes(role || ''));
 };
@@ -44,7 +45,8 @@ const adminItems = (role?: string) => {
     { id: 'VEHICLES_CRUD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Flota, mantenimiento y combustible', disabled: !canAccessUserCrud(role) },
     { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Ubicaciones y áreas de trabajo', disabled: !canAccessUserCrud(role) },
     { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Tareas, categorías y zonas', disabled: !canAccessUserCrud(role) },
-    { id: 'INVENTORY_CRUD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Ropa, EPIs y Maquinaria', disabled: !canAccessUserCrud(role) },
+    { id: 'INVENTORY_CRUD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Ropa y EPIs', disabled: !canAccessUserCrud(role) },
+    { id: 'MACHINERY_CRUD' as DashboardViewType, label: 'Maquinaria', icon: <Wrench className="h-5 w-5" />, description: 'Equipos y mantenimiento', disabled: !canAccessUserCrud(role) },
   ];
 };
 

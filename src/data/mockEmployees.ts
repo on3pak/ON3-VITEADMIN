@@ -1,4 +1,4 @@
-import { Employee, EmployeeCategory, EmployeeStatus, WorkDay, Shift, ContractType, City } from '../types';
+import { Employee, EmployeeCategory, EmployeeStatus, WorkDay, Shift, ContractType, City, ClothingSizes } from '../types';
 
 export const INITIAL_CITIES: City[] = [
   { id: 'ci_000001', name: 'Alcalá de Henares' },
@@ -47,6 +47,19 @@ export const INITIAL_CONTRACT_TYPES: ContractType[] = [
   { id: 'ct_3', name: 'Obra' },
 ];
 
+const DEFAULT_CLOTHING_SIZES: ClothingSizes = {
+  summer_shirt: 'L',
+  winter_shirt: 'L',
+  summer_pants: 'L',
+  winter_pants: 'L',
+  summer_jacket: 'L',
+  winter_jacket: 'L',
+  winter_coat: 'L',
+  cap: 'ESTANDAR',
+  summer_shoe: 42,
+  winter_shoe: 43,
+};
+
 const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'category_id' | 'shift_id' | 'work_day_id' | 'email' | 'phone' | 'personal_email'> = {
   city_id: 'ci_000001',
   work_center_id: 'wc_000001',
@@ -64,7 +77,8 @@ const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'catego
   updated_at: '2025-01-01T08:00:00Z',
   phone_fixed: '',
   iban: 'ES7620770024003102570001',
-  locker: '',
+  lockers: ['001'],
+  clothing_sizes: DEFAULT_CLOTHING_SIZES,
   medical_check: true,
   works_holidays: false,
   contract_type: 'ct_1',

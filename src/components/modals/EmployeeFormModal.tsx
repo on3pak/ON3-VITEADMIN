@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Employee, VacationMonth } from '../../types';
+import { Employee, VacationMonth, ClothingSizes } from '../../types';
 import { INITIAL_CITIES, INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
-import { X, ShieldAlert, UserPlus, Save, CreditCard, Calendar, Clock, Phone, Mail, Award } from 'lucide-react';
+import { X, ShieldAlert, UserPlus, Save, CreditCard, Calendar, Clock, Phone, Mail, Award, Shirt, Plus, Minus } from 'lucide-react';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
@@ -33,7 +33,15 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [excess_days, setExcess_days] = useState(0);
   const [irpf, setIrpf] = useState(0);
   const [iban, setIban] = useState('');
-  const [locker, setLocker] = useState('');
+  const [lockers, setLockers] = useState<string[]>(['']);
+  const [clothingSizes, setClothingSizes] = useState<ClothingSizes>({
+    summer_shirt: null, winter_shirt: null,
+    summer_pants: null, winter_pants: null,
+    summer_jacket: null, winter_jacket: null,
+    winter_coat: null,
+    cap: 'ESTANDAR',
+    summer_shoe: null, winter_shoe: null,
+  });
   const [medical_check, setMedical_check] = useState(true);
   const [works_holidays, setWorks_holidays] = useState(true);
   const [active, setActive] = useState(true);
@@ -64,7 +72,15 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setExcess_days(editingEmployee.excess_days);
       setIrpf(editingEmployee.irpf);
       setIban(editingEmployee.iban || '');
-      setLocker(editingEmployee.locker || '');
+      setLockers(editingEmployee.lockers?.length ? editingEmployee.lockers : ['']);
+      setClothingSizes(editingEmployee.clothing_sizes || {
+        summer_shirt: null, winter_shirt: null,
+        summer_pants: null, winter_pants: null,
+        summer_jacket: null, winter_jacket: null,
+        winter_coat: null,
+        cap: 'ESTANDAR',
+        summer_shoe: null, winter_shoe: null,
+      });
       setMedical_check(editingEmployee.medical_check);
       setWorks_holidays(editingEmployee.works_holidays);
       setActive(editingEmployee.active);
@@ -92,7 +108,15 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setExcess_days(0);
       setIrpf(0);
       setIban('');
-      setLocker('');
+      setLockers(['']);
+      setClothingSizes({
+        summer_shirt: null, winter_shirt: null,
+        summer_pants: null, winter_pants: null,
+        summer_jacket: null, winter_jacket: null,
+        winter_coat: null,
+        cap: 'ESTANDAR',
+        summer_shoe: null, winter_shoe: null,
+      });
       setMedical_check(true);
       setWorks_holidays(true);
       setActive(true);
@@ -138,7 +162,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       phone_fixed: phone_fixed.trim(),
       work_day_id,
       iban: iban.trim(),
-      locker: locker.trim(),
+      lockers: lockers.filter((l) => l.trim() !== ''),
+      clothing_sizes: clothingSizes,
       medical_check,
       works_holidays,
       contract_type,
@@ -297,9 +322,83 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                 <input type="number" value={irpf} onChange={(e) => setIrpf(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquilla</label>
-                <input type="text" value={locker} onChange={(e) => setLocker(e.target.value)} placeholder="L-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
+                <div className="space-y-2">
+                  {lockers.map((l, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={l}
+                        onChange={(e) => {
+                          const next = [...lockers];
+                          next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+                          setLockers(next);
+                        }}
+                        placeholder="001"
+                        maxLength={3}
+                        className="w-full px-3 py-2 border border-app-border rounded-xl text-sm"
+                      />
+                      {lockers.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setLockers(lockers.filter((_, j) => j !== i))}
+                          className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {lockers.length < 2 && (
+                    <button
+                      type="button"
+                      onClick={() => setLockers([...lockers, ''])}
+                      className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500"
+                    >
+                      <Plus className="h-3 w-3" /> Añadir otra taquilla
+                    </button>
+                  )}
+                </div>
               </div>
+
+              <div className="col-span-2">
+                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Shirt className="h-3 w-3"/> Uniformidad</h4>
+              </div>
+              {([
+                { label: 'Camisa Verano', field: 'summer_shirt' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Camisa Invierno', field: 'winter_shirt' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Pantalón Verano', field: 'summer_pants' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Pantalón Invierno', field: 'winter_pants' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Chaqueta Verano', field: 'summer_jacket' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Chaqueta Invierno', field: 'winter_jacket' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Chaquetón', field: 'winter_coat' as const, values: ['XXS','XS','S','M','L','XL','XXL'] },
+                { label: 'Gorra', field: 'cap' as const, values: ['ESTANDAR'], fixed: true },
+                { label: 'Zapatos/Botas Verano', field: 'summer_shoe' as const, values: [36,37,38,39,40,41,42,43,44,45,46] },
+                { label: 'Zapatos/Botas Invierno', field: 'winter_shoe' as const, values: [36,37,38,39,40,41,42,43,44,45,46] },
+              ]).map(({ label, field, values, fixed }) => (
+                <div key={field}>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">{label}</label>
+                  {fixed ? (
+                    <input
+                      type="text"
+                      value="ESTÁNDAR"
+                      disabled
+                      className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-gray-50 text-app-text-secondary"
+                    />
+                  ) : (
+                    <select
+                      value={clothingSizes[field] ?? ''}
+                      onChange={(e) => setClothingSizes({ ...clothingSizes, [field]: e.target.value || null })}
+                      className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm"
+                    >
+                      <option value="">—</option>
+                      {values.map((v) => (
+                        <option key={String(v)} value={String(v)}>{v}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              ))}
 
               <div className="col-span-2">
                 <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">Contrato</h4>

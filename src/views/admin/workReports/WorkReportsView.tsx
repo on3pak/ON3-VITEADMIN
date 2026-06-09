@@ -5,8 +5,9 @@ import { useServices } from '../../../context/ServiceContext';
 import { useServiceReports, getTodayDateString } from '../../../context/ServiceReportContext';
 import { useVehicles } from '../../../context/VehicleContext';
 import { useInventory } from '../../../context/InventoryContext';
+import { useMachinery } from '../../../context/MachineryContext';
 import { useWorkReports } from '../../../context/WorkReportContext';
-import { INVENTORY_SUBTYPES } from '../../../data/mockInventory';
+import { MACHINERY_SUBTYPES } from '../../../data/mockMachinery';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_SHIFTS } from '../../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { Calendar } from '../../../components/Calendar';
@@ -52,6 +53,7 @@ export const WorkReportsView: React.FC = () => {
   const { getDiarioForToday, getReportById: getServiceReportById } = useServiceReports();
   const { vehicles } = useVehicles();
   const { items: inventoryItems } = useInventory();
+  const { items: machineryCtxItems } = useMachinery();
   const {
     getWorkReportForToday, getWorkReportHistory, getWorkReportById,
     updateServices, updateVehicle, toggleTool, setMachineryBreakdown, updateNotes, saveReport,
@@ -161,20 +163,20 @@ export const WorkReportsView: React.FC = () => {
   }, [vehicles, myEmployee]);
 
   const machineryItems = useMemo(() => {
-    return inventoryItems.filter((item) => item.category === 'MACHINERY' && item.status_id === 'ms-1');
-  }, [inventoryItems]);
+    return machineryCtxItems.filter((item) => item.status_id === 'ms-1');
+  }, [machineryCtxItems]);
 
   const machinerySubtypes = useMemo(() => {
     const map = new Map<string, { name: string; items: AssignMachineryType[] }>();
     for (const item of machineryItems) {
-      const sub = INVENTORY_SUBTYPES.find((s) => s.id === item.subtype_id);
+      const sub = MACHINERY_SUBTYPES.find((s) => s.id === item.subtype_id);
       const key = item.subtype_id;
       if (!map.has(key)) map.set(key, { name: sub?.name ?? key, items: [] });
       map.get(key)!.items.push({
         id: item.id,
         name: item.name,
-        model: item.attributes?.model ?? undefined,
-        brand: item.attributes?.brand ?? undefined,
+        model: item.model ?? undefined,
+        brand: item.brand ?? undefined,
       });
     }
     return map;
@@ -1052,7 +1054,7 @@ export const WorkReportsView: React.FC = () => {
             {workReport.tools.length > 0 && (
               <div className="space-y-2">
                 {workReport.tools.map((toolId) => {
-                  const item = inventoryItems.find((i) => i.id === toolId);
+                  const item = machineryCtxItems.find((i) => i.id === toolId) ?? inventoryItems.find((i) => i.id === toolId);
                   const breakdown = workReport.machinery_breakdowns?.[toolId];
                   const isBroken = !!breakdown;
                   return (
@@ -1300,7 +1302,7 @@ export const WorkReportsView: React.FC = () => {
                 <SectionCard icon={<Wrench className="h-4 w-4" />} title="Herramientas / Maquinaria">
                   <div className="flex flex-wrap gap-2">
                     {selectedHistoryReport.tools.map((toolId) => {
-                      const item = inventoryItems.find((i) => i.id === toolId);
+                      const item = machineryCtxItems.find((i) => i.id === toolId) ?? inventoryItems.find((i) => i.id === toolId);
                       return (
                         <span key={toolId} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-app-bg text-app-text-secondary">
                           {item?.name ?? toolId}

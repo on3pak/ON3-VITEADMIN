@@ -32,10 +32,13 @@ import { RolesTestsView } from './views/utils/tests/RolesTestsView';
 import { LogsView } from './views/utils/logs/LogsView';
 import { InventoryView } from './views/admin/inventory/InventoryView';
 import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
+import { DashboardMachineryView } from './views/dashboard/DashboardMachineryView';
+import { MachineryView } from './views/admin/machinery/MachineryView';
 import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
 import { DashboardConfigView } from './views/dashboard/DashboardConfigView';
 import { UtilsView } from './views/utils/UtilsView';
 import { InventoryProvider } from './context/InventoryContext';
+import { MachineryProvider } from './context/MachineryContext';
 import { ServiceReportProvider } from './context/ServiceReportContext';
 import { ServiceReportsView } from './views/admin/serviceReports/ServiceReportsView';
 import { WorkReportProvider } from './context/WorkReportContext';
@@ -57,6 +60,8 @@ const VIEW_ROUTES: Record<DashboardViewType, string> = {
   SERVICE_DETAIL: '/admin/services/:id',
   INVENTORY_CRUD: '/admin/inventory',
   INVENTORY_DASHBOARD: '/dashboard/inventory',
+  MACHINERY_CRUD: '/admin/machinery',
+  MACHINERY_DASHBOARD: '/dashboard/machinery',
   SERVICE_REPORT: '/apps/service-report',
   WORK_REPORT: '/apps/work-report',
   PROFILE: '/profile',
@@ -219,6 +224,10 @@ const MainLayout: React.FC = () => {
         return <InventoryView />;
       case 'INVENTORY_DASHBOARD':
         return <DashboardInventoryView />;
+      case 'MACHINERY_CRUD':
+        return <MachineryView />;
+      case 'MACHINERY_DASHBOARD':
+        return <DashboardMachineryView />;
       case 'PROFILE':
         return <DashboardProfileView />;
       case 'PROFILE_CONFIG':
@@ -284,9 +293,11 @@ export default function App() {
             <ServiceProvider>
               <ServiceReportProvider>
               <InventoryProvider>
+              <MachineryProvider>
               <WorkReportProvider>
               <MainLayout />
               </WorkReportProvider>
+              </MachineryProvider>
               </InventoryProvider>
               </ServiceReportProvider>
             </ServiceProvider>

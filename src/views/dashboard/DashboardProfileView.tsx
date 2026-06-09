@@ -18,7 +18,7 @@ import {
   Sparkles,
   Send, Sun, ClipboardCheck,
   Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
-  Plus, X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart,
+  Plus, X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart, Shirt,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
@@ -301,10 +301,55 @@ export const DashboardProfileView: React.FC = () => {
                         <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Administración</div>
                       </div>
                       <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={myEmployee?.iban || '—'} />
-                      <InfoRow icon={<Package className="h-4 w-4" />} label="Taquilla" value={myEmployee?.locker || '—'} />
+                      <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={myEmployee?.lockers?.length ? myEmployee.lockers.join(', ') : '—'} />
                       <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={myEmployee ? `${myEmployee.irpf}%` : '—'} />
                       <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
                     </SectionCard>
+
+                    {myEmployee.clothing_sizes && (
+                      <SectionCard
+                        icon={<Shirt className="h-4 w-4" />}
+                        title="Uniformidad"
+                      >
+                        <div className="col-span-2">
+                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Camisas</div>
+                        </div>
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_shirt || '—'} />
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_shirt || '—'} />
+
+                        <div className="col-span-2 border-t border-app-card-border my-1" />
+
+                        <div className="col-span-2">
+                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Pantalones</div>
+                        </div>
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_pants || '—'} />
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_pants || '—'} />
+
+                        <div className="col-span-2 border-t border-app-card-border my-1" />
+
+                        <div className="col-span-2">
+                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Chaquetas</div>
+                        </div>
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_jacket || '—'} />
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_jacket || '—'} />
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Chaquetón" value={myEmployee.clothing_sizes.winter_coat || '—'} />
+
+                        <div className="col-span-2 border-t border-app-card-border my-1" />
+
+                        <div className="col-span-2">
+                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Gorra</div>
+                        </div>
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Estándar" value="Sí" />
+
+                        <div className="col-span-2 border-t border-app-card-border my-1" />
+
+                        <div className="col-span-2">
+                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Zapatos / Botas</div>
+                        </div>
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_shoe ? String(myEmployee.clothing_sizes.summer_shoe) : '—'} />
+                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_shoe ? String(myEmployee.clothing_sizes.winter_shoe) : '—'} />
+                      </SectionCard>
+                    )}
                   </>
                 ) : (
                   <div className="bg-app-card rounded-xl border border-app-card-border p-8 text-center">

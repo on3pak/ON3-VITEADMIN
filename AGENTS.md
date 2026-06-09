@@ -65,7 +65,7 @@ All entity IDs follow a consistent pattern — `{prefix}_{6-digit-zero-padded}`:
 | VehicleType | `vt-` | `vt-1` | **Not zero-padded** (unchanged) |
 | InventoryItem | `inv_` | `inv_000001` | |
 | InventoryCategory | `ic-` | `ic-1` | **Not zero-padded** (unchanged) |
-| InventorySubtype | `ist-` | `ist-1` | **Not zero-padded** (unchanged) |
+| InventorySubtype | `ist-` | `ist-1` | **Not zero-padded** — added `ist-5` (Chaquetón), `ist-6` (Gorra), `ist-7` (Zapatos), `ist-8` (Botas) |
 | InventoryStatus | `rs-`/`es-`/`ms-` | `rs-1` | **Not zero-padded** (unchanged) |
 
 ### Mock Data
@@ -85,7 +85,7 @@ All entity IDs follow a consistent pattern — `{prefix}_{6-digit-zero-padded}`:
 | File | Key Types |
 |------|-----------|
 | `user.ts` | `User`, `UserRole` |
-| `employee.ts` | `Employee`, `EmployeeOverview`, `EmployeeCategory`, `EmployeeStatus`, `WorkDay`, `Shift`, `ContractType` |
+| `employee.ts` | `Employee`, `EmployeeOverview`, `EmployeeCategory`, `EmployeeStatus`, `WorkDay`, `Shift`, `ContractType`, `ClothingSizes`, `ClothingSize`, `ShoeSize` |
 | `vehicle.ts` | `Vehicle`, `VehicleOverview`, `VehicleType`, `VehicleStatus`, `FuelType`, `VehicleTypeOption` |
 | `view.ts` | `DashboardViewType` (union of all view identifiers) |
 | `index.ts` | Re-exports all |

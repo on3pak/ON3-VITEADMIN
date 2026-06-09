@@ -1,4 +1,4 @@
-export type InventoryCategory = 'CLOTHING' | 'PPE' | 'MACHINERY';
+export type InventoryCategory = 'CLOTHING' | 'PPE';
 
 export interface InventoryCategoryOption {
   id: string;
@@ -19,19 +19,11 @@ export interface InventorySubtype {
 }
 
 export interface InventoryAttributes {
-  size?: string | null;
-  color?: string | null;
   material?: string | null;
-  gender?: string | null;
   certification?: string | null;
   safety_standard?: string | null;
   serial_number?: string | null;
-  brand?: string | null;
-  model?: string | null;
   expiration_date?: string | null;
-  warranty_expiration?: string | null;
-  last_maintenance?: string | null;
-  next_maintenance?: string | null;
 }
 
 export interface InventoryItem {
@@ -47,6 +39,9 @@ export interface InventoryItem {
   city_id: string;
   work_center_id: string;
   location: string;
+  color: string | null;
+  size: string | null;
+  gender: string | null;
   assigned_to: string | null;
   notes: string;
   attributes: InventoryAttributes;

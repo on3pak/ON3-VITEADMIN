@@ -1,37 +1,34 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useInventory } from '../../../context/InventoryContext';
+import { useMachinery } from '../../../context/MachineryContext';
 import { useAuth } from '../../../context/AuthContext';
-import { InventoryCategory } from '../../../types';
-import { INVENTORY_SUBTYPES, getStatusesForCategory, getSubtypesForCategory } from '../../../data/mockInventory';
+import { MACHINERY_SUBTYPES, MACHINERY_STATUSES } from '../../../data/mockMachinery';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { INITIAL_CITIES } from '../../../data/mockEmployees';
-import { InventoryFormModal } from '../../../components/modals/InventoryFormModal';
+import { MachineryFormModal } from '../../../components/modals/MachineryFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import {
-  Search, Plus, Edit3, Trash2, ShieldAlert,
+  Search, Plus, Edit3, Trash2,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
   ChevronDown, ChevronUp,
-  Shirt, Shield, Filter, MapPin,
+  Wrench, Filter, MapPin, ShieldAlert,
 } from 'lucide-react';
 
-const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
-  { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
-  { value: 'PPE', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
-];
-
-const getSubtypeName = (id: string) => INVENTORY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
+const getSubtypeName = (id: string) => MACHINERY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
+const getStatusName = (id: string) => MACHINERY_STATUSES.find((s) => s.id === id)?.name ?? id;
 const getWcName = (id: string) => INITIAL_WORK_CENTERS.find((wc) => wc.id === id)?.name ?? id;
 const getCityName = (id: string) => INITIAL_CITIES.find((c) => c.id === id)?.name ?? id;
 
-const wcCityMap = Object.fromEntries(
-  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
-);
+const STATUS_COLORS: Record<string, string> = {
+  'ms-1': 'text-emerald-600 bg-emerald-50 border-emerald-200',
+  'ms-2': 'text-amber-600 bg-amber-50 border-amber-200',
+  'ms-3': 'text-rose-600 bg-rose-50 border-rose-200',
+  'ms-4': 'text-slate-500 bg-slate-100 border-slate-200',
+};
 
-export const InventoryView: React.FC = () => {
-  const { getOverviews, getById, create, update, remove } = useInventory();
+export const MachineryView: React.FC = () => {
+  const { getOverviews, getById, create, update, remove } = useMachinery();
   const { user: loggedInUser } = useAuth();
 
-  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [subtypeFilter, setSubtypeFilter] = useState('ALL');
@@ -69,7 +66,7 @@ export const InventoryView: React.FC = () => {
     setDeletingItemId(null);
   };
 
-  const handleModalSubmit = (data: Omit<import('../../../types').InventoryItem, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleModalSubmit = (data: Omit<import('../../../types').MachineryItem, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedItemId) {
       update(selectedItemId, data);
     } else {
@@ -83,7 +80,6 @@ export const InventoryView: React.FC = () => {
   const overviews = getOverviews();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
-  const isRoot = loggedInUser?.role === 'ROOT';
 
   const scopeCities = userCityId
     ? INITIAL_CITIES.filter((c) => c.id === userCityId)
@@ -102,8 +98,6 @@ export const InventoryView: React.FC = () => {
   const filteredItems = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return overviews.filter((item) => {
-      if (item.category !== activeCategory) return false;
-
       const matchesCityScope = !userCityId || item.city_id === userCityId;
       if (!matchesCityScope) return false;
 
@@ -117,9 +111,9 @@ export const InventoryView: React.FC = () => {
       const matchesWorkCenter = workCenterFilter === 'ALL' || item.work_center_id === workCenterFilter;
       return matchesSearch && matchesStatus && matchesSubtype && matchesWorkCenter;
     });
-  }, [overviews, searchQuery, statusFilter, workCenterFilter, cityFilter, activeCategory, userCityId]);
+  }, [overviews, searchQuery, statusFilter, workCenterFilter, cityFilter, userCityId]);
 
-  useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, subtypeFilter, workCenterFilter, cityFilter, activeCategory, itemsPerPage]);
+  useEffect(() => setCurrentPage(1), [searchQuery, statusFilter, subtypeFilter, workCenterFilter, cityFilter, itemsPerPage]);
 
   const { totalPages, paginatedItems } = useMemo(() => {
     const t = Math.ceil(filteredItems.length / itemsPerPage);
@@ -149,7 +143,7 @@ export const InventoryView: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por nombre o subtipo..."
+            placeholder="Buscar por nombre o tipo..."
             className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
           />
         </div>
@@ -163,7 +157,7 @@ export const InventoryView: React.FC = () => {
               className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
-              {getStatusesForCategory(activeCategory).map((s) => (
+              {MACHINERY_STATUSES.map((s) => (
                 <option key={s.id} value={s.id}>{s.name}</option>
               ))}
             </select>
@@ -177,7 +171,7 @@ export const InventoryView: React.FC = () => {
               className="bg-transparent text-xs font-semibold text-app-text focus:outline-hidden cursor-pointer"
             >
               <option value="ALL">Todos</option>
-              {getSubtypesForCategory(activeCategory).map((st) => (
+              {MACHINERY_SUBTYPES.map((st) => (
                 <option key={st.id} value={st.id}>{st.name}</option>
               ))}
             </select>
@@ -200,25 +194,9 @@ export const InventoryView: React.FC = () => {
             className={`flex items-center gap-1.5 px-4 py-2 text-white font-semibold text-xs rounded-xl shadow-xs ${isReadOnly ? 'bg-app-text-secondary cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700'}`}
           >
             <Plus className="h-4 w-4" />
-            <span>Crear {CATEGORY_TABS.find((t) => t.value === activeCategory)?.label}</span>
+            <span>Crear Maquinaria</span>
           </button>
         </div>
-      </div>
-
-      <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
-        {CATEGORY_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setActiveCategory(tab.value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-              activeCategory === tab.value
-                ? 'bg-white text-primary-700 shadow-xs'
-                : 'text-app-text-secondary hover:text-app-text'
-            }`}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
       </div>
 
       <div className="flex gap-5">
@@ -230,9 +208,9 @@ export const InventoryView: React.FC = () => {
                   <tr className="bg-app-bg border-b border-app-border text-[11px] uppercase font-bold text-app-text-secondary tracking-wider">
                     <th className="py-3 px-6">Elemento</th>
                     <th className="py-3 px-4 w-16 text-center">Cant.</th>
-                    <th className="py-3 px-4 w-28 text-center">Tipo</th>
-                    <th className="py-3 px-4 w-20 text-center">Talla</th>
-                    <th className="py-3 px-4 w-24 text-center">Color</th>
+                    <th className="py-3 px-4 w-28 text-center">Estado</th>
+                    <th className="py-3 px-4 w-28 text-center">Marca</th>
+                    <th className="py-3 px-4 w-28 text-center">Modelo</th>
                     <th className="py-3 px-4 w-24 text-center">Acciones</th>
                   </tr>
                 </thead>
@@ -240,22 +218,19 @@ export const InventoryView: React.FC = () => {
                   {paginatedItems.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="py-12 text-center text-app-text-secondary font-medium">
-                        No se encontraron elementos en {CATEGORY_TABS.find((t) => t.value === activeCategory)?.label.toLowerCase()}.
+                        No se encontraron elementos de maquinaria.
                       </td>
                     </tr>
                   ) : (
                     paginatedItems.map((item) => {
                       const full = getById(item.id);
+                      const statusClass = STATUS_COLORS[item.status_id] || 'text-slate-600 bg-slate-50 border-slate-200';
                       return (
                         <tr key={item.id} className="hover:bg-app-bg/70 transition-colors">
                           <td className="py-3.5 px-6">
                             <div className="flex items-center gap-3">
-                              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                                activeCategory === 'CLOTHING' ? 'bg-primary-100 text-primary-600 border border-primary-200' :
-                                activeCategory === 'PPE' ? 'bg-amber-100 text-amber-600 border border-amber-200' :
-                                'bg-cyan-100 text-cyan-600 border border-cyan-200'
-                              }`}>
-                                {CATEGORY_TABS.find((t) => t.value === activeCategory)?.icon}
+                              <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-cyan-100 text-cyan-600 border border-cyan-200">
+                                <Wrench className="h-4 w-4" />
                               </div>
                               <div>
                                 <div className="font-bold text-app-text-secondary leading-tight text-sm">{item.name}</div>
@@ -283,19 +258,21 @@ export const InventoryView: React.FC = () => {
 
                           <td className="py-3.5 px-4">
                             <div className="flex justify-center">
-                              <span className="text-xs text-app-text-secondary font-medium">{getSubtypeName(item.subtype_id)}{full?.gender ? ` / ${full.gender}` : ''}</span>
+                              <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${statusClass}`}>
+                                {getStatusName(item.status_id)}
+                              </span>
                             </div>
                           </td>
 
                           <td className="py-3.5 px-4">
                             <div className="flex justify-center">
-                              <span className="text-xs text-app-text-secondary">{full?.size || '-'}</span>
+                              <span className="text-xs text-app-text-secondary font-medium">{full?.brand || '-'}</span>
                             </div>
                           </td>
 
                           <td className="py-3.5 px-4">
                             <div className="flex justify-center">
-                              <span className="text-xs text-app-text-secondary">{full?.color || '-'}</span>
+                              <span className="text-xs text-app-text-secondary font-medium">{full?.model || '-'}</span>
                             </div>
                           </td>
 
@@ -347,7 +324,7 @@ export const InventoryView: React.FC = () => {
         </div>
 
         <div className="hidden xl:flex xl:flex-col xl:w-64 flex-shrink-0 xl:space-y-3">
-          {isRoot && (() => {
+          {loggedInUser?.role === 'ROOT' && (() => {
             const open = openSections.ciudad;
             return (
             <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -368,6 +345,26 @@ export const InventoryView: React.FC = () => {
           })()}
 
           {(() => {
+            const open = openSections.centros;
+            return (
+            <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+              <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
+                Centros de Trabajo
+                {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
+              </button>
+              {open && (
+              <div className="px-4 pt-2 pb-3 space-y-1">
+                <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+                {scopeWorkCenters.map((wc) => (
+                  <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                ))}
+              </div>
+              )}
+            </div>
+            );
+          })()}
+
+          {(() => {
             const open = openSections.subtipo;
             return (
             <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -378,7 +375,7 @@ export const InventoryView: React.FC = () => {
               {open && (
               <div className="px-4 pt-2 pb-3 space-y-1">
                 <button onClick={() => setSubtypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos</button>
-                {getSubtypesForCategory(activeCategory).map((st) => (
+                {MACHINERY_SUBTYPES.map((st) => (
                   <button key={st.id} onClick={() => setSubtypeFilter(st.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === st.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{st.name}</button>
                 ))}
               </div>
@@ -398,7 +395,7 @@ export const InventoryView: React.FC = () => {
               {open && (
               <div className="px-4 pt-2 pb-3 space-y-1">
                 <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
-                {getStatusesForCategory(activeCategory).map((s) => (
+                {MACHINERY_STATUSES.map((s) => (
                   <button key={s.id} onClick={() => setStatusFilter(s.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s.name}</button>
                 ))}
               </div>
@@ -409,7 +406,7 @@ export const InventoryView: React.FC = () => {
         </div>
       </div>
 
-      <InventoryFormModal
+      <MachineryFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleModalSubmit}
@@ -418,13 +415,11 @@ export const InventoryView: React.FC = () => {
 
       <ConfirmDialog
         isOpen={deleteDialogOpen}
-        title="Eliminar Elemento"
-        message="¿Estás seguro de eliminar este elemento del inventario? Esta acción no se puede deshacer."
+        title="Eliminar Maquinaria"
+        message="¿Estás seguro de eliminar este elemento de maquinaria? Esta acción no se puede deshacer."
         onConfirm={handleConfirmDelete}
         onCancel={() => { setDeleteDialogOpen(false); setDeletingItemId(null); }}
       />
     </div>
   );
 };
-
-

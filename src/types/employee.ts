@@ -1,5 +1,22 @@
 export type VacationMonth = 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT';
 
+export type ClothingSize = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
+
+export type ShoeSize = 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46;
+
+export interface ClothingSizes {
+  summer_shirt: ClothingSize | null;
+  winter_shirt: ClothingSize | null;
+  summer_pants: ClothingSize | null;
+  winter_pants: ClothingSize | null;
+  summer_jacket: ClothingSize | null;
+  winter_jacket: ClothingSize | null;
+  winter_coat: ClothingSize | null;
+  cap: 'ESTANDAR' | null;
+  summer_shoe: ShoeSize | null;
+  winter_shoe: ShoeSize | null;
+}
+
 export interface VacationRequest {
   id: string;
   employee_id: string;
@@ -39,7 +56,8 @@ export interface Employee {
   phone_fixed: string;
   work_day_id: string;
   iban: string;
-  locker: string;
+  lockers: string[];
+  clothing_sizes: ClothingSizes | null;
   medical_check: boolean;
   works_holidays: boolean;
   contract_type: string;
