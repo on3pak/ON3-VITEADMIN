@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
 import { useUsers } from '../../context/UserContext';
@@ -63,10 +63,13 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 
 export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser, triggerToast } = useAuth();
-  const { employees, createEmployee, updateEmployee, createVacationRequest, vacationRequests, getVacationRequestsByEmployee } = useEmployees();
-  const { updateUser } = useUsers();
+  const { employees, createEmployee, updateEmployee, createVacationRequest, vacationRequests, getVacationRequestsByEmployee, loadEmployees } = useEmployees();
+  const { updateUser, loadUsers } = useUsers();
 
   const isReadOnly = loggedInUser?.role === 'USER';
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
+  useEffect(() => { loadUsers(); }, [loadUsers]);
 
   type ProfileTab = 'info' | 'solicitar' | 'parte';
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');

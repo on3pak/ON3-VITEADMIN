@@ -110,7 +110,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       triggerToast(`¡Bienvenido, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
-      window.dispatchEvent(new CustomEvent('auth:login'));
       return true;
     } catch {
       setState({

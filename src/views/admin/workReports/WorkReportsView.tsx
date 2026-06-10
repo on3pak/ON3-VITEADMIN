@@ -48,15 +48,15 @@ function formatEmployeeName(emp: { name: string; last_name1: string; last_name2:
 
 export const WorkReportsView: React.FC = () => {
   const { user } = useAuth();
-  const { employees } = useEmployees();
-  const { services } = useServices();
+  const { employees, loadEmployees } = useEmployees();
+  const { services, loadServices } = useServices();
   const { getDiarioForToday, getReportById: getServiceReportById } = useServiceReports();
-  const { vehicles } = useVehicles();
-  const { items: inventoryItems } = useInventory();
-  const { items: machineryCtxItems } = useMachinery();
+  const { vehicles, loadVehicles } = useVehicles();
+  const { items: inventoryItems, loadInventory } = useInventory();
+  const { items: machineryCtxItems, loadMachinery } = useMachinery();
   const {
     getWorkReportForToday, getWorkReportHistory, getWorkReportById,
-    updateServices, updateVehicle, toggleTool, setMachineryBreakdown, updateNotes, saveReport,
+    updateServices, updateVehicle, toggleTool, setMachineryBreakdown, updateNotes, saveReport, loadReports,
   } = useWorkReports();
 
   const [activeTab, setActiveTab] = useState<Tab>('hoy');
@@ -90,6 +90,13 @@ export const WorkReportsView: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [workReportId, setWorkReportId] = useState<string | null>(null);
   const initializedRef = useRef(false);
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
+  useEffect(() => { loadServices(); }, [loadServices]);
+  useEffect(() => { loadVehicles(); }, [loadVehicles]);
+  useEffect(() => { loadInventory(); }, [loadInventory]);
+  useEffect(() => { loadMachinery(); }, [loadMachinery]);
+  useEffect(() => { loadReports(); }, [loadReports]);
 
   const myEmployee = useMemo(
     () => (user ? employees.find((e) => e.id === user.employee_id) : undefined),

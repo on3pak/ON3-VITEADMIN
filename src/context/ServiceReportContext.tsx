@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { ServiceReport, ServiceAssignment, AttendanceStatus, EmployeeAttendance } from '../types';
 import { serviceReportsApi } from '../api/services';
 import { getToken } from '../api/client';
@@ -35,6 +35,7 @@ export function getYesterdayDateString(): string {
 
 interface ServiceReportContextType {
   reports: ServiceReport[];
+  loadReports: () => void;
   getPrevioForTomorrow: (cityId: string) => ServiceReport;
   getDiarioForToday: (cityId: string) => { report: ServiceReport; warnings: string[] };
   getHistorial: (cityId: string) => ServiceReport[];
@@ -52,18 +53,13 @@ const ServiceReportContext = createContext<ServiceReportContextType | undefined>
 export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [reports, setReports] = useState<ServiceReport[]>([]);
 
-  useEffect(() => {
-    const loadReports = () => {
-      if (!getToken()) return;
-      serviceReportsApi.list()
-        .then((res) => {
-          setReports(res.data);
-        })
-        .catch(() => {});
-    };
-    loadReports();
-    window.addEventListener('auth:login', loadReports);
-    return () => window.removeEventListener('auth:login', loadReports);
+  const loadReports = useCallback(() => {
+    if (!getToken()) return;
+    serviceReportsApi.list()
+      .then((res) => {
+        setReports(res.data);
+      })
+      .catch(() => {});
   }, []);
 
   const persist = useCallback((updater: (prev: ServiceReport[]) => ServiceReport[]) => {
@@ -240,6 +236,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
     <ServiceReportContext.Provider
       value={{
         reports,
+        loadReports,
         getPrevioForTomorrow,
         getDiarioForToday,
         getHistorial,

@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { InventoryItem, InventoryOverview } from '../types';
 import { inventoryApi } from '../api/services';
 import { getToken } from '../api/client';
 
 interface InventoryContextType {
   items: InventoryItem[];
+  loadInventory: () => void;
   getOverviews: () => InventoryOverview[];
   getById: (id: string) => InventoryItem | undefined;
   create: (data: Omit<InventoryItem, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
@@ -17,21 +18,16 @@ const InventoryContext = createContext<InventoryContextType | undefined>(undefin
 export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<InventoryItem[]>([]);
 
-  useEffect(() => {
-    const loadInventory = () => {
-      if (!getToken()) return;
-      inventoryApi.list()
-        .then(async (res) => {
-          const full = await Promise.all(
-            res.data.map((o) => inventoryApi.getById(o.id).catch(() => null))
-          );
-          setItems(full.filter(Boolean) as InventoryItem[]);
-        })
-        .catch(() => {});
-    };
-    loadInventory();
-    window.addEventListener('auth:login', loadInventory);
-    return () => window.removeEventListener('auth:login', loadInventory);
+  const loadInventory = useCallback(() => {
+    if (!getToken()) return;
+    inventoryApi.list()
+      .then(async (res) => {
+        const full = await Promise.all(
+          res.data.map((o) => inventoryApi.getById(o.id).catch(() => null))
+        );
+        setItems(full.filter(Boolean) as InventoryItem[]);
+      })
+      .catch(() => {});
   }, []);
 
   const getOverviews = useCallback((): InventoryOverview[] => {
@@ -76,7 +72,7 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
   }, []);
 
   return (
-    <InventoryContext.Provider value={{ items, getOverviews, getById, create, update, remove }}>
+    <InventoryContext.Provider value={{ items, loadInventory, getOverviews, getById, create, update, remove }}>
       {children}
     </InventoryContext.Provider>
   );

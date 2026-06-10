@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { User, UserRole } from '../types';
 import { useAuth } from './AuthContext';
 import { usersApi } from '../api/services';
@@ -6,6 +6,7 @@ import { getToken } from '../api/client';
 
 interface UserContextProps {
   users: User[];
+  loadUsers: () => void;
   createUser: (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean; message: string }>;
   updateUser: (id: string, userData: Partial<User>) => Promise<{ success: boolean; message: string }>;
   deleteUser: (id: string) => Promise<{ success: boolean; message: string }>;
@@ -19,18 +20,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [users, setUsers] = useState<User[]>([]);
   const { user, triggerToast } = useAuth();
 
-  useEffect(() => {
-    const loadUsers = () => {
-      if (!getToken()) return;
-      usersApi.list()
-        .then((res) => {
-          setUsers(res.data);
-        })
-        .catch(() => {});
-    };
-    loadUsers();
-    window.addEventListener('auth:login', loadUsers);
-    return () => window.removeEventListener('auth:login', loadUsers);
+  const loadUsers = useCallback(() => {
+    if (!getToken()) return;
+    usersApi.list()
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch(() => {});
   }, []);
 
   const checkPermissionForRoleAction = (action: 'CREATE' | 'UPDATE' | 'DELETE', targetRole?: UserRole, originalTarget?: User): { allowed: boolean; reason?: string } => {
@@ -170,7 +166,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <UserContext.Provider value={{ users, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser }}>
+    <UserContext.Provider value={{ users, loadUsers, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser }}>
       {children}
     </UserContext.Provider>
   );

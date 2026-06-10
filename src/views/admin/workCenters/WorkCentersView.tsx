@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useWorkCenters } from '../../../context/WorkCenterContext';
 import { useAuth } from '../../../context/AuthContext';
 import { WorkCenter } from '../../../types';
@@ -8,7 +8,7 @@ import { INITIAL_CITIES } from '../../../data/mockEmployees';
 import { Search, Building2, Plus, Edit3, Trash2, Filter, ShieldAlert, MapPin, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp } from 'lucide-react';
 
 export const WorkCentersView: React.FC = () => {
-  const { workCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter } = useWorkCenters();
+  const { workCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter, loadWorkCenters } = useWorkCenters();
   const { user: loggedInUser } = useAuth();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
@@ -26,6 +26,8 @@ export const WorkCentersView: React.FC = () => {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ ciudad: false, estado: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
   const handleConfirmDelete = () => { if (deletingWcId) { deleteWorkCenter(deletingWcId); } setDeleteDialogOpen(false); setDeletingWcId(null); };
+
+  useEffect(() => { loadWorkCenters(); }, [loadWorkCenters]);
 
   React.useEffect(() => {
     setCurrentPage(1);

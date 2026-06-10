@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useUsers } from '../../context/UserContext';
 import {
@@ -14,9 +14,11 @@ import {
 
 export const DashboardUsersView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { users } = useUsers();
+  const { users, loadUsers } = useUsers();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+
+  useEffect(() => { loadUsers(); }, [loadUsers]);
 
   const scopedUsers = useMemo(
     () => userCityId ? users.filter(u => u.city_id === userCityId) : users,

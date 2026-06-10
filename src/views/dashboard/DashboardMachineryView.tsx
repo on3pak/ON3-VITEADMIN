@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useMachinery } from '../../context/MachineryContext';
 import { MACHINERY_SUBTYPES, MACHINERY_STATUSES } from '../../data/mockMachinery';
@@ -40,9 +40,11 @@ const formatDate = (dateStr: string | null) => {
 
 export const DashboardMachineryView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { items } = useMachinery();
+  const { items, loadMachinery } = useMachinery();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+
+  useEffect(() => { loadMachinery(); }, [loadMachinery]);
 
   const scopedItems = useMemo(
     () => userCityId ? items.filter((i) => i.city_id === userCityId) : items,

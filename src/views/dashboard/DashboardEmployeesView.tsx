@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useEmployees } from '../../context/EmployeeContext';
 import { INITIAL_EMPLOYEE_CATEGORIES } from '../../data/mockEmployees';
@@ -20,9 +20,11 @@ const wcNameMap = Object.fromEntries(INITIAL_WORK_CENTERS.map(w => [w.id, w.name
 
 export const DashboardEmployeesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { employees } = useEmployees();
+  const { employees, loadEmployees } = useEmployees();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
 
   const scopedEmployees = useMemo(
     () => userCityId ? employees.filter(e => e.city_id === userCityId) : employees,

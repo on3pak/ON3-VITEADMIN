@@ -26,7 +26,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = ({ onViewService }) => {
-  const { getServiceOverviews, getServiceById, createService, updateService, deleteService } = useServices();
+  const { getServiceOverviews, getServiceById, createService, updateService, deleteService, loadServices } = useServices();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +42,8 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingServiceId, setDeletingServiceId] = useState<string | null>(null);
+
+  useEffect(() => { loadServices(); }, [loadServices]);
 
   const handleCreate = () => { setModalMode('create'); setSelectedServiceId(null); setModalOpen(true); };
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedServiceId(id); setModalOpen(true); };

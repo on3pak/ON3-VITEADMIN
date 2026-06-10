@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useVehicles } from '../../../context/VehicleContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { INITIAL_VEHICLE_TYPES } from '../../../data/mockVehicles';
@@ -58,7 +58,8 @@ const fuelTypeLabels: Record<string, string> = {
 };
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {
-  const { getVehicleById, updateVehicle, deleteVehicle } = useVehicles();
+  const { getVehicleById, updateVehicle, deleteVehicle, loadVehicles } = useVehicles();
+  useEffect(() => { loadVehicles(); }, [loadVehicles]);
   const vehicle = getVehicleById(vehicleId);
   
   const [modalOpen, setModalOpen] = useState(false);

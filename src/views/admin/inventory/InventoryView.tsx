@@ -28,7 +28,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const InventoryView: React.FC = () => {
-  const { getOverviews, getById, create, update, remove } = useInventory();
+  const { getOverviews, getById, create, update, remove, loadInventory } = useInventory();
   const { user: loggedInUser } = useAuth();
 
   const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
@@ -48,6 +48,8 @@ export const InventoryView: React.FC = () => {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+
+  useEffect(() => { loadInventory(); }, [loadInventory]);
 
   const handleCreate = () => {
     setModalMode('create');

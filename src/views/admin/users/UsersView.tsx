@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useUsers } from '../../../context/UserContext';
 import { useAuth } from '../../../context/AuthContext';
 import { User, UserRole } from '../../types';
@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 export const UsersView: React.FC = () => {
-  const { users, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser } = useUsers();
+  const { users, loadUsers, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser } = useUsers();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +38,8 @@ export const UsersView: React.FC = () => {
   const [hardDeleteDialog, setHardDeleteDialog] = useState<{ open: boolean; userId: string | null }>({ open: false, userId: null });
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ rol: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  useEffect(() => { loadUsers(); }, [loadUsers]);
 
   React.useEffect(() => {
     setCurrentPage(1);

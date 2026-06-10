@@ -33,7 +33,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = ({ onViewVehicle }) => {
-  const { getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle } = useVehicles();
+  const { getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle, loadVehicles } = useVehicles();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,6 +49,8 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingVehicleId, setDeletingVehicleId] = useState<string | null>(null);
+
+  useEffect(() => { loadVehicles(); }, [loadVehicles]);
 
   const handleCreate = () => { setModalMode('create'); setSelectedVehicleId(null); setModalOpen(true); };
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedVehicleId(id); setModalOpen(true); };

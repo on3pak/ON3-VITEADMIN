@@ -47,12 +47,12 @@ const ATTENDANCE_COLORS: Record<AttendanceStatus, string> = {
 
 export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diario' | 'historial') => void }> = ({ onTabChange }) => {
   const { user } = useAuth();
-  const { services } = useServices();
-  const { employees } = useEmployees();
-  const { vehicles } = useVehicles();
+  const { services, loadServices } = useServices();
+  const { employees, loadEmployees } = useEmployees();
+  const { vehicles, loadVehicles } = useVehicles();
   const {
     getPrevioForTomorrow, getDiarioForToday, getHistorial,
-    addAssignment, updateAssignmentVehicle, removeAssignment, setAttendance, saveReport, getReportById
+    addAssignment, updateAssignmentVehicle, removeAssignment, setAttendance, saveReport, getReportById, loadReports
   } = useServiceReports();
 
   const userCityId = user?.role === 'ROOT' ? undefined : user?.city_id;
@@ -65,6 +65,11 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const [activeTab, setActiveTab] = useState<Tab>('previo');
   const [activeWC, setActiveWC] = useState<string | null>(null);
   const [activeShift, setActiveShift] = useState<string>('s_1');
+
+  useEffect(() => { loadServices(); }, [loadServices]);
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
+  useEffect(() => { loadVehicles(); }, [loadVehicles]);
+  useEffect(() => { loadReports(); }, [loadReports]);
 
   useEffect(() => { onTabChange?.(activeTab); }, []);
   const [report, setReport] = useState<{ id: string; warnings: string[] } | null>(null);

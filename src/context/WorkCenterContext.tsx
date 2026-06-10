@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { WorkCenter } from '../types';
 import { useAuth } from './AuthContext';
 import { workCentersApi } from '../api/services';
@@ -6,6 +6,7 @@ import { getToken } from '../api/client';
 
 interface WorkCenterContextProps {
   workCenters: WorkCenter[];
+  loadWorkCenters: () => void;
   createWorkCenter: (data: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean; message: string }>;
   updateWorkCenter: (id: string, data: Partial<WorkCenter>) => Promise<{ success: boolean; message: string }>;
   deleteWorkCenter: (id: string) => Promise<{ success: boolean; message: string }>;
@@ -17,16 +18,11 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [workCenters, setWorkCenters] = useState<WorkCenter[]>([]);
   const { user, triggerToast } = useAuth();
 
-  useEffect(() => {
-    const loadWorkCenters = () => {
-      if (!getToken()) return;
-      workCentersApi.list()
-        .then((res) => setWorkCenters(res.data))
-        .catch(() => {});
-    };
-    loadWorkCenters();
-    window.addEventListener('auth:login', loadWorkCenters);
-    return () => window.removeEventListener('auth:login', loadWorkCenters);
+  const loadWorkCenters = useCallback(() => {
+    if (!getToken()) return;
+    workCentersApi.list()
+      .then((res) => setWorkCenters(res.data))
+      .catch(() => {});
   }, []);
 
   const checkPermission = (action: 'CREATE' | 'UPDATE' | 'DELETE'): { allowed: boolean; reason?: string } => {
@@ -101,7 +97,7 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   return (
-    <WorkCenterContext.Provider value={{ workCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter }}>
+    <WorkCenterContext.Provider value={{ workCenters, loadWorkCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter }}>
       {children}
     </WorkCenterContext.Provider>
   );

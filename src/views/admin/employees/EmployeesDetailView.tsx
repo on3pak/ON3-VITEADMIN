@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../../data/mockEmployees';
@@ -46,8 +46,10 @@ const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }
 };
 
 export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employeeId, onBack }) => {
-  const { getEmployeeById, updateEmployee, deleteEmployee } = useEmployees();
+  const { getEmployeeById, updateEmployee, deleteEmployee, loadEmployees } = useEmployees();
   const { user: loggedInUser } = useAuth();
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
 
   const employee = getEmployeeById(employeeId);
   const isReadOnly = loggedInUser?.role === 'USER';

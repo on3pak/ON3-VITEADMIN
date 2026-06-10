@@ -26,7 +26,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export const MachineryView: React.FC = () => {
-  const { getOverviews, getById, create, update, remove } = useMachinery();
+  const { getOverviews, getById, create, update, remove, loadMachinery } = useMachinery();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,6 +45,8 @@ export const MachineryView: React.FC = () => {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+
+  useEffect(() => { loadMachinery(); }, [loadMachinery]);
 
   const handleCreate = () => {
     setModalMode('create');

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useVehicles } from '../../context/VehicleContext';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
@@ -27,9 +27,11 @@ const vehicleTypeMap = Object.fromEntries(
 
 export const DashboardVehiclesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { vehicles } = useVehicles();
+  const { vehicles, loadVehicles } = useVehicles();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+
+  useEffect(() => { loadVehicles(); }, [loadVehicles]);
 
   const scopedVehicles = useMemo(
     () => userCityId ? vehicles.filter(v => wcCityMap[v.work_center_id] === userCityId) : vehicles,

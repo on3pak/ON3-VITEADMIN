@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Service, ServiceOverview, ServiceTask } from '../types';
 import { servicesApi } from '../api/services';
 import { getToken } from '../api/client';
 
 interface ServiceContextType {
   services: Service[];
+  loadServices: () => void;
   getServiceOverviews: () => ServiceOverview[];
   getServiceById: (id: string) => Service | undefined;
   createService: (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean }>;
@@ -18,21 +19,16 @@ const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
 export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [services, setServices] = useState<Service[]>([]);
 
-  useEffect(() => {
-    const loadServices = () => {
-      if (!getToken()) return;
-      servicesApi.list()
-        .then(async (res) => {
-          const full = await Promise.all(
-            res.data.map((o) => servicesApi.getById(o.id).catch(() => null))
-          );
-          setServices(full.filter(Boolean) as Service[]);
-        })
-        .catch(() => {});
-    };
-    loadServices();
-    window.addEventListener('auth:login', loadServices);
-    return () => window.removeEventListener('auth:login', loadServices);
+  const loadServices = useCallback(() => {
+    if (!getToken()) return;
+    servicesApi.list()
+      .then(async (res) => {
+        const full = await Promise.all(
+          res.data.map((o) => servicesApi.getById(o.id).catch(() => null))
+        );
+        setServices(full.filter(Boolean) as Service[]);
+      })
+      .catch(() => {});
   }, []);
 
   const getServiceOverviews = useCallback(() => {
@@ -97,7 +93,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   return (
     <ServiceContext.Provider
-      value={{ services, getServiceOverviews, getServiceById, createService, updateService, deleteService, updateServiceTask }}
+      value={{ services, loadServices, getServiceOverviews, getServiceById, createService, updateService, deleteService, updateServiceTask }}
     >
       {children}
     </ServiceContext.Provider>

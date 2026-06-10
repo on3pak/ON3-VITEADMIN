@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Employee, EmployeeOverview, VacationRequest } from '../types';
 import { employeesApi, vacationsApi } from '../api/services';
 import { getToken } from '../api/client';
 
 interface EmployeeContextType {
   employees: Employee[];
+  loadEmployees: () => void;
   getEmployeeOverviews: () => EmployeeOverview[];
   getEmployeeById: (id: string) => Employee | undefined;
   createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => Promise<{ success: boolean }>;
@@ -22,24 +23,19 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>([]);
 
-  useEffect(() => {
-    const loadData = () => {
-      if (!getToken()) return;
-      employeesApi.list()
-        .then(async (res) => {
-          const full = await Promise.all(
-            res.data.map((o) => employeesApi.getById(o.id).catch(() => null))
-          );
-          setEmployees(full.filter(Boolean) as Employee[]);
-        })
-        .catch(() => {});
-      vacationsApi.list()
-        .then((res) => setVacationRequests(res.data))
-        .catch(() => {});
-    };
-    loadData();
-    window.addEventListener('auth:login', loadData);
-    return () => window.removeEventListener('auth:login', loadData);
+  const loadEmployees = useCallback(() => {
+    if (!getToken()) return;
+    employeesApi.list()
+      .then(async (res) => {
+        const full = await Promise.all(
+          res.data.map((o) => employeesApi.getById(o.id).catch(() => null))
+        );
+        setEmployees(full.filter(Boolean) as Employee[]);
+      })
+      .catch(() => {});
+    vacationsApi.list()
+      .then((res) => setVacationRequests(res.data))
+      .catch(() => {});
   }, []);
 
   const getEmployeeOverviews = useCallback(() => {
@@ -118,7 +114,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
     <EmployeeContext.Provider
       value={{
-        employees, getEmployeeOverviews, getEmployeeById,
+        employees, loadEmployees, getEmployeeOverviews, getEmployeeById,
         createEmployee, updateEmployee, deleteEmployee,
         vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
       }}

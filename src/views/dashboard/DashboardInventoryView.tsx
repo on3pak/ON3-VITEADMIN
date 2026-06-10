@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useInventory } from '../../context/InventoryContext';
 import { InventoryCategory } from '../../types';
@@ -224,9 +224,11 @@ const TabContent: React.FC<{ items: typeof import('../../types').InventoryItem[]
 
 export const DashboardInventoryView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { items } = useInventory();
+  const { items, loadInventory } = useInventory();
 
   const [activeTab, setActiveTab] = useState<InventoryCategory>('CLOTHING');
+
+  useEffect(() => { loadInventory(); }, [loadInventory]);
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 

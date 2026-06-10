@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useWorkCenters } from '../../context/WorkCenterContext';
 import { INITIAL_CITIES } from '../../data/mockEmployees';
@@ -13,9 +13,11 @@ import {
 
 export const DashboardWorkCentersView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { workCenters } = useWorkCenters();
+  const { workCenters, loadWorkCenters } = useWorkCenters();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+
+  useEffect(() => { loadWorkCenters(); }, [loadWorkCenters]);
 
   const scopedWorkCenters = useMemo(
     () => userCityId ? workCenters.filter(w => w.city_id === userCityId) : workCenters,

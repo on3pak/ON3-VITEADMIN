@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useServices } from '../../context/ServiceContext';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
@@ -36,9 +36,11 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export const DashboardServicesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
-  const { services } = useServices();
+  const { services, loadServices } = useServices();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+
+  useEffect(() => { loadServices(); }, [loadServices]);
 
   const filteredServices = useMemo(() => {
     if (!userCityId) return services;

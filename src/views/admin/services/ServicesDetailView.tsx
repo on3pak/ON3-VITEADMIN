@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useServices } from '../../../context/ServiceContext';
 import { useAuth } from '../../../context/AuthContext';
 import { useWorkReports } from '../../../context/WorkReportContext';
@@ -40,8 +40,11 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find((w) => w.id === id)?.name ?? id;
 
 export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceId, onBack }) => {
-  const { getServiceById, updateService, deleteService } = useServices();
+  const { getServiceById, updateService, deleteService, loadServices } = useServices();
   const { user: loggedInUser } = useAuth();
+
+  useEffect(() => { loadServices(); }, [loadServices]);
+
   const service = getServiceById(serviceId);
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;

@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { MachineryItem, MachineryOverview } from '../types';
 import { machineryApi } from '../api/services';
 import { getToken } from '../api/client';
 
 interface MachineryContextType {
   items: MachineryItem[];
+  loadMachinery: () => void;
   getOverviews: () => MachineryOverview[];
   getById: (id: string) => MachineryItem | undefined;
   create: (data: Omit<MachineryItem, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
@@ -17,21 +18,16 @@ const MachineryContext = createContext<MachineryContextType | undefined>(undefin
 export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<MachineryItem[]>([]);
 
-  useEffect(() => {
-    const loadMachinery = () => {
-      if (!getToken()) return;
-      machineryApi.list()
-        .then(async (res) => {
-          const full = await Promise.all(
-            res.data.map((o) => machineryApi.getById(o.id).catch(() => null))
-          );
-          setItems(full.filter(Boolean) as MachineryItem[]);
-        })
-        .catch(() => {});
-    };
-    loadMachinery();
-    window.addEventListener('auth:login', loadMachinery);
-    return () => window.removeEventListener('auth:login', loadMachinery);
+  const loadMachinery = useCallback(() => {
+    if (!getToken()) return;
+    machineryApi.list()
+      .then(async (res) => {
+        const full = await Promise.all(
+          res.data.map((o) => machineryApi.getById(o.id).catch(() => null))
+        );
+        setItems(full.filter(Boolean) as MachineryItem[]);
+      })
+      .catch(() => {});
   }, []);
 
   const getOverviews = useCallback((): MachineryOverview[] => {
@@ -75,7 +71,7 @@ export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children 
   }, []);
 
   return (
-    <MachineryContext.Provider value={{ items, getOverviews, getById, create, update, remove }}>
+    <MachineryContext.Provider value={{ items, loadMachinery, getOverviews, getById, create, update, remove }}>
       {children}
     </MachineryContext.Provider>
   );

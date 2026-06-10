@@ -43,7 +43,7 @@ const getInitials = (name: string, last1: string) => {
 };
 
 export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> = ({ onViewEmployee }) => {
-  const { getEmployeeOverviews, getEmployeeById, createEmployee, updateEmployee, deleteEmployee } = useEmployees();
+  const { getEmployeeOverviews, getEmployeeById, createEmployee, updateEmployee, deleteEmployee, loadEmployees } = useEmployees();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,6 +59,8 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingEmployeeId, setDeletingEmployeeId] = useState<string | null>(null);
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
 
   type LookupTab = 'employees' | 'categories' | 'statuses' | 'workdays' | 'shifts' | 'contracts';
   const [activeTab, setActiveTab] = useState<LookupTab>('employees');

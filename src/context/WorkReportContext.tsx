@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { WorkReport, WorkServiceEntry } from '../types';
 import { workReportsApi } from '../api/services';
 import { getToken } from '../api/client';
@@ -16,6 +16,7 @@ export function getTodayDateString(): string {
 
 interface WorkReportContextType {
   reports: WorkReport[];
+  loadReports: () => void;
   getWorkReportForToday: (employeeId: string, prefillServices?: WorkServiceEntry[]) => WorkReport;
   getWorkReportHistory: (employeeId: string) => WorkReport[];
   getWorkReportById: (id: string) => WorkReport | undefined;
@@ -40,18 +41,13 @@ const WorkReportContext = createContext<WorkReportContextType | undefined>(undef
 export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [reports, setReports] = useState<WorkReport[]>([]);
 
-  useEffect(() => {
-    const loadReports = () => {
-      if (!getToken()) return;
-      workReportsApi.list()
-        .then((res) => {
-          setReports(res.data);
-        })
-        .catch(() => {});
-    };
-    loadReports();
-    window.addEventListener('auth:login', loadReports);
-    return () => window.removeEventListener('auth:login', loadReports);
+  const loadReports = useCallback(() => {
+    if (!getToken()) return;
+    workReportsApi.list()
+      .then((res) => {
+        setReports(res.data);
+      })
+      .catch(() => {});
   }, []);
 
   const persist = useCallback((updater: (prev: WorkReport[]) => WorkReport[]) => {
@@ -229,6 +225,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
     <WorkReportContext.Provider
       value={{
         reports,
+        loadReports,
         getWorkReportForToday,
         getWorkReportHistory,
         getWorkReportById,

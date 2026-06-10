@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Vehicle, VehicleOverview } from '../types';
 import { vehiclesApi } from '../api/services';
 import { getToken } from '../api/client';
 
 interface VehicleContextType {
   vehicles: Vehicle[];
+  loadVehicles: () => void;
   getVehicleOverviews: () => VehicleOverview[];
   getVehicleById: (id: string) => Vehicle | undefined;
   createVehicle: (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean }>;
@@ -17,21 +18,16 @@ const VehicleContext = createContext<VehicleContextType | undefined>(undefined);
 export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
-  useEffect(() => {
-    const loadVehicles = () => {
-      if (!getToken()) return;
-      vehiclesApi.list()
-        .then(async (res) => {
-          const full = await Promise.all(
-            res.data.map((o) => vehiclesApi.getById(o.id).catch(() => null))
-          );
-          setVehicles(full.filter(Boolean) as Vehicle[]);
-        })
-        .catch(() => {});
-    };
-    loadVehicles();
-    window.addEventListener('auth:login', loadVehicles);
-    return () => window.removeEventListener('auth:login', loadVehicles);
+  const loadVehicles = useCallback(() => {
+    if (!getToken()) return;
+    vehiclesApi.list()
+      .then(async (res) => {
+        const full = await Promise.all(
+          res.data.map((o) => vehiclesApi.getById(o.id).catch(() => null))
+        );
+        setVehicles(full.filter(Boolean) as Vehicle[]);
+      })
+      .catch(() => {});
   }, []);
 
   const getVehicleOverviews = useCallback(() => {
@@ -80,7 +76,7 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, []);
 
   return (
-    <VehicleContext.Provider value={{ vehicles, getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle }}>
+    <VehicleContext.Provider value={{ vehicles, loadVehicles, getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle }}>
       {children}
     </VehicleContext.Provider>
   );
