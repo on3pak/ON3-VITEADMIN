@@ -16,6 +16,7 @@ export function getTodayDateString(): string {
 
 interface WorkReportContextType {
   reports: WorkReport[];
+  loading: boolean;
   loadReports: () => void;
   getWorkReportForToday: (employeeId: string, prefillServices?: WorkServiceEntry[]) => WorkReport;
   getWorkReportHistory: (employeeId: string) => WorkReport[];
@@ -40,14 +41,17 @@ const WorkReportContext = createContext<WorkReportContextType | undefined>(undef
 
 export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [reports, setReports] = useState<WorkReport[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadReports = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     workReportsApi.list()
       .then((res) => {
         setReports(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const persist = useCallback((updater: (prev: WorkReport[]) => WorkReport[]) => {
@@ -225,6 +229,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
     <WorkReportContext.Provider
       value={{
         reports,
+        loading,
         loadReports,
         getWorkReportForToday,
         getWorkReportHistory,

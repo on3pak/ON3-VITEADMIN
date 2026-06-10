@@ -15,6 +15,7 @@ import {
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp, User, Tags,
   HeartPulse, CalendarDays, Clock, FileText, X,
 } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 const STATUS_STYLES: Record<string, string> = {
   'es_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
@@ -44,7 +45,7 @@ const getInitials = (name: string, last1: string) => {
 };
 
 export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> = ({ onViewEmployee }) => {
-  const { getEmployeeOverviews, getEmployeeById, loadEmployees } = useEmployees();
+  const { getEmployeeOverviews, getEmployeeById, loadEmployees, loading } = useEmployees();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -412,7 +413,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         </button>
       </div>
 
-      {activeTab === 'employees' && (
+      {loading && activeTab === 'employees' && employeeOverviews.length === 0 ? (
+        <TableSkeleton rows={8} cols={4} />
+      ) : (
+      activeTab === 'employees' && (
         <>
 
       <div className="flex gap-5">
@@ -567,7 +571,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
         onCancel={() => { setDeleteDialogOpen(false); setDeletingEmployeeId(null); }}
       />
       </>
-      )}
+      ))}
 
       {activeTab === 'categories' && renderLookupTab(cats, <Tags className="h-5 w-5" />, 'Categoría', 'Categorías')}
       {activeTab === 'statuses' && renderLookupTab(statuses, <HeartPulse className="h-5 w-5" />, 'Estado', 'Estados')}

@@ -18,6 +18,7 @@ import {
   Fuel, CalendarClock, Plus, Clock, Trash2,
   Building2, User, BadgeInfo,
 } from 'lucide-react';
+import { CardSkeleton } from '../../../components/ui';
 
 type Tab = 'hoy' | 'historial';
 
@@ -57,6 +58,7 @@ export const WorkReportsView: React.FC = () => {
   const {
     getWorkReportForToday, getWorkReportHistory, getWorkReportById,
     updateServices, updateVehicle, toggleTool, setMachineryBreakdown, updateNotes, saveReport, loadReports,
+    loading,
   } = useWorkReports();
 
   const [activeTab, setActiveTab] = useState<Tab>('hoy');
@@ -1390,8 +1392,14 @@ export const WorkReportsView: React.FC = () => {
         )}
       </div>
 
-      {activeTab === 'hoy' && renderHoyTab()}
-      {activeTab === 'historial' && renderHistorialTab()}
+      {loading ? (
+        <CardSkeleton count={3} />
+      ) : (
+        <>
+          {activeTab === 'hoy' && renderHoyTab()}
+          {activeTab === 'historial' && renderHistorialTab()}
+        </>
+      )}
     </div>
   );
 };

@@ -7,9 +7,10 @@ import { WorkCenterFormModal } from '../../../components/modals/WorkCenterFormMo
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { INITIAL_CITIES } from '../../../data/mockEmployees';
 import { Search, Building2, Plus, Edit3, Trash2, Filter, ShieldAlert, MapPin, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 export const WorkCentersView: React.FC = () => {
-  const { workCenters, loadWorkCenters } = useWorkCenters();
+  const { workCenters, loadWorkCenters, loading } = useWorkCenters();
   const { user: loggedInUser } = useAuth();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
@@ -154,6 +155,9 @@ export const WorkCentersView: React.FC = () => {
         </div>
       </div>
 
+      {loading && workCenters.length === 0 ? (
+        <TableSkeleton rows={8} cols={4} />
+      ) : (
       <div className="flex gap-5">
         <div className="flex-1">
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -312,6 +316,7 @@ export const WorkCentersView: React.FC = () => {
           )})()}
         </div>
       </div>
+      )}
 
       <WorkCenterFormModal
         isOpen={isModalOpen}

@@ -9,9 +9,10 @@ import { Service, ServiceOverview } from '../../../types';
 import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
-  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp,
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,   ChevronDown, ChevronUp,
   ClipboardList, Clock, Users, UserCog,
 } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 const CATEGORY_COLORS: Record<string, string> = {
   'BARRIDO MIXTO': 'bg-violet-100 text-violet-700 border-violet-200',
@@ -27,7 +28,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = ({ onViewService }) => {
-  const { getServiceOverviews, getServiceById, loadServices } = useServices();
+  const { getServiceOverviews, getServiceById, loadServices, loading } = useServices();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -155,6 +156,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
         </div>
       </div>
 
+      {loading && serviceOverviews.length === 0 ? (
+        <TableSkeleton rows={8} cols={5} />
+      ) : (
       <div className="flex gap-5">
         <div className="flex-1">
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -302,6 +306,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
           )})()}
         </div>
       </div>
+      )}
 
       <ServiceFormModal
         isOpen={modalOpen}

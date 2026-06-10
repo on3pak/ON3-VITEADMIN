@@ -11,6 +11,7 @@ import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp, Truck,
 } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 const STATUS_STYLES: Record<string, string> = {
   'ACTIVE': 'bg-emerald-100 text-emerald-800 border-emerald-200',
@@ -34,7 +35,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = ({ onViewVehicle }) => {
-  const { getVehicleOverviews, getVehicleById, loadVehicles } = useVehicles();
+  const { getVehicleOverviews, getVehicleById, loadVehicles, loading } = useVehicles();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -162,6 +163,9 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
         </div>
       </div>
 
+      {loading && vehicleOverviews.length === 0 ? (
+        <TableSkeleton rows={8} cols={5} />
+      ) : (
       <div className="flex gap-5">
         <div className="flex-1">
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -295,6 +299,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
           )})()}
         </div>
       </div>
+      )}
 
       <VehicleFormModal
         isOpen={modalOpen}

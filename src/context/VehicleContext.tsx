@@ -5,6 +5,7 @@ import { getToken } from '../api/client';
 
 interface VehicleContextType {
   vehicles: Vehicle[];
+  loading: boolean;
   loadVehicles: () => void;
   getVehicleOverviews: () => VehicleOverview[];
   getVehicleById: (id: string) => Vehicle | undefined;
@@ -17,14 +18,17 @@ const VehicleContext = createContext<VehicleContextType | undefined>(undefined);
 
 export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadVehicles = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     vehiclesApi.list()
       .then((res) => {
         setVehicles(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const getVehicleOverviews = useCallback(() => {
@@ -73,7 +77,7 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, []);
 
   return (
-    <VehicleContext.Provider value={{ vehicles, loadVehicles, getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle }}>
+    <VehicleContext.Provider value={{ vehicles, loading, loadVehicles, getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle }}>
       {children}
     </VehicleContext.Provider>
   );

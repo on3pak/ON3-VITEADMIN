@@ -5,6 +5,7 @@ import { getToken } from '../api/client';
 
 interface ServiceContextType {
   services: Service[];
+  loading: boolean;
   loadServices: () => void;
   getServiceOverviews: () => ServiceOverview[];
   getServiceById: (id: string) => Service | undefined;
@@ -18,14 +19,17 @@ const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
 
 export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadServices = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     servicesApi.list()
       .then((res) => {
         setServices(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const getServiceOverviews = useCallback(() => {
@@ -90,7 +94,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   return (
     <ServiceContext.Provider
-      value={{ services, loadServices, getServiceOverviews, getServiceById, createService, updateService, deleteService, updateServiceTask }}
+      value={{ services, loading, loadServices, getServiceOverviews, getServiceById, createService, updateService, deleteService, updateServiceTask }}
     >
       {children}
     </ServiceContext.Provider>

@@ -23,9 +23,10 @@ import {
   RotateCcw,
   ArrowLeft,
 } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 export const UsersView: React.FC = () => {
-  const { users, loadUsers } = useUsers();
+  const { users, loadUsers, loading } = useUsers();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -307,6 +308,9 @@ export const UsersView: React.FC = () => {
         </div>
       </div>
 
+      {loading && users.length === 0 ? (
+        <TableSkeleton rows={8} cols={3} />
+      ) : (
       <div className="flex gap-5">
         <div className="flex-1">
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -418,6 +422,7 @@ export const UsersView: React.FC = () => {
           )}
         </div>
       </div>
+      )}
 
       <UserFormModal
         isOpen={isModalOpen}

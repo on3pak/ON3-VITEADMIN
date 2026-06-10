@@ -13,6 +13,7 @@ import {
   ChevronDown, ChevronUp,
   Wrench, Filter, MapPin, ShieldAlert,
 } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 const getSubtypeName = (id: string) => MACHINERY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
 const getStatusName = (id: string) => MACHINERY_STATUSES.find((s) => s.id === id)?.name ?? id;
@@ -27,7 +28,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export const MachineryView: React.FC = () => {
-  const { getOverviews, getById, loadMachinery } = useMachinery();
+  const { getOverviews, getById, loadMachinery, loading } = useMachinery();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -203,6 +204,9 @@ export const MachineryView: React.FC = () => {
         </div>
       </div>
 
+      {loading && overviews.length === 0 ? (
+        <TableSkeleton rows={8} cols={6} />
+      ) : (
       <div className="flex gap-5">
         <div className="flex-1">
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -409,6 +413,7 @@ export const MachineryView: React.FC = () => {
           })()}
         </div>
       </div>
+      )}
 
       <MachineryFormModal
         isOpen={modalOpen}

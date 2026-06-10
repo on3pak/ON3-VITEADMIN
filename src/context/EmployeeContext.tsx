@@ -5,6 +5,7 @@ import { getToken } from '../api/client';
 
 interface EmployeeContextType {
   employees: Employee[];
+  loading: boolean;
   loadEmployees: () => void;
   getEmployeeOverviews: () => EmployeeOverview[];
   getEmployeeById: (id: string) => Employee | undefined;
@@ -22,17 +23,15 @@ const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined
 export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadEmployees = useCallback(() => {
     if (!getToken()) return;
-    employeesApi.list()
-      .then((res) => {
-        setEmployees(res.data);
-      })
-      .catch(() => {});
-    vacationsApi.list()
-      .then((res) => setVacationRequests(res.data))
-      .catch(() => {});
+    setLoading(true);
+    Promise.all([
+      employeesApi.list().then((res) => setEmployees(res.data)),
+      vacationsApi.list().then((res) => setVacationRequests(res.data)),
+    ]).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   const getEmployeeOverviews = useCallback(() => {
@@ -109,13 +108,13 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   }, [vacationRequests]);
 
   return (
-    <EmployeeContext.Provider
-      value={{
-        employees, loadEmployees, getEmployeeOverviews, getEmployeeById,
-        createEmployee, updateEmployee, deleteEmployee,
-        vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
-      }}
-    >
+      <EmployeeContext.Provider
+        value={{
+          employees, loading, loadEmployees, getEmployeeOverviews, getEmployeeById,
+          createEmployee, updateEmployee, deleteEmployee,
+          vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
+        }}
+      >
       {children}
     </EmployeeContext.Provider>
   );

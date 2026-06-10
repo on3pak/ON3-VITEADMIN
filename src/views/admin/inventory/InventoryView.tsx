@@ -14,6 +14,7 @@ import {
   ChevronDown, ChevronUp,
   Shirt, Shield, Filter, MapPin,
 } from 'lucide-react';
+import { TableSkeleton } from '../../../components/ui';
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
   { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
@@ -29,7 +30,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const InventoryView: React.FC = () => {
-  const { getOverviews, getById, loadInventory } = useInventory();
+  const { getOverviews, getById, loadInventory, loading } = useInventory();
   const { user: loggedInUser } = useAuth();
 
   const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
@@ -225,6 +226,9 @@ export const InventoryView: React.FC = () => {
         ))}
       </div>
 
+      {loading && overviews.length === 0 ? (
+        <TableSkeleton rows={8} cols={6} />
+      ) : (
       <div className="flex gap-5">
         <div className="flex-1">
           <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
@@ -412,6 +416,7 @@ export const InventoryView: React.FC = () => {
           })()}
         </div>
       </div>
+      )}
 
       <InventoryFormModal
         isOpen={modalOpen}

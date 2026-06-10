@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LoadingProvider, useLoading } from './context/LoadingContext';
+import { TopProgressBar } from './components/ui';
 import { UserProvider } from './context/UserContext';
 import { EmployeeProvider } from './context/EmployeeContext';
 import { DashboardViewType, VIEW_ROLES } from './types';
@@ -283,28 +285,40 @@ const MainLayout: React.FC = () => {
   );
 };
 
+const AppContent: React.FC = () => {
+  const { loading } = useLoading();
+  return (
+    <>
+      <TopProgressBar loading={loading} />
+      <MainLayout />
+    </>
+  );
+};
+
 export default function App() {
   return (
     <AuthProvider>
-      <UserProvider>
-        <EmployeeProvider>
-          <VehicleProvider>
-            <WorkCenterProvider>
-            <ServiceProvider>
-              <ServiceReportProvider>
-              <InventoryProvider>
-              <MachineryProvider>
-              <WorkReportProvider>
-              <MainLayout />
-              </WorkReportProvider>
-              </MachineryProvider>
-              </InventoryProvider>
-              </ServiceReportProvider>
-            </ServiceProvider>
-            </WorkCenterProvider>
-          </VehicleProvider>
-        </EmployeeProvider>
-      </UserProvider>
+      <LoadingProvider>
+        <UserProvider>
+          <EmployeeProvider>
+            <VehicleProvider>
+              <WorkCenterProvider>
+              <ServiceProvider>
+                <ServiceReportProvider>
+                <InventoryProvider>
+                <MachineryProvider>
+                <WorkReportProvider>
+                <AppContent />
+                </WorkReportProvider>
+                </MachineryProvider>
+                </InventoryProvider>
+                </ServiceReportProvider>
+              </ServiceProvider>
+              </WorkCenterProvider>
+            </VehicleProvider>
+          </EmployeeProvider>
+        </UserProvider>
+      </LoadingProvider>
     </AuthProvider>
   );
 }

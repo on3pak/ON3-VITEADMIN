@@ -6,6 +6,7 @@ import { getToken } from '../api/client';
 
 interface UserContextProps {
   users: User[];
+  loading: boolean;
   loadUsers: () => void;
   createUser: (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean; message: string }>;
   updateUser: (id: string, userData: Partial<User>) => Promise<{ success: boolean; message: string }>;
@@ -18,15 +19,18 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const { user, triggerToast } = useAuth();
 
   const loadUsers = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     usersApi.list()
       .then((res) => {
         setUsers(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const checkPermissionForRoleAction = (action: 'CREATE' | 'UPDATE' | 'DELETE', targetRole?: UserRole, originalTarget?: User): { allowed: boolean; reason?: string } => {
@@ -166,7 +170,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <UserContext.Provider value={{ users, loadUsers, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser }}>
+    <UserContext.Provider value={{ users, loading, loadUsers, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -6,6 +6,7 @@ import { getToken } from '../api/client';
 
 interface WorkCenterContextProps {
   workCenters: WorkCenter[];
+  loading: boolean;
   loadWorkCenters: () => void;
   createWorkCenter: (data: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean; message: string }>;
   updateWorkCenter: (id: string, data: Partial<WorkCenter>) => Promise<{ success: boolean; message: string }>;
@@ -16,13 +17,16 @@ const WorkCenterContext = createContext<WorkCenterContextProps | undefined>(unde
 
 export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [workCenters, setWorkCenters] = useState<WorkCenter[]>([]);
+  const [loading, setLoading] = useState(true);
   const { user, triggerToast } = useAuth();
 
   const loadWorkCenters = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     workCentersApi.list()
       .then((res) => setWorkCenters(res.data))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const checkPermission = (action: 'CREATE' | 'UPDATE' | 'DELETE'): { allowed: boolean; reason?: string } => {
@@ -97,7 +101,7 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   return (
-    <WorkCenterContext.Provider value={{ workCenters, loadWorkCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter }}>
+    <WorkCenterContext.Provider value={{ workCenters, loading, loadWorkCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter }}>
       {children}
     </WorkCenterContext.Provider>
   );

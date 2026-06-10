@@ -7,6 +7,7 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, CreditCard, Award, Clock, Edit3, Trash2, ShieldAlert, Building2, Wallet, FileCheck, Activity, Shirt, Package } from 'lucide-react';
+import { ProfileSkeleton } from '../../../components/ui';
 
 interface EmployeesDetailViewProps {
   employeeId: string;
@@ -49,9 +50,11 @@ const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }
 export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employeeId, onBack }) => {
   const { user: loggedInUser } = useAuth();
   const [employee, setEmployee] = useState<Employee | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    employeesApi.getById(employeeId).then(setEmployee).catch(() => {});
+    setLoading(true);
+    employeesApi.getById(employeeId).then(setEmployee).finally(() => setLoading(false)).catch(() => {});
   }, [employeeId]);
 
   const isReadOnly = loggedInUser?.role === 'USER';
@@ -80,6 +83,10 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
     setModalOpen(false);
     return true;
   };
+
+  if (loading) {
+    return <ProfileSkeleton />;
+  }
 
   if (!employee) {
     return (

@@ -7,6 +7,7 @@ import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import type { Service } from '../../../types';
 import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
+import { ProfileSkeleton } from '../../../components/ui';
 import {
   ArrowLeft, ClipboardList,
   Edit3, Trash2, ListChecks, UserCog, Users,
@@ -42,9 +43,11 @@ const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find((w) => w.id 
 export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceId, onBack }) => {
   const { user: loggedInUser } = useAuth();
   const [service, setService] = useState<Service | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    servicesApi.getById(serviceId).then(setService).catch(() => {});
+    setLoading(true);
+    servicesApi.getById(serviceId).then(setService).finally(() => setLoading(false)).catch(() => {});
   }, [serviceId]);
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
@@ -77,6 +80,8 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
   const [activeDay, setActiveDay] = useState(todayIndex);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  if (loading) return <ProfileSkeleton />;
 
   if (!service) {
     return (

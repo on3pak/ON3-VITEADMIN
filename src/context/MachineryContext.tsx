@@ -5,6 +5,7 @@ import { getToken } from '../api/client';
 
 interface MachineryContextType {
   items: MachineryItem[];
+  loading: boolean;
   loadMachinery: () => void;
   getOverviews: () => MachineryOverview[];
   getById: (id: string) => MachineryItem | undefined;
@@ -17,14 +18,17 @@ const MachineryContext = createContext<MachineryContextType | undefined>(undefin
 
 export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<MachineryItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadMachinery = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     machineryApi.list()
       .then((res) => {
         setItems(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const getOverviews = useCallback((): MachineryOverview[] => {
@@ -68,7 +72,7 @@ export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children 
   }, []);
 
   return (
-    <MachineryContext.Provider value={{ items, loadMachinery, getOverviews, getById, create, update, remove }}>
+    <MachineryContext.Provider value={{ items, loading, loadMachinery, getOverviews, getById, create, update, remove }}>
       {children}
     </MachineryContext.Provider>
   );

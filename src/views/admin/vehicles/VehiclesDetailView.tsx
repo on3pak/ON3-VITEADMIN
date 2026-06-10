@@ -6,6 +6,7 @@ import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import type { Vehicle } from '../../../types';
 import { ArrowLeft, Truck, FileCheck, Edit3, Trash2 } from 'lucide-react';
+import { ProfileSkeleton } from '../../../components/ui';
 
 interface VehiclesDetailViewProps {
   vehicleId: string;
@@ -59,13 +60,19 @@ const fuelTypeLabels: Record<string, string> = {
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    vehiclesApi.getById(vehicleId).then(setVehicle).catch(() => {});
+    setLoading(true);
+    vehiclesApi.getById(vehicleId).then(setVehicle).finally(() => setLoading(false)).catch(() => {});
   }, [vehicleId]);
   
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  if (loading) {
+    return <ProfileSkeleton />;
+  }
 
   if (!vehicle) {
     return (

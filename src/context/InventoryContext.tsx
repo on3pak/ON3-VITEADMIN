@@ -5,6 +5,7 @@ import { getToken } from '../api/client';
 
 interface InventoryContextType {
   items: InventoryItem[];
+  loading: boolean;
   loadInventory: () => void;
   getOverviews: () => InventoryOverview[];
   getById: (id: string) => InventoryItem | undefined;
@@ -17,14 +18,17 @@ const InventoryContext = createContext<InventoryContextType | undefined>(undefin
 
 export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<InventoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadInventory = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     inventoryApi.list()
       .then((res) => {
         setItems(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const getOverviews = useCallback((): InventoryOverview[] => {
@@ -69,7 +73,7 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
   }, []);
 
   return (
-    <InventoryContext.Provider value={{ items, loadInventory, getOverviews, getById, create, update, remove }}>
+    <InventoryContext.Provider value={{ items, loading, loadInventory, getOverviews, getById, create, update, remove }}>
       {children}
     </InventoryContext.Provider>
   );

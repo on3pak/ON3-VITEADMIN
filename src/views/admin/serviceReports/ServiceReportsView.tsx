@@ -12,6 +12,7 @@ import {
   CheckCircle2, X, ChevronDown, ChevronRight,
   Building2, Clock, Users, Save, AlertTriangle, UserCog,
 } from 'lucide-react';
+import { CardSkeleton } from '../../../components/ui';
 
 type Tab = 'previo' | 'diario' | 'historial';
 
@@ -52,7 +53,8 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const { vehicles, loadVehicles } = useVehicles();
   const {
     getPrevioForTomorrow, getDiarioForToday, getHistorial,
-    addAssignment, updateAssignmentVehicle, removeAssignment, setAttendance, saveReport, getReportById, loadReports
+    addAssignment, updateAssignmentVehicle, removeAssignment, setAttendance, saveReport, getReportById, loadReports,
+    loading,
   } = useServiceReports();
 
   const userCityId = user?.role === 'ROOT' ? undefined : user?.city_id;
@@ -583,39 +585,45 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
         )}
       </div>
 
-      {saveMsg && (
-        <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${
-          saveMsg.type === 'success'
-            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-            : 'bg-rose-50 text-rose-700 border border-rose-200'
-        }`}>
-          {saveMsg.type === 'success' ? (
-            <CheckCircle2 className="h-4 w-4 shrink-0" />
-          ) : (
-            <AlertTriangle className="h-4 w-4 shrink-0" />
+      {loading ? (
+        <CardSkeleton count={3} />
+      ) : (
+        <>
+          {saveMsg && (
+            <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${
+              saveMsg.type === 'success'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-rose-50 text-rose-700 border border-rose-200'
+            }`}>
+              {saveMsg.type === 'success' ? (
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+              ) : (
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+              )}
+              {saveMsg.text}
+              <button onClick={() => setSaveMsg(null)} className="ml-auto p-0.5 hover:opacity-70">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
           )}
-          {saveMsg.text}
-          <button onClick={() => setSaveMsg(null)} className="ml-auto p-0.5 hover:opacity-70">
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      )}
 
-      {computedWarnings.length > 0 && !saveMsg && (
-        <div className="flex items-start gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200">
-          <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold">Cambios detectados en empleados del parte previo:</p>
-            <ul className="list-disc list-inside text-xs mt-1">
-              {computedWarnings.map((w, i) => <li key={i}>{w}</li>)}
-            </ul>
-          </div>
-        </div>
-      )}
+          {computedWarnings.length > 0 && !saveMsg && (
+            <div className="flex items-start gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200">
+              <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold">Cambios detectados en empleados del parte previo:</p>
+                <ul className="list-disc list-inside text-xs mt-1">
+                  {computedWarnings.map((w, i) => <li key={i}>{w}</li>)}
+                </ul>
+              </div>
+            </div>
+          )}
 
-      {activeTab === 'previo' && renderPrevioTab()}
-      {activeTab === 'diario' && renderDiarioTab()}
-      {activeTab === 'historial' && renderHistorialTab()}
+          {activeTab === 'previo' && renderPrevioTab()}
+          {activeTab === 'diario' && renderDiarioTab()}
+          {activeTab === 'historial' && renderHistorialTab()}
+        </>
+      )}
     </div>
   );
 };

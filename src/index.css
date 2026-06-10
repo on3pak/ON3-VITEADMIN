@@ -104,3 +104,14 @@ body {
 .metronic-input {
   @apply w-full px-3.5 py-2 text-sm border border-app-border rounded-lg bg-white text-app-text placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all;
 }
+
+/* Top progress bar animation */
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  60% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-progress {
+  animation: progress-indeterminate 1.5s ease-in-out infinite;
+}

@@ -35,6 +35,7 @@ export function getYesterdayDateString(): string {
 
 interface ServiceReportContextType {
   reports: ServiceReport[];
+  loading: boolean;
   loadReports: () => void;
   getPrevioForTomorrow: (cityId: string) => ServiceReport;
   getDiarioForToday: (cityId: string) => { report: ServiceReport; warnings: string[] };
@@ -52,14 +53,17 @@ const ServiceReportContext = createContext<ServiceReportContextType | undefined>
 
 export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [reports, setReports] = useState<ServiceReport[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadReports = useCallback(() => {
     if (!getToken()) return;
+    setLoading(true);
     serviceReportsApi.list()
       .then((res) => {
         setReports(res.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const persist = useCallback((updater: (prev: ServiceReport[]) => ServiceReport[]) => {
@@ -236,6 +240,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
     <ServiceReportContext.Provider
       value={{
         reports,
+        loading,
         loadReports,
         getPrevioForTomorrow,
         getDiarioForToday,
