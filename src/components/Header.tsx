@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
 import { Menu, Search, User, Settings, LogOut, Moon, Grid, Languages, Bell, Maximize2, Minimize2, Type, Star } from 'lucide-react';
-import { useUsers } from '../context/UserContext';
+
 
 interface HeaderProps {
   currentView: DashboardViewType;
@@ -47,7 +47,6 @@ const viewBreadcrumb: Record<DashboardViewType, { title: string; parent?: string
 
 export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sidebarOpen, setSidebarOpen, serviceReportTab }) => {
   const { user, triggerToast, logout } = useAuth();
-  const { resetMockData } = useUsers();
   const [mobileUserOpen, setMobileUserOpen] = useState(false);
   const mobileUserRef = useRef<HTMLDivElement>(null);
 

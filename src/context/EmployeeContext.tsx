@@ -1,27 +1,46 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { Employee, EmployeeOverview, VacationRequest } from '../types';
-import { INITIAL_EMPLOYEES, INITIAL_EMPLOYEE_STATUSES } from '../data/mockEmployees';
-import { generateId } from '../utils/id';
+import { employeesApi, vacationsApi } from '../api/services';
+import { getToken } from '../api/client';
 
 interface EmployeeContextType {
   employees: Employee[];
   getEmployeeOverviews: () => EmployeeOverview[];
   getEmployeeById: (id: string) => Employee | undefined;
-  getNextEmployeeId: () => string;
-  createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => { success: boolean };
-  updateEmployee: (id: string, data: Partial<Employee>) => { success: boolean };
-  deleteEmployee: (id: string) => void;
+  createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => Promise<{ success: boolean }>;
+  updateEmployee: (id: string, data: Partial<Employee>) => Promise<{ success: boolean }>;
+  deleteEmployee: (id: string) => Promise<void>;
   vacationRequests: VacationRequest[];
-  createVacationRequest: (data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => { success: boolean };
-  resolveVacationRequest: (id: string, status: 'APPROVED' | 'REJECTED') => void;
+  createVacationRequest: (data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => Promise<{ success: boolean }>;
+  resolveVacationRequest: (id: string, status: 'APPROVED' | 'REJECTED') => Promise<void>;
   getVacationRequestsByEmployee: (employeeId: string) => VacationRequest[];
 }
 
 const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined);
 
 export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>([]);
+
+  useEffect(() => {
+    const loadData = () => {
+      if (!getToken()) return;
+      employeesApi.list()
+        .then(async (res) => {
+          const full = await Promise.all(
+            res.data.map((o) => employeesApi.getById(o.id).catch(() => null))
+          );
+          setEmployees(full.filter(Boolean) as Employee[]);
+        })
+        .catch(() => {});
+      vacationsApi.list()
+        .then((res) => setVacationRequests(res.data))
+        .catch(() => {});
+    };
+    loadData();
+    window.addEventListener('auth:login', loadData);
+    return () => window.removeEventListener('auth:login', loadData);
+  }, []);
 
   const getEmployeeOverviews = useCallback(() => {
     return employees.map((emp) => ({
@@ -34,7 +53,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
       work_day_id: emp.work_day_id,
       work_center_id: emp.work_center_id,
       status_id: emp.status_id,
-      status_name: INITIAL_EMPLOYEE_STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id,
+      status_name: '',
       city_id: emp.city_id,
     }));
   }, [employees]);
@@ -43,58 +62,53 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     return employees.find((emp) => emp.id === id);
   }, [employees]);
 
-  const getNextEmployeeId = useCallback(() => {
-    const max = employees.reduce((maxId, emp) => {
-      const num = parseInt(emp.id, 10);
-      return isNaN(num) ? maxId : Math.max(maxId, num);
-    }, 0);
-    return String(max + 1).padStart(6, '0');
-  }, [employees]);
-
-  const createEmployee = useCallback((
+  const createEmployee = useCallback(async (
     data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>,
     employeeId?: string
   ) => {
-    const now = new Date().toISOString();
-    const newEmployee: Employee = {
-      ...data,
-      id: employeeId || generateId('emp'),
-      created_at: now,
-      updated_at: now,
-    };
-    setEmployees((prev) => [newEmployee, ...prev]);
-    return { success: true };
+    try {
+      const created = await employeesApi.create(data);
+      setEmployees((prev) => [created, ...prev]);
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const updateEmployee = useCallback((id: string, data: Partial<Employee>) => {
-    setEmployees((prev) =>
-      prev.map((emp) =>
-        emp.id === id ? { ...emp, ...data, updated_at: new Date().toISOString() } : emp
-      )
-    );
-    return { success: true };
+  const updateEmployee = useCallback(async (id: string, data: Partial<Employee>) => {
+    try {
+      const updated = await employeesApi.update(id, data);
+      setEmployees((prev) => prev.map((emp) => emp.id === id ? updated : emp));
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const deleteEmployee = useCallback((id: string) => {
-    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+  const deleteEmployee = useCallback(async (id: string) => {
+    try {
+      await employeesApi.delete(id);
+      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+    } catch { /* ignore */ }
   }, []);
 
-  const createVacationRequest = useCallback((data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => {
-    const newRequest: VacationRequest = {
-      ...data,
-      id: generateId('vrq'),
-      created_at: new Date().toISOString(),
-    };
-    setVacationRequests((prev) => [...prev, newRequest]);
-    return { success: true };
+  const createVacationRequest = useCallback(async (data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => {
+    try {
+      const created = await vacationsApi.create(data);
+      setVacationRequests((prev) => [...prev, created]);
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const resolveVacationRequest = useCallback((id: string, status: 'APPROVED' | 'REJECTED') => {
-    setVacationRequests((prev) =>
-      prev.map((req) =>
-        req.id === id ? { ...req, status, resolved_at: new Date().toISOString() } : req
-      )
-    );
+  const resolveVacationRequest = useCallback(async (id: string, status: 'APPROVED' | 'REJECTED') => {
+    try {
+      const updated = await vacationsApi.update(id, { status });
+      setVacationRequests((prev) =>
+        prev.map((req) => req.id === id ? updated : req)
+      );
+    } catch { /* ignore */ }
   }, []);
 
   const getVacationRequestsByEmployee = useCallback((employeeId: string) => {
@@ -104,7 +118,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
     <EmployeeContext.Provider
       value={{
-        employees, getEmployeeOverviews, getEmployeeById, getNextEmployeeId,
+        employees, getEmployeeOverviews, getEmployeeById,
         createEmployee, updateEmployee, deleteEmployee,
         vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
       }}

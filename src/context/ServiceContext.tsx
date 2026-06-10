@@ -1,22 +1,39 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { Service, ServiceOverview, ServiceTask } from '../types';
-import { INITIAL_SERVICES } from '../data/mockServices';
-import { generateId } from '../utils/id';
+import { servicesApi } from '../api/services';
+import { getToken } from '../api/client';
 
 interface ServiceContextType {
   services: Service[];
   getServiceOverviews: () => ServiceOverview[];
   getServiceById: (id: string) => Service | undefined;
-  createService: (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
-  updateService: (id: string, data: Partial<Service>) => { success: boolean };
-  deleteService: (id: string) => void;
+  createService: (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean }>;
+  updateService: (id: string, data: Partial<Service>) => Promise<{ success: boolean }>;
+  deleteService: (id: string) => Promise<void>;
   updateServiceTask: (serviceId: string, taskId: string, status: ServiceTask['status']) => void;
 }
 
 const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
 
 export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [services, setServices] = useState<Service[]>(INITIAL_SERVICES);
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    const loadServices = () => {
+      if (!getToken()) return;
+      servicesApi.list()
+        .then(async (res) => {
+          const full = await Promise.all(
+            res.data.map((o) => servicesApi.getById(o.id).catch(() => null))
+          );
+          setServices(full.filter(Boolean) as Service[]);
+        })
+        .catch(() => {});
+    };
+    loadServices();
+    window.addEventListener('auth:login', loadServices);
+    return () => window.removeEventListener('auth:login', loadServices);
+  }, []);
 
   const getServiceOverviews = useCallback(() => {
     return services.map((s) => ({
@@ -35,29 +52,31 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
     return services.find((s) => s.id === id);
   }, [services]);
 
-  const createService = useCallback((data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
-    const now = new Date().toISOString();
-    const newService: Service = {
-      ...data,
-      id: generateId('svc'),
-      created_at: now,
-      updated_at: now,
-    };
-    setServices((prev) => [newService, ...prev]);
-    return { success: true };
+  const createService = useCallback(async (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const created = await servicesApi.create(data);
+      setServices((prev) => [created, ...prev]);
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const updateService = useCallback((id: string, data: Partial<Service>) => {
-    setServices((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, ...data, updated_at: new Date().toISOString() } : s
-      )
-    );
-    return { success: true };
+  const updateService = useCallback(async (id: string, data: Partial<Service>) => {
+    try {
+      const updated = await servicesApi.update(id, data);
+      setServices((prev) => prev.map((s) => s.id === id ? updated : s));
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const deleteService = useCallback((id: string) => {
-    setServices((prev) => prev.filter((s) => s.id !== id));
+  const deleteService = useCallback(async (id: string) => {
+    try {
+      await servicesApi.delete(id);
+      setServices((prev) => prev.filter((s) => s.id !== id));
+    } catch { /* ignore */ }
   }, []);
 
   const updateServiceTask = useCallback((serviceId: string, taskId: string, status: ServiceTask['status']) => {
@@ -78,24 +97,16 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   return (
     <ServiceContext.Provider
-      value={{
-        services,
-        getServiceOverviews,
-        getServiceById,
-        createService,
-        updateService,
-        deleteService,
-        updateServiceTask,
-      }}
+      value={{ services, getServiceOverviews, getServiceById, createService, updateService, deleteService, updateServiceTask }}
     >
       {children}
     </ServiceContext.Provider>
   );
 };
 
-export const useServices = (): ServiceContextType => {
+export const useServices = () => {
   const context = useContext(ServiceContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useServices must be used within a ServiceProvider');
   }
   return context;

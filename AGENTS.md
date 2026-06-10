@@ -127,7 +127,15 @@ Both share: search bar, mobile filters (lg:hidden), sidebar filters (lg:flex), p
 
 ## Testing
 
-- No test framework installed
+- **Vitest 4.1.8** installed (configured in `vite.config.ts`)
+- `pnpm test` — run all tests once
+- `pnpm test:watch` — watch mode
+- Tests located in `src/api/__tests__/`:
+  - `client.test.ts` — 17 tests covering HTTP client, auth headers, error handling, ApiError
+  - `services.test.ts` — 23 tests covering all 14 API service modules (auth, cities, workCenters, employees, users, vehicles, services, inventory, machinery, vacations, workReports, serviceReports, lookups, dashboard)
+  - `api.integration.test.ts` — 23 integration tests against real backend (auto-skip via `runIf` when backend is down)
+- Tests mock `fetch` and `localStorage` globally; no real backend needed for unit tests
+- Integration tests connect to `VITE_API_URL` (default `http://localhost:6543/api`); 18 pass, 3 fail with 500 (employees, vehicles, inventory — backend bugs)
 - Testing view (`TestsView`) exists in UI but requires manual verification
 
 ## Scaffolding CRUD Prompts

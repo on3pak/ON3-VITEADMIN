@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import path from "path";
 import { fileURLToPath } from "url";
 import tailwindcss from "@tailwindcss/vite";
@@ -19,5 +20,9 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
+  },
+  test: {
+    globals: true,
+    environment: 'node',
   },
 });

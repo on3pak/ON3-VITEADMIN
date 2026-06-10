@@ -1,21 +1,38 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { InventoryItem, InventoryOverview } from '../types';
-import { INITIAL_INVENTORY } from '../data/mockInventory';
-import { generateId } from '../utils/id';
+import { inventoryApi } from '../api/services';
+import { getToken } from '../api/client';
 
 interface InventoryContextType {
   items: InventoryItem[];
   getOverviews: () => InventoryOverview[];
   getById: (id: string) => InventoryItem | undefined;
-  create: (data: Omit<InventoryItem, 'id' | 'created_at' | 'updated_at'>) => void;
-  update: (id: string, data: Partial<InventoryItem>) => void;
-  remove: (id: string) => void;
+  create: (data: Omit<InventoryItem, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
+  update: (id: string, data: Partial<InventoryItem>) => Promise<void>;
+  remove: (id: string) => Promise<void>;
 }
 
 const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
 
 export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<InventoryItem[]>(INITIAL_INVENTORY);
+  const [items, setItems] = useState<InventoryItem[]>([]);
+
+  useEffect(() => {
+    const loadInventory = () => {
+      if (!getToken()) return;
+      inventoryApi.list()
+        .then(async (res) => {
+          const full = await Promise.all(
+            res.data.map((o) => inventoryApi.getById(o.id).catch(() => null))
+          );
+          setItems(full.filter(Boolean) as InventoryItem[]);
+        })
+        .catch(() => {});
+    };
+    loadInventory();
+    window.addEventListener('auth:login', loadInventory);
+    return () => window.removeEventListener('auth:login', loadInventory);
+  }, []);
 
   const getOverviews = useCallback((): InventoryOverview[] => {
     return items.map((item) => ({
@@ -37,27 +54,25 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
     return items.find((item) => item.id === id);
   }, [items]);
 
-  const create = useCallback((data: Omit<InventoryItem, 'id' | 'created_at' | 'updated_at'>) => {
-    const now = new Date().toISOString();
-    const newItem: InventoryItem = {
-      ...data,
-      id: generateId('inv'),
-      created_at: now,
-      updated_at: now,
-    };
-    setItems((prev) => [newItem, ...prev]);
+  const create = useCallback(async (data: Omit<InventoryItem, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const created = await inventoryApi.create(data);
+      setItems((prev) => [created, ...prev]);
+    } catch { /* fallback */ }
   }, []);
 
-  const update = useCallback((id: string, data: Partial<InventoryItem>) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, ...data, updated_at: new Date().toISOString() } : item
-      )
-    );
+  const update = useCallback(async (id: string, data: Partial<InventoryItem>) => {
+    try {
+      const updated = await inventoryApi.update(id, data);
+      setItems((prev) => prev.map((item) => item.id === id ? updated : item));
+    } catch { /* fallback */ }
   }, []);
 
-  const remove = useCallback((id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  const remove = useCallback(async (id: string) => {
+    try {
+      await inventoryApi.delete(id);
+      setItems((prev) => prev.filter((item) => item.id !== id));
+    } catch { /* ignore */ }
   }, []);
 
   return (
@@ -67,9 +82,9 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
   );
 };
 
-export const useInventory = (): InventoryContextType => {
+export const useInventory = () => {
   const context = useContext(InventoryContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useInventory must be used within an InventoryProvider');
   }
   return context;

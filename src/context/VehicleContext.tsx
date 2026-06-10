@@ -1,21 +1,38 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { Vehicle, VehicleOverview } from '../types';
-import { INITIAL_VEHICLES } from '../data/mockVehicles';
-import { generateId } from '../utils/id';
+import { vehiclesApi } from '../api/services';
+import { getToken } from '../api/client';
 
 interface VehicleContextType {
   vehicles: Vehicle[];
   getVehicleOverviews: () => VehicleOverview[];
   getVehicleById: (id: string) => Vehicle | undefined;
-  createVehicle: (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => { success: boolean };
-  updateVehicle: (id: string, data: Partial<Vehicle>) => { success: boolean };
-  deleteVehicle: (id: string) => void;
+  createVehicle: (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean }>;
+  updateVehicle: (id: string, data: Partial<Vehicle>) => Promise<{ success: boolean }>;
+  deleteVehicle: (id: string) => Promise<void>;
 }
 
 const VehicleContext = createContext<VehicleContextType | undefined>(undefined);
 
 export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>(INITIAL_VEHICLES);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+
+  useEffect(() => {
+    const loadVehicles = () => {
+      if (!getToken()) return;
+      vehiclesApi.list()
+        .then(async (res) => {
+          const full = await Promise.all(
+            res.data.map((o) => vehiclesApi.getById(o.id).catch(() => null))
+          );
+          setVehicles(full.filter(Boolean) as Vehicle[]);
+        })
+        .catch(() => {});
+    };
+    loadVehicles();
+    window.addEventListener('auth:login', loadVehicles);
+    return () => window.removeEventListener('auth:login', loadVehicles);
+  }, []);
 
   const getVehicleOverviews = useCallback(() => {
     return vehicles.map((v) => ({
@@ -27,6 +44,7 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
       status: v.status,
       work_center_id: v.work_center_id,
       kilometers: v.kilometers,
+      hour_meter: v.hour_meter,
     }));
   }, [vehicles]);
 
@@ -34,50 +52,43 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
     return vehicles.find((v) => v.id === id);
   }, [vehicles]);
 
-  const createVehicle = useCallback((data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
-    const now = new Date().toISOString();
-    const newVehicle: Vehicle = {
-      ...data,
-      id: generateId('veh'),
-      created_at: now,
-      updated_at: now,
-    };
-    setVehicles((prev) => [newVehicle, ...prev]);
-    return { success: true };
+  const createVehicle = useCallback(async (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const created = await vehiclesApi.create(data);
+      setVehicles((prev) => [created, ...prev]);
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const updateVehicle = useCallback((id: string, data: Partial<Vehicle>) => {
-    setVehicles((prev) =>
-      prev.map((v) =>
-        v.id === id ? { ...v, ...data, updated_at: new Date().toISOString() } : v
-      )
-    );
-    return { success: true };
+  const updateVehicle = useCallback(async (id: string, data: Partial<Vehicle>) => {
+    try {
+      const updated = await vehiclesApi.update(id, data);
+      setVehicles((prev) => prev.map((v) => v.id === id ? updated : v));
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
   }, []);
 
-  const deleteVehicle = useCallback((id: string) => {
-    setVehicles((prev) => prev.filter((v) => v.id !== id));
+  const deleteVehicle = useCallback(async (id: string) => {
+    try {
+      await vehiclesApi.delete(id);
+      setVehicles((prev) => prev.filter((v) => v.id !== id));
+    } catch { /* ignore */ }
   }, []);
 
   return (
-    <VehicleContext.Provider
-      value={{
-        vehicles,
-        getVehicleOverviews,
-        getVehicleById,
-        createVehicle,
-        updateVehicle,
-        deleteVehicle,
-      }}
-    >
+    <VehicleContext.Provider value={{ vehicles, getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle }}>
       {children}
     </VehicleContext.Provider>
   );
 };
 
-export const useVehicles = (): VehicleContextType => {
+export const useVehicles = () => {
   const context = useContext(VehicleContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useVehicles must be used within a VehicleProvider');
   }
   return context;

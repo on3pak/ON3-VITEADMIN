@@ -1,30 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { ServiceReport, ServiceAssignment, ReportType, AttendanceStatus, EmployeeAttendance } from '../types';
-import { INITIAL_SERVICE_REPORTS } from '../data/mockServiceReports';
-import { generateId } from '../utils/id';
-
-const STORAGE_KEY = 'on3_mock_service_reports';
-
-function loadReports(): ServiceReport[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed: ServiceReport[] = JSON.parse(raw);
-      const today = getTodayDateString();
-      const existingDiario = parsed.find((r) => r.date === today && r.type === 'DIARIO');
-      const fresh = INITIAL_SERVICE_REPORTS.filter((r) => r.date === today);
-      if (existingDiario) {
-        if (existingDiario.assignments.length === 0 && fresh.length > 0) {
-          return parsed.map((r) => r.id === existingDiario.id ? fresh[0] : r);
-        }
-        return parsed;
-      }
-      if (fresh.length > 0) return [...parsed, ...fresh].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-      return parsed;
-    }
-  } catch { /* ignore */ }
-  return INITIAL_SERVICE_REPORTS;
-}
+import { ServiceReport, ServiceAssignment, AttendanceStatus, EmployeeAttendance } from '../types';
+import { serviceReportsApi } from '../api/services';
+import { getToken } from '../api/client';
 
 function getDateString(d: Date): string {
   const y = d.getFullYear();
@@ -73,15 +50,38 @@ interface ServiceReportContextType {
 const ServiceReportContext = createContext<ServiceReportContextType | undefined>(undefined);
 
 export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [reports, setReports] = useState<ServiceReport[]>(loadReports);
+  const [reports, setReports] = useState<ServiceReport[]>([]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
-  }, [reports]);
+    const loadReports = () => {
+      if (!getToken()) return;
+      serviceReportsApi.list()
+        .then((res) => {
+          setReports(res.data);
+        })
+        .catch(() => {});
+    };
+    loadReports();
+    window.addEventListener('auth:login', loadReports);
+    return () => window.removeEventListener('auth:login', loadReports);
+  }, []);
 
   const persist = useCallback((updater: (prev: ServiceReport[]) => ServiceReport[]) => {
     setReports(updater);
   }, []);
+
+  const syncReport = useCallback((reportId: string) => {
+    if (getToken()) {
+      const report = reports.find((r) => r.id === reportId);
+      if (report) {
+        serviceReportsApi.update(reportId, {
+          assignments: report.assignments,
+          attendance: report.attendance,
+          status: report.status,
+        }).catch(() => {});
+      }
+    }
+  }, [reports]);
 
   const getPrevioForTomorrow = useCallback((cityId: string): ServiceReport => {
     const tomorrow = getTomorrowDateString();
@@ -90,7 +90,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
 
     const now = new Date().toISOString();
     const newReport: ServiceReport = {
-      id: generateId('sr'),
+      id: crypto.randomUUID(),
       date: tomorrow,
       type: 'PREVIO',
       city_id: cityId,
@@ -101,6 +101,9 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
       updated_at: now,
     };
     persist((prev) => [newReport, ...prev]);
+    if (getToken()) {
+      serviceReportsApi.create(newReport).catch(() => {});
+    }
     return newReport;
   }, [reports, persist]);
 
@@ -119,7 +122,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
 
     const now = new Date().toISOString();
     const newReport: ServiceReport = {
-      id: generateId('sr'),
+      id: crypto.randomUUID(),
       date: today,
       type: 'DIARIO',
       city_id: cityId,
@@ -133,6 +136,9 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
     };
 
     persist((prev) => [newReport, ...prev]);
+    if (getToken()) {
+      serviceReportsApi.create(newReport).catch(() => {});
+    }
     return { report: newReport, warnings };
   }, [reports, persist]);
 
@@ -148,7 +154,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
       prev.map((r) => {
         if (r.id !== reportId) return r;
         const newAssignment: ServiceAssignment = {
-          id: generateId('sa'),
+          id: crypto.randomUUID(),
           ...data,
         };
         const attendance = r.type === 'DIARIO'
@@ -159,7 +165,8 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         return { ...r, assignments: [...r.assignments, newAssignment], attendance, updated_at: new Date().toISOString() };
       })
     );
-  }, [persist]);
+    syncReport(reportId);
+  }, [persist, syncReport]);
 
   const updateAssignmentVehicle = useCallback((reportId: string, assignmentId: string, vehicleId: string | null) => {
     persist((prev) =>
@@ -174,7 +181,8 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         };
       })
     );
-  }, [persist]);
+    syncReport(reportId);
+  }, [persist, syncReport]);
 
   const removeAssignment = useCallback((reportId: string, assignmentId: string) => {
     persist((prev) =>
@@ -183,7 +191,8 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         return { ...r, assignments: r.assignments.filter((a) => a.id !== assignmentId), updated_at: new Date().toISOString() };
       })
     );
-  }, [persist]);
+    syncReport(reportId);
+  }, [persist, syncReport]);
 
   const setAttendance = useCallback((reportId: string, employeeId: string, status: AttendanceStatus, note?: string) => {
     persist((prev) =>
@@ -195,7 +204,8 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         return { ...r, attendance, updated_at: new Date().toISOString() };
       })
     );
-  }, [persist]);
+    syncReport(reportId);
+  }, [persist, syncReport]);
 
   const saveReport = useCallback((reportId: string): { success: boolean; error?: string } => {
     let result: { success: boolean; error?: string } = { success: true };
@@ -209,11 +219,17 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         return { ...r, status: 'CONFIRMED', updated_at: new Date().toISOString() };
       })
     );
+    if (result.success && getToken()) {
+      serviceReportsApi.update(reportId, { status: 'CONFIRMED' }).catch(() => {});
+    }
     return result;
   }, [persist]);
 
   const deleteReport = useCallback((reportId: string) => {
     persist((prev) => prev.filter((r) => r.id !== reportId));
+    if (getToken()) {
+      serviceReportsApi.delete(reportId).catch(() => {});
+    }
   }, [persist]);
 
   const getReportById = useCallback((id: string) => {

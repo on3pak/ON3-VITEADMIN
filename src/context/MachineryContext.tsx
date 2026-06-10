@@ -1,21 +1,38 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { MachineryItem, MachineryOverview } from '../types';
-import { INITIAL_MACHINERY } from '../data/mockMachinery';
-import { generateId } from '../utils/id';
+import { machineryApi } from '../api/services';
+import { getToken } from '../api/client';
 
 interface MachineryContextType {
   items: MachineryItem[];
   getOverviews: () => MachineryOverview[];
   getById: (id: string) => MachineryItem | undefined;
-  create: (data: Omit<MachineryItem, 'id' | 'created_at' | 'updated_at'>) => void;
-  update: (id: string, data: Partial<MachineryItem>) => void;
-  remove: (id: string) => void;
+  create: (data: Omit<MachineryItem, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
+  update: (id: string, data: Partial<MachineryItem>) => Promise<void>;
+  remove: (id: string) => Promise<void>;
 }
 
 const MachineryContext = createContext<MachineryContextType | undefined>(undefined);
 
 export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<MachineryItem[]>(INITIAL_MACHINERY);
+  const [items, setItems] = useState<MachineryItem[]>([]);
+
+  useEffect(() => {
+    const loadMachinery = () => {
+      if (!getToken()) return;
+      machineryApi.list()
+        .then(async (res) => {
+          const full = await Promise.all(
+            res.data.map((o) => machineryApi.getById(o.id).catch(() => null))
+          );
+          setItems(full.filter(Boolean) as MachineryItem[]);
+        })
+        .catch(() => {});
+    };
+    loadMachinery();
+    window.addEventListener('auth:login', loadMachinery);
+    return () => window.removeEventListener('auth:login', loadMachinery);
+  }, []);
 
   const getOverviews = useCallback((): MachineryOverview[] => {
     return items.map((item) => ({
@@ -36,27 +53,25 @@ export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children 
     return items.find((item) => item.id === id);
   }, [items]);
 
-  const create = useCallback((data: Omit<MachineryItem, 'id' | 'created_at' | 'updated_at'>) => {
-    const now = new Date().toISOString();
-    const newItem: MachineryItem = {
-      ...data,
-      id: generateId('mch'),
-      created_at: now,
-      updated_at: now,
-    };
-    setItems((prev) => [newItem, ...prev]);
+  const create = useCallback(async (data: Omit<MachineryItem, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const created = await machineryApi.create(data);
+      setItems((prev) => [created, ...prev]);
+    } catch { /* fallback */ }
   }, []);
 
-  const update = useCallback((id: string, data: Partial<MachineryItem>) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, ...data, updated_at: new Date().toISOString() } : item
-      )
-    );
+  const update = useCallback(async (id: string, data: Partial<MachineryItem>) => {
+    try {
+      const updated = await machineryApi.update(id, data);
+      setItems((prev) => prev.map((item) => item.id === id ? updated : item));
+    } catch { /* fallback */ }
   }, []);
 
-  const remove = useCallback((id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  const remove = useCallback(async (id: string) => {
+    try {
+      await machineryApi.delete(id);
+      setItems((prev) => prev.filter((item) => item.id !== id));
+    } catch { /* ignore */ }
   }, []);
 
   return (
@@ -66,9 +81,9 @@ export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children 
   );
 };
 
-export const useMachinery = (): MachineryContextType => {
+export const useMachinery = () => {
   const context = useContext(MachineryContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useMachinery must be used within a MachineryProvider');
   }
   return context;

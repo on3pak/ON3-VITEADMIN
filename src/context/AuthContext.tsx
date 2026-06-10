@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User, UserRole } from '../types';
-import { INITIAL_USERS, TEST_ACCOUNTS } from '../data/mockUsers';
-import { signMockToken, verifyMockToken, decodeMockToken } from '../utils/jwt';
+import { authApi } from '../api/services/auth';
+import { STORAGE_KEYS } from '../config';
+import { getToken } from '../api/client';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -22,7 +23,22 @@ interface AuthContextProps extends AuthState {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-const STORAGE_KEY = 'mock_auth_session';
+function mapApiUserToAppUser(apiUser: { id: string; email: string; role: string; employee_id: string | null; city_id: string; full_name?: string }): User {
+  return {
+    id: apiUser.id,
+    employee_id: apiUser.employee_id ?? '',
+    username: apiUser.email.split('@')[0],
+    email: apiUser.email,
+    full_name: apiUser.full_name || apiUser.email.split('@')[0],
+    password: '',
+    role: apiUser.role as UserRole,
+    status: 'ACTIVE',
+    language: 'ES',
+    city_id: apiUser.city_id,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
@@ -35,9 +51,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  const triggerToast = (message: string, type: 'success' | 'error' | 'info') => {
+  const triggerToast = useCallback((message: string, type: 'success' | 'error' | 'info') => {
     setToast({ message, type });
-  };
+  }, []);
 
   useEffect(() => {
     if (toast) {
@@ -49,24 +65,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const initializeAuth = () => {
       try {
-        const storedSession = localStorage.getItem(STORAGE_KEY);
-        if (storedSession) {
-          const session = JSON.parse(storedSession);
-          if (verifyMockToken(session.token)) {
-            const payload = decodeMockToken(session.token);
-            if (payload) {
-              const appUser = INITIAL_USERS.find(u => u.username === payload.username);
-              if (appUser) {
-                setState({
-                  isAuthenticated: true,
-                  user: { ...appUser },
-                  token: session.token,
-                  loading: false,
-                  error: null,
-                });
-                return;
-              }
-            }
+        const storedToken = getToken();
+        if (storedToken) {
+          const storedUser = localStorage.getItem(STORAGE_KEYS.AUTH_USER);
+          if (storedUser) {
+            const user = JSON.parse(storedUser) as User;
+            setState({
+              isAuthenticated: true,
+              user,
+              token: storedToken,
+              loading: false,
+              error: null,
+            });
+            return;
           }
         }
       } catch (err) {
@@ -83,76 +94,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<boolean> => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      const { accessToken, user: apiUser } = await authApi.login({ email, password });
+      const appUser = mapApiUserToAppUser(apiUser);
 
-    const lowercaseEmail = email.trim().toLowerCase();
-    const testAccount = TEST_ACCOUNTS.find(
-      a => a.email.toLowerCase() === lowercaseEmail && a.password === password
-    );
+      localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, accessToken);
+      localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(appUser));
 
-    if (!testAccount) {
+      setState({
+        isAuthenticated: true,
+        user: appUser,
+        token: accessToken,
+        loading: false,
+        error: null,
+      });
+
+      triggerToast(`¡Bienvenido, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
+      window.dispatchEvent(new CustomEvent('auth:login'));
+      return true;
+    } catch {
       setState({
         isAuthenticated: false,
         user: null,
         token: null,
         loading: false,
-        error: 'Credenciales inválidas. Compruebe el email y la contraseña de prueba.',
+        error: 'Error de autenticación. Credenciales incorrectas o servidor no disponible.',
       });
       triggerToast('Error de autenticación. Credenciales incorrectas.', 'error');
       return false;
     }
-
-    const appUser = INITIAL_USERS.find(
-      u => u.email.toLowerCase() === lowercaseEmail
-    );
-
-    if (!appUser) {
-      setState({
-        isAuthenticated: false,
-        user: null,
-        token: null,
-        loading: false,
-        error: 'Credenciales inválidas. Compruebe el email y la contraseña de prueba.',
-      });
-      triggerToast('Error de autenticación. Credenciales incorrectas.', 'error');
-      return false;
-    }
-
-    if (appUser.status === 'DELETED') {
-      setState({
-        isAuthenticated: false,
-        user: null,
-        token: null,
-        loading: false,
-        error: 'Cuenta dada de baja. Contacta al administrador.',
-      });
-      triggerToast('Cuenta dada de baja. No puedes iniciar sesión.', 'error');
-      return false;
-    }
-
-    const token = signMockToken({
-      sub: appUser.id,
-      username: appUser.username,
-      role: appUser.role,
-      full_name: appUser.full_name,
-    });
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token, user: appUser }));
-
-    setState({
-      isAuthenticated: true,
-      user: appUser,
-      token,
-      loading: false,
-      error: null,
-    });
-
-    triggerToast(`¡Bienvenido de nuevo, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
-    return true;
   };
 
   const logout = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
     setState({
       isAuthenticated: false,
       user: null,

@@ -1,17 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
-import { INITIAL_USERS } from '../data/mockUsers';
 import { useAuth } from './AuthContext';
-import { generateId } from '../utils/id';
+import { usersApi } from '../api/services';
+import { getToken } from '../api/client';
 
 interface UserContextProps {
   users: User[];
-  createUser: (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => { success: boolean; message: string };
-  updateUser: (id: string, userData: Partial<User>) => { success: boolean; message: string };
-  deleteUser: (id: string) => { success: boolean; message: string };
-  hardDeleteUser: (id: string) => { success: boolean; message: string };
-  restoreUser: (id: string) => { success: boolean; message: string };
-  resetMockData: () => void;
+  createUser: (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => Promise<{ success: boolean; message: string }>;
+  updateUser: (id: string, userData: Partial<User>) => Promise<{ success: boolean; message: string }>;
+  deleteUser: (id: string) => Promise<{ success: boolean; message: string }>;
+  hardDeleteUser: (id: string) => Promise<{ success: boolean; message: string }>;
+  restoreUser: (id: string) => Promise<{ success: boolean; message: string }>;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -21,19 +20,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user, triggerToast } = useAuth();
 
   useEffect(() => {
-    setUsers(INITIAL_USERS);
-    localStorage.setItem('on3_mock_users', JSON.stringify(INITIAL_USERS));
+    const loadUsers = () => {
+      if (!getToken()) return;
+      usersApi.list()
+        .then((res) => {
+          setUsers(res.data);
+        })
+        .catch(() => {});
+    };
+    loadUsers();
+    window.addEventListener('auth:login', loadUsers);
+    return () => window.removeEventListener('auth:login', loadUsers);
   }, []);
-
-  const saveUsersToStorage = (updatedUsers: User[]) => {
-    setUsers(updatedUsers);
-    localStorage.setItem('on3_mock_users', JSON.stringify(updatedUsers));
-  };
-
-  const resetMockData = () => {
-    saveUsersToStorage(INITIAL_USERS);
-    triggerToast('Base de datos simulada restablecida a los valores iniciales.', 'info');
-  };
 
   const checkPermissionForRoleAction = (action: 'CREATE' | 'UPDATE' | 'DELETE', targetRole?: UserRole, originalTarget?: User): { allowed: boolean; reason?: string } => {
     if (!user) return { allowed: false, reason: 'No autenticado' };
@@ -58,129 +56,121 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (currentRole === 'ADMIN') {
       if (originalTarget?.role === 'ROOT' || targetRole === 'ROOT') {
-        return { allowed: false, reason: 'El rol ADMIN no puede manipular ni alterar la cuenta del ROOT principal.' };
+        return { allowed: false, reason: 'No puedes modificar usuarios ROOT.' };
       }
       return { allowed: true };
     }
 
-    return { allowed: false, reason: 'Permiso denegado' };
+    return { allowed: false, reason: 'Permiso denegado.' };
   };
 
-  const createUser = (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
+  const createUser = async (userData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
     const check = checkPermissionForRoleAction('CREATE', userData.role);
     if (!check.allowed) {
-      const msg = check.reason || 'Permiso denegado.';
+      triggerToast(check.reason || 'Permiso denegado.', 'error');
+      return { success: false, message: check.reason || 'Permiso denegado.' };
+    }
+
+    try {
+      const created = await usersApi.create({
+        email: userData.email,
+        password: userData.password,
+        role: userData.role,
+        employee_id: userData.employee_id,
+      });
+      const newUser: User = { ...userData, ...created };
+      setUsers((prev) => [newUser, ...prev]);
+      triggerToast(`Usuario ${newUser.username} creado con éxito.`, 'success');
+      return { success: true, message: 'Usuario creado correctamente.' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al crear usuario.';
       triggerToast(msg, 'error');
       return { success: false, message: msg };
     }
-
-    if (users.some(u => u.username.toLowerCase() === userData.username.toLowerCase().trim())) {
-      const msg = `El nombre de usuario '${userData.username}' ya está en uso.`;
-      triggerToast(msg, 'error');
-      return { success: false, message: msg };
-    }
-
-    const now = new Date().toISOString();
-    const newUser: User = {
-      ...userData,
-      id: generateId('usr'),
-      username: userData.username.trim(),
-      created_at: now,
-      updated_at: now,
-    };
-
-    const updated = [newUser, ...users];
-    saveUsersToStorage(updated);
-    triggerToast(`Usuario ${newUser.full_name} creado con éxito.`, 'success');
-    return { success: true, message: 'Usuario creado correctamente.' };
   };
 
-  const updateUser = (id: string, userData: Partial<User>) => {
-    const targetUser = users.find(u => u.id === id);
-    if (!targetUser) {
-      return { success: false, message: 'Usuario no encontrado' };
-    }
+  const updateUser = async (id: string, userData: Partial<User>) => {
+    const target = users.find(u => u.id === id);
+    if (!target) return { success: false, message: 'Usuario no encontrado.' };
 
-    const check = checkPermissionForRoleAction('UPDATE', userData.role || targetUser.role, targetUser);
+    const check = checkPermissionForRoleAction('UPDATE', userData.role, target);
     if (!check.allowed) {
-      const msg = check.reason || 'Permiso denegado.';
+      triggerToast(check.reason || 'Permiso denegado.', 'error');
+      return { success: false, message: check.reason || 'Permiso denegado.' };
+    }
+
+    try {
+      const updated = await usersApi.update(id, userData);
+      setUsers((prev) => prev.map(u => u.id === id ? updated : u));
+      triggerToast(`Usuario ${updated.username} actualizado.`, 'success');
+      return { success: true, message: 'Usuario actualizado.' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al actualizar usuario.';
       triggerToast(msg, 'error');
       return { success: false, message: msg };
     }
-
-    const updated = users.map(u => {
-      if (u.id === id) {
-        return { ...u, ...userData, updated_at: new Date().toISOString() };
-      }
-      return u;
-    });
-
-    saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.full_name} actualizado correctamente.`, 'success');
-    return { success: true, message: 'Usuario actualizado.' };
   };
 
-  const deleteUser = (id: string) => {
-    const targetUser = users.find(u => u.id === id);
-    if (!targetUser) {
-      return { success: false, message: 'Usuario no encontrado' };
-    }
+  const deleteUser = async (id: string) => {
+    const target = users.find(u => u.id === id);
+    if (!target) return { success: false, message: 'Usuario no encontrado.' };
 
-    const check = checkPermissionForRoleAction('DELETE', undefined, targetUser);
+    const check = checkPermissionForRoleAction('DELETE', target.role, target);
     if (!check.allowed) {
-      const msg = check.reason || 'Permiso denegado.';
+      triggerToast(check.reason || 'Permiso denegado.', 'error');
+      return { success: false, message: check.reason || 'Permiso denegado.' };
+    }
+
+    try {
+      await usersApi.delete(id);
+      const updated = users.map(u =>
+        u.id === id ? { ...u, status: 'DELETED' as const, updated_at: new Date().toISOString() } : u
+      );
+      setUsers(updated);
+      triggerToast(`Usuario ${target.username} dado de baja.`, 'success');
+      return { success: true, message: 'Usuario dado de baja.' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al eliminar usuario.';
       triggerToast(msg, 'error');
       return { success: false, message: msg };
     }
+  };
 
-    if (user && user.username === targetUser.username) {
-      const msg = 'No puedes dar de baja tu propio usuario activo actual.';
+  const hardDeleteUser = async (id: string) => {
+    const target = users.find(u => u.id === id);
+    if (!target) return { success: false, message: 'Usuario no encontrado.' };
+
+    try {
+      await usersApi.delete(id);
+      const updated = users.filter(u => u.id !== id);
+      setUsers(updated);
+      triggerToast(`Usuario ${target.username} eliminado permanentemente.`, 'success');
+      return { success: true, message: 'Usuario eliminado.' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al eliminar usuario.';
       triggerToast(msg, 'error');
       return { success: false, message: msg };
     }
-
-    const updated = users.map(u => {
-      if (u.id === id) {
-        return { ...u, status: 'DELETED' as const, updated_at: new Date().toISOString() };
-      }
-      return u;
-    });
-    saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.full_name} dado de baja.`, 'info');
-    return { success: true, message: 'Usuario dado de baja.' };
   };
 
-  const hardDeleteUser = (id: string) => {
-    const targetUser = users.find(u => u.id === id);
-    if (!targetUser) {
-      return { success: false, message: 'Usuario no encontrado' };
+  const restoreUser = async (id: string) => {
+    const target = users.find(u => u.id === id);
+    if (!target) return { success: false, message: 'Usuario no encontrado.' };
+
+    try {
+      const updated = await usersApi.update(id, { status: 'ACTIVE' });
+      setUsers((prev) => prev.map(u => u.id === id ? updated : u));
+      triggerToast(`Usuario ${target.username} restaurado.`, 'success');
+      return { success: true, message: 'Usuario restaurado.' };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al restaurar usuario.';
+      triggerToast(msg, 'error');
+      return { success: false, message: msg };
     }
-
-    const updated = users.filter(u => u.id !== id);
-    saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.full_name} eliminado definitivamente.`, 'success');
-    return { success: true, message: 'Usuario eliminado.' };
-  };
-
-  const restoreUser = (id: string) => {
-    const targetUser = users.find(u => u.id === id);
-    if (!targetUser) {
-      return { success: false, message: 'Usuario no encontrado' };
-    }
-
-    const updated = users.map(u => {
-      if (u.id === id) {
-        return { ...u, status: 'ACTIVE' as const, updated_at: new Date().toISOString() };
-      }
-      return u;
-    });
-    saveUsersToStorage(updated);
-    triggerToast(`Usuario ${targetUser.full_name} recuperado.`, 'success');
-    return { success: true, message: 'Usuario recuperado.' };
   };
 
   return (
-    <UserContext.Provider value={{ users, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser, resetMockData }}>
+    <UserContext.Provider value={{ users, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser }}>
       {children}
     </UserContext.Provider>
   );
