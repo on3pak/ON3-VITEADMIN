@@ -44,7 +44,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const loadReports = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     workReportsApi.list()
       .then((res) => {

@@ -26,12 +26,13 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [loading, setLoading] = useState(true);
 
   const loadEmployees = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     Promise.all([
       employeesApi.list().then((res) => setEmployees(res.data)),
       vacationsApi.list().then((res) => setVacationRequests(res.data)),
-    ]).catch(() => {}).finally(() => setLoading(false));
+    ])
+      .catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   const getEmployeeOverviews = useCallback(() => {

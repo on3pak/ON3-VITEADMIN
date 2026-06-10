@@ -22,7 +22,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [loading, setLoading] = useState(true);
 
   const loadServices = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     servicesApi.list()
       .then((res) => {
@@ -40,8 +40,8 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
       name: s.name,
       category: s.category,
       staff_requirement: s.staff_requirement,
-      totalTasks: s.tasks.length,
-      completedTasks: s.tasks.filter((t) => t.status === 'COMPLETED').length,
+      totalTasks: s.tasks?.length ?? 0,
+      completedTasks: s.tasks?.filter((t) => t.status === 'COMPLETED').length ?? 0,
     }));
   }, [services]);
 

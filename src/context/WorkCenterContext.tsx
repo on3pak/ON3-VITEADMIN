@@ -21,7 +21,7 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const { user, triggerToast } = useAuth();
 
   const loadWorkCenters = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     workCentersApi.list()
       .then((res) => setWorkCenters(res.data))

@@ -21,7 +21,7 @@ export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [loading, setLoading] = useState(true);
 
   const loadMachinery = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     machineryApi.list()
       .then((res) => {

@@ -51,7 +51,7 @@ export const INITIAL_USERS: User[] = [
     city_id: 'ci_000001'
     },
   {
-    id: 'b2c3d4e5-f6a7-48b8-c9j0-1l2m3n4o5p6',
+    id: 'b2c3d4e5-f6a7-48b8-a9c0-1d2e3f4a5b6c',
     employee_id: '000002',
     username: 'a.mendoza2',
     email: 'a.mendoza2@on3.com',

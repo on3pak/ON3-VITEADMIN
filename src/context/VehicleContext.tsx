@@ -21,12 +21,10 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [loading, setLoading] = useState(true);
 
   const loadVehicles = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     vehiclesApi.list()
-      .then((res) => {
-        setVehicles(res.data);
-      })
+      .then((res) => setVehicles(res.data))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

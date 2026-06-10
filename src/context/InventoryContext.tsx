@@ -21,7 +21,7 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [loading, setLoading] = useState(true);
 
   const loadInventory = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     inventoryApi.list()
       .then((res) => {

@@ -16,7 +16,7 @@ import {
   Truck, Wrench, FileText, Save,
   CheckCircle2, AlertTriangle, X, ChevronDown, ChevronRight,
   Fuel, CalendarClock, Plus, Clock, Trash2,
-  Building2, User, BadgeInfo,
+  Building2, User, UserCog, BadgeInfo,
 } from 'lucide-react';
 import { CardSkeleton } from '../../../components/ui';
 

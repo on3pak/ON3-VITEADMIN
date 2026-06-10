@@ -23,7 +23,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user, triggerToast } = useAuth();
 
   const loadUsers = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     usersApi.list()
       .then((res) => {

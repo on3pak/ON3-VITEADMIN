@@ -56,7 +56,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
   const [loading, setLoading] = useState(true);
 
   const loadReports = useCallback(() => {
-    if (!getToken()) return;
+    if (!getToken()) { setLoading(false); return; }
     setLoading(true);
     serviceReportsApi.list()
       .then((res) => {

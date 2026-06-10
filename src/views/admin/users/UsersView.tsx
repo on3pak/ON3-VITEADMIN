@@ -98,9 +98,9 @@ export const UsersView: React.FC = () => {
     const q = searchQuery.toLowerCase();
     return activeUsers.filter((u) => {
       const matchesSearch =
-        u.full_name.toLowerCase().includes(q) ||
-        u.username.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q);
+        (u.full_name ?? '').toLowerCase().includes(q) ||
+        (u.username ?? '').toLowerCase().includes(q) ||
+        (u.email ?? '').toLowerCase().includes(q);
 
       const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
 
@@ -112,9 +112,9 @@ export const UsersView: React.FC = () => {
     const q = searchQuery.toLowerCase();
     return deletedUsers.filter((u) => {
       return (
-        u.full_name.toLowerCase().includes(q) ||
-        u.username.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q)
+        (u.full_name ?? '').toLowerCase().includes(q) ||
+        (u.username ?? '').toLowerCase().includes(q) ||
+        (u.email ?? '').toLowerCase().includes(q)
       );
     });
   }, [deletedUsers, searchQuery]);
@@ -149,12 +149,12 @@ export const UsersView: React.FC = () => {
       <td className="py-3.5 px-6">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold border border-gray-200">
-            {u.full_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+            {(u.full_name ?? '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
           </div>
           <div>
-            <div className="font-bold text-app-text-secondary leading-tight">{u.full_name}</div>
+            <div className="font-bold text-app-text-secondary leading-tight">{u.full_name ?? ''}</div>
             <div className="text-xs text-app-text-secondary flex items-center gap-1 mt-0.5">
-              <span className="font-mono text-primary-600 font-semibold">@{u.username}</span>
+              <span className="font-mono text-primary-600 font-semibold">@{u.username ?? ''}</span>
               <span>•</span>
               <Mail className="h-3 w-3 text-app-text-secondary inline" />
               <span className="truncate max-w-[140px]">{u.email}</span>

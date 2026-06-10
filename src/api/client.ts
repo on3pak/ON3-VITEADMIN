@@ -31,6 +31,13 @@ function buildHeaders(extra: Record<string, string> = {}): Record<string, string
 }
 
 async function handleResponse<T>(res: Response): Promise<T> {
+  if (res.status === 401) {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+    window.location.reload();
+    throw new ApiError(401, ['Sesión expirada'], 'Unauthorized');
+  }
+
   if (!res.ok) {
     let errorBody: ApiErrorResponse;
     try {
