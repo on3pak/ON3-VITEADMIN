@@ -26,7 +26,7 @@ import {
 import { TableSkeleton } from '../../../components/ui';
 
 export const UsersView: React.FC = () => {
-  const { users, loadUsers, loading } = useUsers();
+  const { users, loadUsers, loading, deleteUser, hardDeleteUser, restoreUser } = useUsers();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +38,7 @@ export const UsersView: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [showDeleted, setShowDeleted] = useState(false);
   const [hardDeleteDialog, setHardDeleteDialog] = useState<{ open: boolean; userId: string | null }>({ open: false, userId: null });
+  const [softDeleteDialog, setSoftDeleteDialog] = useState<{ open: boolean; userId: string | null; userName: string | null }>({ open: false, userId: null, userName: null });
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ rol: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
@@ -185,7 +186,7 @@ export const UsersView: React.FC = () => {
           {isDeletedView ? (
             <>
               <button
-                onClick={async () => { try { await usersApi.update(u.id, { status: 'ACTIVE' }); loadUsers(); } catch {} }}
+                onClick={async () => { try { await restoreUser(u.id); } catch {} }}
                 title="Recuperar usuario"
                 className="p-1.5 text-app-text-secondary hover:text-emerald-600 hover:bg-emerald-50 rounded-lg border border-transparent hover:border-emerald-200 transition-colors cursor-pointer"
               >
@@ -202,7 +203,7 @@ export const UsersView: React.FC = () => {
           ) : (
             canModifyUser(u) && (
               <button
-                onClick={async () => { try { await usersApi.delete(u.id); loadUsers(); } catch {} }}
+                onClick={() => setSoftDeleteDialog({ open: true, userId: u.id, userName: u.full_name ?? u.username })}
                 title="Dar de baja"
                 className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
               >
@@ -436,10 +437,24 @@ export const UsersView: React.FC = () => {
         title="Borrar definitivamente"
         message="¿Estás seguro de borrar este usuario definitivamente? Esta acción no se puede deshacer."
         onConfirm={async () => {
-          if (hardDeleteDialog.userId) { try { await usersApi.delete(hardDeleteDialog.userId); loadUsers(); } catch {} }
+          if (hardDeleteDialog.userId) { try { await hardDeleteUser(hardDeleteDialog.userId); } catch {} }
           setHardDeleteDialog({ open: false, userId: null });
         }}
         onCancel={() => setHardDeleteDialog({ open: false, userId: null })}
+      />
+
+      <ConfirmDialog
+        isOpen={softDeleteDialog.open}
+        title="Dar de baja usuario"
+        message={`¿Estás seguro de dar de baja a "${softDeleteDialog.userName}"? El usuario pasará a estado "dado de baja" y podrá ser recuperado posteriormente.`}
+        confirmLabel="Dar de baja"
+        onConfirm={async () => {
+          if (softDeleteDialog.userId) {
+            try { await deleteUser(softDeleteDialog.userId); } catch {}
+          }
+          setSoftDeleteDialog({ open: false, userId: null, userName: null });
+        }}
+        onCancel={() => setSoftDeleteDialog({ open: false, userId: null, userName: null })}
       />
 
     </div>

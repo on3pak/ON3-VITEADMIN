@@ -122,11 +122,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      await usersApi.delete(id);
-      const updated = users.map(u =>
-        u.id === id ? { ...u, status: 'DELETED' as const, updated_at: new Date().toISOString() } : u
-      );
-      setUsers(updated);
+      const updated = await usersApi.update(id, { status: 'DELETED' as const });
+      setUsers((prev) => prev.map(u => u.id === id ? updated : u));
       triggerToast(`Usuario ${target.username} dado de baja.`, 'success');
       return { success: true, message: 'Usuario dado de baja.' };
     } catch (err: unknown) {
