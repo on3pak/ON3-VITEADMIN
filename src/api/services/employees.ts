@@ -1,11 +1,11 @@
 import { api } from '../client';
-import type { Employee, EmployeeOverview } from '../../types';
+import type { Employee } from '../../types';
 
 const BASE = '/employees';
 
 export const employeesApi = {
   list: (params?: { page?: number; limit?: number }) =>
-    api.getList<EmployeeOverview>(BASE, params),
+    api.getList<Employee>(BASE, params),
   getById: (id: string) =>
     api.getById<Employee>(BASE, id),
   create: (body: Partial<Employee>) =>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { machineryApi } from '../../../api/services';
 import { useMachinery } from '../../../context/MachineryContext';
 import { useAuth } from '../../../context/AuthContext';
 import { MACHINERY_SUBTYPES, MACHINERY_STATUSES } from '../../../data/mockMachinery';
@@ -26,7 +27,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export const MachineryView: React.FC = () => {
-  const { getOverviews, getById, create, update, remove, loadMachinery } = useMachinery();
+  const { getOverviews, getById, loadMachinery } = useMachinery();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,18 +63,19 @@ export const MachineryView: React.FC = () => {
     setDeletingItemId(id);
     setDeleteDialogOpen(true);
   };
-  const handleConfirmDelete = () => {
-    if (deletingItemId) remove(deletingItemId);
+  const handleConfirmDelete = async () => {
+    if (deletingItemId) { await machineryApi.delete(deletingItemId); loadMachinery(); }
     setDeleteDialogOpen(false);
     setDeletingItemId(null);
   };
 
-  const handleModalSubmit = (data: Omit<import('../../../types').MachineryItem, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleModalSubmit = async (data: Omit<import('../../../types').MachineryItem, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedItemId) {
-      update(selectedItemId, data);
+      await machineryApi.update(selectedItemId, data);
     } else {
-      create(data);
+      await machineryApi.create(data);
     }
+    loadMachinery();
     setModalOpen(false);
     return true;
   };

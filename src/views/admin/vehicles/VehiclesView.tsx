@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { vehiclesApi } from '../../../api/services';
 import { useVehicles } from '../../../context/VehicleContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
@@ -33,7 +34,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = ({ onViewVehicle }) => {
-  const { getVehicleOverviews, getVehicleById, createVehicle, updateVehicle, deleteVehicle, loadVehicles } = useVehicles();
+  const { getVehicleOverviews, getVehicleById, loadVehicles } = useVehicles();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,14 +56,15 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
   const handleCreate = () => { setModalMode('create'); setSelectedVehicleId(null); setModalOpen(true); };
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedVehicleId(id); setModalOpen(true); };
   const handleDelete = (id: string) => { setDeletingVehicleId(id); setDeleteDialogOpen(true); };
-  const handleConfirmDelete = () => { if (deletingVehicleId) { deleteVehicle(deletingVehicleId); } setDeleteDialogOpen(false); setDeletingVehicleId(null); };
+  const handleConfirmDelete = async () => { if (deletingVehicleId) { await vehiclesApi.delete(deletingVehicleId); loadVehicles(); } setDeleteDialogOpen(false); setDeletingVehicleId(null); };
 
-  const handleModalSubmit = (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleModalSubmit = async (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedVehicleId) {
-      updateVehicle(selectedVehicleId, data);
+      await vehiclesApi.update(selectedVehicleId, data);
     } else {
-      createVehicle(data);
+      await vehiclesApi.create(data);
     }
+    loadVehicles();
     setModalOpen(false);
     return true;
   };

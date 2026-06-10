@@ -1,11 +1,11 @@
 import { api } from '../client';
-import type { InventoryItem, InventoryOverview } from '../../types';
+import type { InventoryItem } from '../../types';
 
 const BASE = '/inventory';
 
 export const inventoryApi = {
   list: (params?: { page?: number; limit?: number }) =>
-    api.getList<InventoryOverview>(BASE, params),
+    api.getList<InventoryItem>(BASE, params),
   getById: (id: string) =>
     api.getById<InventoryItem>(BASE, id),
   create: (body: Partial<InventoryItem>) =>

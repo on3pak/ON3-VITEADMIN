@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useId } from 'react';
+import { employeesApi } from '../../../api/services';
 import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
 import {
@@ -43,7 +44,7 @@ const getInitials = (name: string, last1: string) => {
 };
 
 export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> = ({ onViewEmployee }) => {
-  const { getEmployeeOverviews, getEmployeeById, createEmployee, updateEmployee, deleteEmployee, loadEmployees } = useEmployees();
+  const { getEmployeeOverviews, getEmployeeById, loadEmployees } = useEmployees();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -126,14 +127,15 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   }, [activeTab, cats, statuses, workDays, shifts, contracts]);
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedEmployeeId(id); setModalOpen(true); };
   const handleDelete = (id: string) => { setDeletingEmployeeId(id); setDeleteDialogOpen(true); };
-  const handleConfirmDelete = () => { if (deletingEmployeeId) { deleteEmployee(deletingEmployeeId); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
+  const handleConfirmDelete = async () => { if (deletingEmployeeId) { await employeesApi.delete(deletingEmployeeId); loadEmployees(); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
 
-  const handleModalSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => {
+  const handleModalSubmit = async (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => {
     if (modalMode === 'edit' && selectedEmployeeId) {
-      updateEmployee(selectedEmployeeId, data);
+      await employeesApi.update(selectedEmployeeId, data);
     } else {
-      createEmployee(data, employeeId);
+      await employeesApi.create(data);
     }
+    loadEmployees();
     setModalOpen(false);
     return true;
   };

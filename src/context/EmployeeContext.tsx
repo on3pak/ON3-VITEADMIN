@@ -26,11 +26,8 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   const loadEmployees = useCallback(() => {
     if (!getToken()) return;
     employeesApi.list()
-      .then(async (res) => {
-        const full = await Promise.all(
-          res.data.map((o) => employeesApi.getById(o.id).catch(() => null))
-        );
-        setEmployees(full.filter(Boolean) as Employee[]);
+      .then((res) => {
+        setEmployees(res.data);
       })
       .catch(() => {});
     vacationsApi.list()

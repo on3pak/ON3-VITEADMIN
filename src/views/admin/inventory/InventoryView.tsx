@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { inventoryApi } from '../../../api/services';
 import { useInventory } from '../../../context/InventoryContext';
 import { useAuth } from '../../../context/AuthContext';
 import { InventoryCategory } from '../../../types';
@@ -28,7 +29,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const InventoryView: React.FC = () => {
-  const { getOverviews, getById, create, update, remove, loadInventory } = useInventory();
+  const { getOverviews, getById, loadInventory } = useInventory();
   const { user: loggedInUser } = useAuth();
 
   const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
@@ -65,18 +66,19 @@ export const InventoryView: React.FC = () => {
     setDeletingItemId(id);
     setDeleteDialogOpen(true);
   };
-  const handleConfirmDelete = () => {
-    if (deletingItemId) remove(deletingItemId);
+  const handleConfirmDelete = async () => {
+    if (deletingItemId) { await inventoryApi.delete(deletingItemId); loadInventory(); }
     setDeleteDialogOpen(false);
     setDeletingItemId(null);
   };
 
-  const handleModalSubmit = (data: Omit<import('../../../types').InventoryItem, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleModalSubmit = async (data: Omit<import('../../../types').InventoryItem, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedItemId) {
-      update(selectedItemId, data);
+      await inventoryApi.update(selectedItemId, data);
     } else {
-      create(data);
+      await inventoryApi.create(data);
     }
+    loadInventory();
     setModalOpen(false);
     return true;
   };

@@ -21,11 +21,8 @@ export const MachineryProvider: React.FC<{ children: ReactNode }> = ({ children 
   const loadMachinery = useCallback(() => {
     if (!getToken()) return;
     machineryApi.list()
-      .then(async (res) => {
-        const full = await Promise.all(
-          res.data.map((o) => machineryApi.getById(o.id).catch(() => null))
-        );
-        setItems(full.filter(Boolean) as MachineryItem[]);
+      .then((res) => {
+        setItems(res.data);
       })
       .catch(() => {});
   }, []);

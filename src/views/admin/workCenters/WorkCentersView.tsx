@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { workCentersApi } from '../../../api/services';
 import { useWorkCenters } from '../../../context/WorkCenterContext';
 import { useAuth } from '../../../context/AuthContext';
 import { WorkCenter } from '../../../types';
@@ -8,7 +9,7 @@ import { INITIAL_CITIES } from '../../../data/mockEmployees';
 import { Search, Building2, Plus, Edit3, Trash2, Filter, ShieldAlert, MapPin, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp } from 'lucide-react';
 
 export const WorkCentersView: React.FC = () => {
-  const { workCenters, createWorkCenter, updateWorkCenter, deleteWorkCenter, loadWorkCenters } = useWorkCenters();
+  const { workCenters, loadWorkCenters } = useWorkCenters();
   const { user: loggedInUser } = useAuth();
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
@@ -25,7 +26,7 @@ export const WorkCentersView: React.FC = () => {
   const [deletingWcId, setDeletingWcId] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({ ciudad: false, estado: false });
   const toggleSection = (key: string) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
-  const handleConfirmDelete = () => { if (deletingWcId) { deleteWorkCenter(deletingWcId); } setDeleteDialogOpen(false); setDeletingWcId(null); };
+  const handleConfirmDelete = async () => { if (deletingWcId) { await workCentersApi.delete(deletingWcId); loadWorkCenters(); } setDeleteDialogOpen(false); setDeletingWcId(null); };
 
   useEffect(() => { loadWorkCenters(); }, [loadWorkCenters]);
 
@@ -33,14 +34,14 @@ export const WorkCentersView: React.FC = () => {
     setCurrentPage(1);
   }, [searchQuery, cityFilter, statusFilter, itemsPerPage]);
 
-  const handleFormSubmit = (formData: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleFormSubmit = async (formData: Omit<WorkCenter, 'id' | 'created_at' | 'updated_at'>) => {
     if (selectedForEdit) {
-      const result = updateWorkCenter(selectedForEdit.id, formData);
-      return result.success;
+      await workCentersApi.update(selectedForEdit.id, formData);
     } else {
-      const result = createWorkCenter(formData);
-      return result.success;
+      await workCentersApi.create(formData);
     }
+    loadWorkCenters();
+    return true;
   };
 
   const resolveCity = (cityId: string) => INITIAL_CITIES.find((c) => c.id === cityId)?.name ?? cityId;
@@ -202,9 +203,10 @@ export const WorkCentersView: React.FC = () => {
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
                             <button
-                              onClick={() => {
+                              onClick={async () => {
                                 const newStatus = wc.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-                                updateWorkCenter(wc.id, { status: newStatus });
+                                await workCentersApi.update(wc.id, { status: newStatus });
+                                loadWorkCenters();
                               }}
                               disabled={isReadOnlyOperator}
                               title={wc.status === 'ACTIVE' ? 'Desactivar' : 'Activar'}

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { servicesApi } from '../../../api/services';
 import { useServices } from '../../../context/ServiceContext';
 import { useAuth } from '../../../context/AuthContext';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
@@ -26,7 +27,7 @@ const wcCityMap = Object.fromEntries(
 );
 
 export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = ({ onViewService }) => {
-  const { getServiceOverviews, getServiceById, createService, updateService, deleteService, loadServices } = useServices();
+  const { getServiceOverviews, getServiceById, loadServices } = useServices();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,14 +49,15 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const handleCreate = () => { setModalMode('create'); setSelectedServiceId(null); setModalOpen(true); };
   const handleEdit = (id: string) => { setModalMode('edit'); setSelectedServiceId(id); setModalOpen(true); };
   const handleDelete = (id: string) => { setDeletingServiceId(id); setDeleteDialogOpen(true); };
-  const handleConfirmDelete = () => { if (deletingServiceId) { deleteService(deletingServiceId); } setDeleteDialogOpen(false); setDeletingServiceId(null); };
+  const handleConfirmDelete = async () => { if (deletingServiceId) { await servicesApi.delete(deletingServiceId); loadServices(); } setDeleteDialogOpen(false); setDeletingServiceId(null); };
 
-  const handleModalSubmit = (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleModalSubmit = async (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
     if (modalMode === 'edit' && selectedServiceId) {
-      updateService(selectedServiceId, data);
+      await servicesApi.update(selectedServiceId, data);
     } else {
-      createService(data);
+      await servicesApi.create(data);
     }
+    loadServices();
     setModalOpen(false);
     return true;
   };

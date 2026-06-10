@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useUsers } from '../../../context/UserContext';
 import { useAuth } from '../../../context/AuthContext';
+import { usersApi } from '../../../api/services';
 import { User, UserRole } from '../../types';
 import { UserFormModal } from '../../../components/modals/UserFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
@@ -24,7 +25,7 @@ import {
 } from 'lucide-react';
 
 export const UsersView: React.FC = () => {
-  const { users, loadUsers, createUser, updateUser, deleteUser, hardDeleteUser, restoreUser } = useUsers();
+  const { users, loadUsers } = useUsers();
   const { user: loggedInUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,17 +46,32 @@ export const UsersView: React.FC = () => {
     setCurrentPage(1);
   }, [searchQuery, roleFilter, itemsPerPage, showDeleted]);
 
-  const handleFormSubmit = (formData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleFormSubmit = async (formData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
     if (selectedUserForEdit) {
       if (selectedUserForEdit.role === 'ROOT' && loggedInUser?.role !== 'ROOT') {
         alert('⚠️ No se puede modificar la cuenta ROOT. Esta cuenta está protegida por el sistema.');
         return false;
       }
-      const result = updateUser(selectedUserForEdit.id, formData);
-      return result.success;
+      try {
+        await usersApi.update(selectedUserForEdit.id, formData);
+        loadUsers();
+        return true;
+      } catch {
+        return false;
+      }
     } else {
-      const result = createUser(formData);
-      return result.success;
+      try {
+        await usersApi.create({
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          employee_id: formData.employee_id,
+        });
+        loadUsers();
+        return true;
+      } catch {
+        return false;
+      }
     }
   };
 
@@ -168,7 +184,7 @@ export const UsersView: React.FC = () => {
           {isDeletedView ? (
             <>
               <button
-                onClick={() => restoreUser(u.id)}
+                onClick={async () => { try { await usersApi.update(u.id, { status: 'ACTIVE' }); loadUsers(); } catch {} }}
                 title="Recuperar usuario"
                 className="p-1.5 text-app-text-secondary hover:text-emerald-600 hover:bg-emerald-50 rounded-lg border border-transparent hover:border-emerald-200 transition-colors cursor-pointer"
               >
@@ -185,7 +201,7 @@ export const UsersView: React.FC = () => {
           ) : (
             canModifyUser(u) && (
               <button
-                onClick={() => deleteUser(u.id)}
+                onClick={async () => { try { await usersApi.delete(u.id); loadUsers(); } catch {} }}
                 title="Dar de baja"
                 className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
               >
@@ -414,8 +430,8 @@ export const UsersView: React.FC = () => {
         isOpen={hardDeleteDialog.open}
         title="Borrar definitivamente"
         message="¿Estás seguro de borrar este usuario definitivamente? Esta acción no se puede deshacer."
-        onConfirm={() => {
-          if (hardDeleteDialog.userId) hardDeleteUser(hardDeleteDialog.userId);
+        onConfirm={async () => {
+          if (hardDeleteDialog.userId) { try { await usersApi.delete(hardDeleteDialog.userId); loadUsers(); } catch {} }
           setHardDeleteDialog({ open: false, userId: null });
         }}
         onCancel={() => setHardDeleteDialog({ open: false, userId: null })}

@@ -22,11 +22,8 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
   const loadServices = useCallback(() => {
     if (!getToken()) return;
     servicesApi.list()
-      .then(async (res) => {
-        const full = await Promise.all(
-          res.data.map((o) => servicesApi.getById(o.id).catch(() => null))
-        );
-        setServices(full.filter(Boolean) as Service[]);
+      .then((res) => {
+        setServices(res.data);
       })
       .catch(() => {});
   }, []);

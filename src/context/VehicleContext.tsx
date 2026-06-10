@@ -21,11 +21,8 @@ export const VehicleProvider: React.FC<{ children: ReactNode }> = ({ children })
   const loadVehicles = useCallback(() => {
     if (!getToken()) return;
     vehiclesApi.list()
-      .then(async (res) => {
-        const full = await Promise.all(
-          res.data.map((o) => vehiclesApi.getById(o.id).catch(() => null))
-        );
-        setVehicles(full.filter(Boolean) as Vehicle[]);
+      .then((res) => {
+        setVehicles(res.data);
       })
       .catch(() => {});
   }, []);

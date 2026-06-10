@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useEmployees } from '../../context/EmployeeContext';
-import { useUsers } from '../../context/UserContext';
+import { employeesApi, vacationsApi, usersApi } from '../../api/services';
+import type { Employee, VacationRequest } from '../../types';
 import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { UserFormModal } from '../../components/modals/UserFormModal';
@@ -63,13 +63,20 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 
 export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser, triggerToast } = useAuth();
-  const { employees, createEmployee, updateEmployee, createVacationRequest, vacationRequests, getVacationRequestsByEmployee, loadEmployees } = useEmployees();
-  const { updateUser, loadUsers } = useUsers();
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  useEffect(() => { loadEmployees(); }, [loadEmployees]);
-  useEffect(() => { loadUsers(); }, [loadUsers]);
+  const [myEmployee, setMyEmployee] = useState<Employee | undefined>();
+  const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>([]);
+
+  useEffect(() => {
+    if (!loggedInUser?.employee_id) return;
+    employeesApi.getById(loggedInUser.employee_id).then(setMyEmployee).catch(() => {});
+  }, [loggedInUser?.employee_id]);
+
+  useEffect(() => {
+    vacationsApi.list().then((res) => setVacationRequests(res.data)).catch(() => {});
+  }, []);
 
   type ProfileTab = 'info' | 'solicitar' | 'parte';
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');
@@ -82,11 +89,6 @@ export const DashboardProfileView: React.FC = () => {
   const [requestModalCard, setRequestModalCard] = useState<'personal' | 'employee' | null>(null);
   const [requestText, setRequestText] = useState('');
 
-  const myEmployee = useMemo(
-    () => (loggedInUser ? employees.find((e) => e.id === loggedInUser.employee_id) : undefined),
-    [employees, loggedInUser]
-  );
-
   const currentVacationMonth = useMemo(
     () => myEmployee ? getCurrentVacationMonth(myEmployee.vacation_month, myEmployee.vacation_year) : null,
     [myEmployee]
@@ -98,12 +100,12 @@ export const DashboardProfileView: React.FC = () => {
   const shiftName = myEmployee ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id : '';
   const scheduleDisplay = myEmployee ? `${myEmployee.start_time || '—'} — ${myEmployee.end_time || '—'}` : '—';
 
-  const handleEmployeeSubmit = (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
+  const handleEmployeeSubmit = (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (isReadOnly) return false;
     if (myEmployee) {
-      updateEmployee(myEmployee.id, data);
+      employeesApi.update(myEmployee.id, data).then((updated) => setMyEmployee(updated)).catch(() => {});
     } else if (loggedInUser) {
-      createEmployee({ ...data, city_id: loggedInUser.city_id || null });
+      employeesApi.create({ ...data, city_id: loggedInUser.city_id || null }).then((created) => setMyEmployee(created)).catch(() => {});
     }
     setEmployeeModalOpen(false);
     return true;
@@ -111,40 +113,38 @@ export const DashboardProfileView: React.FC = () => {
 
   const handleCambioVacaciones = (data: { type: 'VACATION_CHANGE'; requested_month: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' }) => {
     if (!myEmployee || isReadOnly) return;
-    createVacationRequest({
+    vacationsApi.create({
       employee_id: myEmployee.id,
       type: data.type,
       status: 'PENDING',
       requested_month: data.requested_month,
-    });
+    }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
     setCambioVacacionesOpen(false);
     setCambioSubmitted(true);
   };
 
   const handleSolicitarDias = (data: { type: 'FREE_DAYS'; requested_days: string[] }) => {
     if (!myEmployee || isReadOnly) return;
-    createVacationRequest({
+    vacationsApi.create({
       employee_id: myEmployee.id,
       type: data.type,
       status: 'PENDING',
       requested_days: data.requested_days,
-    });
+    }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
     setSolicitarDiasOpen(false);
   };
 
   const handleUserSubmit = (data: Omit<import('../../types').User, 'id' | 'created_at' | 'updated_at'>) => {
     if (!loggedInUser) return false;
-    const result = updateUser(loggedInUser.id, data);
-    if (result.success) {
+    usersApi.update(loggedInUser.id, data).then(() => {
       triggerToast('Usuario actualizado correctamente', 'success');
       setUserFormModalOpen(false);
-      return true;
-    }
-    return false;
+    }).catch(() => {});
+    return true;
   };
 
   const pendingRequests = useMemo(
-    () => myEmployee ? getVacationRequestsByEmployee(myEmployee.id).filter((r) => r.status === 'PENDING').length : 0,
+    () => myEmployee ? vacationRequests.filter((r) => r.employee_id === myEmployee.id && r.status === 'PENDING').length : 0,
     [myEmployee, vacationRequests]
   );
 

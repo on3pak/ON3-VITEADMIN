@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useEmployees } from '../../../context/EmployeeContext';
 import { useAuth } from '../../../context/AuthContext';
+import { employeesApi } from '../../../api/services';
+import type { Employee } from '../../../types';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
@@ -46,12 +47,13 @@ const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }
 };
 
 export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employeeId, onBack }) => {
-  const { getEmployeeById, updateEmployee, deleteEmployee, loadEmployees } = useEmployees();
   const { user: loggedInUser } = useAuth();
+  const [employee, setEmployee] = useState<Employee | null>(null);
 
-  useEffect(() => { loadEmployees(); }, [loadEmployees]);
+  useEffect(() => {
+    employeesApi.getById(employeeId).then(setEmployee).catch(() => {});
+  }, [employeeId]);
 
-  const employee = getEmployeeById(employeeId);
   const isReadOnly = loggedInUser?.role === 'USER';
 
   const resolveCategory = (id: string) => INITIAL_EMPLOYEE_CATEGORIES.find(c => c.id === id)?.name ?? id;
@@ -66,10 +68,15 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
 
   const handleEdit = () => { setModalOpen(true); };
   const handleDelete = () => { setDeleteDialogOpen(true); };
-  const handleConfirmDelete = () => { deleteEmployee(employeeId); onBack(); };
+  const handleConfirmDelete = () => {
+    employeesApi.delete(employeeId).then(() => {
+      if (employee) setEmployee({ ...employee, active: false });
+    }).catch(() => {});
+    onBack();
+  };
 
   const handleModalSubmit = (data: Omit<import('../../../types').Employee, 'id' | 'created_at' | 'updated_at'>) => {
-    updateEmployee(employeeId, data);
+    employeesApi.update(employeeId, data).then((updated) => setEmployee(updated)).catch(() => {});
     setModalOpen(false);
     return true;
   };

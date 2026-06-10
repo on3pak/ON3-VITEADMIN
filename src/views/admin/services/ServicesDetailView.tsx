@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useServices } from '../../../context/ServiceContext';
 import { useAuth } from '../../../context/AuthContext';
 import { useWorkReports } from '../../../context/WorkReportContext';
+import { servicesApi } from '../../../api/services';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { Service } from '../../../types';
+import type { Service } from '../../../types';
 import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
 import {
   ArrowLeft, ClipboardList,
@@ -40,12 +40,12 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find((w) => w.id === id)?.name ?? id;
 
 export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceId, onBack }) => {
-  const { getServiceById, updateService, deleteService, loadServices } = useServices();
   const { user: loggedInUser } = useAuth();
+  const [service, setService] = useState<Service | null>(null);
 
-  useEffect(() => { loadServices(); }, [loadServices]);
-
-  const service = getServiceById(serviceId);
+  useEffect(() => {
+    servicesApi.getById(serviceId).then(setService).catch(() => {});
+  }, [serviceId]);
 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
@@ -96,12 +96,12 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
   const handleDelete = () => setDeleteDialogOpen(true);
 
   const handleConfirmDelete = () => {
-    deleteService(serviceId);
+    servicesApi.delete(serviceId).catch(() => {});
     onBack();
   };
 
   const handleModalSubmit = (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>) => {
-    updateService(serviceId, data);
+    servicesApi.update(serviceId, data).then((updated) => setService(updated)).catch(() => {});
     setModalOpen(false);
     return true;
   };

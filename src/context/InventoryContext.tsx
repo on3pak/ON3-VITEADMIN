@@ -21,11 +21,8 @@ export const InventoryProvider: React.FC<{ children: ReactNode }> = ({ children 
   const loadInventory = useCallback(() => {
     if (!getToken()) return;
     inventoryApi.list()
-      .then(async (res) => {
-        const full = await Promise.all(
-          res.data.map((o) => inventoryApi.getById(o.id).catch(() => null))
-        );
-        setItems(full.filter(Boolean) as InventoryItem[]);
+      .then((res) => {
+        setItems(res.data);
       })
       .catch(() => {});
   }, []);

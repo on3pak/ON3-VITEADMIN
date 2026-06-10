@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useVehicles } from '../../../context/VehicleContext';
+import { vehiclesApi } from '../../../api/services';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { INITIAL_VEHICLE_TYPES } from '../../../data/mockVehicles';
 import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { Vehicle } from '../../types';
+import type { Vehicle } from '../../../types';
 import { ArrowLeft, Truck, FileCheck, Edit3, Trash2 } from 'lucide-react';
 
 interface VehiclesDetailViewProps {
@@ -58,9 +58,11 @@ const fuelTypeLabels: Record<string, string> = {
 };
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {
-  const { getVehicleById, updateVehicle, deleteVehicle, loadVehicles } = useVehicles();
-  useEffect(() => { loadVehicles(); }, [loadVehicles]);
-  const vehicle = getVehicleById(vehicleId);
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+
+  useEffect(() => {
+    vehiclesApi.getById(vehicleId).then(setVehicle).catch(() => {});
+  }, [vehicleId]);
   
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -101,12 +103,12 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
   };
 
   const handleConfirmDelete = () => {
-    deleteVehicle(vehicleId);
+    vehiclesApi.delete(vehicleId).catch(() => {});
     onBack();
   };
 
   const handleModalSubmit = (data: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>) => {
-    updateVehicle(vehicleId, data);
+    vehiclesApi.update(vehicleId, data).then((updated) => setVehicle(updated)).catch(() => {});
     setModalOpen(false);
     return true;
   };

@@ -1,11 +1,11 @@
 import { api } from '../client';
-import type { Service, ServiceOverview } from '../../types';
+import type { Service } from '../../types';
 
 const BASE = '/services';
 
 export const servicesApi = {
   list: (params?: { page?: number; limit?: number }) =>
-    api.getList<ServiceOverview>(BASE, params),
+    api.getList<Service>(BASE, params),
   getById: (id: string) =>
     api.getById<Service>(BASE, id),
   create: (body: Partial<Service>) =>

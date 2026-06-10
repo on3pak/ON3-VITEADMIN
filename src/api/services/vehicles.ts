@@ -1,11 +1,11 @@
 import { api } from '../client';
-import type { Vehicle, VehicleOverview } from '../../types';
+import type { Vehicle } from '../../types';
 
 const BASE = '/vehicles';
 
 export const vehiclesApi = {
   list: (params?: { page?: number; limit?: number }) =>
-    api.getList<VehicleOverview>(BASE, params),
+    api.getList<Vehicle>(BASE, params),
   getById: (id: string) =>
     api.getById<Vehicle>(BASE, id),
   create: (body: Partial<Vehicle>) =>
