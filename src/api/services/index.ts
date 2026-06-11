@@ -12,4 +12,6 @@ export { lookupsApi } from './lookups';
 export { dashboardApi } from './dashboard';
 export { vacationsApi } from './vacations';
 export { authApi } from './auth';
+export { logsApi } from './logs';
+export type { LogFileInfo, LogFileContent, LogEntry } from './logs';
 export type { DashboardStats } from './dashboard';

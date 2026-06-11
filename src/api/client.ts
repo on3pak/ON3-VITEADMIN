@@ -53,7 +53,9 @@ async function handleResponse<T>(res: Response): Promise<T> {
   }
 
   if (res.status === 204) return undefined as T;
-  return res.json();
+  const text = await res.text();
+  if (!text) return undefined as T;
+  return JSON.parse(text);
 }
 
 function buildUrl(path: string, params?: Record<string, string | number | undefined>): string {
@@ -107,6 +109,9 @@ export const api = {
 
   delete: (path: string, id: string) =>
     request<void>('DELETE', `${path}/${id}`),
+
+  deletePath: <T = void>(path: string) =>
+    request<T>('DELETE', path),
 
   ApiError,
 };

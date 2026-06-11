@@ -7,18 +7,10 @@ import { RbacTestsView } from './tests/RbacTestsView';
 import { RolesTestsView } from './tests/RolesTestsView';
 
 type TestType = 'auth' | 'jwt' | 'crud' | 'rbac' | 'roles';
-type LogType = 'LOGS_AUTH' | 'LOGS_LOGOUT' | 'LOGS_USERS' | 'LOGS_EMPLOYEES';
 
 interface UtilsViewProps {
   initialTab?: 'logs' | 'tests';
 }
-
-const LOGS_TABS: { value: LogType; label: string }[] = [
-  { value: 'LOGS_AUTH', label: 'Auth' },
-  { value: 'LOGS_LOGOUT', label: 'Logout' },
-  { value: 'LOGS_USERS', label: 'Usuarios' },
-  { value: 'LOGS_EMPLOYEES', label: 'Empleados' },
-];
 
 const TESTS_TABS: { value: TestType; label: string }[] = [
   { value: 'auth', label: 'Auth' },
@@ -30,28 +22,10 @@ const TESTS_TABS: { value: TestType; label: string }[] = [
 
 export const UtilsView: React.FC<UtilsViewProps> = ({ initialTab = 'logs' }) => {
   const [activeTab] = useState<'logs' | 'tests'>(initialTab);
-  const [selectedLogType, setSelectedLogType] = useState<LogType>('LOGS_AUTH');
   const [selectedTestType, setSelectedTestType] = useState<TestType>('auth');
 
   const renderLogsContent = () => (
-    <div className="space-y-4">
-      <div className="flex gap-2 border-b border-app-border pb-2">
-        {LOGS_TABS.map(tab => (
-          <button
-            key={tab.value}
-            onClick={() => setSelectedLogType(tab.value)}
-            className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-              selectedLogType === tab.value
-                ? 'bg-primary-100 text-primary-700'
-                : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      <LogsView logType={selectedLogType} />
-    </div>
+    <LogsView />
   );
 
   const renderTestsContent = () => {
