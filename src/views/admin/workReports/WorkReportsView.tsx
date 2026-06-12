@@ -396,8 +396,8 @@ export const WorkReportsView: React.FC = () => {
         {saveMsg && (
           <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${
             saveMsg.type === 'success'
-              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-              : 'bg-rose-50 text-rose-700 border border-rose-200'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800'
+              : 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800'
           }`}>
             {saveMsg.type === 'success' ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertTriangle className="h-4 w-4 shrink-0" />}
             {saveMsg.text}
@@ -406,7 +406,7 @@ export const WorkReportsView: React.FC = () => {
         )}
 
         {isConfirmed && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             Parte de trabajo confirmado — no editable
           </div>
@@ -484,7 +484,7 @@ export const WorkReportsView: React.FC = () => {
             <div className="relative">
               <button
                 onMouseDown={(e) => { e.stopPropagation(); setShowServicePicker(!showServicePicker); }}
-                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/20 dark:hover:bg-primary-900/30 dark:text-primary-400 dark:hover:text-primary-300 px-3 py-1.5 rounded-lg transition-colors"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Añadir servicio
@@ -492,7 +492,7 @@ export const WorkReportsView: React.FC = () => {
               {showServicePicker && (
                 <div
                   onMouseDown={(e) => e.stopPropagation()}
-                  className="absolute top-full right-0 mt-1 w-72 bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
+                  className="absolute top-full right-0 mt-1 w-72 bg-app-card border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
                 >
                   {(() => {
                     const available = services.filter((s) => !workReport.services.some((e) => e.service_id === s.id));
@@ -534,7 +534,7 @@ export const WorkReportsView: React.FC = () => {
                   <div key={entry.service_id} className="border border-app-border rounded-xl overflow-hidden">
                     <button
                       onClick={() => handleToggleExpand(entry.service_id)}
-                      className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-gray-100/50 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-app-bg transition-colors"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <ClipboardList className="h-4 w-4 text-primary-500 shrink-0" />
@@ -545,7 +545,7 @@ export const WorkReportsView: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-3 shrink-0">
                         <div className="flex items-center gap-1.5">
-                          <div className="h-1.5 w-16 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="h-1.5 w-16 bg-app-bg rounded-full overflow-hidden">
                             <div className={`h-full rounded-full transition-all duration-300 ${
                               progress === 100 ? 'bg-emerald-500' : 'bg-primary-500'
                             }`} style={{ width: `${progress}%` }} />
@@ -555,7 +555,7 @@ export const WorkReportsView: React.FC = () => {
                         {canEdit && (
                           <button
                             onClick={(e) => { e.stopPropagation(); handleRemoveService(entry.service_id); }}
-                            className="p-1 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                            className="p-1 rounded-md hover:bg-rose-50 dark:hover:bg-rose-900/20 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                             title="Quitar servicio"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -579,7 +579,7 @@ export const WorkReportsView: React.FC = () => {
                               <label
                                 key={task.id}
                                 className={`flex items-start gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                                  isCompleted ? 'bg-emerald-50/50' : 'hover:bg-app-bg'
+                                  isCompleted ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : 'hover:bg-app-bg'
                                 } ${isSavedMode || isConfirmed || !canEdit ? 'cursor-default' : ''}`}
                               >
                                 <input
@@ -587,7 +587,7 @@ export const WorkReportsView: React.FC = () => {
                                   checked={isCompleted}
                                   disabled={isSavedMode || isConfirmed || !canEdit}
                                   onChange={() => handleToggleCompleted(entry.service_id, task.id)}
-                                  className="mt-0.5 rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0 disabled:opacity-50"
+                                  className="mt-0.5 rounded border-app-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-400/50 h-4 w-4 shrink-0 disabled:opacity-50"
                                 />
                                 <div className="min-w-0 flex-1">
                                   <p className={`text-sm ${isCompleted ? 'text-app-text-secondary line-through' : 'text-app-text'}`}>
@@ -620,7 +620,7 @@ export const WorkReportsView: React.FC = () => {
               {!workReport.vehicle_id && !workReport.replacement_vehicle_id && (
                 <button
                   onMouseDown={(e) => { e.stopPropagation(); setVehiclePickerMode('primary'); setShowVehiclePicker(!showVehiclePicker); }}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/20 dark:hover:bg-primary-900/30 dark:text-primary-400 dark:hover:text-primary-300 px-3 py-1.5 rounded-lg transition-colors"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Añadir vehículo
@@ -629,7 +629,7 @@ export const WorkReportsView: React.FC = () => {
               {isVehicleBroken && !workReport.replacement_vehicle_id && (
                 <button
                   onMouseDown={(e) => { e.stopPropagation(); setVehiclePickerMode('replacement'); setShowVehiclePicker(!showVehiclePicker); }}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/20 dark:hover:bg-primary-900/30 dark:text-primary-400 dark:hover:text-primary-300 px-3 py-1.5 rounded-lg transition-colors"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Añadir vehículo de reemplazo
@@ -659,18 +659,18 @@ export const WorkReportsView: React.FC = () => {
               <div className="border border-app-border rounded-xl overflow-hidden">
                 <button
                   onClick={() => setExpandedVehicle(!expandedVehicle)}
-                  className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-gray-100/50 transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-app-bg transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Truck className={`h-4 w-4 shrink-0 ${isVehicleBroken ? 'text-amber-500' : 'text-primary-500'}`} />
                     <div className="min-w-0 text-left">
-                      <p className={`text-sm font-semibold truncate ${isVehicleBroken ? 'text-amber-800' : 'text-app-text'}`}>
+                      <p className={`text-sm font-semibold truncate ${isVehicleBroken ? 'text-amber-800 dark:text-amber-200' : 'text-app-text'}`}>
                         {(() => {
                           const v = vehicles.find((x) => x.id === workReport.vehicle_id);
                           return v ? `${v.license_plate} — ${v.brand} ${v.model}` : workReport.vehicle_id;
                         })()}
                       </p>
-                      <p className={`text-[11px] ${isVehicleBroken ? 'text-amber-600' : 'text-app-text-secondary'}`}>
+                      <p className={`text-[11px] ${isVehicleBroken ? 'text-amber-600 dark:text-amber-400' : 'text-app-text-secondary'}`}>
                         {(() => {
                           const v = vehicles.find((x) => x.id === workReport.vehicle_id);
                           return v ? `${v.kilometers.toLocaleString()} km` : '';
@@ -683,14 +683,14 @@ export const WorkReportsView: React.FC = () => {
                       <>
                         <button
                           onClick={(e) => { e.stopPropagation(); handleOpenBreakdownModal(); }}
-                          className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
+                          className="p-1.5 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/20 text-app-text-secondary hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                           title="Avería"
                         >
                           <AlertTriangle className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); handleVehicleChange(''); setShowVehiclePicker(false); }}
-                          className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                          className="p-1.5 rounded-md hover:bg-rose-50 dark:hover:bg-rose-900/20 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                           title="Quitar vehículo"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -702,19 +702,19 @@ export const WorkReportsView: React.FC = () => {
                 </button>
 
                 {isVehicleBroken && (
-                  <div className="px-4 py-2 bg-amber-50 border-b border-app-border">
-                    <div className="flex items-start gap-2 text-amber-700 text-xs font-medium">
+                  <div className="px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border-b border-app-border">
+                    <div className="flex items-start gap-2 text-amber-700 dark:text-amber-300 text-xs font-medium">
                       <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p>Avería registrada: {workReport.vehicle_breakdown_type}</p>
                         {workReport.vehicle_breakdown_notes && (
-                          <p className="text-[11px] text-amber-600 mt-0.5 leading-relaxed">{workReport.vehicle_breakdown_notes}</p>
+                          <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5 leading-relaxed">{workReport.vehicle_breakdown_notes}</p>
                         )}
                       </div>
                       {canEdit && (
                         <button
                           onClick={(e) => { e.stopPropagation(); handleRemoveBreakdown(); }}
-                          className="shrink-0 p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-amber-600 transition-colors"
+                          className="shrink-0 p-1 rounded hover:bg-amber-100 dark:hover:bg-amber-900/20 text-amber-400 dark:text-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                           title="Quitar avería"
                         >
                           <X className="h-3 w-3" />
@@ -734,7 +734,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.km_start ?? ''}
                           onChange={(e) => handleFieldChange('km_start', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -745,7 +745,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.km_end ?? ''}
                           onChange={(e) => handleFieldChange('km_end', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -756,7 +756,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.hour_meter_start ?? ''}
                           onChange={(e) => handleFieldChange('hour_meter_start', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -767,7 +767,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.hour_meter_end ?? ''}
                           onChange={(e) => handleFieldChange('hour_meter_end', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -779,7 +779,7 @@ export const WorkReportsView: React.FC = () => {
                         checked={showFuelLiters || !!workReport.fuel_liters}
                         onChange={(e) => setShowFuelLiters(e.target.checked)}
                         disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
-                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 disabled:opacity-50"
+                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-400/50 h-4 w-4 disabled:opacity-50"
                       />
                       <span className="text-xs font-medium text-app-text">Repostar</span>
                     </label>
@@ -795,7 +795,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.fuel_liters ?? ''}
                           onChange={(e) => handleFieldChange('fuel_liters', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit || isVehicleBroken}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                           step="0.1"
                         />
@@ -811,7 +811,7 @@ export const WorkReportsView: React.FC = () => {
               <div className="border border-app-border rounded-xl overflow-hidden">
                 <button
                   onClick={() => setExpandedReplacement(!expandedReplacement)}
-                  className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-gray-100/50 transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-2 bg-app-bg hover:bg-app-bg transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Truck className="h-4 w-4 text-primary-500 shrink-0" />
@@ -834,7 +834,7 @@ export const WorkReportsView: React.FC = () => {
                     {canEdit && (
                       <button
                         onClick={(e) => { e.stopPropagation(); handleRemoveReplacement(); }}
-                        className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                        className="p-1.5 rounded-md hover:bg-rose-50 dark:hover:bg-rose-900/20 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                         title="Quitar vehículo de reemplazo"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -854,7 +854,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.replacement_km_start ?? ''}
                           onChange={(e) => handleFieldChange('replacement_km_start', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -865,7 +865,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.replacement_km_end ?? ''}
                           onChange={(e) => handleFieldChange('replacement_km_end', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -876,7 +876,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.replacement_hour_meter_start ?? ''}
                           onChange={(e) => handleFieldChange('replacement_hour_meter_start', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -887,7 +887,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.replacement_hour_meter_end ?? ''}
                           onChange={(e) => handleFieldChange('replacement_hour_meter_end', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                         />
                       </div>
@@ -899,7 +899,7 @@ export const WorkReportsView: React.FC = () => {
                         checked={showReplacementFuelLiters || !!workReport.replacement_fuel_liters}
                         onChange={(e) => setShowReplacementFuelLiters(e.target.checked)}
                         disabled={isSavedMode || isConfirmed || !canEdit}
-                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 disabled:opacity-50"
+                        className="rounded border-app-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-400/50 h-4 w-4 disabled:opacity-50"
                       />
                       <span className="text-xs font-medium text-app-text">Repostar</span>
                     </label>
@@ -915,7 +915,7 @@ export const WorkReportsView: React.FC = () => {
                           value={workReport.replacement_fuel_liters ?? ''}
                           onChange={(e) => handleFieldChange('replacement_fuel_liters', e.target.value ? Number(e.target.value) : undefined)}
                           disabled={isSavedMode || isConfirmed || !canEdit}
-                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-white text-app-text disabled:opacity-50"
+                          className="w-full rounded-lg border border-app-border px-2 py-1.5 text-sm bg-app-card text-app-text disabled:opacity-50"
                           placeholder="0"
                           step="0.1"
                         />
@@ -940,7 +940,7 @@ export const WorkReportsView: React.FC = () => {
         {showBreakdownModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40" onClick={() => setShowBreakdownModal(false)}>
             <div
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden"
+              className="bg-app-card rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="px-5 pt-5 pb-2">
@@ -949,7 +949,7 @@ export const WorkReportsView: React.FC = () => {
               </div>
               <div className="px-5 py-3 space-y-3 max-h-80 overflow-y-auto">
                 <div className="relative">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg transition-colors pointer-events-none">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 dark:bg-primary-900/20 dark:text-primary-400 px-3 py-1.5 rounded-lg transition-colors pointer-events-none">
                     <AlertTriangle className="h-3.5 w-3.5" />
                     {breakdownType ? BREAKDOWN_TYPES.find((b) => b.id === breakdownType)?.label : 'Seleccionar tipo de avería'}
                   </div>
@@ -971,7 +971,7 @@ export const WorkReportsView: React.FC = () => {
                     onChange={(e) => setBreakdownNotes(e.target.value)}
                     placeholder="Describe brevemente lo ocurrido..."
                     rows={3}
-                    className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-white text-app-text resize-none placeholder:text-app-text-secondary/50"
+                    className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-app-card text-app-text resize-none placeholder:text-app-text-secondary/50"
                   />
                 </div>
               </div>
@@ -1002,7 +1002,7 @@ export const WorkReportsView: React.FC = () => {
             <div className="relative">
               <button
                 onMouseDown={(e) => { e.stopPropagation(); setShowToolPicker(!showToolPicker); }}
-                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/20 dark:hover:bg-primary-900/30 dark:text-primary-400 dark:hover:text-primary-300 px-3 py-1.5 rounded-lg transition-colors"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Añadir herramienta
@@ -1011,14 +1011,14 @@ export const WorkReportsView: React.FC = () => {
               {showToolPicker && (
                 <div
                   onMouseDown={(e) => e.stopPropagation()}
-                  className="absolute top-full right-0 mt-1 w-72 bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
+                  className="absolute top-full right-0 mt-1 w-72 bg-app-card border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
                 >
                   {machineryItems.length === 0 ? (
                     <p className="p-3 text-xs text-app-text-secondary text-center">No hay maquinaria disponible</p>
                   ) : (
                     Array.from(machinerySubtypes.entries()).map(([subtypeId, group]) => (
                       <div key={subtypeId}>
-                        <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-app-text-secondary uppercase tracking-wider border-b border-app-border/50">
+                        <div className="sticky top-0 bg-app-card px-3 py-1.5 text-[10px] font-bold text-app-text-secondary uppercase tracking-wider border-b border-app-border/50">
                           {group.name}
                         </div>
                         {group.items.map((item) => {
@@ -1027,7 +1027,7 @@ export const WorkReportsView: React.FC = () => {
                             <label
                               key={item.id}
                               className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${
-                                workReport.tools.includes(item.id) ? (isBroken ? 'bg-amber-50' : 'bg-primary-50') : ''
+                                workReport.tools.includes(item.id) ? (isBroken ? 'bg-amber-50 dark:bg-amber-900/20' : 'bg-primary-50 dark:bg-primary-900/20') : ''
                               }`}
                             >
                               <input
@@ -1035,13 +1035,13 @@ export const WorkReportsView: React.FC = () => {
                                 checked={workReport.tools.includes(item.id)}
                                 onChange={() => handleToggleTool(item.id)}
                                 disabled={isBroken}
-                                className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0 disabled:opacity-50"
+                                className="rounded border-app-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-400/50 h-4 w-4 shrink-0 disabled:opacity-50"
                               />
                               <div className="min-w-0 flex-1">
-                                <p className={`text-sm truncate ${isBroken ? 'text-amber-700' : 'text-app-text'}`}>
+                                <p className={`text-sm truncate ${isBroken ? 'text-amber-700 dark:text-amber-300' : 'text-app-text'}`}>
                                   {item.name}
                                   {isBroken && (
-                                    <span className="ml-1.5 text-[10px] text-amber-500 font-medium">(avería)</span>
+                                    <span className="ml-1.5 text-[10px] text-amber-500 dark:text-amber-400 font-medium">(avería)</span>
                                   )}
                                 </p>
                                 {(item.brand || item.model) && (
@@ -1067,14 +1067,14 @@ export const WorkReportsView: React.FC = () => {
                   const breakdown = workReport.machinery_breakdowns?.[toolId];
                   const isBroken = !!breakdown;
                   return (
-                    <div key={toolId} className={`flex items-center justify-between rounded-lg px-3 py-2 border ${isBroken ? 'bg-amber-50 border-amber-200' : 'bg-app-bg border-app-border'}`}>
+                    <div key={toolId} className={`flex items-center justify-between rounded-lg px-3 py-2 border ${isBroken ? 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800' : 'bg-app-bg border-app-border'}`}>
                       <div className="flex items-center gap-3 min-w-0">
                         <Wrench className={`h-4 w-4 shrink-0 ${isBroken ? 'text-amber-500' : 'text-primary-500'}`} />
                         <div className="min-w-0">
-                          <p className={`text-sm font-semibold truncate ${isBroken ? 'text-amber-800' : 'text-app-text'}`}>
+                          <p className={`text-sm font-semibold truncate ${isBroken ? 'text-amber-800 dark:text-amber-200' : 'text-app-text'}`}>
                             {item?.name ?? toolId}
                             {isBroken && (
-                              <span className="ml-1.5 text-[10px] text-amber-600 font-medium">(avería: {breakdown?.type})</span>
+                              <span className="ml-1.5 text-[10px] text-amber-600 dark:text-amber-400 font-medium">(avería: {breakdown?.type})</span>
                             )}
                           </p>
                           {(item?.brand || item?.model) && (
@@ -1087,14 +1087,14 @@ export const WorkReportsView: React.FC = () => {
                           <>
                             <button
                               onClick={() => handleOpenMachineryBreakdown(toolId)}
-                              className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/20 text-app-text-secondary hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                               title="Marcar como averiado"
                             >
                               <AlertTriangle className="h-3.5 w-3.5" />
                             </button>
                             <button
                               onClick={() => handleToggleTool(toolId)}
-                              className="p-1.5 rounded-md hover:bg-rose-50 text-app-text-secondary hover:text-rose-600 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-rose-50 dark:hover:bg-rose-900/20 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                               title="Quitar herramienta"
                             >
                               <X className="h-3.5 w-3.5" />
@@ -1104,7 +1104,7 @@ export const WorkReportsView: React.FC = () => {
                         {isBroken && canEdit && workReport.status !== 'CONFIRMED' && (
                           <button
                             onClick={() => handleRemoveMachineryBreakdown(toolId)}
-                            className="p-1.5 rounded-md hover:bg-amber-50 text-app-text-secondary hover:text-amber-600 transition-colors"
+                            className="p-1.5 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/20 text-app-text-secondary hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                             title="Quitar avería"
                           >
                             <X className="h-3.5 w-3.5" />
@@ -1129,7 +1129,7 @@ export const WorkReportsView: React.FC = () => {
         {showMachineryBreakdownModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40" onClick={() => setShowMachineryBreakdownModal(false)}>
             <div
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden"
+              className="bg-app-card rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="px-5 pt-5 pb-2">
@@ -1138,7 +1138,7 @@ export const WorkReportsView: React.FC = () => {
               </div>
               <div className="px-5 py-3 space-y-3 max-h-80 overflow-y-auto">
                 <div className="relative">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-lg transition-colors pointer-events-none">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 dark:bg-primary-900/20 dark:text-primary-400 px-3 py-1.5 rounded-lg transition-colors pointer-events-none">
                     <AlertTriangle className="h-3.5 w-3.5" />
                     {machineryBreakdownType ? BREAKDOWN_TYPES.find((b) => b.id === machineryBreakdownType)?.label : 'Seleccionar tipo de avería'}
                   </div>
@@ -1160,7 +1160,7 @@ export const WorkReportsView: React.FC = () => {
                     onChange={(e) => setMachineryBreakdownNotes(e.target.value)}
                     placeholder="Describe brevemente lo ocurrido..."
                     rows={3}
-                    className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-white text-app-text resize-none placeholder:text-app-text-secondary/50"
+                    className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-app-card text-app-text resize-none placeholder:text-app-text-secondary/50"
                   />
                 </div>
               </div>
@@ -1190,7 +1190,7 @@ export const WorkReportsView: React.FC = () => {
             onChange={(e) => handleNotesChange(e.target.value)}
             disabled={isSavedMode || isConfirmed || !canEdit}
             rows={3}
-            className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-white text-app-text resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-lg border border-app-border px-3 py-2 text-sm bg-app-card text-app-text resize-none disabled:opacity-50 disabled:cursor-not-allowed"
             placeholder="Incidencias, observaciones, ..."
           />
         </SectionCard>
@@ -1204,10 +1204,10 @@ export const WorkReportsView: React.FC = () => {
       return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40" onClick={() => setSelectedHistoryId(null)}>
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4"
+            className="bg-app-card rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="sticky top-0 bg-white border-b border-app-border px-5 py-3 flex items-center gap-2 z-10">
+            <div className="sticky top-0 bg-app-card border-b border-app-border px-5 py-3 flex items-center gap-2 z-10">
               <CalendarClock className="h-5 w-5 text-app-text-secondary" />
               <span className="text-sm font-semibold text-app-text flex-1">
                 Parte del {selectedHistoryReport.date}
@@ -1415,7 +1415,7 @@ function VehiclePicker({ vehicles, assignedIds, onSelect }: VehiclePickerProps) 
   return (
     <div
       onMouseDown={(e) => e.stopPropagation()}
-      className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
+      className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-app-card border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
     >
       {available.length === 0 ? (
         <p className="p-3 text-xs text-app-text-secondary text-center">No hay vehículos disponibles en tu centro</p>

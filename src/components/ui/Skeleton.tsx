@@ -6,7 +6,7 @@ interface SkeletonProps {
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => (
-  <div className={cn('animate-pulse rounded-lg bg-gray-200/70', className)} />
+  <div className={cn('animate-pulse rounded-lg bg-app-text-secondary/10', className)} />
 );
 
 export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ rows = 8, cols = 5 }) => (
@@ -17,7 +17,7 @@ export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ rows
       ))}
     </div>
     {Array.from({ length: rows }).map((_, r) => (
-      <div key={r} className="flex gap-4 px-4 py-4 border-t border-gray-100">
+      <div key={r} className="flex gap-4 px-4 py-4 border-t border-app-border/50">
         {Array.from({ length: cols }).map((_, c) => (
           <Skeleton key={c} className={`h-4 ${c === 0 ? 'flex-[2]' : 'flex-1'}`} />
         ))}
@@ -29,7 +29,7 @@ export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ rows
 export const CardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
+      <div key={i} className="bg-app-card rounded-xl border border-app-border/50 p-5 space-y-4">
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-10 rounded-xl" />
           <div className="space-y-2 flex-1">
@@ -49,9 +49,9 @@ export const CardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => (
 
 export const ProfileSkeleton: React.FC = () => (
   <div className="space-y-5 animate-pulse">
-    <div className="h-40 lg:h-56 bg-gray-200 rounded-t-xl" />
+    <div className="h-40 lg:h-56 bg-app-text-secondary/10 rounded-t-xl" />
     <div className="flex items-center gap-4 px-6 -mt-12">
-      <Skeleton className="h-24 w-24 rounded-full ring-4 ring-white" />
+      <Skeleton className="h-24 w-24 rounded-full ring-4 ring-app-card" />
       <div className="space-y-2 flex-1">
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-32" />

@@ -52,18 +52,18 @@ export const DashboardUsersView: React.FC = () => {
 
   const statColor = (color: string) => {
     const map: Record<string, { bg: string, border: string, text: string }> = {
-      primary: { bg: 'bg-primary-50', border: 'border-primary-100', text: 'text-primary-600' },
-      emerald: { bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-600' },
-      rose: { bg: 'bg-rose-50', border: 'border-rose-100', text: 'text-rose-600' },
-      amber: { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-600' },
+      primary: { bg: 'bg-primary-50 dark:bg-primary-900/20', border: 'border-primary-100 dark:border-primary-800', text: 'text-primary-600 dark:text-primary-300' },
+      emerald: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-100 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-300' },
+      rose: { bg: 'bg-rose-50 dark:bg-rose-900/20', border: 'border-rose-100 dark:border-rose-800', text: 'text-rose-600 dark:text-rose-300' },
+      amber: { bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-100 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-300' },
     };
     return map[color] || map.primary;
   };
 
   const getStatusBadge = (status: string) => {
     const styles = status === 'ACTIVE'
-      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-      : 'bg-rose-50 text-rose-700 border-rose-200';
+      ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+      : 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800';
     return (
       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${styles}`}>
         {status}
@@ -138,8 +138,8 @@ export const DashboardUsersView: React.FC = () => {
 
           <div className="space-y-4">
             <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
-              <div className="p-2 bg-primary-100 rounded-lg">
-                <Users className="h-4 w-4 text-primary-600" />
+              <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                <Users className="h-4 w-4 text-primary-600 dark:text-primary-300" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-app-text-secondary">Usuario</p>
@@ -150,8 +150,8 @@ export const DashboardUsersView: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Mail className="h-4 w-4 text-blue-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Mail className="h-4 w-4 text-blue-600 dark:text-blue-300" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-app-text-secondary">Email</p>
@@ -162,8 +162,8 @@ export const DashboardUsersView: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3 p-3 bg-app-bg rounded-xl">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Shield className="h-4 w-4 text-purple-600" />
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Shield className="h-4 w-4 text-purple-600 dark:text-purple-300" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-app-text-secondary">Rol</p>

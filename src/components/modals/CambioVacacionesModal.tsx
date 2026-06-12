@@ -72,10 +72,10 @@ export const CambioVacacionesModal: React.FC<CambioVacacionesModalProps> = ({ is
                     disabled={isCurrent}
                     className={`flex flex-col items-center gap-2 p-5 rounded-xl border-2 transition-all ${
                       isCurrent
-                        ? 'border-primary-200 bg-primary-50 text-primary-600 cursor-not-allowed opacity-60'
-                        : isSelected
-                          ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm'
-                          : 'border-app-border bg-white text-app-text hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-700'
+                      ? 'border-primary-200 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 cursor-not-allowed opacity-60'
+                          : isSelected
+                            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
+                            : 'border-app-border bg-app-card text-app-text hover:border-primary-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300'
                     }`}
                   >
                     <div className={`${isSelected ? 'text-primary-500' : isCurrent ? 'text-primary-400' : 'text-app-text-secondary'}`}>

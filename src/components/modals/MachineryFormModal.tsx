@@ -111,10 +111,10 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-sidebar/80" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between p-6 border-b border-app-border">
           <h2 className="text-lg font-bold text-app-text flex items-center gap-2">
-            <Wrench className="h-5 w-5 text-indigo-600" />
+            <Wrench className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             {editingItem ? 'Editar Maquinaria' : 'Nueva Maquinaria'}
           </h2>
           <button onClick={onClose} className="p-1 text-app-text-secondary hover:text-app-text-secondary rounded-lg hover:bg-app-bg">
@@ -124,7 +124,7 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {formError && (
-            <div className="p-3 bg-rose-50 rounded-xl border border-rose-200 text-xs text-rose-700 font-medium">
+            <div className="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-medium">
               {formError}
             </div>
           )}
@@ -133,11 +133,11 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
             <div className="flex gap-3">
               <div className="flex-1">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Nombre *</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Sopladora STIHL BR600" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Sopladora STIHL BR600" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
               </div>
               <div className="w-[30%]">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Centro</label>
-                <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
+                <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card">
                   {allWorkCenters.map((wc) => (
                     <option key={wc.id} value={wc.id}>{wc.name}</option>
                   ))}
@@ -148,7 +148,7 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
             <div className="flex gap-3">
               <div className="w-[40%]">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Tipo *</label>
-                <select value={subtype_id} onChange={(e) => setSubtype_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
+                <select value={subtype_id} onChange={(e) => setSubtype_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card">
                   <option value="">Seleccionar...</option>
                   {MACHINERY_SUBTYPES.map((st) => (
                     <option key={st.id} value={st.id}>{st.name}</option>
@@ -157,7 +157,7 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
               </div>
               <div className="w-[30%]">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Estado</label>
-                <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
+                <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card">
                   {MACHINERY_STATUSES.map((s) => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
@@ -165,7 +165,7 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
               </div>
               <div className="w-[30%]">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Cantidad</label>
-                <input type="number" min={0} value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                <input type="number" min={0} value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
               </div>
             </div>
 
@@ -174,21 +174,21 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
               <div className="flex gap-3 mb-3">
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Marca</label>
-                  <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="Ej: STIHL" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="Ej: STIHL" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Modelo</label>
-                  <input type="text" value={model} onChange={(e) => setModel(e.target.value)} placeholder="Ej: BR 600" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={model} onChange={(e) => setModel(e.target.value)} placeholder="Ej: BR 600" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
               </div>
               <div className="flex gap-3 mb-3">
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Nº Serie</label>
-                  <input type="text" value={serial_number} onChange={(e) => setSerial_number(e.target.value)} placeholder="Ej: STIHL-BR600-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="text" value={serial_number} onChange={(e) => setSerial_number(e.target.value)} placeholder="Ej: STIHL-BR600-001" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Garantía hasta</label>
-                  <input type="date" value={warranty_expiration} onChange={(e) => setWarranty_expiration(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={warranty_expiration} onChange={(e) => setWarranty_expiration(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
               </div>
             </div>
@@ -198,28 +198,28 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
               <div className="flex gap-3 mb-3">
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Último mantenimiento</label>
-                  <input type="date" value={last_maintenance} onChange={(e) => setLast_maintenance(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={last_maintenance} onChange={(e) => setLast_maintenance(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Próximo mantenimiento</label>
-                  <input type="date" value={next_maintenance} onChange={(e) => setNext_maintenance(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="date" value={next_maintenance} onChange={(e) => setNext_maintenance(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
               </div>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Asignado a (ID empleado)</label>
-              <input type="text" value={assigned_to} onChange={(e) => setAssigned_to(e.target.value)} placeholder="Ej: 000011" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+              <input type="text" value={assigned_to} onChange={(e) => setAssigned_to(e.target.value)} placeholder="Ej: 000011" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Notas</label>
-              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Observaciones adicionales..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text resize-none" />
+              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Observaciones adicionales..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text resize-none" />
             </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-app-border">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-app-text-secondary bg-app-bg hover:bg-app-border rounded-xl transition-colors">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-app-text-secondary bg-app-bg hover:bg-app-border dark:hover:bg-app-border rounded-xl transition-colors">
               Cancelar
             </button>
             <button type="submit" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">

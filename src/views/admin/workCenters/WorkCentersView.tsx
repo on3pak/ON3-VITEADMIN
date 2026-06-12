@@ -74,8 +74,8 @@ export const WorkCentersView: React.FC = () => {
 
   const getStatusBadgeStyle = (status: string) => {
     switch (status) {
-      case 'ACTIVE': return 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-600/10';
-      case 'INACTIVE': return 'bg-app-bg text-app-text-secondary ring-1 ring-slate-600/10';
+      case 'ACTIVE': return 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-600/10 dark:bg-emerald-900/30 dark:text-emerald-300 dark:ring-emerald-800/30';
+      case 'INACTIVE': return 'bg-app-bg text-app-text-secondary ring-1 ring-app-border';
       default: return 'bg-app-bg text-app-text';
     }
   };
@@ -86,10 +86,10 @@ export const WorkCentersView: React.FC = () => {
     <div className="space-y-5">
 
       {isReadOnlyOperator && (
-        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
-          <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0" />
+        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200">
+          <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0 dark:text-amber-400" />
           <span>
-            ⚠️ <span className="font-bold">Modo de Consulta Activo:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">USER</span>. Puedes navegar y filtrar los datos de la grilla, pero cualquier intento de creación, edición o borrado será bloqueado por las directivas de seguridad RBAC de ON3ADMIN.
+            ⚠️ <span className="font-bold">Modo de Consulta Activo:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">USER</span>. Puedes navegar y filtrar los datos de la grilla, pero cualquier intento de creación, edición o borrado será bloqueado por las directivas de seguridad RBAC de ON3ADMIN.
           </span>
         </div>
       )}
@@ -104,7 +104,7 @@ export const WorkCentersView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, dirección o ciudad..."
-            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder:text-app-text-secondary/50 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
           />
         </div>
 
@@ -171,7 +171,7 @@ export const WorkCentersView: React.FC = () => {
                     <th className="py-3 px-4 w-24 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+                <tbody className="divide-y divide-app-border text-app-text text-sm">
                   {paginated.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="py-12 text-center text-app-text-secondary font-medium">
@@ -183,7 +183,7 @@ export const WorkCentersView: React.FC = () => {
                       <tr key={wc.id} className="hover:bg-app-bg/70 transition-colors">
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-lg bg-primary-100 border border-primary-200 flex items-center justify-center text-primary-600 shrink-0">
+                            <div className="w-9 h-9 rounded-lg bg-primary-100 border border-primary-200 flex items-center justify-center text-primary-600 shrink-0 dark:bg-primary-900/30 dark:border-primary-800 dark:text-primary-300">
                               <Building2 className="h-5 w-5" />
                             </div>
                             <div>
@@ -198,7 +198,7 @@ export const WorkCentersView: React.FC = () => {
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
-                            <span className="inline-flex px-2 py-0.5 text-[10px] font-extrabold rounded-md border bg-sky-100 text-sky-800 border-sky-200">
+                            <span className="inline-flex px-2 py-0.5 text-[10px] font-extrabold rounded-md border bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800">
                               {resolveCity(wc.city_id)}
                             </span>
                           </div>
@@ -232,7 +232,7 @@ export const WorkCentersView: React.FC = () => {
                             <button
                               onClick={() => { setSelectedForEdit(wc); setIsModalOpen(true); }}
                               title="Modificar centro de trabajo"
-                              className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
+                              className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer dark:hover:text-amber-400 dark:hover:bg-amber-900/20 dark:hover:border-amber-800"
                             >
                               <Edit3 className="h-4 w-4" />
                             </button>
@@ -240,7 +240,7 @@ export const WorkCentersView: React.FC = () => {
                             <button
                               onClick={() => { setDeletingWcId(wc.id); setDeleteDialogOpen(true); }}
                               title="Eliminar centro de trabajo"
-                              className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                              className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer dark:hover:text-rose-400 dark:hover:bg-rose-900/20 dark:hover:border-rose-800"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -260,7 +260,7 @@ export const WorkCentersView: React.FC = () => {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -271,10 +271,10 @@ export const WorkCentersView: React.FC = () => {
 
               <div className="flex items-center gap-1">
                 <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -289,9 +289,9 @@ export const WorkCentersView: React.FC = () => {
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setCityFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
+              <button onClick={() => setCityFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
               {scopeCities.map((city) => (
-                <button key={city.id} onClick={() => setCityFilter(city.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === city.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{city.name}</button>
+                <button key={city.id} onClick={() => setCityFilter(city.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === city.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{city.name}</button>
               ))}
             </div>
             )}
@@ -306,9 +306,9 @@ export const WorkCentersView: React.FC = () => {
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {(['ACTIVE', 'INACTIVE'] as const).map((status) => (
-                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
+                <button key={status} onClick={() => setStatusFilter(status)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === status ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{status === 'ACTIVE' ? 'Activos' : 'Inactivos'}</button>
               ))}
             </div>
             )}

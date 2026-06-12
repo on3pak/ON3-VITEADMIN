@@ -187,12 +187,12 @@ const MainLayout: React.FC = () => {
         setSidebarOpen={setSidebarOpen} 
       />
 
-      <div className="flex flex-col grow lg:ms-[290px] min-h-screen">
+      <div className="flex flex-col grow lg:ms-[290px] min-h-screen bg-app-bg">
         {/* Mobile spacer for fixed header */}
         <div className="h-16 lg:hidden" />
 
         {/* Main Content Card (Metronic-style) */}
-        <div className="flex grow rounded-xl bg-white border border-app-border mt-3 lg:mt-5 mx-5 mb-5">
+        <div className="flex grow rounded-xl bg-app-card border border-app-border mt-3 lg:mt-5 mx-5 mb-5">
           <div className="flex flex-col grow overflow-y-auto pt-5" id="scrollable_content">
             <main className="grow">
               {/* Toolbar */}

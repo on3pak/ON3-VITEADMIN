@@ -21,10 +21,10 @@ const getWcName = (id: string) => INITIAL_WORK_CENTERS.find((wc) => wc.id === id
 const getCityName = (id: string) => INITIAL_CITIES.find((c) => c.id === id)?.name ?? id;
 
 const STATUS_COLORS: Record<string, string> = {
-  'ms-1': 'text-emerald-600 bg-emerald-50 border-emerald-200',
-  'ms-2': 'text-amber-600 bg-amber-50 border-amber-200',
-  'ms-3': 'text-rose-600 bg-rose-50 border-rose-200',
-  'ms-4': 'text-slate-500 bg-slate-100 border-slate-200',
+  'ms-1': 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-800',
+  'ms-2': 'text-amber-600 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-900/20 dark:border-amber-800',
+  'ms-3': 'text-rose-600 bg-rose-50 border-rose-200 dark:text-rose-300 dark:bg-rose-900/20 dark:border-rose-800',
+  'ms-4': 'text-app-text-secondary bg-app-bg border-app-border dark:bg-app-border',
 };
 
 export const MachineryView: React.FC = () => {
@@ -131,10 +131,10 @@ export const MachineryView: React.FC = () => {
   return (
     <div className="space-y-5">
       {isReadOnly && (
-        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
-          <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0" />
+        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-200">
+          <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0 dark:text-amber-400" />
           <span>
-            <span className="font-bold">Modo de Consulta:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">{loggedInUser?.role}</span>. Cualquier intento de creación, edición o borrado será bloqueado.
+            <span className="font-bold">Modo de Consulta:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">{loggedInUser?.role}</span>. Cualquier intento de creación, edición o borrado será bloqueado.
           </span>
         </div>
       )}
@@ -149,7 +149,7 @@ export const MachineryView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o tipo..."
-            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder:text-app-text-secondary/50 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
           />
         </div>
 
@@ -222,7 +222,7 @@ export const MachineryView: React.FC = () => {
                     <th className="py-3 px-4 w-24 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+                <tbody className="divide-y divide-app-border text-app-text text-sm">
                   {paginatedItems.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="py-12 text-center text-app-text-secondary font-medium">
@@ -232,12 +232,12 @@ export const MachineryView: React.FC = () => {
                   ) : (
                     paginatedItems.map((item) => {
                       const full = getById(item.id);
-                      const statusClass = STATUS_COLORS[item.status_id] || 'text-slate-600 bg-slate-50 border-slate-200';
+                      const statusClass = STATUS_COLORS[item.status_id] || 'text-app-text-secondary bg-app-bg border-app-border';
                       return (
                         <tr key={item.id} className="hover:bg-app-bg/70 transition-colors">
                           <td className="py-3.5 px-6">
                             <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-cyan-100 text-cyan-600 border border-cyan-200">
+                              <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-cyan-100 text-cyan-600 border border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800">
                                 <Wrench className="h-4 w-4" />
                               </div>
                               <div>
@@ -288,10 +288,10 @@ export const MachineryView: React.FC = () => {
                             <div className="flex justify-end gap-1.5">
                               {!isReadOnly && (
                                 <>
-                                  <button onClick={() => handleEdit(item.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg" title="Editar">
+                                  <button onClick={() => handleEdit(item.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg dark:hover:text-amber-400 dark:hover:bg-amber-900/20" title="Editar">
                                     <Edit3 className="h-4 w-4" />
                                   </button>
-                                  <button onClick={() => handleDelete(item.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg" title="Eliminar">
+                                  <button onClick={() => handleDelete(item.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg dark:hover:text-rose-400 dark:hover:bg-rose-900/20" title="Eliminar">
                                     <Trash2 className="h-4 w-4" />
                                   </button>
                                 </>
@@ -311,7 +311,7 @@ export const MachineryView: React.FC = () => {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -322,10 +322,10 @@ export const MachineryView: React.FC = () => {
 
               <div className="flex items-center gap-1">
                 <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors dark:hover:bg-primary-900/20 dark:hover:text-primary-400" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -342,9 +342,9 @@ export const MachineryView: React.FC = () => {
               </button>
               {open && (
               <div className="px-4 pt-2 pb-3 space-y-1">
-                <button onClick={() => { setCityFilter('ALL'); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
+                <button onClick={() => { setCityFilter('ALL'); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todas las Ciudades</button>
                 {scopeCities.map((c) => (
-                  <button key={c.id} onClick={() => { setCityFilter(c.id); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === c.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{c.name}</button>
+                  <button key={c.id} onClick={() => { setCityFilter(c.id); setWorkCenterFilter('ALL'); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cityFilter === c.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{c.name}</button>
                 ))}
               </div>
               )}
@@ -362,9 +362,9 @@ export const MachineryView: React.FC = () => {
               </button>
               {open && (
               <div className="px-4 pt-2 pb-3 space-y-1">
-                <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+                <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
                 {scopeWorkCenters.map((wc) => (
-                  <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                  <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
                 ))}
               </div>
               )}
@@ -382,9 +382,9 @@ export const MachineryView: React.FC = () => {
               </button>
               {open && (
               <div className="px-4 pt-2 pb-3 space-y-1">
-                <button onClick={() => setSubtypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos</button>
+                <button onClick={() => setSubtypeFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos</button>
                 {MACHINERY_SUBTYPES.map((st) => (
-                  <button key={st.id} onClick={() => setSubtypeFilter(st.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === st.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{st.name}</button>
+                  <button key={st.id} onClick={() => setSubtypeFilter(st.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${subtypeFilter === st.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{st.name}</button>
                 ))}
               </div>
               )}
@@ -402,9 +402,9 @@ export const MachineryView: React.FC = () => {
               </button>
               {open && (
               <div className="px-4 pt-2 pb-3 space-y-1">
-                <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+                <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
                 {MACHINERY_STATUSES.map((s) => (
-                  <button key={s.id} onClick={() => setStatusFilter(s.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s.name}</button>
+                  <button key={s.id} onClick={() => setStatusFilter(s.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s.name}</button>
                 ))}
               </div>
               )}

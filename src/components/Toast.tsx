@@ -11,18 +11,18 @@ export const Toast: React.FC = () => {
 
   const config = {
     success: {
-      bg: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-      icon: <CheckCircle className="h-5 w-5 text-emerald-600" />,
+      bg: 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-200',
+      icon: <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />,
       badge: 'bg-emerald-600',
     },
     error: {
-      bg: 'bg-rose-50 border-rose-200 text-rose-900',
-      icon: <AlertTriangle className="h-5 w-5 text-rose-600" />,
+      bg: 'bg-rose-50 border-rose-200 text-rose-900 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-200',
+      icon: <AlertTriangle className="h-5 w-5 text-rose-600 dark:text-rose-400" />,
       badge: 'bg-rose-600',
     },
     info: {
-      bg: 'bg-blue-50 border-blue-200 text-blue-900',
-      icon: <Info className="h-5 w-5 text-blue-600" />,
+      bg: 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200',
+      icon: <Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />,
       badge: 'bg-blue-600',
     },
   };

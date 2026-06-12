@@ -104,10 +104,10 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-sidebar/80" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-app-card rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 border-b border-app-border">
           <div className="flex items-center gap-2">
-            <Truck className="h-5 w-5 text-indigo-600" />
+            <Truck className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             <h2 className="text-lg font-bold text-app-text">
               {editingVehicle ? 'Editar Vehículo' : 'Nuevo Vehículo'}
             </h2>
@@ -119,7 +119,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           {formError && (
-            <div className="p-3 bg-rose-50 text-rose-700 rounded-lg text-sm">{formError}</div>
+            <div className="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300 rounded-lg text-sm">{formError}</div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -3,9 +3,9 @@ import { useAuth } from '../context/AuthContext';
 import { DashboardViewType, VIEW_ROLES } from '../types';
 import {
   LayoutDashboard, Users, UserSquare,
-  ShieldCheck, LogOut, KeyRound,
-  Truck, Briefcase, Building2, ClipboardList, Package,
-  Settings, ChevronDown, User, Shield,
+  LogOut, KeyRound,
+  Truck, Building2, ClipboardList, Package,
+  Settings, User, Shield,
   Moon, Grid, Wrench, CalendarCheck, ClipboardCheck,
 } from 'lucide-react';
 
@@ -63,14 +63,47 @@ const appsItems = (role?: string) => {
 
 const profileItems = [
   { id: 'PROFILE' as DashboardViewType, label: 'Mi Perfil', icon: <User className="h-5 w-5" />, description: 'Información personal' },
-  { id: 'PROFILE_CONFIG' as DashboardViewType, label: 'Configuración', icon: <Settings className="h-5 w-5" />, description: 'Ajustes del sistema' },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
-  const { user, logout, triggerToast } = useAuth();
+  const { user, logout } = useAuth();
   const [activeSection, setActiveSection] = useState<'profile' | 'dashboard' | 'admin' | 'apps'>('profile');
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('on3_profile_prefs');
+    if (saved) {
+      const prefs = JSON.parse(saved);
+      return prefs.theme === 'oscuro';
+    }
+    return false;
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('on3_profile_prefs');
+    let theme = 'claro';
+    if (saved) {
+      const prefs = JSON.parse(saved);
+      theme = prefs.theme || 'claro';
+    }
+    if (theme === 'oscuro') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'sistema') {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const next = !darkMode;
+    setDarkMode(next);
+    document.documentElement.classList.toggle('dark', next);
+    const saved = localStorage.getItem('on3_profile_prefs');
+    const prefs = saved ? JSON.parse(saved) : {};
+    prefs.theme = next ? 'oscuro' : 'claro';
+    localStorage.setItem('on3_profile_prefs', JSON.stringify(prefs));
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -105,10 +138,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
 
   const getRoleBadgeStyle = (role: string) => {
     switch (role) {
-      case 'ROOT': return 'bg-purple-500/10 text-purple-700 border-purple-200';
-      case 'ADMIN': return 'bg-primary-500/10 text-primary-700 border-primary-200';
-      case 'MANAGER': return 'bg-amber-500/10 text-amber-700 border-amber-200';
-      default: return 'bg-slate-100 text-slate-600 border-slate-200';
+      case 'ROOT': return 'bg-purple-500/10 text-purple-700 border-purple-200 dark:text-purple-300 dark:border-purple-800';
+      case 'ADMIN': return 'bg-primary-500/10 text-primary-700 border-primary-200 dark:text-primary-300 dark:border-primary-800';
+      case 'MANAGER': return 'bg-amber-500/10 text-amber-700 border-amber-200 dark:text-amber-300 dark:border-amber-800';
+      default: return 'bg-sidebar-hover text-sidebar-text border-sidebar-border';
     }
   };
 
@@ -137,7 +170,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Sidebar Primary - Icon Bar */}
-        <div className="w-[70px] bg-[#f8f9fc] border-r border-app-border flex flex-col items-center py-5 shrink-0">
+        <div className="w-[70px] bg-sidebar border-r border-sidebar-border flex flex-col items-center py-5 shrink-0">
           {/* Brand Icon */}
           <a
             onClick={() => { setActiveSection('profile'); setView('PROFILE'); setSidebarOpen?.(false); }}
@@ -146,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
             <span className="text-white font-bold text-xs tracking-tight">ON3</span>
           </a>
 
-          <div className="w-5 h-px bg-app-border mt-4 mb-2" />
+          <div className="w-5 h-px bg-sidebar-border mt-4 mb-2" />
 
           {/* Navigation Icons */}
           <div className="flex-1 flex flex-col items-center gap-1.5">
@@ -154,8 +187,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
               onClick={() => { setActiveSection('profile'); setView('PROFILE'); setSidebarOpen?.(false); }}
               className={`flex items-center justify-center size-9 rounded-md border transition-all ${
                 activeSection === 'profile'
-                  ? 'bg-white text-primary-600 border-app-border shadow-xs'
-                  : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+                  ? 'bg-sidebar-hover text-primary-600 border-sidebar-border'
+                  : 'border-transparent text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active hover:border-sidebar-border'
               }`}
               title="Perfil"
             >
@@ -167,8 +200,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                 onClick={() => handleSectionChange('dashboard')}
                 className={`flex items-center justify-center size-9 rounded-md border transition-all ${
                   activeSection === 'dashboard'
-                    ? 'bg-white text-primary-600 border-app-border shadow-xs'
-                    : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+                    ? 'bg-sidebar-hover text-primary-600 border-sidebar-border'
+                    : 'border-transparent text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active hover:border-sidebar-border'
                 }`}
                 title="Dashboard"
               >
@@ -181,8 +214,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                 onClick={() => handleSectionChange('admin')}
                 className={`flex items-center justify-center size-9 rounded-md border transition-all ${
                   activeSection === 'admin'
-                    ? 'bg-white text-primary-600 border-app-border shadow-xs'
-                    : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+                    ? 'bg-sidebar-hover text-primary-600 border-sidebar-border'
+                    : 'border-transparent text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active hover:border-sidebar-border'
                 }`}
                 title="Administración"
               >
@@ -197,15 +230,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
               onClick={() => handleSectionChange('apps')}
               className={`flex items-center justify-center size-9 rounded-md border transition-all ${
                 activeSection === 'apps'
-                  ? 'bg-white text-primary-600 border-app-border shadow-xs'
-                  : 'border-transparent text-app-text-secondary hover:bg-white hover:text-app-text hover:border-app-border'
+                  ? 'bg-sidebar-hover text-primary-600 border-sidebar-border'
+                  : 'border-transparent text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active hover:border-sidebar-border'
               }`}
               title="Apps"
             >
               <Grid className="h-[18px] w-[18px]" />
             </button>
 
-            <div className="w-6 h-px bg-app-border" />
+            <div className="w-6 h-px bg-sidebar-border" />
 
             {/* User Avatar */}
             <div className="relative pt-1" ref={dropdownRef}>
@@ -213,22 +246,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="shrink-0 cursor-pointer"
               >
-                <div className="size-9 rounded-full ring-2 ring-white overflow-hidden border-2 border-green-500 bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                <div className="size-9 rounded-full ring-2 ring-sidebar overflow-hidden border-2 border-green-500 bg-sidebar-hover text-sidebar-text flex items-center justify-center text-xs font-bold">
                   {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
                 </div>
               </button>
 
               {userDropdownOpen && (
-                <div className="absolute left-full bottom-0 ml-2 w-[250px] bg-white rounded-xl shadow-lg border border-app-border overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="absolute left-full bottom-0 ml-2 w-[250px] bg-sidebar rounded-xl shadow-lg border border-sidebar-border overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
                   {/* User Info Header */}
                   <div className="flex items-center justify-between px-3 py-3 gap-1.5">
                     <div className="flex items-center gap-2.5">
-                      <div className="size-9 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-white bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                      <div className="size-9 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-sidebar bg-sidebar-hover text-sidebar-text flex items-center justify-center text-xs font-bold">
                         {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
                       </div>
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-sm text-app-text font-semibold leading-none">{user?.full_name}</span>
-                        <span className="text-xs text-app-text-secondary hover:text-primary-600 font-medium leading-none">{user?.email}</span>
+                        <span className="text-sm text-sidebar-text-active font-semibold leading-none">{user?.full_name}</span>
+                        <span className="text-xs text-sidebar-text hover:text-sidebar-brand font-medium leading-none">{user?.email}</span>
                       </div>
                     </div>
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${getRoleBadgeStyle(user?.role || '')}`}>
@@ -236,44 +269,44 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                     </span>
                   </div>
 
-                  <div className="border-t border-app-border" />
+                  <div className="border-t border-sidebar-border" />
 
                   {/* Menu Items */}
                   <div className="py-1">
                     <button
                       onClick={() => { setView('PROFILE'); setUserDropdownOpen(false); setSidebarOpen?.(false); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-app-text hover:bg-app-bg transition-colors"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-sidebar-text-active hover:bg-sidebar-hover transition-colors"
                     >
-                      <User className="h-4 w-4 text-app-text-secondary" />
+                      <User className="h-4 w-4 text-sidebar-text" />
                       Mi Perfil
                     </button>
                     <button
                       onClick={() => { setView('PROFILE_CONFIG'); setUserDropdownOpen(false); setSidebarOpen?.(false); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-app-text hover:bg-app-bg transition-colors"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-sidebar-text-active hover:bg-sidebar-hover transition-colors"
                     >
-                      <Settings className="h-4 w-4 text-app-text-secondary" />
+                      <Settings className="h-4 w-4 text-sidebar-text" />
                       Configuración
                     </button>
                   </div>
 
-                  <div className="border-t border-app-border" />
+                  <div className="border-t border-sidebar-border" />
 
                   <div className="px-3 py-2">
                     <div className="flex items-center gap-2 justify-between mb-2">
-                      <span className="flex items-center gap-2 text-sm text-app-text-secondary">
+                      <span className="flex items-center gap-2 text-sm text-sidebar-text">
                         <Moon className="h-4 w-4" />
                         Modo oscuro
                       </span>
                       <div
-                        onClick={() => triggerToast('Modo oscuro — En desarrollo', 'info')}
-                        className="w-9 h-5 bg-app-border rounded-full relative cursor-pointer"
+                        onClick={toggleDarkMode}
+                        className={`w-9 h-5 rounded-full relative cursor-pointer transition-colors ${darkMode ? 'bg-primary-500' : 'bg-sidebar-border'}`}
                       >
-                        <div className="w-3.5 h-3.5 bg-white rounded-full shadow-xs absolute top-0.5 left-0.5" />
+                        <div className={`w-3.5 h-3.5 bg-sidebar-text-active rounded-full shadow-xs absolute top-0.5 transition-transform ${darkMode ? 'translate-x-4' : 'left-0.5'}`} />
                       </div>
                     </div>
                     <button
                       onClick={() => { logout(); setUserDropdownOpen(false); }}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 border border-app-border rounded-lg transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 border border-sidebar-border rounded-lg transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Cerrar Sesión
@@ -286,12 +319,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
         </div>
 
         {/* Sidebar Secondary - Menu Panel */}
-        <div className="flex-1 bg-white border-r border-app-border flex flex-col min-w-0">
+        <div className="flex-1 bg-sidebar border-r border-sidebar-border flex flex-col min-w-0">
           {/* Brand Header */}
-          <div className="flex items-center justify-between px-4 h-[60px] shrink-0 border-b border-app-border">
+          <div className="flex items-center justify-between px-4 h-[60px] shrink-0 border-b border-sidebar-border">
             <div>
-              <h1 className="font-bold text-sm text-app-text tracking-tight">ON3ADMIN</h1>
-              <p className="text-[10px] text-primary-600 font-semibold tracking-wider uppercase">Secure Suite</p>
+              <h1 className="font-bold text-sm text-sidebar-text-active tracking-tight">ON3ADMIN</h1>
+              <p className="text-[10px] text-sidebar-brand font-semibold tracking-wider uppercase">Secure Suite</p>
             </div>
           </div>
 
@@ -299,7 +332,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
 
           {/* Section Group Label */}
           <div className="px-[18px] pt-4 pb-1">
-            <p className="text-[10px] font-semibold text-app-text-secondary uppercase tracking-[0.1em]">
+            <p className="text-[10px] font-semibold text-sidebar-text uppercase tracking-[0.1em]">
               {activeSection === 'profile' ? 'Perfil' : activeSection === 'dashboard' ? 'Dashboard' : activeSection === 'apps' ? 'Apps' : 'Administración'}
             </p>
           </div>
@@ -324,14 +357,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                   className={`
                     w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md border text-left transition-all
                     ${isActive
-                      ? 'bg-app-bg border-app-border text-primary-600 font-medium'
+                      ? 'bg-sidebar-active border-sidebar-border text-primary-600 font-medium'
                       : isDisabled
-                        ? 'opacity-40 cursor-not-allowed text-app-text-secondary border-transparent'
-                        : 'border-transparent text-app-text hover:bg-app-bg hover:border-app-border hover:text-app-text'
+                        ? 'opacity-40 cursor-not-allowed text-sidebar-text border-transparent'
+                        : 'border-transparent text-sidebar-text hover:bg-sidebar-hover hover:border-sidebar-border hover:text-sidebar-text-active'
                     }
                   `}
                 >
-                  <span className={`shrink-0 ${isActive ? 'text-primary-600' : 'text-app-text-secondary'}`}>
+                  <span className={`shrink-0 ${isActive ? 'text-primary-600' : 'text-sidebar-text'}`}>
                     {item.icon}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -339,7 +372,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                       <p className="text-sm leading-tight">{item.label}</p>
                       {isDisabled && <KeyRound className="h-3 w-3 text-amber-500" />}
                     </div>
-                    <p className={`text-[11px] font-normal truncate mt-0.5 ${isActive ? 'text-primary-500/70' : 'text-app-text-secondary/70'}`}>
+                    <p className={`text-[11px] font-normal truncate mt-0.5 ${isActive ? 'text-primary-500/70' : 'text-sidebar-text/70'}`}>
                       {item.description}
                     </p>
                   </div>

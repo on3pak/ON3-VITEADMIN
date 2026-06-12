@@ -94,12 +94,12 @@ export const DashboardEmployeesView: React.FC = () => {
 
   const getStatusBadge = (statusId: string) => {
     const colors: Record<string, string> = {
-      'es_1': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      'es_2': 'bg-blue-50 text-blue-700 border-blue-200',
-      'es_3': 'bg-rose-50 text-rose-700 border-rose-200',
-      'es_4': 'bg-amber-50 text-amber-700 border-amber-200',
-      'es_5': 'bg-purple-50 text-purple-700 border-purple-200',
-      'es_6': 'bg-cyan-50 text-cyan-700 border-cyan-200',
+      'es_1': 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+      'es_2': 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+      'es_3': 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+      'es_4': 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+      'es_5': 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+      'es_6': 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
     };
     return (
       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${colors[statusId] || 'bg-app-bg text-app-text'}`}>
@@ -112,6 +112,15 @@ export const DashboardEmployeesView: React.FC = () => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
   };
+
+  const statColors: Record<string, { bg: string, border: string, text: string }> = {
+    primary: { bg: 'bg-primary-50 dark:bg-primary-900/20', border: 'border-primary-100 dark:border-primary-800', text: 'text-primary-600 dark:text-primary-300' },
+    emerald: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-100 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-300' },
+    rose: { bg: 'bg-rose-50 dark:bg-rose-900/20', border: 'border-rose-100 dark:border-rose-800', text: 'text-rose-600 dark:text-rose-300' },
+    blue: { bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-100 dark:border-blue-800', text: 'text-blue-600 dark:text-blue-300' },
+  };
+
+  const getStatColor = (color: string) => statColors[color] || statColors.primary;
 
   const stats = [
     {
@@ -143,20 +152,23 @@ export const DashboardEmployeesView: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
+        {stats.map((stat, i) => {
+          const sc = getStatColor(stat.color);
+          return (
           <div
             key={i}
             className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs"
           >
-            <div className={`p-2.5 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-3`}>
-              <div className={`text-${stat.color}-600`}>{stat.icon}</div>
+            <div className={`p-2.5 rounded-xl ${sc.bg} border ${sc.border} w-fit mb-3`}>
+              <div className={sc.text}>{stat.icon}</div>
             </div>
             <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">
               {stat.title}
             </p>
             <p className="text-2xl font-bold text-app-text mt-1">{stat.value}</p>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

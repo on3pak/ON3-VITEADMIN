@@ -141,10 +141,10 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-sidebar/80" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between p-6 border-b border-app-border">
           <h2 className="text-lg font-bold text-app-text flex items-center gap-2">
-            <Shirt className="h-5 w-5 text-indigo-600" />
+            <Shirt className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             {editingItem ? 'Editar Prenda' : 'Nueva Prenda'}
           </h2>
           <button onClick={onClose} className="p-1 text-app-text-secondary hover:text-app-text-secondary rounded-lg hover:bg-app-bg">
@@ -154,7 +154,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {formError && (
-            <div className="p-3 bg-rose-50 rounded-xl border border-rose-200 text-xs text-rose-700 font-medium">
+            <div className="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-medium">
               {formError}
             </div>
           )}
@@ -163,11 +163,11 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
             <div className="flex gap-3">
               <div className="w-[70%]">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Nombre *</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Pantalón Verano" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Pantalón Verano" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
               </div>
               <div className="flex-1">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Ubicación</label>
-                <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
+                <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card">
                   {filteredWorkCenters.map((wc) => (
                     <option key={wc.id} value={wc.id}>{wc.name}</option>
                   ))}
@@ -191,7 +191,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                         setCustomSubtype('');
                       }
                     }}
-                    className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white"
+                    className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card"
                   >
                     <option value="">Seleccionar...</option>
                     {filteredSubtypes.map((st) => (
@@ -202,7 +202,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                 </div>
                 <div className="w-[20%]">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Talla</label>
-                  <select value={itemSize} onChange={(e) => setItemSize(e.target.value)} disabled={!subtype_id} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white disabled:opacity-50 disabled:cursor-not-allowed">
+                  <select value={itemSize} onChange={(e) => setItemSize(e.target.value)} disabled={!subtype_id} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card disabled:opacity-50 disabled:cursor-not-allowed">
                     <option value="">—</option>
                     {sizeOptions.map((s) => (
                       <option key={s} value={s}>{s}</option>
@@ -211,7 +211,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                 </div>
                 <div className="w-[20%]">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Cant.</label>
-                  <input type="number" min={0} value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text" />
+                  <input type="number" min={0} value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text" />
                 </div>
               </div>
               {isCustomSubtype && (
@@ -220,7 +220,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                   value={customSubtype}
                   onChange={(e) => { setCustomSubtype(e.target.value); setSubtype_id(e.target.value); }}
                   placeholder="Especificar tipo..."
-                  className="mt-2 w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text"
+                  className="mt-2 w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text"
                   autoFocus
                 />
               )}
@@ -243,7 +243,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                       }
                     }}
                     disabled={!subtype_id}
-                    className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">Seleccionar...</option>
                     {getPresetColors(subtype_id).map((c) => (
@@ -254,7 +254,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Género</label>
-                  <select value={itemGender} onChange={(e) => setItemGender(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text bg-white">
+                  <select value={itemGender} onChange={(e) => setItemGender(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card">
                     <option value="">Sin especificar</option>
                     <option value="Hombre">Hombre</option>
                     <option value="Mujer">Mujer</option>
@@ -268,7 +268,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
                   value={customColor}
                   onChange={(e) => { setCustomColor(e.target.value); setItemColor(e.target.value); }}
                   placeholder="Especificar color..."
-                  className="mt-2 w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-app-text"
+                  className="mt-2 w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text"
                   autoFocus
                 />
               )}
@@ -276,7 +276,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-app-border">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-app-text-secondary bg-app-bg hover:bg-app-border rounded-xl transition-colors">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-app-text-secondary bg-app-bg hover:bg-app-border dark:hover:bg-app-border rounded-xl transition-colors">
               Cancelar
             </button>
             <button type="submit" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">

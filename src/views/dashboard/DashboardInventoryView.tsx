@@ -27,15 +27,15 @@ for (const cat of ['CLOTHING', 'PPE'] as const) {
 }
 
 const statusBadgeStyles: Record<string, string> = {
-  'rs-1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'rs-2': 'bg-rose-100 text-rose-700 border-rose-200',
-  'rs-3': 'bg-amber-100 text-amber-700 border-amber-200',
-  'es-1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'es-2': 'bg-rose-100 text-rose-700 border-rose-200',
-  'es-3': 'bg-amber-100 text-amber-700 border-amber-200',
-  'ms-1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'ms-2': 'bg-amber-100 text-amber-700 border-amber-200',
-  'ms-3': 'bg-rose-100 text-rose-700 border-rose-200',
+  'rs-1': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+  'rs-2': 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+  'rs-3': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+  'es-1': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+  'es-2': 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+  'es-3': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+  'ms-1': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+  'ms-2': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+  'ms-3': 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
   'ms-4': 'bg-app-bg text-app-text border-app-border',
 };
 
@@ -91,6 +91,15 @@ const TabContent: React.FC<{ items: typeof import('../../types').InventoryItem[]
 
   const recent = [...filtered].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 5);
 
+  const statColors: Record<string, { bg: string, border: string, text: string }> = {
+    primary: { bg: 'bg-primary-50 dark:bg-primary-900/20', border: 'border-primary-100 dark:border-primary-800', text: 'text-primary-600 dark:text-primary-300' },
+    emerald: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-100 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-300' },
+    rose: { bg: 'bg-rose-50 dark:bg-rose-900/20', border: 'border-rose-100 dark:border-rose-800', text: 'text-rose-600 dark:text-rose-300' },
+    amber: { bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-100 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-300' },
+  };
+
+  const getStatColor = (color: string) => statColors[color] || statColors.primary;
+
   const stats = [
     { title: category === 'CLOTHING' ? 'Total Prendas' : category === 'PPE' ? 'Total EPIs' : 'Total Máquinas', value: totalCount, sub: `${totalUnits} unidades`, icon: <Box className="h-5 w-5" />, color: 'primary' },
     { title: 'Disponibles', value: disponibles, sub: `${filteredCount > 0 ? ((disponibles / filteredCount) * 100).toFixed(0) : 0}%`, icon: <TrendingUp className="h-5 w-5" />, color: 'emerald' },
@@ -101,16 +110,19 @@ const TabContent: React.FC<{ items: typeof import('../../types').InventoryItem[]
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
+        {stats.map((stat, i) => {
+          const sc = getStatColor(stat.color);
+          return (
           <div key={i} className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
-            <div className={`p-2 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-2.5`}>
-              <div className={`text-${stat.color}-600`}>{stat.icon}</div>
+            <div className={`p-2 rounded-xl ${sc.bg} border ${sc.border} w-fit mb-2.5`}>
+              <div className={sc.text}>{stat.icon}</div>
             </div>
             <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">{stat.title}</p>
             <p className="text-2xl font-bold text-app-text mt-0.5">{stat.value}</p>
             <p className="text-[11px] text-app-text-secondary mt-0.5">{stat.sub}</p>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -245,7 +257,7 @@ export const DashboardInventoryView: React.FC = () => {
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-              activeTab === tab.value ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'
+              activeTab === tab.value ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'
             }`}
           >
             {tab.icon} {tab.label}

@@ -126,16 +126,16 @@ export const DashboardServicesView: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
-          <div className="p-2.5 rounded-xl bg-indigo-50 border border-indigo-100 w-fit mb-3">
-            <ClipboardList className="h-5 w-5 text-indigo-600" />
+          <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 w-fit mb-3">
+            <ClipboardList className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
           </div>
           <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">Servicios</p>
           <p className="text-2xl font-bold text-app-text mt-1">{total}</p>
         </div>
 
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
-          <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-100 w-fit mb-3">
-            <UserCog className="h-5 w-5 text-amber-600" />
+          <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 w-fit mb-3">
+            <UserCog className="h-5 w-5 text-amber-600 dark:text-amber-300" />
           </div>
           <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">Oficiales</p>
           <p className="text-2xl font-bold text-app-text mt-1">{staffStats.totalOficiales}</p>
@@ -143,8 +143,8 @@ export const DashboardServicesView: React.FC = () => {
         </div>
 
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
-          <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 w-fit mb-3">
-            <Users className="h-5 w-5 text-emerald-600" />
+          <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 w-fit mb-3">
+            <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />
           </div>
           <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">Peones</p>
           <p className="text-2xl font-bold text-app-text mt-1">{staffStats.totalPeones}</p>
@@ -152,8 +152,8 @@ export const DashboardServicesView: React.FC = () => {
         </div>
 
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
-          <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-100 w-fit mb-3">
-            <Building2 className="h-5 w-5 text-sky-600" />
+          <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800 w-fit mb-3">
+            <Building2 className="h-5 w-5 text-sky-600 dark:text-sky-300" />
           </div>
           <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">Centros</p>
           <p className="text-2xl font-bold text-app-text mt-1">{totalCentros}</p>
@@ -299,7 +299,7 @@ export const DashboardServicesView: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-app-text">{svc.name}</span>
-                  <span className={`text-[10px] font-semibold text-white px-2 py-0.5 rounded ${CATEGORY_COLORS[svc.category] || 'bg-gray-500'}`}>
+                  <span className={`text-[10px] font-semibold text-white px-2 py-0.5 rounded ${CATEGORY_COLORS[svc.category] || 'bg-app-text-secondary'}`}>
                     {svc.category.substring(0, 5)}
                   </span>
                 </div>
@@ -315,14 +315,14 @@ export const DashboardServicesView: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3 text-xs">
                   {svc.staff_requirement.oficial ? (
-                    <span className="flex items-center gap-1 text-amber-600 font-medium">
+                    <span className="flex items-center gap-1 text-amber-600 dark:text-amber-300 font-medium">
                       <UserCog className="h-3 w-3" />
                       {svc.staff_requirement.oficial === 'ec_000003' ? '1ª' : '2ª'}
                     </span>
                   ) : (
                     <span className="text-app-text-secondary text-[10px]">Sin oficial</span>
                   )}
-                  <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-300 font-medium">
                     <Users className="h-3 w-3" />
                     {svc.staff_requirement.peones} peón{svc.staff_requirement.peones !== 1 ? 'es' : ''}
                   </span>

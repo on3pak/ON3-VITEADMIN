@@ -129,9 +129,9 @@ export const UsersView: React.FC = () => {
 
   const getRoleBadgeStyle = (role: UserRole) => {
     switch (role) {
-      case 'ROOT': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'ADMIN': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'MANAGER': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'ROOT': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800';
+      case 'ADMIN': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+      case 'MANAGER': return 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800';
       case 'USER': return 'bg-app-bg text-app-text border-app-border';
     }
   };
@@ -149,7 +149,7 @@ export const UsersView: React.FC = () => {
     <tr key={u.id} className="hover:bg-app-bg/70 transition-colors">
       <td className="py-3.5 px-6">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold border border-gray-200">
+          <div className="w-9 h-9 rounded-lg bg-app-bg text-app-text-secondary flex items-center justify-center text-xs font-bold border border-app-border">
             {(u.full_name ?? '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
           </div>
           <div>
@@ -178,7 +178,7 @@ export const UsersView: React.FC = () => {
             <button
               onClick={() => handleOpenEditModal(u)}
               title="Editar mis datos"
-              className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg border border-transparent hover:border-amber-200 transition-colors cursor-pointer"
+              className="p-1.5 text-app-text-secondary hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg border border-transparent hover:border-amber-200 dark:hover:border-amber-800 transition-colors cursor-pointer"
             >
               <Edit3 className="h-4 w-4" />
             </button>
@@ -188,14 +188,14 @@ export const UsersView: React.FC = () => {
               <button
                 onClick={async () => { try { await restoreUser(u.id); } catch {} }}
                 title="Recuperar usuario"
-                className="p-1.5 text-app-text-secondary hover:text-emerald-600 hover:bg-emerald-50 rounded-lg border border-transparent hover:border-emerald-200 transition-colors cursor-pointer"
+                className="p-1.5 text-app-text-secondary hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg border border-transparent hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors cursor-pointer"
               >
                 <RotateCcw className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setHardDeleteDialog({ open: true, userId: u.id })}
                 title="Borrar definitivamente"
-                className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                className="p-1.5 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg border border-transparent hover:border-rose-200 dark:hover:border-rose-800 transition-colors cursor-pointer"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -205,7 +205,7 @@ export const UsersView: React.FC = () => {
               <button
                 onClick={() => setSoftDeleteDialog({ open: true, userId: u.id, userName: u.full_name ?? u.username })}
                 title="Dar de baja"
-                className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                className="p-1.5 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg border border-transparent hover:border-rose-200 dark:hover:border-rose-800 transition-colors cursor-pointer"
               >
                 <UserX className="h-4 w-4" />
               </button>
@@ -220,10 +220,10 @@ export const UsersView: React.FC = () => {
     <div className="space-y-5">
 
       {isReadOnlyOperator && (
-        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
+        <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-center gap-3 font-medium">
           <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0" />
           <span>
-            ⚠️ <span className="font-bold">Modo de Consulta Activo:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">USER</span>. Puedes navegar y filtrar los datos de la grilla, pero cualquier intento de creación, edición o borrado será bloqueado por las directivas de seguridad RBAC de ON3ADMIN.
+            ⚠️ <span className="font-bold">Modo de Consulta Activo:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 dark:bg-amber-900/30 px-1 py-0.5 rounded text-amber-800 dark:text-amber-300">USER</span>. Puedes navegar y filtrar los datos de la grilla, pero cualquier intento de creación, edición o borrado será bloqueado por las directivas de seguridad RBAC de ON3ADMIN.
           </span>
         </div>
       )}
@@ -238,7 +238,7 @@ export const UsersView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={showDeleted ? "Buscar en usuarios dados de baja..." : "Buscar por nombre, @username o correo..."}
-            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder:text-app-text-secondary/50 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
           />
         </div>
 
@@ -261,7 +261,7 @@ export const UsersView: React.FC = () => {
           )}
           <button
             onClick={() => { setShowDeleted(!showDeleted); setCurrentPage(1); }}
-            className={`flex items-center gap-1.5 px-3 py-2 border font-semibold text-xs rounded-xl transition-colors ${showDeleted ? 'bg-rose-50 text-rose-700 border-rose-200' : 'text-rose-700 border-rose-200 bg-rose-50 hover:bg-rose-100'}`}
+            className={`flex items-center gap-1.5 px-3 py-2 border font-semibold text-xs rounded-xl transition-colors ${showDeleted ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800' : 'text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 dark:hover:bg-rose-900/30'}`}
           >
             {showDeleted ? <ArrowLeft className="h-4 w-4" /> : <UserX className="h-4 w-4" />}
             <span>{showDeleted ? 'Volver' : `Baja (${deletedUsers.length})`}</span>
@@ -282,7 +282,7 @@ export const UsersView: React.FC = () => {
           {showDeleted ? (
             <button
               onClick={() => { setShowDeleted(false); setCurrentPage(1); }}
-              className="flex items-center gap-1.5 px-4 py-2 text-app-text border border-app-border bg-white hover:bg-app-bg font-semibold text-xs rounded-xl shadow-xs transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 text-app-text border border-app-border bg-app-card hover:bg-app-bg font-semibold text-xs rounded-xl shadow-xs transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Volver a usuarios activos</span>
@@ -291,7 +291,7 @@ export const UsersView: React.FC = () => {
             <>
               <button
                 onClick={() => { setShowDeleted(true); setCurrentPage(1); }}
-                className="flex items-center gap-1.5 px-4 py-2 text-rose-700 border border-rose-200 bg-rose-50 hover:bg-rose-100 font-semibold text-xs rounded-xl shadow-xs transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 dark:hover:bg-rose-900/30 font-semibold text-xs rounded-xl shadow-xs transition-colors"
               >
                 <UserX className="h-4 w-4" />
                 <span>Ver dados de baja</span>
@@ -324,7 +324,7 @@ export const UsersView: React.FC = () => {
                 <th className="py-3 px-4 w-24 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+            <tbody className="divide-y divide-app-border text-app-text text-sm">
               {paginatedUsers.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="py-12 text-center text-app-text-secondary font-medium">
@@ -346,7 +346,7 @@ export const UsersView: React.FC = () => {
             <select
               value={itemsPerPage}
               onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -360,7 +360,7 @@ export const UsersView: React.FC = () => {
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1 || totalPages === 0}
-              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
+              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Primera página"
             >
               <ChevronsLeft className="h-4 w-4" />
@@ -368,7 +368,7 @@ export const UsersView: React.FC = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1 || totalPages === 0}
-              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
+              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Página anterior"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -376,7 +376,7 @@ export const UsersView: React.FC = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
+              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Página siguiente"
             >
               <ChevronRight className="h-4 w-4" />
@@ -384,7 +384,7 @@ export const UsersView: React.FC = () => {
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
+              className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors"
               title="Última página"
             >
               <ChevronsRight className="h-4 w-4" />
@@ -403,9 +403,9 @@ export const UsersView: React.FC = () => {
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setRoleFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Roles</button>
+              <button onClick={() => setRoleFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === 'ALL' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Roles</button>
               {(['ROOT', 'ADMIN', 'MANAGER', 'USER'] as const).map((role) => (
-                <button key={role} onClick={() => setRoleFilter(role)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === role ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{role}</button>
+                <button key={role} onClick={() => setRoleFilter(role)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === role ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{role}</button>
               ))}
             </div>
             )}
@@ -415,7 +415,7 @@ export const UsersView: React.FC = () => {
           {!showDeleted && (
             <button
               onClick={() => { setShowDeleted(true); setCurrentPage(1); }}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-rose-700 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-200 hover:border-rose-300 transition-colors"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-rose-700 dark:text-rose-300 hover:text-rose-800 dark:hover:text-rose-200 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-xl border border-rose-200 dark:border-rose-800 hover:border-rose-300 dark:hover:border-rose-800 transition-colors"
             >
               <UserX className="h-4 w-4" />
               Ver dados de baja ({deletedUsers.length})

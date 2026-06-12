@@ -129,8 +129,8 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
             onClick={() => setTab('FREE_DAYS')}
             className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition-all ${
               tab === 'FREE_DAYS'
-                ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30'
-                : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
+              ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30 dark:bg-primary-900/30'
+              : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
             }`}
           >
             Solicitar Días
@@ -139,8 +139,8 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
             onClick={() => setTab('MONTH_CHANGE')}
             className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition-all ${
               tab === 'MONTH_CHANGE'
-                ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30'
-                : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
+              ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30 dark:bg-primary-900/30'
+              : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
             }`}
           >
             Cambiar Mes
@@ -156,23 +156,23 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
               </div>
 
               {selectedDays.length > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-primary-50 rounded-xl border border-primary-100">
-                  <Check className="w-4 h-4 text-primary-600 shrink-0" />
-                  <span className="text-xs font-semibold text-primary-700">
+                <div className="flex items-center gap-2 px-3 py-2 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800">
+                  <Check className="w-4 h-4 text-primary-600 dark:text-primary-400 shrink-0" />
+                  <span className="text-xs font-semibold text-primary-700 dark:text-primary-300">
                     {selectedDays.length} día{selectedDays.length !== 1 ? 's' : ''} seleccionado{selectedDays.length !== 1 ? 's' : ''}
                   </span>
                 </div>
               )}
 
-              <div className="bg-white rounded-xl border border-app-border overflow-hidden">
+              <div className="bg-app-card rounded-xl border border-app-border overflow-hidden">
                 <div className="flex items-center justify-between px-3 py-2 bg-app-bg border-b border-app-border">
-                  <button onClick={goToPrevMonth} className="p-1 rounded-lg hover:bg-white text-app-text-secondary hover:text-app-text">
+                  <button onClick={goToPrevMonth} className="p-1 rounded-lg hover:bg-app-card text-app-text-secondary hover:text-app-text">
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <span className="text-sm font-bold text-app-text">
                     {MONTH_NAMES[calendarMonth]} {calendarYear}
                   </span>
-                  <button onClick={goToNextMonth} className="p-1 rounded-lg hover:bg-white text-app-text-secondary hover:text-app-text">
+                  <button onClick={goToNextMonth} className="p-1 rounded-lg hover:bg-app-card text-app-text-secondary hover:text-app-text">
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -184,7 +184,7 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
                     </div>
                   ))}
                   {monthDays.map((d, i) => {
-                    if (!d) return <div key={`empty-${i}`} className="bg-white" />;
+                    if (!d) return <div key={`empty-${i}`} className="bg-app-card" />;
                     const dateStr = d.toISOString().split('T')[0];
                     const isPast = d < today;
                     const isWeekendDay = isWeekend(d);
@@ -200,10 +200,10 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
                           isSelected
                             ? 'bg-primary-500 text-white font-bold shadow-sm z-10'
                             : isPast
-                              ? 'text-gray-200 cursor-not-allowed'
-                              : isWeekendDay
-                                ? 'text-gray-200 cursor-not-allowed'
-                                : 'text-app-text hover:bg-primary-50 hover:text-primary-700 cursor-pointer'
+                          ? 'text-app-text-secondary/20 cursor-not-allowed'
+                          : isWeekendDay
+                            ? 'text-app-text-secondary/20 cursor-not-allowed'
+                            : 'text-app-text hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300 cursor-pointer'
                         } ${isToday && !isSelected ? 'ring-1 ring-primary-300' : ''}`}
                       >
                         {d.getDate()}
@@ -243,10 +243,10 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
                       disabled={isCurrent}
                       className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                         isCurrent
-                          ? 'border-primary-200 bg-primary-50 text-primary-600 cursor-not-allowed opacity-60'
+                          ? 'border-primary-200 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 cursor-not-allowed opacity-60'
                           : isSelected
-                            ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm'
-                            : 'border-app-border bg-white text-app-text hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-700'
+                            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
+                            : 'border-app-border bg-app-card text-app-text hover:border-primary-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300'
                       }`}
                     >
                       <Sun className={`w-6 h-6 ${isSelected ? 'text-primary-500' : isCurrent ? 'text-primary-400' : 'text-app-text-secondary'}`} />

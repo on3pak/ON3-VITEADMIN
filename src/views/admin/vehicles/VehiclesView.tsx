@@ -14,18 +14,18 @@ import {
 import { TableSkeleton } from '../../../components/ui';
 
 const STATUS_STYLES: Record<string, string> = {
-  'ACTIVE': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'MAINTENANCE': 'bg-amber-100 text-amber-800 border-amber-200',
-  'BROKEN': 'bg-rose-100 text-rose-800 border-rose-200',
+  'ACTIVE': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  'MAINTENANCE': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+  'BROKEN': 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
   'RETIRED': 'bg-app-bg text-app-text border-app-border',
 };
 
 const TYPE_COLORS: Record<VehicleType, string> = {
-  'BARREDORA': 'bg-violet-100 text-violet-700 border-violet-200',
-  'CAMION': 'bg-blue-100 text-blue-700 border-blue-200',
-  'FURGONETA': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-  'TURISMO': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'PORTER': 'bg-amber-100 text-amber-700 border-amber-200',
+  'BARREDORA': 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
+  'CAMION': 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+  'FURGONETA': 'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
+  'TURISMO': 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  'PORTER': 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
 };
 
 const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.category]));
@@ -116,7 +116,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por matrícula, modelo o marca..."
-            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder:text-app-text-secondary/50 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
           />
         </div>
 
@@ -180,7 +180,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                     <th className="py-3 px-4 w-20 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+                <tbody className="divide-y divide-app-border text-app-text text-sm">
                   {paginatedVehicles.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-12 text-center text-app-text-secondary font-medium">
@@ -226,9 +226,9 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewVehicle?.(v.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
-                            <button onClick={() => handleEdit(v.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                            <button onClick={() => handleDelete(v.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                            <button onClick={() => onViewVehicle?.(v.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => handleEdit(v.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 dark:hover:text-amber-400 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                            <button onClick={() => handleDelete(v.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                           </div>
                         </td>
                       </tr>
@@ -243,7 +243,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -254,10 +254,10 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
 
               <div className="flex items-center gap-1">
                 <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -272,9 +272,9 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -289,9 +289,9 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {['ACTIVE', 'MAINTENANCE', 'BROKEN', 'RETIRED'].map((s) => (
-                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVE' ? 'Activo' : s === 'MAINTENANCE' ? 'Mantenimiento' : s === 'BROKEN' ? 'Averiado' : 'Baja'}</button>
+                <button key={s} onClick={() => setStatusFilter(s)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === s ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{s === 'ACTIVE' ? 'Activo' : s === 'MAINTENANCE' ? 'Mantenimiento' : s === 'BROKEN' ? 'Averiado' : 'Baja'}</button>
               ))}
             </div>
             )}

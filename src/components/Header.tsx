@@ -97,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
         <div className="flex items-center justify-between w-full px-4">
           <button
             onClick={() => setSidebarOpen?.(!sidebarOpen)}
-            className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
+            className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-app-card hover:border-app-border border border-transparent transition-all"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
           <div className="flex items-center gap-2">
             <button
               onClick={() => triggerToast('Apps — En desarrollo', 'info')}
-              className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
+              className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-app-card hover:border-app-border border border-transparent transition-all"
             >
               <Grid className="h-5 w-5" />
             </button>
@@ -115,15 +115,15 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
                 onClick={() => setMobileUserOpen(!mobileUserOpen)}
                 className="shrink-0 cursor-pointer"
               >
-                <div className="size-8 rounded-full ring-2 ring-white overflow-hidden border-2 border-green-500 bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                <div className="size-8 rounded-full ring-2 ring-app-card overflow-hidden border-2 border-green-500 bg-app-bg text-app-text-secondary flex items-center justify-center text-xs font-bold">
                   {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
                 </div>
               </button>
 
               {mobileUserOpen && (
-                <div className="absolute right-0 top-full mt-2 w-[220px] bg-white rounded-xl shadow-lg border border-app-border overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 top-full mt-2 w-[220px] bg-app-card rounded-xl shadow-lg border border-app-border overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="flex items-center gap-2.5 px-3 py-3">
-                    <div className="size-8 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-white bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">
+                    <div className="size-8 shrink-0 rounded-full ring-2 ring-green-500 overflow-hidden border-2 border-app-card bg-app-bg text-app-text-secondary flex items-center justify-center text-xs font-bold">
                       {user?.full_name ? getInitials(user.full_name) : <User className="h-4 w-4" />}
                     </div>
                     <div className="flex flex-col gap-0.5 min-w-0">
@@ -152,7 +152,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
                   <div className="px-3 py-2">
                     <button
                       onClick={() => { logout(); setMobileUserOpen(false); }}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 border border-app-border rounded-lg transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 border border-app-border rounded-lg transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Cerrar Sesión
@@ -172,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
           <div className="flex items-center gap-3 pb-2">
             <button
               onClick={() => triggerToast('Acceso directo — En desarrollo', 'info')}
-              className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-white hover:border-app-border border border-transparent transition-all"
+              className="flex items-center justify-center size-9 rounded-md text-app-text-secondary hover:text-app-text hover:bg-app-card hover:border-app-border border border-transparent transition-all"
               title="Acceso directo"
             >
               <Star className="h-[18px] w-[18px]" />
@@ -186,13 +186,13 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
               <div className="flex items-center flex-wrap gap-1 mt-0.5 text-xs text-app-text-secondary">
                 {info.section && (
                   <>
-                    <span className="hover:text-primary-600 transition-colors">{info.section}</span>
+                    <span className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{info.section}</span>
                     <span className="text-app-text-secondary/50">/</span>
                   </>
                 )}
                 {info.parent && (
                   <>
-                    <span className="hover:text-primary-600 transition-colors">{info.parent}</span>
+                    <span className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{info.parent}</span>
                     <span className="text-app-text-secondary/50">/</span>
                   </>
                 )}
@@ -206,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
           <div className="flex items-center flex-wrap gap-2">
             <button
               onClick={() => { setLang(lang === 'ES' ? 'EN' : 'ES'); triggerToast(`Idioma cambiado a ${lang === 'ES' ? 'English' : 'Español'}`, 'info'); }}
-              className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200 text-xs font-semibold"
+              className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all border border-transparent hover:border-primary-200 dark:hover:border-primary-800 text-xs font-semibold"
               title="Idioma"
             >
               <Languages className="h-[18px] w-[18px] group-hover:text-primary-600" />
@@ -214,14 +214,14 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
             </button>
             <button
               onClick={() => triggerToast('Tamaño de texto — En desarrollo', 'info')}
-              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all border border-transparent hover:border-primary-200 dark:hover:border-primary-800"
               title="Tamaño de texto"
             >
               <Type className="h-[18px] w-[18px] group-hover:text-primary-600" />
             </button>
             <button
               onClick={toggleFullscreen}
-              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all border border-transparent hover:border-primary-200 dark:hover:border-primary-800"
               title={isFullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'}
             >
               {isFullscreen ? (
@@ -232,7 +232,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
             </button>
             <button
               onClick={() => triggerToast('Notificaciones — En desarrollo', 'info')}
-              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all border border-transparent hover:border-primary-200 dark:hover:border-primary-800"
               title="Notificaciones"
             >
               <Bell className="h-[18px] w-[18px] group-hover:text-primary-600" />
@@ -240,7 +240,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
             <div className="w-px h-6 bg-app-border" />
             <button
               onClick={() => triggerToast('Búsqueda — En desarrollo', 'info')}
-              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all border border-transparent hover:border-primary-200"
+              className="group flex items-center justify-center size-9 rounded-full text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all border border-transparent hover:border-primary-200 dark:hover:border-primary-800"
               title="Buscar"
             >
               <Search className="h-[18px] w-[18px] group-hover:text-primary-600" />

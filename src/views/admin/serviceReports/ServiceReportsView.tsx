@@ -41,9 +41,9 @@ const ATTENDANCE_LABELS: Record<AttendanceStatus, string> = {
 };
 
 const ATTENDANCE_COLORS: Record<AttendanceStatus, string> = {
-  PRESENT: 'text-emerald-600 bg-emerald-50 border-emerald-200',
-  ABSENT: 'text-rose-600 bg-rose-50 border-rose-200',
-  JUSTIFIED_ABSENCE: 'text-amber-600 bg-amber-50 border-amber-200',
+  PRESENT: 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800',
+  ABSENT: 'text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800',
+  JUSTIFIED_ABSENCE: 'text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800',
 };
 
 export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diario' | 'historial') => void }> = ({ onTabChange }) => {
@@ -252,7 +252,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
       : [];
 
     return (
-      <div key={service.id} className="bg-white rounded-xl border border-app-border p-4">
+      <div key={service.id} className="bg-app-card rounded-xl border border-app-border p-4">
         <div className="flex items-start justify-between mb-3">
           <div>
             <h4 className="text-sm font-bold text-app-text">{service.name}</h4>
@@ -260,12 +260,12 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
           </div>
           <div className="flex items-center gap-2">
             {staffReq.oficial && (
-              <span className="text-[11px] text-app-text-secondary font-mono bg-amber-50 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] text-app-text-secondary font-mono bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded-full">
                 {assignedOficiales.length}/1 of.
               </span>
             )}
             {staffReq.peones > 0 && (
-              <span className="text-[11px] text-app-text-secondary font-mono bg-sky-50 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] text-app-text-secondary font-mono bg-sky-50 dark:bg-sky-900/20 px-2 py-0.5 rounded-full">
                 {assignedPeones.length}/{staffReq.peones} peón{staffReq.peones !== 1 ? 'es' : ''}
               </span>
             )}
@@ -284,7 +284,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                     <div key={a.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-app-bg/50 border border-app-border/50">
                       <div className="flex items-center gap-2 min-w-0">
                         <div className={`size-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
-                          isOficial ? 'bg-amber-100 text-amber-700' : 'bg-primary-100 text-primary-600'
+                          isOficial ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' : 'bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
                         }`}>
                           {emp.name.charAt(0)}{emp.last_name1.charAt(0)}
                         </div>
@@ -302,7 +302,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                               updateAssignmentVehicle(currentReport!.id, a.id, vId);
                             }}
                             onClick={(e) => e.stopPropagation()}
-                            className="text-[11px] font-medium border border-app-border rounded-md px-1.5 py-0.5 bg-white text-app-text max-w-[140px] truncate cursor-pointer"
+                            className="text-[11px] font-medium border border-app-border rounded-md px-1.5 py-0.5 bg-app-card text-app-text max-w-[140px] truncate cursor-pointer"
                           >
                             <option value="">Sin vehículo</option>
                             {wcVehicles.map((v) => (
@@ -326,7 +326,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                     )}
                     <button
                       onClick={() => removeAssignment(currentReport!.id, a.id)}
-                      className="p-0.5 rounded text-app-text-secondary hover:text-rose-500 hover:bg-rose-50 transition-colors"
+                      className="p-0.5 rounded text-app-text-secondary hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 transition-colors"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -340,7 +340,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
         <div className="relative">
           <button
             onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === dropdownId ? null : dropdownId); }}
-            className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/20 dark:hover:bg-primary-900/30 dark:text-primary-400 dark:hover:text-primary-300 px-3 py-1.5 rounded-lg transition-colors"
           >
             <Users className="h-3.5 w-3.5" />
             Asignar empleados
@@ -350,7 +350,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
           {openDropdown === dropdownId && (
             <div
               onMouseDown={(e) => e.stopPropagation()}
-              className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-white border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
+              className="absolute top-full left-0 mt-1 w-full min-w-[280px] bg-app-card border border-app-border rounded-xl shadow-lg z-50 max-h-72 overflow-y-auto"
             >
               {oficiales.length === 0 && peones.length === 0 ? (
                 <p className="p-3 text-xs text-app-text-secondary text-center">No hay empleados disponibles para este turno</p>
@@ -358,7 +358,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                 <>
                   {staffReq.oficial && (
                     <div>
-                      <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-amber-700 uppercase tracking-wider border-b border-app-border/50">
+                      <div className="sticky top-0 bg-app-card px-3 py-1.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider border-b border-app-border/50">
                         Oficial — {INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === staffReq.oficial)?.name ?? ''} ({assignedOficiales.length}/1)
                       </div>
                       {oficiales.length === 0 ? (
@@ -370,8 +370,8 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                           const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
                           return (
                             <label key={emp.id} className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${atLimit ? 'opacity-40 pointer-events-none' : ''}`}>
-                              <input type="checkbox" checked={checked} disabled={atLimit} onChange={() => handleToggleAssign(wcId, emp.id, service.id, staffReq)} className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0" />
-                              <div className="size-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[10px] font-bold shrink-0">{emp.name.charAt(0)}{emp.last_name1.charAt(0)}</div>
+                              <input type="checkbox" checked={checked} disabled={atLimit} onChange={() => handleToggleAssign(wcId, emp.id, service.id, staffReq)} className="rounded border-app-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-400/50 h-4 w-4 shrink-0" />
+                              <div className="size-7 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 flex items-center justify-center text-[10px] font-bold shrink-0">{emp.name.charAt(0)}{emp.last_name1.charAt(0)}</div>
                               <div className="min-w-0 flex-1">
                                 <p className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</p>
                                 <p className="text-[10px] text-app-text-secondary">{statusName}</p>
@@ -384,7 +384,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                   )}
                   {staffReq.peones > 0 && (
                     <div>
-                      <div className="sticky top-0 bg-white px-3 py-1.5 text-[10px] font-bold text-sky-700 uppercase tracking-wider border-b border-app-border/50">
+                      <div className="sticky top-0 bg-app-card px-3 py-1.5 text-[10px] font-bold text-sky-700 dark:text-sky-300 uppercase tracking-wider border-b border-app-border/50">
                         Peones ({assignedPeones.length}/{staffReq.peones})
                       </div>
                       {peones.length === 0 ? (
@@ -396,8 +396,8 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                           const statusName = STATUSES.find((s) => s.id === emp.status_id)?.name ?? emp.status_id;
                           return (
                             <label key={emp.id} className={`flex items-center gap-2.5 px-3 py-2 hover:bg-app-bg cursor-pointer border-b border-app-border/50 transition-colors ${atLimit ? 'opacity-40 pointer-events-none' : ''}`}>
-                              <input type="checkbox" checked={checked} disabled={atLimit} onChange={() => handleToggleAssign(wcId, emp.id, service.id, staffReq)} className="rounded border-app-border text-primary-600 focus:ring-primary-500 h-4 w-4 shrink-0" />
-                              <div className="size-7 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-[10px] font-bold shrink-0">{emp.name.charAt(0)}{emp.last_name1.charAt(0)}</div>
+                              <input type="checkbox" checked={checked} disabled={atLimit} onChange={() => handleToggleAssign(wcId, emp.id, service.id, staffReq)} className="rounded border-app-border text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-400/50 h-4 w-4 shrink-0" />
+                              <div className="size-7 rounded-full bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 flex items-center justify-center text-[10px] font-bold shrink-0">{emp.name.charAt(0)}{emp.last_name1.charAt(0)}</div>
                               <div className="min-w-0 flex-1">
                                 <p className="text-sm text-app-text truncate">{formatEmployeeName(emp)}</p>
                                 <p className="text-[10px] text-app-text-secondary">{statusName}</p>
@@ -457,7 +457,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
             )}
 
             {wcEmployees.length === 0 && wcSvc.length > 0 && (
-              <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+              <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
                 No hay empleados disponibles (trabajando) para este turno en este centro de trabajo.
               </p>
             )}
@@ -518,11 +518,11 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const renderDiarioTab = () => (
     <div className="space-y-4">
       {currentReport && currentReport.assignments.length === 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 flex items-start gap-3">
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-amber-800">Parte vacío</p>
-            <p className="text-xs text-amber-700">No hay asignaciones. Asigna empleados a los servicios para poder guardar el parte.</p>
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">Parte vacío</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300">No hay asignaciones. Asigna empleados a los servicios para poder guardar el parte.</p>
           </div>
         </div>
       )}
@@ -577,7 +577,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
         {(activeTab === 'previo' || activeTab === 'diario') && (
           <button
             onClick={handleSave}
-            className="flex items-center justify-center size-9 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 transition-colors border border-emerald-200 shrink-0"
+            className="flex items-center justify-center size-9 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-200 border border-emerald-200 dark:border-emerald-800 shrink-0"
             title="Guardar parte"
           >
             <Save className="h-4 w-4" />
@@ -592,8 +592,8 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
           {saveMsg && (
             <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${
               saveMsg.type === 'success'
-                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                : 'bg-rose-50 text-rose-700 border border-rose-200'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800'
+                : 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800'
             }`}>
               {saveMsg.type === 'success' ? (
                 <CheckCircle2 className="h-4 w-4 shrink-0" />
@@ -608,7 +608,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
           )}
 
           {computedWarnings.length > 0 && !saveMsg && (
-            <div className="flex items-start gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200">
+            <div className="flex items-start gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800">
               <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold">Cambios detectados en empleados del parte previo:</p>

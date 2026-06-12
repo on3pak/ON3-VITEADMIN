@@ -184,10 +184,10 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-sidebar/80" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+      <div className="relative bg-app-card rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-app-border shrink-0">
           <div className="flex items-center gap-2">
-            <ClipboardList className="h-5 w-5 text-indigo-600" />
+            <ClipboardList className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             <h2 className="text-lg font-bold text-app-text">
               {editingService ? 'Editar Servicio' : 'Nuevo Servicio'}
             </h2>
@@ -199,7 +199,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto grow">
           {formError && (
-            <div className="p-3 bg-rose-50 text-rose-700 rounded-lg text-sm">{formError}</div>
+            <div className="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300 rounded-lg text-sm">{formError}</div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
@@ -357,7 +357,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 <button
                   type="button"
                   onClick={handleAddTask}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition-colors w-full justify-center mb-3"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 px-3 py-2 rounded-lg transition-colors w-full justify-center mb-3"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Añadir tarea
@@ -379,7 +379,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                     <button
                       type="button"
                       onClick={() => handleDeleteTask(task.id)}
-                      className="p-2 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                      className="p-2 text-app-text-secondary hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors shrink-0"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

@@ -104,8 +104,8 @@ export const DashboardVehiclesView: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-primary-50">
-              <TruckIcon className="h-5 w-5 text-primary-600" />
+            <div className="p-2.5 rounded-xl bg-primary-50 dark:bg-primary-900/20">
+              <TruckIcon className="h-5 w-5 text-primary-600 dark:text-primary-300" />
             </div>
             <div>
               <p className="text-xs text-app-text-secondary font-medium">Total Flota</p>
@@ -116,8 +116,8 @@ export const DashboardVehiclesView: React.FC = () => {
 
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-50">
-              <Truck className="h-5 w-5 text-emerald-600" />
+            <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20">
+              <Truck className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />
             </div>
             <div>
               <p className="text-xs text-app-text-secondary font-medium">Activos</p>
@@ -128,8 +128,8 @@ export const DashboardVehiclesView: React.FC = () => {
 
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-50">
-              <Wrench className="h-5 w-5 text-amber-600" />
+            <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20">
+              <Wrench className="h-5 w-5 text-amber-600 dark:text-amber-300" />
             </div>
             <div>
               <p className="text-xs text-app-text-secondary font-medium">En Taller</p>
@@ -140,8 +140,8 @@ export const DashboardVehiclesView: React.FC = () => {
 
         <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-rose-50">
-              <AlertTriangle className="h-5 w-5 text-rose-600" />
+            <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-900/20">
+              <AlertTriangle className="h-5 w-5 text-rose-600 dark:text-rose-300" />
             </div>
             <div>
               <p className="text-xs text-app-text-secondary font-medium">Averiados</p>
@@ -172,10 +172,10 @@ export const DashboardVehiclesView: React.FC = () => {
           <div className="p-5 border-t border-app-border">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-emerald-600" />
+                <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
                 <span className="text-sm text-app-text-secondary">Tasa de Actividad</span>
               </div>
-              <span className="text-lg font-bold text-emerald-600">{activeRate.toFixed(0)}%</span>
+              <span className="text-lg font-bold text-emerald-600 dark:text-emerald-300">{activeRate.toFixed(0)}%</span>
             </div>
           </div>
         </div>

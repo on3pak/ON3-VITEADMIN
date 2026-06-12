@@ -95,27 +95,27 @@ export const LoginView: React.FC = () => {
         </div>
       </div>
 
-      <div className="lg:w-1/2 bg-gradient-to-br from-gray-50 to-white p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
+      <div className="lg:w-1/2 bg-gradient-to-br from-app-bg to-app-card p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
         <div className="w-full max-w-md mx-auto space-y-8">
           <div className="text-center lg:text-left">
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Iniciar Sesión</h2>
-            <p className="text-sm text-gray-500 mt-1">Ingresa tus credenciales para acceder al sistema.</p>
+            <h2 className="text-2xl font-bold text-app-text tracking-tight">Iniciar Sesión</h2>
+            <p className="text-sm text-app-text-secondary mt-1">Ingresa tus credenciales para acceder al sistema.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl flex items-start gap-2.5 font-medium">
+              <div className="p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs rounded-xl flex items-start gap-2.5 font-medium">
                 <ShieldAlert className="h-4 w-4 text-rose-500 flex-shrink-0 mt-0.5" />
                 <span>{error}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-bold text-app-text-secondary uppercase tracking-wide mb-1.5">
                 Correo Electrónico
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary/60">
                   <User className="h-4 w-4" />
                 </div>
                 <input
@@ -125,12 +125,12 @@ export const LoginView: React.FC = () => {
                   onBlur={() => setTouched(p => ({ ...p, email: true }))}
                   onChange={(e) => { setEmail(e.target.value); if (touched.email) setTouched(p => ({ ...p, email: true })); }}
                   placeholder="Introduce email (ej: m.torres@on3.com)"
-                  className={`w-full pl-10 pr-10 py-2.5 bg-white border rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-10 py-2.5 bg-app-card border rounded-xl text-sm text-app-text placeholder:text-app-text-secondary/50 focus:outline-hidden focus:ring-2 transition-all ${
                     emailError
-                      ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-100'
+                      ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/30'
                       : touched.email && !emailError
-                        ? 'border-emerald-300 focus:border-emerald-500 focus:ring-emerald-100'
-                        : 'border-gray-200 focus:border-primary-500 focus:ring-primary-100'
+                        ? 'border-emerald-300 focus:border-emerald-500 focus:ring-emerald-500/30'
+                        : 'border-app-border focus:border-primary-500 focus:ring-primary-500/30'
                   }`}
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -150,11 +150,11 @@ export const LoginView: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-bold text-app-text-secondary uppercase tracking-wide mb-1.5">
                 Contraseña
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary/60">
                   <Lock className="h-4 w-4" />
                 </div>
                 <input
@@ -164,12 +164,12 @@ export const LoginView: React.FC = () => {
                   onBlur={() => setTouched(p => ({ ...p, password: true }))}
                   onChange={(e) => { setPassword(e.target.value); if (touched.password) setTouched(p => ({ ...p, password: true })); }}
                   placeholder="Introduce contraseña"
-                  className={`w-full pl-10 pr-10 py-2.5 bg-white border rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 transition-all ${
+                  className={`w-full pl-10 pr-10 py-2.5 bg-app-card border rounded-xl text-sm text-app-text placeholder:text-app-text-secondary/50 focus:outline-hidden focus:ring-2 transition-all ${
                     passwordError
-                      ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-100'
+                      ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/30'
                       : touched.password && !passwordError
-                        ? 'border-emerald-300 focus:border-emerald-500 focus:ring-emerald-100'
-                        : 'border-gray-200 focus:border-primary-500 focus:ring-primary-100'
+                        ? 'border-emerald-300 focus:border-emerald-500 focus:ring-emerald-500/30'
+                        : 'border-app-border focus:border-primary-500 focus:ring-primary-500/30'
                   }`}
                 />
                 <div className="absolute inset-y-0 right-0 pr-10 flex items-center pointer-events-none">
@@ -182,7 +182,7 @@ export const LoginView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer z-10"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-app-text-secondary/60 hover:text-app-text cursor-pointer z-10"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -213,7 +213,7 @@ export const LoginView: React.FC = () => {
 
           {import.meta.env.DEV && (
             <div className="space-y-3 pt-2">
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-app-text-secondary uppercase tracking-wider">
                 Acceso rápido (dev):
               </label>
               <div className="grid grid-cols-2 gap-2.5">
@@ -229,16 +229,16 @@ export const LoginView: React.FC = () => {
                       key={acc.role}
                       type="button"
                       onClick={() => handleQuickFill(acc)}
-                      className="p-3 text-left rounded-xl border border-gray-200 bg-white hover:border-primary-200 hover:shadow-sm transition-all relative overflow-hidden flex flex-col justify-between group cursor-pointer"
+                      className="p-3 text-left rounded-xl border border-app-border bg-app-card hover:border-primary-200 hover:shadow-sm transition-all relative overflow-hidden flex flex-col justify-between group cursor-pointer"
                     >
                       <div className="flex items-center justify-between w-full gap-1 mb-1">
-                        <span className="text-xs font-bold text-gray-900 truncate">{acc.name.split(' ')[0]}</span>
+                        <span className="text-xs font-bold text-app-text truncate">{acc.name.split(' ')[0]}</span>
                         <span className={`text-[9px] px-2 py-0.5 rounded font-bold text-white ${roleColors[acc.role]}`}>
                           {acc.role}
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono text-gray-400 block truncate">{acc.email}</span>
-                      <span className="text-[9px] text-gray-300 mt-1 group-hover:text-gray-500">Pass: {acc.password}</span>
+                      <span className="text-[10px] font-mono text-app-text-secondary/60 block truncate">{acc.email}</span>
+                      <span className="text-[9px] text-app-text-secondary/60 mt-1 group-hover:text-app-text-secondary">Pass: {acc.password}</span>
                     </button>
                   );
                 })}

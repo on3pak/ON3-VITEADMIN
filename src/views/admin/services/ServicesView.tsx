@@ -15,12 +15,12 @@ import {
 import { TableSkeleton } from '../../../components/ui';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'BARRIDO MIXTO': 'bg-violet-100 text-violet-700 border-violet-200',
-  'BARRIDO MANUAL': 'bg-blue-100 text-blue-700 border-blue-200',
-  'BARRIDO MECÁNICO': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-  'BALDEO': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'RECOGIDA': 'bg-amber-100 text-amber-700 border-amber-200',
-  'VACIADO': 'bg-rose-100 text-rose-700 border-rose-200',
+  'BARRIDO MIXTO': 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
+  'BARRIDO MANUAL': 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+  'BARRIDO MECÁNICO': 'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
+  'BALDEO': 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  'RECOGIDA': 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+  'VACIADO': 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
 };
 
 const wcCityMap = Object.fromEntries(
@@ -107,7 +107,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o tipo..."
-            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder:text-app-text-secondary/50 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
           />
         </div>
 
@@ -173,7 +173,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                     <th className="py-3 px-4 w-20 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+                <tbody className="divide-y divide-app-border text-app-text text-sm">
                   {paginatedServices.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-12 text-center text-app-text-secondary font-medium">
@@ -199,7 +199,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-slate-100 text-slate-700">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-app-bg text-app-text">
                               <Clock className="h-3 w-3" />
                               {INITIAL_SHIFTS.find((sh) => sh.id === s.shift_id)?.name ?? s.shift_id}
                             </span>
@@ -217,13 +217,13 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                         <td className="py-3.5 px-4">
                           <div className="flex flex-col items-center gap-1">
                             {s.staff_requirement.oficial ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-amber-100 text-amber-700">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
                                 <UserCog className="h-3 w-3" />
                                 {INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === s.staff_requirement.oficial)?.name ?? 'Oficial'}
                               </span>
                             ) : null}
                             {s.staff_requirement.peones > 0 ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-sky-100 text-sky-700">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
                                 <Users className="h-3 w-3" />
                                 {s.staff_requirement.peones} peón{s.staff_requirement.peones !== 1 ? 'es' : ''}
                               </span>
@@ -233,9 +233,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewService?.(s.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-lg" title="Ver tareas"><Eye className="h-4 w-4" /></button>
-                            <button onClick={() => handleEdit(s.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                            <button onClick={() => handleDelete(s.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                            <button onClick={() => onViewService?.(s.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 rounded-lg" title="Ver tareas"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => handleEdit(s.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 dark:hover:text-amber-400 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                            <button onClick={() => handleDelete(s.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                           </div>
                         </td>
                       </tr>
@@ -250,7 +250,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -261,10 +261,10 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
 
               <div className="flex items-center gap-1">
                 <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -279,9 +279,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -296,9 +296,9 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setCategoryFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categoryFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
+              <button onClick={() => setCategoryFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categoryFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Tipos</button>
               {['BARRIDO MIXTO', 'BARRIDO MANUAL', 'BARRIDO MECÁNICO', 'BALDEO', 'RECOGIDA', 'VACIADO'].map((t) => (
-                <button key={t} onClick={() => setCategoryFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categoryFilter === t ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
+                <button key={t} onClick={() => setCategoryFilter(t)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${categoryFilter === t ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{t.charAt(0) + t.slice(1).toLowerCase()}</button>
               ))}
             </div>
             )}

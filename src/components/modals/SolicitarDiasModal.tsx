@@ -115,23 +115,23 @@ export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, 
             </div>
 
             {selectedDays.length > 0 && (
-              <div className="flex items-center gap-2 px-3 py-2 bg-primary-50 rounded-xl border border-primary-100">
-                <Check className="w-4 h-4 text-primary-600 shrink-0" />
-                <span className="text-xs font-semibold text-primary-700">
+              <div className="flex items-center gap-2 px-3 py-2 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-800">
+                <Check className="w-4 h-4 text-primary-600 dark:text-primary-400 shrink-0" />
+                <span className="text-xs font-semibold text-primary-700 dark:text-primary-300">
                   {selectedDays.length} día{selectedDays.length !== 1 ? 's' : ''} seleccionado{selectedDays.length !== 1 ? 's' : ''}
                 </span>
               </div>
             )}
 
-            <div className="bg-white rounded-xl border border-app-border overflow-hidden">
+            <div className="bg-app-card rounded-xl border border-app-border overflow-hidden">
               <div className="flex items-center justify-between px-3 py-2 bg-app-bg border-b border-app-border">
-                <button onClick={goToPrevMonth} className="p-1 rounded-lg hover:bg-white text-app-text-secondary hover:text-app-text">
+                <button onClick={goToPrevMonth} className="p-1 rounded-lg hover:bg-app-card text-app-text-secondary hover:text-app-text">
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <span className="text-sm font-bold text-app-text">
                   {MONTH_NAMES[calendarMonth]} {calendarYear}
                 </span>
-                <button onClick={goToNextMonth} className="p-1 rounded-lg hover:bg-white text-app-text-secondary hover:text-app-text">
+                <button onClick={goToNextMonth} className="p-1 rounded-lg hover:bg-app-card text-app-text-secondary hover:text-app-text">
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
@@ -143,7 +143,7 @@ export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, 
                   </div>
                 ))}
                 {monthDays.map((d, i) => {
-                  if (!d) return <div key={`empty-${i}`} className="bg-white" />;
+                  if (!d) return <div key={`empty-${i}`} className="bg-app-card" />;
                   const dateStr = d.toISOString().split('T')[0];
                   const past = isPast(d);
                   const disabled = isDisabled(d);
@@ -159,8 +159,8 @@ export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, 
                         isSelected
                           ? 'bg-primary-500 text-white font-bold shadow-sm z-10'
                           : disabled
-                            ? 'text-gray-200 cursor-not-allowed'
-                            : 'text-app-text hover:bg-primary-50 hover:text-primary-700 cursor-pointer'
+                            ? 'text-app-text-secondary/20 cursor-not-allowed'
+                            : 'text-app-text hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300 cursor-pointer'
                       } ${isToday && !isSelected ? 'ring-1 ring-primary-300' : ''}`}
                     >
                       {d.getDate()}

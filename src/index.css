@@ -12,13 +12,13 @@
   --color-primary-800: #115e59;
   --color-primary-900: #134e4a;
 
-  --color-sidebar: #1a1a2e;
-  --color-sidebar-hover: #232344;
-  --color-sidebar-active: #2d2d5e;
-  --color-sidebar-muted: #2d2d4a;
-  --color-sidebar-text: #9293ab;
-  --color-sidebar-text-active: #ffffff;
-  --color-sidebar-border: #2d2d4a;
+  --color-sidebar: #ffffff;
+  --color-sidebar-hover: #ffffff;
+  --color-sidebar-active: #f0fdfa;
+  --color-sidebar-muted: #f8f9fc;
+  --color-sidebar-text: #6c6c80;
+  --color-sidebar-text-active: #1a1a2e;
+  --color-sidebar-border: #e8e8ec;
   --color-sidebar-brand: #14b8a6;
 
   --color-app-bg: #f0f2f5;
@@ -29,10 +29,31 @@
   --color-app-border: #e8e8ec;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-sidebar: #1a1a2e;
+  --color-sidebar-hover: #232344;
+  --color-sidebar-active: #115e59;
+  --color-sidebar-muted: #0f0f1a;
+  --color-sidebar-text: #ffffff;
+  --color-sidebar-text-active: #ffffff;
+  --color-sidebar-border: #232344;
+  --color-sidebar-brand: #14b8a6;
+
+  --color-app-bg: #0f0f1a;
+  --color-app-card: #1a1a2e;
+  --color-app-card-border: #232344;
+  --color-app-text: #ffffff;
+  --color-app-text-secondary: #c8c8d0;
+  --color-app-border: #232344;
+}
+
 body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-app-bg);
 }
 
 /* Metronic-style scrollbar */

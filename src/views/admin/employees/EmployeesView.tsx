@@ -18,24 +18,24 @@ import {
 import { TableSkeleton } from '../../../components/ui';
 
 const STATUS_STYLES: Record<string, string> = {
-  'es_1': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'es_2': 'bg-amber-100 text-amber-800 border-amber-200',
-  'es_3': 'bg-rose-100 text-rose-800 border-rose-200',
-  'es_4': 'bg-blue-100 text-blue-800 border-blue-200',
-  'es_5': 'bg-cyan-100 text-cyan-800 border-cyan-200',
-  'es_6': 'bg-violet-100 text-violet-800 border-violet-200',
+  'es_1': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  'es_2': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+  'es_3': 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
+  'es_4': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+  'es_5': 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
+  'es_6': 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'ec_000001': 'bg-primary-100 text-primary-700 border-primary-200',
-  'ec_000002': 'bg-purple-100 text-purple-700 border-purple-200',
-  'ec_000003': 'bg-violet-100 text-violet-700 border-violet-200',
-  'ec_000004': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
-  'ec_000005': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-  'ec_000006': 'bg-teal-100 text-teal-700 border-teal-200',
-  'ec_000007': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'ec_000008': 'bg-amber-100 text-amber-700 border-amber-200',
-  'ec_000009': 'bg-orange-100 text-orange-700 border-orange-200',
+  'ec_000001': 'bg-primary-100 text-primary-700 border-primary-200 dark:bg-primary-900/30 dark:text-primary-300 dark:border-primary-800',
+  'ec_000002': 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800',
+  'ec_000003': 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
+  'ec_000004': 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-900/30 dark:text-fuchsia-300 dark:border-fuchsia-800',
+  'ec_000005': 'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
+  'ec_000006': 'bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800',
+  'ec_000007': 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  'ec_000008': 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+  'ec_000009': 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800',
   'ec_000010': 'bg-app-bg text-app-text border-app-border',
 };
 
@@ -203,7 +203,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                 <th className="py-3 px-4 w-24 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+            <tbody className="divide-y divide-app-border text-app-text text-sm">
               {lookupPaginated.length === 0 ? (
                 <tr>
                   <td colSpan={2} className="py-12 text-center text-app-text-secondary font-medium">
@@ -226,10 +226,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                     </td>
                     <td className="py-3.5 px-4">
                       <div className="flex justify-center gap-1.5">
-                        <button onClick={() => s.openModal(item)} disabled={isReadOnly} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg" title={`Editar ${singular.toLowerCase()}`}>
+                        <button onClick={() => s.openModal(item)} disabled={isReadOnly} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 dark:hover:text-amber-400 rounded-lg" title={`Editar ${singular.toLowerCase()}`}>
                           <Edit3 className="h-4 w-4" />
                         </button>
-                        <button onClick={() => s.setDeleteTarget(item)} disabled={isReadOnly} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg" title={`Eliminar ${singular.toLowerCase()}`}>
+                        <button onClick={() => s.setDeleteTarget(item)} disabled={isReadOnly} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 rounded-lg" title={`Eliminar ${singular.toLowerCase()}`}>
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -246,7 +246,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             <select
               value={s.ipp}
               onChange={(e) => { s.setIpp(Number(e.target.value)); s.setPage(1); }}
-              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+              className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -256,17 +256,17 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
           </div>
           <div className="flex items-center gap-1">
             <span className="text-xs text-app-text-secondary mr-3">Página {lookupTotalPages > 0 ? s.page : 0} de {lookupTotalPages}</span>
-            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage((p: number) => Math.min(lookupTotalPages, p + 1))} disabled={s.page === lookupTotalPages || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-            <button onClick={() => s.setPage(lookupTotalPages)} disabled={s.page === lookupTotalPages || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage(1)} disabled={s.page === 1 || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.max(1, p - 1))} disabled={s.page === 1 || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage((p: number) => Math.min(lookupTotalPages, p + 1))} disabled={s.page === lookupTotalPages || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+            <button onClick={() => s.setPage(lookupTotalPages)} disabled={s.page === lookupTotalPages || lookupTotalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
           </div>
         </div>
       </div>
 
       {s.modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-sidebar/80" onClick={() => s.setModalOpen(false)}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-md mx-4 p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-app-text-secondary">
                 {s.editItem ? `Editar ${singular}` : `Nuev${singular.endsWith('a') ? 'a' : 'o'} ${singular}`}
@@ -283,7 +283,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                   value={s.name}
                   onChange={(e) => s.setName(e.target.value)}
                   placeholder={`Nombre del ${singular.toLowerCase()}`}
-                  className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100 text-app-text"
+                  className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 text-app-text"
                   autoFocus
                 />
               </div>
@@ -320,10 +320,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   return (
     <div className="space-y-5">
       {isReadOnly && (
-        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
+        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 dark:bg-amber-900/20 dark:text-amber-200 dark:border-amber-800 flex items-center gap-3 font-medium">
           <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0" />
           <span>
-            ⚠️ <span className="font-bold">Modo de Consulta:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800">{loggedInUser?.role}</span>. Cualquier intento de creación, edición o borrado será bloqueado.
+            ⚠️ <span className="font-bold">Modo de Consulta:</span> Has iniciado sesión como <span className="font-mono bg-amber-100 px-1 py-0.5 rounded text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">{loggedInUser?.role}</span>. Cualquier intento de creación, edición o borrado será bloqueado.
           </span>
         </div>
       )}
@@ -338,7 +338,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={activeTab === 'employees' ? 'Buscar por nombre o apellidos...' : `Buscar ${({categories: 'categorías', statuses: 'estados', workdays: 'jornadas', shifts: 'turnos', contracts: 'contratos'} as Record<string, string>)[activeTab] ?? '...'}`}
-            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder-slate-400 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+            className="w-full min-w-0 pl-9 pr-4 py-2 border border-app-border rounded-xl text-sm placeholder:text-app-text-secondary/50 text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
           />
         </div>
 
@@ -393,22 +393,22 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
       </div>
 
       <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
-        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('employees')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'employees' ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <User className="h-4 w-4" /> Empleados
         </button>
-        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('categories')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <Tags className="h-4 w-4" /> Categorías
         </button>
-        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('statuses')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'statuses' ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <HeartPulse className="h-4 w-4" /> Estados
         </button>
-        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('workdays')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'workdays' ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <CalendarDays className="h-4 w-4" /> Jornadas
         </button>
-        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('shifts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'shifts' ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <Clock className="h-4 w-4" /> Turnos
         </button>
-        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-white text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
+        <button onClick={() => setActiveTab('contracts')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'contracts' ? 'bg-app-card text-primary-700 shadow-xs' : 'text-app-text-secondary hover:text-app-text'}`}>
           <FileText className="h-4 w-4" /> Contratos
         </button>
       </div>
@@ -432,7 +432,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                     <th className="py-3 px-4 w-24 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-app-text text-sm">
+                <tbody className="divide-y divide-app-border text-app-text text-sm">
                   {paginatedEmployees.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="py-12 text-center text-app-text-secondary font-medium">
@@ -445,7 +445,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                         <td className="py-3.5 px-6">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-sm shadow-primary-500/20 relative overflow-hidden">
-                              <User className="w-8 h-8 text-black/50 absolute" />
+                              <User className="w-8 h-8 text-app-text-secondary/50 absolute" />
                               <span className="text-white font-bold text-sm relative z-10">{getInitials(emp.name, emp.last_name1)}</span>
                             </div>
                             <div>
@@ -478,11 +478,11 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-end gap-1.5">
-                            <button onClick={() => onViewEmployee?.(emp.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
+                            <button onClick={() => onViewEmployee?.(emp.id)} className="p-1.5 text-app-text-secondary hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 rounded-lg" title="Ver detalles"><Eye className="h-4 w-4" /></button>
                             {!isReadOnly && (
                               <>
-                                <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 rounded-lg"><Edit3 className="h-4 w-4" /></button>
-                                <button onClick={() => handleDelete(emp.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg"><Trash2 className="h-4 w-4" /></button>
+                                <button onClick={() => handleEdit(emp.id)} className="p-1.5 text-app-text-secondary hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 dark:hover:text-amber-400 rounded-lg"><Edit3 className="h-4 w-4" /></button>
+                                <button onClick={() => handleDelete(emp.id)} className="p-1.5 text-app-text-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400 rounded-lg"><Trash2 className="h-4 w-4" /></button>
                               </>
                             )}
                           </div>
@@ -499,7 +499,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
                 <select
                   value={itemsPerPage}
                   onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                  className="border border-app-border rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -510,10 +510,10 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
 
               <div className="flex items-center gap-1">
                 <span className="text-xs text-app-text-secondary mr-3">Página {totalPages > 0 ? currentPage : 0} de {totalPages}</span>
-                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
-                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Primera página"><ChevronsLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1 || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página anterior"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Página siguiente"><ChevronRight className="h-4 w-4" /></button>
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages || totalPages === 0} className="p-1.5 rounded-lg text-app-text-secondary hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/20 dark:hover:text-primary-400 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary transition-colors" title="Última página"><ChevronsRight className="h-4 w-4" /></button>
               </div>
             </div>
           </div>
@@ -528,9 +528,9 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
+              <button onClick={() => setWorkCenterFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Centros</button>
               {scopeWorkCenters.map((wc) => (
-                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
+                <button key={wc.id} onClick={() => setWorkCenterFilter(wc.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${workCenterFilter === wc.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{wc.name}</button>
               ))}
             </div>
             )}
@@ -545,9 +545,9 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
             </button>
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
-              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
+              <button onClick={() => setStatusFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === 'ALL' ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Estados</button>
               {INITIAL_EMPLOYEE_STATUSES.map((es) => (
-                <button key={es.id} onClick={() => setStatusFilter(es.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === es.id ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{es.name}</button>
+                <button key={es.id} onClick={() => setStatusFilter(es.id)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${statusFilter === es.id ? 'bg-primary-100 text-primary-700 font-semibold dark:bg-primary-900/30 dark:text-primary-300' : 'text-app-text-secondary hover:bg-app-bg'}`}>{es.name}</button>
               ))}
             </div>
             )}

@@ -35,9 +35,9 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 
 const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const colors: Record<string, string> = {
-    'ACTIVE': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    'MAINTENANCE': 'bg-amber-100 text-amber-700 border-amber-200',
-    'BROKEN': 'bg-rose-100 text-rose-700 border-rose-200',
+    'ACTIVE': 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+    'MAINTENANCE': 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+    'BROKEN': 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
     'RETIRED': 'bg-app-bg text-app-text border-app-border',
   };
   const labels: Record<string, string> = {
@@ -96,9 +96,9 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
     const now = new Date();
     const diff = exp.getTime() - now.getTime();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    if (days < 0) return { color: 'text-rose-600 bg-rose-50', text: 'Expirado' };
-    if (days < 30) return { color: 'text-amber-600 bg-amber-50', text: `${days} días` };
-    return { color: 'text-emerald-600 bg-emerald-50', text: `${days} días` };
+    if (days < 0) return { color: 'text-rose-600 bg-rose-50 dark:text-rose-300 dark:bg-rose-900/20', text: 'Expirado' };
+    if (days < 30) return { color: 'text-amber-600 bg-amber-50 dark:text-amber-300 dark:bg-amber-900/20', text: `${days} días` };
+    return { color: 'text-emerald-600 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-900/20', text: `${days} días` };
   };
 
   const handleEdit = () => {
@@ -181,7 +181,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
 
           {vehicle.observations && (
             <SectionCard icon={<Truck className="h-4 w-4" />} title="Observaciones">
-              <div className="col-span-2 p-3 bg-amber-50 rounded-lg text-sm text-amber-800">
+              <div className="col-span-2 p-3 bg-amber-50 rounded-lg text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
                 {vehicle.observations}
               </div>
             </SectionCard>
@@ -190,11 +190,11 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
       </div>
 
       <div className="flex items-center gap-2">
-        <button onClick={handleEdit} className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-xl font-medium text-sm">
+        <button onClick={handleEdit} className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-900/50 rounded-xl font-medium text-sm">
           <Edit3 className="h-4 w-4" />
           <span>Editar</span>
         </button>
-        <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-xl font-medium text-sm">
+        <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:hover:bg-rose-900/50 rounded-xl font-medium text-sm">
           <Trash2 className="h-4 w-4" />
           <span>Eliminar</span>
         </button>

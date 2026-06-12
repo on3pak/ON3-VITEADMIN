@@ -37,12 +37,12 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }[] }> = ({ id, statuses }) => {
   const status = statuses.find(s => s.id === id);
   const colors: Record<string, string> = {
-    'es_1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    'es_2': 'bg-amber-100 text-amber-700 border-amber-200',
-    'es_3': 'bg-rose-100 text-rose-700 border-rose-200',
-    'es_4': 'bg-blue-100 text-blue-700 border-blue-200',
-    'es_5': 'bg-cyan-100 text-cyan-700 border-cyan-200',
-    'es_6': 'bg-violet-100 text-violet-700 border-violet-200',
+    'es_1': 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+    'es_2': 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
+    'es_3': 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
+    'es_4': 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+    'es_5': 'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
+    'es_6': 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
   };
   return <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-lg border ${colors[id] || 'bg-app-bg'}`}>{status?.name || id}</span>;
 };
@@ -102,7 +102,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
   return (
     <div className="space-y-5">
       {isReadOnly && (
-        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-3 font-medium">
+        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 dark:bg-amber-900/20 dark:text-amber-200 dark:border-amber-800 flex items-center gap-3 font-medium">
           <ShieldAlert className="h-4 w-4 text-amber-600" />
           <span>Modo lectura - Rol: {loggedInUser?.role}</span>
         </div>
@@ -148,27 +148,27 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
 
           <SectionCard icon={<Calendar className="h-4 w-4" />} title="Vacaciones">
             <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-primary-50/60 rounded-xl border border-primary-100/50">
-                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-100 text-primary-600 shrink-0">
+              <div className="flex items-center gap-3 p-3 bg-primary-50/60 dark:bg-primary-900/20 rounded-xl border border-primary-100/50 dark:border-primary-800/50">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900/30 shrink-0">
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div className="flex-1 flex items-center justify-between">
                   <div>
                     <div className="text-xs text-app-text-secondary font-medium">Mes asignado</div>
-                    <div className="text-sm font-bold text-primary-700 capitalize">{employee.vacation_month || 'Sin asignar'}</div>
+                    <div className="text-sm font-bold text-primary-700 dark:text-primary-300 capitalize">{employee.vacation_month || 'Sin asignar'}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
-                    <div className="text-sm font-bold text-emerald-600 capitalize">{(() => { const m = ['JULIO','AGOSTO','SEPTIEMBRE']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
+                    <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 capitalize">{(() => { const m = ['JULIO','AGOSTO','SEPTIEMBRE']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
                   </div>
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {[
-                  { label: 'Vacaciones', value: employee.vacation_days, color: 'text-primary-600', bg: 'bg-primary-50' },
-                  { label: 'Propios', value: employee.own_days, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                  { label: 'Acumulados', value: employee.accumulated_days, color: 'text-blue-600', bg: 'bg-blue-50' },
-                  { label: 'Extras', value: employee.excess_days, color: 'text-rose-600', bg: 'bg-rose-50' },
+                  { label: 'Vacaciones', value: employee.vacation_days, color: 'text-primary-600 dark:text-primary-400', bg: 'bg-primary-50 dark:bg-primary-900/20' },
+                  { label: 'Propios', value: employee.own_days, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+                  { label: 'Acumulados', value: employee.accumulated_days, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+                  { label: 'Extras', value: employee.excess_days, color: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/20' },
                 ].map((d) => (
                   <div key={d.label} className={`text-center p-2 rounded-lg ${d.bg}`}>
                     <div className={`text-lg font-bold ${d.color}`}>{d.value}</div>
@@ -176,7 +176,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
                   </div>
                 ))}
               </div>
-              <p className="text-[11px] text-gray-400 leading-relaxed">
+              <p className="text-[11px] text-app-text-secondary/60 leading-relaxed">
                 Rota cada año: julio → agosto → septiembre → julio...
               </p>
             </div>
@@ -230,13 +230,13 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
 
           <SectionCard icon={<Activity className="h-4 w-4" />} title="Estados">
             <div className="flex flex-wrap gap-2">
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.active ? 'bg-emerald-100 text-emerald-700' : 'bg-app-bg text-app-text-secondary'}`}>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.active ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.active ? '✓ Activo' : '○ Inactivo'}
               </span>
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.medical_check ? 'bg-emerald-100 text-emerald-700' : 'bg-app-bg text-app-text-secondary'}`}>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.medical_check ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.medical_check ? '✓ Rev. Médica' : '○ Rev. Médica'}
               </span>
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.works_holidays ? 'bg-emerald-100 text-emerald-700' : 'bg-app-bg text-app-text-secondary'}`}>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.works_holidays ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.works_holidays ? '✓ Festivos' : '○ Festivos'}
               </span>
             </div>
@@ -246,11 +246,11 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
 
       {!isReadOnly && (
         <div className="flex items-center gap-2">
-          <button onClick={handleEdit} className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-xl font-medium text-sm">
+          <button onClick={handleEdit} className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-800/40 rounded-xl font-medium text-sm">
             <Edit3 className="h-4 w-4" />
             <span>Editar</span>
           </button>
-          <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-xl font-medium text-sm">
+          <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:hover:bg-rose-800/40 rounded-xl font-medium text-sm">
             <Trash2 className="h-4 w-4" />
             <span>Eliminar</span>
           </button>

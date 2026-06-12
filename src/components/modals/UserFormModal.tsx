@@ -212,7 +212,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
         {/* Header Title */}
         <div className="px-6 py-4 bg-app-bg border-b border-app-border flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className={`p-2 rounded-lg ${editingUser ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
+            <div className={`p-2 rounded-lg ${editingUser ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300'}`}>
               {editingUser ? <Save className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
             </div>
             <div>
@@ -233,14 +233,14 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {formError && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2 font-medium">
-              <ShieldAlert className="h-4 w-4 text-rose-500 flex-shrink-0" />
+            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-300 text-xs rounded-xl flex items-center gap-2 font-medium">
+              <ShieldAlert className="h-4 w-4 text-rose-500 dark:text-rose-400 flex-shrink-0" />
               <span>{formError}</span>
             </div>
           )}
           {formSuccess && (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2 font-medium">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300 text-xs rounded-xl flex items-center gap-2 font-medium">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
               <span>{formSuccess}</span>
             </div>
           )}
@@ -265,7 +265,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                       onChange={handleEmployeeIdChange}
                       onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleEmployeeSearch(); } }}
                       placeholder="Ej. 000001"
-                      className="w-full pl-9 pr-10 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                      className="w-full pl-9 pr-10 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all text-app-text"
                     />
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                       {employeeLookupStatus === 'found' && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
@@ -340,7 +340,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Mín. 8 caracteres"
-                    className="w-full px-3 py-2 pr-10 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                    className="w-full px-3 py-2 pr-10 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all text-app-text"
                   />
                   <button
                     type="button"
@@ -354,7 +354,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 <button
                   type="button"
                   onClick={() => setPassword(generateSecurePassword())}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-app-text text-sm font-semibold rounded-xl transition-colors shrink-0 border border-app-border"
+                  className="px-4 py-2 bg-app-bg hover:bg-app-border dark:hover:bg-app-border text-app-text text-sm font-semibold rounded-xl transition-colors shrink-0 border border-app-border"
                   title="Generar contraseña segura"
                 >
                   <Key className="h-4 w-4" />
@@ -370,7 +370,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all text-app-text"
+                className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all text-app-text"
               >
                 <option value="USER" disabled={isRoleSelectionDisabled('USER')}>USER (Lectura Básica)</option>
                 <option value="MANAGER" disabled={isRoleSelectionDisabled('MANAGER')}>MANAGER (Gestión Media)</option>
@@ -386,7 +386,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-slate-200 hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors cursor-pointer"
+              className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors cursor-pointer"
             >
               Cancelar
             </button>

@@ -13,7 +13,7 @@ export const AccessDeniedView: React.FC<AccessDeniedViewProps> = ({
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="text-center max-w-md mx-auto p-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-100 text-rose-500 mb-6">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-500 mb-6">
           <ShieldOff className="h-10 w-10" />
         </div>
         

@@ -183,7 +183,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
                   onClick={() => setActiveDay(idx)}
                   className={`relative flex flex-col items-center gap-1 px-5 py-3 text-xs font-semibold transition-colors shrink-0 ${
                     activeDay === idx
-                      ? 'text-primary-700 bg-primary-50'
+                      ? 'text-primary-700 bg-primary-50 dark:text-primary-300 dark:bg-primary-900/20'
                       : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
                   }`}
                 >
@@ -204,7 +204,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
           {dayTasks.length === 0 ? (
             <p className="text-sm text-app-text-secondary text-center py-4">No hay tareas para este día.</p>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-app-border">
               {dayTasks.map((task) => (
                 <div
                   key={task.id}
@@ -220,11 +220,11 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
       </div>
 
       <div className="flex items-center gap-2">
-        <button onClick={handleEdit} className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-xl font-medium text-sm">
+        <button onClick={handleEdit} className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-900/50 rounded-xl font-medium text-sm">
           <Edit3 className="h-4 w-4" />
           <span>Editar</span>
         </button>
-        <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-xl font-medium text-sm">
+        <button onClick={handleDelete} className="flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:hover:bg-rose-900/50 rounded-xl font-medium text-sm">
           <Trash2 className="h-4 w-4" />
           <span>Eliminar</span>
         </button>

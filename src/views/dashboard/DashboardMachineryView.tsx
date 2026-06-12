@@ -15,9 +15,9 @@ const cityNameMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name])
 const statusNameMap = Object.fromEntries(MACHINERY_STATUSES.map((s) => [s.id, s.name]));
 
 const statusBadgeStyles: Record<string, string> = {
-  'ms-1': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  'ms-2': 'bg-amber-100 text-amber-700 border-amber-200',
-  'ms-3': 'bg-rose-100 text-rose-700 border-rose-200',
+  'ms-1': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+  'ms-2': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+  'ms-3': 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
   'ms-4': 'bg-app-bg text-app-text border-app-border',
 };
 
@@ -101,6 +101,15 @@ export const DashboardMachineryView: React.FC = () => {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
+  const statColors: Record<string, { bg: string, border: string, text: string }> = {
+    primary: { bg: 'bg-primary-50 dark:bg-primary-900/20', border: 'border-primary-100 dark:border-primary-800', text: 'text-primary-600 dark:text-primary-300' },
+    emerald: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-100 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-300' },
+    rose: { bg: 'bg-rose-50 dark:bg-rose-900/20', border: 'border-rose-100 dark:border-rose-800', text: 'text-rose-600 dark:text-rose-300' },
+    amber: { bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-100 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-300' },
+  };
+
+  const getStatColor = (color: string) => statColors[color] || statColors.primary;
+
   const stats = [
     { title: 'Total Máquinas', value: totalCount, sub: `${totalUnits} unidades`, icon: <Box className="h-5 w-5" />, color: 'primary' },
     { title: 'Disponibles', value: disponibles, sub: `${totalCount > 0 ? ((disponibles / totalCount) * 100).toFixed(0) : 0}%`, icon: <TrendingUp className="h-5 w-5" />, color: 'emerald' },
@@ -113,39 +122,39 @@ export const DashboardMachineryView: React.FC = () => {
       {(maintenanceDue.length > 0 || maintenanceSoon.length > 0) && (
         <div className="space-y-2">
           {maintenanceDue.length > 0 && (
-            <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200">
+            <div className="p-4 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border border-rose-200 dark:border-rose-800">
               <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="h-4 w-4 text-rose-600" />
-                <span className="text-sm font-bold text-rose-800">Mantenimiento Vencido</span>
-                <span className="text-xs font-semibold text-rose-600 ml-auto">{maintenanceDue.length} máquina(s)</span>
+                <AlertTriangle className="h-4 w-4 text-rose-600 dark:text-rose-300" />
+                <span className="text-sm font-bold text-rose-800 dark:text-rose-300">Mantenimiento Vencido</span>
+                <span className="text-xs font-semibold text-rose-600 dark:text-rose-300 ml-auto">{maintenanceDue.length} máquina(s)</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {maintenanceDue.slice(0, 5).map((item) => (
-                  <span key={item.id} className="text-[11px] bg-white px-2.5 py-1 rounded-lg border border-rose-200 text-rose-700 font-medium">
+                  <span key={item.id} className="text-[11px] bg-app-card px-2.5 py-1 rounded-lg border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-medium">
                     {item.name}
                   </span>
                 ))}
                 {maintenanceDue.length > 5 && (
-                  <span className="text-[11px] text-rose-500 font-medium px-2 py-1">+{maintenanceDue.length - 5} más</span>
+                  <span className="text-[11px] text-rose-500 dark:text-rose-400 font-medium px-2 py-1">+{maintenanceDue.length - 5} más</span>
                 )}
               </div>
             </div>
           )}
           {maintenanceSoon.length > 0 && (
-            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200">
+            <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 dark:border-amber-800">
               <div className="flex items-center gap-2 mb-2">
-                <Clock className="h-4 w-4 text-amber-600" />
-                <span className="text-sm font-bold text-amber-800">Próximo Mantenimiento</span>
-                <span className="text-xs font-semibold text-amber-600 ml-auto">{maintenanceSoon.length} máquina(s)</span>
+                <Clock className="h-4 w-4 text-amber-600 dark:text-amber-300" />
+                <span className="text-sm font-bold text-amber-800 dark:text-amber-300">Próximo Mantenimiento</span>
+                <span className="text-xs font-semibold text-amber-600 dark:text-amber-300 ml-auto">{maintenanceSoon.length} máquina(s)</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {maintenanceSoon.slice(0, 5).map((item) => (
-                  <span key={item.id} className="text-[11px] bg-white px-2.5 py-1 rounded-lg border border-amber-200 text-amber-700 font-medium">
+                  <span key={item.id} className="text-[11px] bg-app-card px-2.5 py-1 rounded-lg border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 font-medium">
                     {item.name}
                   </span>
                 ))}
                 {maintenanceSoon.length > 5 && (
-                  <span className="text-[11px] text-amber-500 font-medium px-2 py-1">+{maintenanceSoon.length - 5} más</span>
+                  <span className="text-[11px] text-amber-500 dark:text-amber-400 font-medium px-2 py-1">+{maintenanceSoon.length - 5} más</span>
                 )}
               </div>
             </div>
@@ -154,16 +163,19 @@ export const DashboardMachineryView: React.FC = () => {
       )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
+        {stats.map((stat, i) => {
+          const sc = getStatColor(stat.color);
+          return (
           <div key={i} className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
-            <div className={`p-2 rounded-xl bg-${stat.color}-50 border border-${stat.color}-100 w-fit mb-2.5`}>
-              <div className={`text-${stat.color}-600`}>{stat.icon}</div>
+            <div className={`p-2 rounded-xl ${sc.bg} border ${sc.border} w-fit mb-2.5`}>
+              <div className={sc.text}>{stat.icon}</div>
             </div>
             <p className="text-xs font-medium text-app-text-secondary uppercase tracking-wide">{stat.title}</p>
             <p className="text-2xl font-bold text-app-text mt-0.5">{stat.value}</p>
             <p className="text-[11px] text-app-text-secondary mt-0.5">{stat.sub}</p>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -267,7 +279,7 @@ export const DashboardMachineryView: React.FC = () => {
                       <td className="py-2.5 px-3">{getStatusBadge(item.status_id)}</td>
                       <td className="py-2.5 px-3">
                         <span className={`text-[11px] font-medium ${
-                          item.next_maintenance && new Date(item.next_maintenance) <= today ? 'text-rose-600' : 'text-app-text-secondary'
+                          item.next_maintenance && new Date(item.next_maintenance) <= today ? 'text-rose-600 dark:text-rose-300' : 'text-app-text-secondary'
                         }`}>
                           {formatDate(item.next_maintenance)}
                         </span>

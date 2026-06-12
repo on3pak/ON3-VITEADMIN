@@ -19,19 +19,19 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   return (
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="sr-only peer" />
-      <div className="w-10 h-6 bg-gray-200 rounded-full peer peer-focus:outline-hidden peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all duration-300 peer-checked:bg-primary-500 shadow-inner" />
+      <div className="w-10 h-6 bg-app-border dark:bg-app-card rounded-full peer peer-focus:outline-hidden peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all duration-300 peer-checked:bg-primary-500 shadow-inner" />
     </label>
   );
 }
 
 function ConfigCard({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden transition-all duration-300 hover:shadow-md">
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-gray-50">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-50 text-primary-600">
+    <div className="bg-app-card rounded-2xl border border-app-border shadow-xs overflow-hidden transition-all duration-300 hover:shadow-md">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-app-border">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
           {icon}
         </div>
-        <h3 className="text-sm font-bold text-gray-900">{title}</h3>
+        <h3 className="text-sm font-bold text-app-text">{title}</h3>
       </div>
       <div className="p-5">
         {children}
@@ -48,16 +48,16 @@ function OptionGroup({ label, options, value, onChange }: {
 }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-sm font-medium text-gray-900">{label}</span>
-      <div className="flex gap-1 p-0.5 bg-gray-100 rounded-xl">
+      <span className="text-sm font-medium text-app-text">{label}</span>
+      <div className="flex gap-1 p-0.5 bg-app-bg rounded-xl">
         {options.map((opt) => (
           <button
             key={opt.v}
             onClick={() => onChange(opt.v)}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 ${
               value === opt.v
-                ? 'bg-white text-primary-600 shadow-xs'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-app-card text-primary-600 shadow-xs'
+                : 'text-app-text-secondary/60 hover:text-app-text-secondary'
             }`}
           >
             {opt.icon} {opt.l}
@@ -82,7 +82,7 @@ export const DashboardConfigView: React.FC = () => {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className="space-y-5">
           <ConfigCard icon={<Palette className="w-4 h-4" />} title="Apariencia">
-            <div className="space-y-4 divide-y divide-gray-50">
+            <div className="space-y-4 divide-y divide-app-border">
               <OptionGroup
                 label="Tema"
                 value={prefs.theme}
@@ -103,20 +103,20 @@ export const DashboardConfigView: React.FC = () => {
                 ]}
               />
               <div className="flex items-center justify-between py-1.5 pt-4">
-                <span className="text-sm font-medium text-gray-900">Vista compacta</span>
+                <span className="text-sm font-medium text-app-text">Vista compacta</span>
                 <Toggle checked={prefs.compactView} onChange={(v) => savePrefs({ ...prefs, compactView: v })} />
               </div>
               <div className="flex items-center justify-between py-1.5 pt-4">
                 <span className="text-sm font-medium text-gray-900">Items por página</span>
-                <div className="flex gap-1 p-0.5 bg-gray-100 rounded-xl">
+                <div className="flex gap-1 p-0.5 bg-app-bg rounded-xl">
                   {[10, 25, 50].map((n) => (
                     <button
                       key={n}
                       onClick={() => savePrefs({ ...prefs, itemsPerPage: n })}
                       className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 ${
                         prefs.itemsPerPage === n
-                          ? 'bg-white text-primary-600 shadow-xs'
-                          : 'text-gray-500 hover:text-gray-700'
+                          ? 'bg-app-card text-primary-600 shadow-xs'
+                          : 'text-app-text-secondary/60 hover:text-app-text-secondary'
                       }`}
                     >
                       {n}
@@ -133,15 +133,15 @@ export const DashboardConfigView: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between py-1">
                 <div>
-                  <div className="text-sm font-medium text-gray-900">Notificaciones push</div>
-                  <div className="text-xs text-gray-400 mt-0.5">Recibir alertas en el navegador</div>
+                  <div className="text-sm font-medium text-app-text">Notificaciones push</div>
+                  <div className="text-xs text-app-text-secondary/60 mt-0.5">Recibir alertas en el navegador</div>
                 </div>
                 <Toggle checked={prefs.notifications} onChange={(v) => savePrefs({ ...prefs, notifications: v })} />
               </div>
               <div className="flex items-center justify-between py-1">
                 <div>
-                  <div className="text-sm font-medium text-gray-900">Informes por email</div>
-                  <div className="text-xs text-gray-400 mt-0.5">Resumen semanal en tu correo</div>
+                  <div className="text-sm font-medium text-app-text">Informes por email</div>
+                  <div className="text-xs text-app-text-secondary/60 mt-0.5">Resumen semanal en tu correo</div>
                 </div>
                 <Toggle checked={prefs.emailReports} onChange={(v) => savePrefs({ ...prefs, emailReports: v })} />
               </div>
@@ -151,26 +151,26 @@ export const DashboardConfigView: React.FC = () => {
           <ConfigCard icon={<User className="w-4 h-4" />} title="Cuenta">
             <div className="space-y-3">
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-gray-500">Versión</span>
-                <span className="font-mono text-xs font-semibold text-gray-900 bg-gray-50 px-2 py-0.5 rounded-md">1.0.0</span>
+                <span className="text-sm text-app-text-secondary">Versión</span>
+                <span className="font-mono text-xs font-semibold text-app-text bg-app-bg px-2 py-0.5 rounded-md">1.0.0</span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-gray-500">Estado</span>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+                <span className="text-sm text-app-text-secondary">Estado</span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 px-2.5 py-1 rounded-lg">
                   <CheckCircle className="w-3.5 h-3.5" /> Sesión activa
                 </span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-gray-500">Usuario</span>
-                <span className="font-mono text-xs font-semibold text-gray-900 bg-gray-50 px-2 py-0.5 rounded-md">{loggedInUser?.username}</span>
+                <span className="text-sm text-app-text-secondary">Usuario</span>
+                <span className="font-mono text-xs font-semibold text-app-text bg-app-bg px-2 py-0.5 rounded-md">{loggedInUser?.username}</span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-sm text-gray-500">Rol</span>
+                <span className="text-sm text-app-text-secondary">Rol</span>
                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-lg ${
-                  loggedInUser?.role === 'ROOT' ? 'bg-violet-50 text-violet-700' :
-                  loggedInUser?.role === 'ADMIN' ? 'bg-blue-50 text-blue-700' :
-                  loggedInUser?.role === 'MANAGER' ? 'bg-amber-50 text-amber-700' :
-                  'bg-gray-50 text-gray-600'
+                  loggedInUser?.role === 'ROOT' ? 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300' :
+                  loggedInUser?.role === 'ADMIN' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' :
+                  loggedInUser?.role === 'MANAGER' ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300' :
+                  'bg-app-bg text-app-text-secondary'
                 }`}>
                   <Shield className="w-3 h-3" /> {loggedInUser?.role}
                 </span>

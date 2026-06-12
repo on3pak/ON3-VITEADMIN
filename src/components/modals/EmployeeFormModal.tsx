@@ -211,7 +211,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-2xl border border-app-card-border overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="px-6 py-4 bg-app-bg border-b border-app-border flex items-center justify-between sticky top-0">
           <div className="flex items-center gap-2.5">
-            <div className={`p-2 rounded-lg ${editingEmployee ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
+            <div className={`p-2 rounded-lg ${editingEmployee ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300'}`}>
               {editingEmployee ? <Save className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
             </div>
             <div>
@@ -228,14 +228,14 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {formError && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2 font-medium">
-              <ShieldAlert className="h-4 w-4 text-rose-500 flex-shrink-0" />
+            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-300 text-xs rounded-xl flex items-center gap-2 font-medium">
+              <ShieldAlert className="h-4 w-4 text-rose-500 dark:text-rose-400 flex-shrink-0" />
               <span>{formError}</span>
             </div>
           )}
           {formSuccess && (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2 font-medium">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300 text-xs rounded-xl flex items-center gap-2 font-medium">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
               <span>{formSuccess}</span>
             </div>
           )}
@@ -250,13 +250,13 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                     value={employeeId}
                     onChange={(e) => handleIdCheck(e.target.value)}
                     placeholder="000009"
-                    className={`w-full px-3 py-2 border rounded-xl text-sm ${idStatus === 'taken' ? 'border-rose-400 bg-rose-50' : idStatus === 'valid' ? 'border-emerald-400 bg-emerald-50' : 'border-app-border'}`}
+                    className={`w-full px-3 py-2 border rounded-xl text-sm ${idStatus === 'taken' ? 'border-rose-400 bg-rose-50 dark:bg-rose-900/20' : idStatus === 'valid' ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20' : 'border-app-border'}`}
                   />
                   {idStatus === 'valid' && <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />}
                   {idStatus === 'taken' && <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-rose-500" />}
                 </div>
               </div>
-              <button type="button" onClick={handleSuggestId} className="px-3 py-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl flex items-center justify-center" title="Sugerir ID">
+              <button type="button" onClick={handleSuggestId} className="px-3 py-2 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800 rounded-xl flex items-center justify-center" title="Sugerir ID">
                 <Search className="h-4 w-4" />
               </button>
             </div>
@@ -264,7 +264,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Mail className="h-3 w-3"/> Datos Personales</h4>
+              <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Mail className="h-3 w-3"/> Datos Personales</h4>
             </div>
             <div className="col-span-2">
               <div className="grid grid-cols-3 gap-4">
@@ -298,25 +298,25 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             {!profileMode && (
               <>
               <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
+                <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Award className="h-3 w-3"/> Laboral</h4>
               </div>
               <div className="col-span-2">
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
-                    <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
-                    <select value={work_day_id} onChange={(e) => setWork_day_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={work_day_id} onChange={(e) => setWork_day_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
-                    <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
                     </select>
                   </div>
@@ -351,14 +351,14 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                           className="w-full px-3 py-2 border border-app-border rounded-xl text-sm"
                         />
                         {lockers.length > 1 && (
-                          <button type="button" onClick={() => setLockers(lockers.filter((_, j) => j !== i))} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg">
+                          <button type="button" onClick={() => setLockers(lockers.filter((_, j) => j !== i))} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg">
                             <Minus className="h-4 w-4" />
                           </button>
                         )}
                       </div>
                     ))}
                     {lockers.length < 2 && (
-                      <button type="button" onClick={() => setLockers([...lockers, ''])} className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500">
+                      <button type="button" onClick={() => setLockers([...lockers, ''])} className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
                         <Plus className="h-3 w-3" /> Añadir otra taquilla
                       </button>
                     )}
@@ -366,13 +366,13 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                 </div>
                 <div className="w-1/2">
                   <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
-                  <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as VacationMonth | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                  <select value={vacation_month} onChange={(e) => setVacation_month(e.target.value as VacationMonth | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                     <option value="">Sin asignar</option>
                     <option value="JULIO">Julio</option>
                     <option value="AGOSTO">Agosto</option>
                     <option value="SEPTIEMBRE">Septiembre</option>
                   </select>
-                  <p className="text-[11px] text-gray-400 mt-1.5">Rota cada año</p>
+                  <p className="text-[11px] text-app-text-secondary/50 mt-1.5">Rota cada año</p>
                 </div>
               </div>
               <div className="col-span-2 flex flex-wrap gap-6">
@@ -387,7 +387,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </div>
 
               <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
+                <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1"><CreditCard className="h-3 w-3"/> Datos Bancarios</h4>
               </div>
               <div className="col-span-2 flex gap-4">
                 <div className="w-[80%]">
@@ -401,13 +401,13 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </div>
 
               <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><FileText className="h-3 w-3"/> Contrato</h4>
+                <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1"><FileText className="h-3 w-3"/> Contrato</h4>
               </div>
               <div className="col-span-2">
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
-                    <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">Seleccionar...</option>
                       {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                     </select>
@@ -424,41 +424,41 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </div>
 
               <div className="col-span-2">
-                <h4 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 flex items-center gap-1"><Shirt className="h-3 w-3"/> Uniformidad</h4>
+                <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Shirt className="h-3 w-3"/> Uniformidad</h4>
               </div>
               <div className="col-span-2">
                 <div className="grid grid-cols-5 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Camisa</label>
-                    <select value={shirtSize} onChange={(e) => setShirtSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={shirtSize} onChange={(e) => setShirtSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">—</option>
                       {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Pantalón</label>
-                    <select value={pantsSize} onChange={(e) => setPantsSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={pantsSize} onChange={(e) => setPantsSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">—</option>
                       {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Chaqueta</label>
-                    <select value={jacketSize} onChange={(e) => setJacketSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={jacketSize} onChange={(e) => setJacketSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">—</option>
                       {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Chaquetón</label>
-                    <select value={winter_coat} onChange={(e) => setWinter_coat(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={winter_coat} onChange={(e) => setWinter_coat(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">—</option>
                       {CLOTHING_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Zapatos</label>
-                    <select value={shoeSize} onChange={(e) => setShoeSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-white text-sm">
+                    <select value={shoeSize} onChange={(e) => setShoeSize(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">—</option>
                       {SHOE_SIZES.map((v) => (<option key={v} value={v}>{v}</option>))}
                     </select>
@@ -470,7 +470,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           </div>
 
           <div className="pt-4 border-t border-app-border flex items-center justify-end gap-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-200 hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl">Cancelar</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl">Cancelar</button>
             <button type="submit" className={`px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs ${editingEmployee ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
               {editingEmployee ? 'Guardar Cambios' : 'Registrar'}
             </button>
