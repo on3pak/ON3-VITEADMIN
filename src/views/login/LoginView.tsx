@@ -52,7 +52,7 @@ export const LoginView: React.FC = () => {
     <>
       <TopProgressBar loading={submitting} />
       <div className="min-h-screen flex flex-col lg:flex-row font-sans antialiased">
-      <div className="lg:w-1/2 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 p-12 flex flex-col justify-between text-white relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10">
+      <div className="lg:w-1/2 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 p-6 lg:p-12 flex flex-col lg:justify-between text-white relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10">
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-amber-300/10 rounded-full blur-3xl pointer-events-none" />
@@ -67,7 +67,7 @@ export const LoginView: React.FC = () => {
           </div>
         </div>
 
-        <div className="my-auto pt-16 pb-12 relative z-10 max-w-lg">
+        <div className="hidden lg:block my-auto pt-16 pb-12 relative z-10 max-w-lg">
           <span className="text-xs font-bold text-white/80 uppercase tracking-widest bg-white/10 border border-white/20 px-3 py-1 rounded-full inline-block mb-4">
             AUTENTICACIÓN
           </span>
@@ -90,14 +90,14 @@ export const LoginView: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-white/40 relative z-10 font-mono">
+        <div className="hidden lg:block text-xs text-white/40 relative z-10 font-mono">
           ON3ADMIN Core • v4.1.0 • 2026
         </div>
       </div>
 
       <div className="lg:w-1/2 bg-gradient-to-br from-gray-50 to-white p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
         <div className="w-full max-w-md mx-auto space-y-8">
-          <div>
+          <div className="text-center lg:text-left">
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Iniciar Sesión</h2>
             <p className="text-sm text-gray-500 mt-1">Ingresa tus credenciales para acceder al sistema.</p>
           </div>

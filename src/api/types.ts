@@ -25,12 +25,4 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   accessToken: string;
-  user: {
-    id: string;
-    email: string;
-    role: 'ROOT' | 'ADMIN' | 'MANAGER' | 'USER';
-    employee_id: string | null;
-    city_id: string;
-    full_name?: string;
-  };
 }

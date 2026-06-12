@@ -36,18 +36,23 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-function mapApiUserToAppUser(apiUser: { id: string; email: string; role: string; employee_id: string | null; city_id: string; full_name?: string }): User {
+function mapApiUserToAppUser(apiUser: {
+  id: string; employee_id: string | null; email: string; full_name: string;
+  role: string; status: 'ACTIVE' | 'INACTIVE'; language: 'ES' | 'EN';
+  avatar_url?: string | null; city_id?: string | null;
+}): User {
   return {
     id: apiUser.id,
     employee_id: apiUser.employee_id ?? '',
     username: apiUser.email.split('@')[0],
     email: apiUser.email,
-    full_name: apiUser.full_name || apiUser.email.split('@')[0],
+    full_name: apiUser.full_name.split(' ').slice(0, 2).join(' '),
     password: '',
     role: apiUser.role as UserRole,
-    status: 'ACTIVE',
-    language: 'ES',
-    city_id: apiUser.city_id,
+    status: apiUser.status,
+    language: apiUser.language,
+    city_id: apiUser.city_id ?? '',
+    avatar_url: apiUser.avatar_url ?? undefined,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -93,6 +98,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               initializing: false,
               submitting: false,
               error: null,
+              employee: null,
+              vacations: [],
             });
             return;
           }
@@ -114,23 +121,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const minDelay = new Promise<void>(r => setTimeout(r, 800));
 
     try {
-      const { accessToken, user: apiUser } = await authApi.login({ email, password });
-      await minDelay;
-      const appUser = mapApiUserToAppUser(apiUser);
-
+      const { accessToken } = await authApi.login({ email, password });
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, accessToken);
-      localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(appUser));
 
-      // fetch full profile after login
+      await minDelay;
+
       let employee: Employee | null = null;
       let vacations: VacationRequest[] = [];
+      let appUser: User;
+
       try {
         const profile = await authApi.me();
+        appUser = mapApiUserToAppUser(profile.user);
         employee = profile.employee;
         vacations = profile.vacations;
       } catch {
-        // /auth/me no disponible — continuar con datos básicos
+        throw new api.ApiError(0, ['Error al obtener perfil del usuario'], 'ProfileError');
       }
+
+      localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(appUser));
 
       setState({
         isAuthenticated: true,

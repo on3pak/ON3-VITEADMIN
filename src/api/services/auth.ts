@@ -5,10 +5,14 @@ import type { Employee, VacationRequest } from '../../types';
 export interface AuthProfile {
   user: {
     id: string;
-    email: string;
-    role: 'ROOT' | 'ADMIN' | 'MANAGER' | 'USER';
     employee_id: string | null;
-    city_id: string;
+    email: string;
+    full_name: string;
+    role: 'ROOT' | 'ADMIN' | 'MANAGER' | 'USER';
+    status: 'ACTIVE' | 'INACTIVE';
+    language: 'ES' | 'EN';
+    avatar_url?: string | null;
+    city_id?: string | null;
   };
   employee: Employee | null;
   vacations: VacationRequest[];
