@@ -67,14 +67,14 @@ export const DashboardProfileView: React.FC = () => {
   const isReadOnly = loggedInUser?.role === 'USER';
 
   const [myEmployee, setMyEmployee] = useState<Employee | undefined>(profileEmployee ?? undefined);
-  const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>(profileVacations);
+  const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>(profileVacations ?? []);
 
   useEffect(() => {
     if (profileEmployee) setMyEmployee(profileEmployee);
   }, [profileEmployee]);
 
   useEffect(() => {
-    if (profileVacations.length > 0) setVacationRequests(profileVacations);
+    if (profileVacations?.length > 0) setVacationRequests(profileVacations);
   }, [profileVacations]);
 
   // fallback: fetch if auth context didn't have profile data
@@ -82,11 +82,6 @@ export const DashboardProfileView: React.FC = () => {
     if (!loggedInUser?.employee_id || myEmployee) return;
     employeesApi.getById(loggedInUser.employee_id).then(setMyEmployee).catch(() => {});
   }, [loggedInUser?.employee_id, myEmployee]);
-
-  useEffect(() => {
-    if (vacationRequests.length > 0) return;
-    vacationsApi.list().then((res) => setVacationRequests(res.data)).catch(() => {});
-  }, [vacationRequests.length]);
 
   type ProfileTab = 'info' | 'solicitar' | 'parte';
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');

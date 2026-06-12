@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User, UserRole } from '../types';
-import { authApi } from '../api/services/auth';
+import { authApi } from '../api/services';
 import { STORAGE_KEYS } from '../config';
 import { getToken, api } from '../api/client';
 
 import type { Employee, VacationRequest } from '../types';
-import type { AuthProfile } from '../api/services';
 
 interface AuthState {
   isAuthenticated: boolean;
