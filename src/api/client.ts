@@ -4,7 +4,7 @@ import type { ApiErrorResponse, ApiPaginatedResponse } from './types';
 class ApiError extends Error {
   constructor(
     public statusCode: number,
-    messages: string[],
+    public messages: string[],
     public error: string,
   ) {
     super(messages.join('; '));
@@ -31,7 +31,7 @@ function buildHeaders(extra: Record<string, string> = {}): Record<string, string
 }
 
 async function handleResponse<T>(res: Response): Promise<T> {
-  if (res.status === 401) {
+  if (res.status === 401 && getToken()) {
     localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
     window.location.reload();
@@ -48,7 +48,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
     throw new ApiError(
       errorBody.statusCode || res.status,
       errorBody.message || [res.statusText],
-      errorBody.error || res.statusText,
+      errorBody.error || errorBody.message?.join('; ') || res.statusText,
     );
   }
 

@@ -7,9 +7,11 @@ export interface ApiPaginatedResponse<T> {
 }
 
 export interface ApiErrorResponse {
+  success: boolean;
   statusCode: number;
   message: string[];
-  error: string;
+  timestamp: string;
+  error?: string;
 }
 
 export type ApiResponse<T> = T;

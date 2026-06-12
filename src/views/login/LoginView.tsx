@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldCheck, Lock, User, Eye, EyeOff, ShieldAlert } from 'lucide-react';
+import { TopProgressBar } from '../../components/ui';
+import { ShieldCheck, Lock, User, Eye, EyeOff, ShieldAlert, AlertCircle, CheckCircle } from 'lucide-react';
 
 const DEV_ACCOUNTS = [
   { role: 'ROOT', name: 'Miguel Torres', email: 'm.torres1@on3.com', password: 'root1' },
@@ -9,17 +10,37 @@ const DEV_ACCOUNTS = [
   { role: 'USER', name: 'Carlos Fuentes', email: 'c.fuentes4@on3.com', password: 'user4' },
 ] as const;
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateEmail(v: string): string | null {
+  if (!v.trim()) return 'El correo es obligatorio.';
+  if (!EMAIL_RE.test(v.trim())) return 'Formato de correo inválido.';
+  return null;
+}
+
+function validatePassword(v: string): string | null {
+  if (!v) return 'La contraseña es obligatoria.';
+  if (v.length < 4) return 'La contraseña debe tener al menos 4 caracteres.';
+  return null;
+}
+
 export const LoginView: React.FC = () => {
-  const { login, error, loading } = useAuth();
+  const { login, error, submitting } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
+
+  const emailError = touched.email ? validateEmail(email) : null;
+  const passwordError = touched.password ? validatePassword(password) : null;
+  const hasErrors = !!validateEmail(email) || !!validatePassword(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password) return;
-    await login(email, password);
+    setTouched({ email: true, password: true });
+    if (hasErrors) return;
+    await login(email.trim(), password);
   };
 
   const handleQuickFill = (acc: typeof DEV_ACCOUNTS[number]) => {
@@ -28,7 +49,9 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row font-sans antialiased">
+    <>
+      <TopProgressBar loading={submitting} />
+      <div className="min-h-screen flex flex-col lg:flex-row font-sans antialiased">
       <div className="lg:w-1/2 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 p-12 flex flex-col justify-between text-white relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/10">
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
@@ -99,11 +122,31 @@ export const LoginView: React.FC = () => {
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => setTouched(p => ({ ...p, email: true }))}
+                  onChange={(e) => { setEmail(e.target.value); if (touched.email) setTouched(p => ({ ...p, email: true })); }}
                   placeholder="Introduce email (ej: m.torres@on3.com)"
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
+                  className={`w-full pl-10 pr-10 py-2.5 bg-white border rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 transition-all ${
+                    emailError
+                      ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-100'
+                      : touched.email && !emailError
+                        ? 'border-emerald-300 focus:border-emerald-500 focus:ring-emerald-100'
+                        : 'border-gray-200 focus:border-primary-500 focus:ring-primary-100'
+                  }`}
                 />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  {emailError ? (
+                    <AlertCircle className="h-4 w-4 text-rose-500" />
+                  ) : touched.email && !emailError ? (
+                    <CheckCircle className="h-4 w-4 text-emerald-500" />
+                  ) : null}
+                </div>
               </div>
+              {emailError && (
+                <p className="mt-1 text-xs text-rose-600 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <div>
@@ -118,26 +161,46 @@ export const LoginView: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onBlur={() => setTouched(p => ({ ...p, password: true }))}
+                  onChange={(e) => { setPassword(e.target.value); if (touched.password) setTouched(p => ({ ...p, password: true })); }}
                   placeholder="Introduce contraseña"
-                  className="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
+                  className={`w-full pl-10 pr-10 py-2.5 bg-white border rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 transition-all ${
+                    passwordError
+                      ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-100'
+                      : touched.password && !passwordError
+                        ? 'border-emerald-300 focus:border-emerald-500 focus:ring-emerald-100'
+                        : 'border-gray-200 focus:border-primary-500 focus:ring-primary-100'
+                  }`}
                 />
+                <div className="absolute inset-y-0 right-0 pr-10 flex items-center pointer-events-none">
+                  {passwordError ? (
+                    <AlertCircle className="h-4 w-4 text-rose-500" />
+                  ) : touched.password && !passwordError ? (
+                    <CheckCircle className="h-4 w-4 text-emerald-500" />
+                  ) : null}
+                </div>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer z-10"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
+              {passwordError && (
+                <p className="mt-1 text-xs text-rose-600 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {passwordError}
+                </p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={submitting || (touched.email && touched.password && hasErrors)}
               className="w-full py-2.5 px-4 bg-primary-600 hover:bg-primary-500 disabled:bg-primary-400 disabled:opacity-50 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-primary-600/20 active:scale-[0.99] mt-2 cursor-pointer flex items-center justify-center gap-2"
             >
-              {loading ? (
+              {submitting ? (
                 <>
                   <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span>Validando credenciales...</span>
@@ -185,5 +248,6 @@ export const LoginView: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };

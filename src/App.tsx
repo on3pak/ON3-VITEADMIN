@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LoadingProvider, useLoading } from './context/LoadingContext';
 import { TopProgressBar } from './components/ui';
@@ -26,71 +26,25 @@ import { DashboardServicesView } from './views/dashboard/DashboardServicesView';
 import { ServicesView } from './views/admin/services/ServicesView';
 import { ServicesDetailView } from './views/admin/services/ServicesDetailView';
 import { AccessDeniedView } from './views/errors/AccessDeniedView';
-import { AuthTestsView } from './views/utils/tests/AuthTestsView';
-import { JwtTestsView } from './views/utils/tests/JwtTestsView';
-import { CrudTestsView } from './views/utils/tests/CrudTestsView';
-import { RbacTestsView } from './views/utils/tests/RbacTestsView';
-import { RolesTestsView } from './views/utils/tests/RolesTestsView';
-import { LogsView } from './views/utils/logs/LogsView';
 import { InventoryView } from './views/admin/inventory/InventoryView';
 import { DashboardInventoryView } from './views/dashboard/DashboardInventoryView';
 import { DashboardMachineryView } from './views/dashboard/DashboardMachineryView';
 import { MachineryView } from './views/admin/machinery/MachineryView';
 import { DashboardProfileView } from './views/dashboard/DashboardProfileView';
 import { DashboardConfigView } from './views/dashboard/DashboardConfigView';
-import { UtilsView } from './views/utils/UtilsView';
 import { InventoryProvider } from './context/InventoryContext';
 import { MachineryProvider } from './context/MachineryContext';
 import { ServiceReportProvider } from './context/ServiceReportContext';
 import { ServiceReportsView } from './views/admin/serviceReports/ServiceReportsView';
 import { WorkReportProvider } from './context/WorkReportContext';
 import { WorkReportsView } from './views/admin/workReports/WorkReportsView';
-
-const VIEW_ROUTES: Record<DashboardViewType, string> = {
-  USER_DASHBOARD: '/',
-  USERS_CRUD: '/admin/users',
-  EMPLOYEES_CRUD: '/admin/employees',
-  EMPLOYEE_DASHBOARD: '/dashboard/employees',
-  EMPLOYEE_DETAIL: '/admin/employees/:id',
-  VEHICLES_CRUD: '/admin/vehicles',
-  VEHICLE_DASHBOARD: '/dashboard/vehicles',
-  VEHICLE_DETAIL: '/admin/vehicles/:id',
-  WORK_CENTERS_CRUD: '/admin/work-centers',
-  WORK_CENTERS_DASHBOARD: '/dashboard/work-centers',
-  SERVICES_CRUD: '/admin/services',
-  SERVICES_DASHBOARD: '/dashboard/services',
-  SERVICE_DETAIL: '/admin/services/:id',
-  INVENTORY_CRUD: '/admin/inventory',
-  INVENTORY_DASHBOARD: '/dashboard/inventory',
-  MACHINERY_CRUD: '/admin/machinery',
-  MACHINERY_DASHBOARD: '/dashboard/machinery',
-  SERVICE_REPORT: '/apps/service-report',
-  WORK_REPORT: '/apps/work-report',
-  PROFILE: '/profile',
-  PROFILE_CONFIG: '/profile/config',
-  TESTS_AUTH: '/tests/auth',
-  TESTS_JWT: '/tests/jwt',
-  TESTS_CRUD: '/tests/crud',
-  TESTS_RBAC: '/tests/rbac',
-  TESTS_ROLES: '/tests/roles',
-  LOGS_AUTH: '/logs/auth',
-  LOGS_LOGOUT: '/logs/logout',
-  LOGS_USERS: '/logs/users',
-  LOGS_EMPLOYEES: '/logs/employees',
-  UTILS: '/utils',
-  UTILS_LOGS: '/utils/logs',
-  UTILS_TESTS: '/utils/tests',
-};
-
-
-
 const canAccessView = (view: DashboardViewType, role?: string): boolean => {
   const allowedRoles = VIEW_ROLES[view] || [];
   return allowedRoles.includes(role || '');
 };
 
 const MainLayout: React.FC = () => {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, initializing, user } = useAuth();
   const [currentView, setCurrentView] = useState<DashboardViewType>('PROFILE');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
@@ -98,7 +52,7 @@ const MainLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [serviceReportTab, setServiceReportTab] = useState<'previo' | 'diario' | 'historial'>('previo');
 
-  if (loading) {
+  if (initializing) {
     return (
       <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center text-sidebar-text font-sans relative overflow-hidden">
         {/* Subtle background pattern */}
@@ -118,7 +72,7 @@ const MainLayout: React.FC = () => {
 
           <div className="space-y-2">
             <h2 className="text-lg font-bold tracking-wide text-white">ON3ADMIN</h2>
-            <p className="text-sm text-sidebar-text">Panel de Administración</p>
+            <p className="text-sm text-sidebar-text">Panel de AdministraciÃ³n</p>
           </div>
 
           <div className="flex items-center gap-2.5 mt-2">
@@ -127,7 +81,7 @@ const MainLayout: React.FC = () => {
             <div className="h-1 w-1 rounded-full bg-primary-300 animate-bounce [animation-delay:300ms]" />
           </div>
 
-          <p className="text-[11px] text-sidebar-text/60 font-mono tracking-wider mt-1">VERIFICANDO SESIÓN</p>
+          <p className="text-[11px] text-sidebar-text/60 font-mono tracking-wider mt-1">VERIFICANDO SESIÃ“N</p>
         </div>
       </div>
     );
@@ -159,7 +113,7 @@ const MainLayout: React.FC = () => {
       return (
         <AccessDeniedView 
           onBack={() => setCurrentView('PROFILE')}
-          message={`Tu rol (${user?.role}) no tiene permiso para acceder a esta sección. Contacta a un administrador.`}
+          message={`Tu rol (${user?.role}) no tiene permiso para acceder a esta secciÃ³n. Contacta a un administrador.`}
         />
       );
     }
@@ -203,21 +157,6 @@ const MainLayout: React.FC = () => {
         ) : (
           <VehiclesView onViewVehicle={(id) => handleViewChange('VEHICLE_DETAIL', id)} />
         );
-      case 'TESTS_AUTH':
-        return <AuthTestsView />;
-      case 'TESTS_JWT':
-        return <JwtTestsView />;
-      case 'TESTS_CRUD':
-        return <CrudTestsView />;
-      case 'TESTS_RBAC':
-        return <RbacTestsView />;
-      case 'TESTS_ROLES':
-        return <RolesTestsView />;
-      case 'LOGS_AUTH':
-      case 'LOGS_LOGOUT':
-      case 'LOGS_USERS':
-      case 'LOGS_EMPLOYEES':
-        return <LogsView logType={currentView} />;
       case 'SERVICE_REPORT':
         return <ServiceReportsView onTabChange={setServiceReportTab} />;
       case 'WORK_REPORT':
@@ -234,10 +173,6 @@ const MainLayout: React.FC = () => {
         return <DashboardProfileView />;
       case 'PROFILE_CONFIG':
         return <DashboardConfigView />;
-      case 'UTILS_LOGS':
-        return <UtilsView initialTab="logs" />;
-      case 'UTILS_TESTS':
-        return <UtilsView initialTab="tests" />;
       default:
         return <DashboardUsersView />;
     }

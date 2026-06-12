@@ -113,5 +113,5 @@ body {
 }
 
 .animate-progress {
-  animation: progress-indeterminate 1.5s ease-in-out infinite;
+  animation: progress-indeterminate 3.5s ease-in-out infinite;
 }

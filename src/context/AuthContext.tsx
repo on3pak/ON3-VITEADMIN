@@ -2,17 +2,24 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { User, UserRole } from '../types';
 import { authApi } from '../api/services/auth';
 import { STORAGE_KEYS } from '../config';
-import { getToken } from '../api/client';
+import { getToken, api } from '../api/client';
 
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
   token: string | null;
-  loading: boolean;
+  initializing: boolean;
+  submitting: boolean;
   error: string | null;
 }
 
-interface AuthContextProps extends AuthState {
+interface AuthContextProps {
+  isAuthenticated: boolean;
+  user: User | null;
+  token: string | null;
+  initializing: boolean;
+  submitting: boolean;
+  error: string | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   hasRole: (roles: UserRole[]) => boolean;
@@ -45,7 +52,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isAuthenticated: false,
     user: null,
     token: null,
-    loading: true,
+    initializing: true,
+    submitting: false,
     error: null,
   });
 
@@ -74,7 +82,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               isAuthenticated: true,
               user,
               token: storedToken,
-              loading: false,
+              initializing: false,
+              submitting: false,
               error: null,
             });
             return;
@@ -84,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Error auto-authenticating:', err);
       }
 
-      setState(prev => ({ ...prev, loading: false }));
+      setState(prev => ({ ...prev, initializing: false }));
     };
 
     const timer = setTimeout(initializeAuth, 600);
@@ -92,10 +101,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState(prev => ({ ...prev, submitting: true, error: null }));
+
+    const minDelay = new Promise<void>(r => setTimeout(r, 800));
 
     try {
       const { accessToken, user: apiUser } = await authApi.login({ email, password });
+      await minDelay;
       const appUser = mapApiUserToAppUser(apiUser);
 
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, accessToken);
@@ -105,21 +117,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: true,
         user: appUser,
         token: accessToken,
-        loading: false,
+        initializing: false,
+        submitting: false,
         error: null,
       });
 
       triggerToast(`¡Bienvenido, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
       return true;
-    } catch {
+    } catch (err) {
+      await minDelay;
+      const serverMsg = err instanceof api.ApiError
+        ? err.messages.join('. ')
+        : 'Error de conexión con el servidor.';
       setState({
         isAuthenticated: false,
         user: null,
         token: null,
-        loading: false,
-        error: 'Error de autenticación. Credenciales incorrectas o servidor no disponible.',
+        initializing: false,
+        submitting: false,
+        error: serverMsg,
       });
-      triggerToast('Error de autenticación. Credenciales incorrectas.', 'error');
+      triggerToast(serverMsg, 'error');
       return false;
     }
   };
@@ -131,7 +149,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAuthenticated: false,
       user: null,
       token: null,
-      loading: false,
+      initializing: false,
+      submitting: false,
       error: null,
     });
     triggerToast('Sesión cerrada correctamente.', 'info');
