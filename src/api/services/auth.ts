@@ -25,4 +25,6 @@ export const authApi = {
     api.post<LoginResponse>(`${BASE}/login`, payload),
   me: () =>
     api.get<AuthProfile>(`${BASE}/me`),
+  logout: () =>
+    api.post<{ message: string }>(`${BASE}/logout`, {}),
 };
