@@ -13,3 +13,7 @@ export { dashboardApi } from './dashboard';
 export { vacationsApi } from './vacations';
 export { authApi } from './auth';
 export type { DashboardStats } from './dashboard';
+export type { AuthProfile } from './auth';
+export type { AllLookups } from './lookups';
+export type { EmployeeDetail } from './employees';
+export type { VehicleDetail } from './vehicles';

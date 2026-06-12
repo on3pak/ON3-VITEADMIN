@@ -4,6 +4,9 @@ import { authApi } from '../api/services/auth';
 import { STORAGE_KEYS } from '../config';
 import { getToken, api } from '../api/client';
 
+import type { Employee, VacationRequest } from '../types';
+import type { AuthProfile } from '../api/services';
+
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
@@ -11,6 +14,8 @@ interface AuthState {
   initializing: boolean;
   submitting: boolean;
   error: string | null;
+  employee: Employee | null;
+  vacations: VacationRequest[];
 }
 
 interface AuthContextProps {
@@ -20,6 +25,8 @@ interface AuthContextProps {
   initializing: boolean;
   submitting: boolean;
   error: string | null;
+  employee: Employee | null;
+  vacations: VacationRequest[];
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   hasRole: (roles: UserRole[]) => boolean;
@@ -55,6 +62,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializing: true,
     submitting: false,
     error: null,
+    employee: null,
+    vacations: [],
   });
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -113,6 +122,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, accessToken);
       localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(appUser));
 
+      // fetch full profile after login
+      let employee: Employee | null = null;
+      let vacations: VacationRequest[] = [];
+      try {
+        const profile = await authApi.me();
+        employee = profile.employee;
+        vacations = profile.vacations;
+      } catch {
+        // /auth/me no disponible — continuar con datos básicos
+      }
+
       setState({
         isAuthenticated: true,
         user: appUser,
@@ -120,6 +140,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         initializing: false,
         submitting: false,
         error: null,
+        employee,
+        vacations,
       });
 
       triggerToast(`¡Bienvenido, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
@@ -136,6 +158,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         initializing: false,
         submitting: false,
         error: serverMsg,
+        employee: null,
+        vacations: [],
       });
       triggerToast(serverMsg, 'error');
       return false;
@@ -152,6 +176,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       initializing: false,
       submitting: false,
       error: null,
+      employee: null,
+      vacations: [],
     });
     triggerToast('Sesión cerrada correctamente.', 'info');
   };
@@ -166,7 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, hasRole, clearError, triggerToast, toast }}>
+    <AuthContext.Provider value={{ ...state, employee: state.employee, vacations: state.vacations, login, logout, hasRole, clearError, triggerToast, toast }}>
       {children}
     </AuthContext.Provider>
   );

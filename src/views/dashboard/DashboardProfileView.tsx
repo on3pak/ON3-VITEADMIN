@@ -62,21 +62,31 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 );
 
 export const DashboardProfileView: React.FC = () => {
-  const { user: loggedInUser, triggerToast } = useAuth();
+  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast } = useAuth();
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
-  const [myEmployee, setMyEmployee] = useState<Employee | undefined>();
-  const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>([]);
+  const [myEmployee, setMyEmployee] = useState<Employee | undefined>(profileEmployee ?? undefined);
+  const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>(profileVacations);
 
   useEffect(() => {
-    if (!loggedInUser?.employee_id) return;
+    if (profileEmployee) setMyEmployee(profileEmployee);
+  }, [profileEmployee]);
+
+  useEffect(() => {
+    if (profileVacations.length > 0) setVacationRequests(profileVacations);
+  }, [profileVacations]);
+
+  // fallback: fetch if auth context didn't have profile data
+  useEffect(() => {
+    if (!loggedInUser?.employee_id || myEmployee) return;
     employeesApi.getById(loggedInUser.employee_id).then(setMyEmployee).catch(() => {});
-  }, [loggedInUser?.employee_id]);
+  }, [loggedInUser?.employee_id, myEmployee]);
 
   useEffect(() => {
+    if (vacationRequests.length > 0) return;
     vacationsApi.list().then((res) => setVacationRequests(res.data)).catch(() => {});
-  }, []);
+  }, [vacationRequests.length]);
 
   type ProfileTab = 'info' | 'solicitar' | 'parte';
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');
