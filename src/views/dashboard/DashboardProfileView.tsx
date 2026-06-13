@@ -278,7 +278,8 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={myEmployee?.iban || '—'} />
                       <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={myEmployee?.lockers?.length ? myEmployee.lockers.join(', ') : '—'} />
                       <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={myEmployee ? `${myEmployee.irpf}%` : '—'} />
-                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
+                       <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
+                       <InfoRow icon={<Heart className="h-4 w-4" />} label="Vacunación" value={myEmployee?.vaccinated ? 'Sí' : 'No'} />
                     </SectionCard>
 
                     {myEmployee.clothing_sizes && (

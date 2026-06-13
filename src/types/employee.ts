@@ -58,6 +58,7 @@ export interface Employee {
   lockers: string[];
   clothing_sizes: ClothingSizes | null;
   medical_check: boolean;
+  vaccinated: boolean;
   works_holidays: boolean;
   contract_type: string;
   contract_start_date: string;

@@ -146,6 +146,12 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={employee.lockers?.length ? employee.lockers.join(', ') : '-'} />
           </SectionCard>
 
+          <SectionCard icon={<FileCheck className="h-4 w-4" />} title="Contrato">
+            <InfoRow icon={<FileCheck className="h-4 w-4" />} label="Tipo" value={resolveContractType(employee.contract_type) || '-'} />
+            <InfoRow icon={<Calendar className="h-4 w-4" />} label="Inicio" value={employee.contract_start_date || '-'} />
+            <InfoRow icon={<Calendar className="h-4 w-4" />} label="Fin" value={employee.contract_end_date || 'Indefinido'} />
+          </SectionCard>
+
           <SectionCard icon={<CreditCard className="h-4 w-4" />} title="Datos Bancarios">
             <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={employee.iban || 'Sin registrar'} />
             <InfoRow icon={<Wallet className="h-4 w-4" />} label="IRPF" value={employee.irpf ? `${employee.irpf}%` : '-'} />
@@ -219,12 +225,6 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             </div>
           )}
 
-          <SectionCard icon={<FileCheck className="h-4 w-4" />} title="Contrato">
-            <InfoRow icon={<FileCheck className="h-4 w-4" />} label="Tipo" value={resolveContractType(employee.contract_type) || '-'} />
-            <InfoRow icon={<Calendar className="h-4 w-4" />} label="Inicio" value={employee.contract_start_date || '-'} />
-            <InfoRow icon={<Calendar className="h-4 w-4" />} label="Fin" value={employee.contract_end_date || 'Indefinido'} />
-          </SectionCard>
-
           <SectionCard icon={<Activity className="h-4 w-4" />} title="Estados">
             <div className="flex flex-wrap gap-2">
               <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.active ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
@@ -235,6 +235,9 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
               </span>
               <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.works_holidays ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.works_holidays ? '✓ Festivos' : '○ Festivos'}
+              </span>
+              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.vaccinated ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
+                {employee.vaccinated ? '✓ Vacunación' : '○ Vacunación'}
               </span>
             </div>
           </SectionCard>
