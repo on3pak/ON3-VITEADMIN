@@ -26,5 +26,5 @@ export const authApi = {
   me: () =>
     api.get<AuthProfile>(`${BASE}/me`),
   logout: () =>
-    api.post<{ message: string }>(`${BASE}/logout`, {}),
+    api.postRaw<{ message: string }>(`${BASE}/logout`, {}),
 };

@@ -1,13 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLookupsContext } from '../../context/LookupContext';
 import { employeesApi, vacationsApi } from '../../api/services';
 import type { Employee, VacationRequest } from '../../types';
 import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
 import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_SHIFTS, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_CITIES } from '../../data/mockEmployees';
-import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import {
   User, Calendar,
   CheckCircle,
@@ -22,22 +21,12 @@ import {
 
 const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
 
-function getCurrentVacationMonth(month: string | null, year: number | null): string | null {
-  if (!month || !year) return null;
-  const currentYear = new Date().getFullYear();
-  const diff = currentYear - year;
+function getCurrentVacationMonth(month: string | null): string | null {
+  if (!month) return null;
   const idx = VACATION_MONTHS.indexOf(month as typeof VACATION_MONTHS[number]);
   if (idx === -1) return null;
-  const currentIdx = ((idx + diff) % 3 + 3) % 3;
-  return VACATION_MONTHS[currentIdx];
+  return VACATION_MONTHS[idx];
 }
-
-const cityMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
-const catMap = Object.fromEntries(INITIAL_EMPLOYEE_CATEGORIES.map((c) => [c.id, c.name]));
-const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
-const wdMap = Object.fromEntries(INITIAL_WORK_DAYS.map((w) => [w.id, w.name]));
-const wcMap = Object.fromEntries(INITIAL_WORK_CENTERS.map((w) => [w.id, w.name]));
-const ctMap = Object.fromEntries(INITIAL_CONTRACT_TYPES.map((c) => [c.id, c.name]));
 
 const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | React.ReactNode }> = ({ icon, label, value }) => (
   <div className="flex items-start gap-3">
@@ -62,6 +51,7 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 
 export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast } = useAuth();
+  const { cityMap, categoryMap, shiftMap, workDayMap, workCenterMap, contractTypeMap } = useLookupsContext();
 
   const isReadOnly = loggedInUser?.role === 'USER';
 
@@ -93,13 +83,13 @@ export const DashboardProfileView: React.FC = () => {
   const [requestText, setRequestText] = useState('');
 
   const currentVacationMonth = useMemo(
-    () => myEmployee ? getCurrentVacationMonth(myEmployee.vacation_month, myEmployee.vacation_year) : null,
+    () => myEmployee ? getCurrentVacationMonth(myEmployee.vacation_month) : null,
     [myEmployee]
   );
 
   const fullName = loggedInUser?.full_name || '';
 
-  const categoryName = myEmployee ? catMap[myEmployee.category_id] || myEmployee.category_id : '';
+  const categoryName = myEmployee ? categoryMap[myEmployee.category_id] || myEmployee.category_id : '';
   const shiftName = myEmployee ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id : '';
   const fmtTime = (t: string | undefined | null) => t ? t.length > 5 ? t.slice(0, 5) : t : '—';
   const scheduleDisplay = myEmployee ? `${fmtTime(myEmployee.start_time)} — ${fmtTime(myEmployee.end_time)}` : '—';
@@ -274,9 +264,9 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
                       <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
-                      <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
-                      <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
-                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
+                      <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? contractTypeMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
+                      <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (workCenterMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
+                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? workDayMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
 
                       {/* Separator */}
                       <div className="col-span-2 border-t border-app-card-border my-1" />
@@ -503,9 +493,9 @@ export const DashboardProfileView: React.FC = () => {
                         <>
                           <li>• Categoría: <strong>{categoryName || '—'}</strong></li>
                           <li>• Turno: <strong>{shiftName || '—'}</strong></li>
-                          <li>• Contrato: <strong>{myEmployee?.contract_type ? ctMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}</strong></li>
-                          <li>• Centro: <strong>{myEmployee?.work_center_id ? (wcMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}</strong></li>
-                          <li>• Días Laborables: <strong>{myEmployee?.work_day_id ? wdMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}</strong></li>
+                          <li>• Contrato: <strong>{myEmployee?.contract_type ? contractTypeMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}</strong></li>
+                          <li>• Centro: <strong>{myEmployee?.work_center_id ? (workCenterMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}</strong></li>
+                          <li>• Días Laborables: <strong>{myEmployee?.work_day_id ? workDayMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}</strong></li>
                         </>
                       )}
                     </ul>

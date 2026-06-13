@@ -45,7 +45,6 @@ export interface Employee {
   start_time: string;
   end_time: string;
   vacation_month: VacationMonth | null;
-  vacation_year: number | null;
   vacation_days: number;
   own_days: number;
   accumulated_days: number;

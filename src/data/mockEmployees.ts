@@ -68,7 +68,7 @@ const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'catego
   start_time: '06:00',
   end_time: '13:00',
   vacation_month: null,
-  vacation_year: null,
+
   vacation_days: 22,
   own_days: 2,
   accumulated_days: 5,

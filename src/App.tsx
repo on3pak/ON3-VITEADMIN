@@ -38,6 +38,7 @@ import { ServiceReportProvider } from './context/ServiceReportContext';
 import { ServiceReportsView } from './views/admin/serviceReports/ServiceReportsView';
 import { WorkReportProvider } from './context/WorkReportContext';
 import { WorkReportsView } from './views/admin/workReports/WorkReportsView';
+import { LookupProvider } from './context/LookupContext';
 const canAccessView = (view: DashboardViewType, role?: string): boolean => {
   const allowedRoles = VIEW_ROLES[view] || [];
   return allowedRoles.includes(role || '');
@@ -234,6 +235,7 @@ export default function App() {
   return (
     <AuthProvider>
       <LoadingProvider>
+        <LookupProvider>
         <UserProvider>
           <EmployeeProvider>
             <VehicleProvider>
@@ -253,6 +255,7 @@ export default function App() {
             </VehicleProvider>
           </EmployeeProvider>
         </UserProvider>
+        </LookupProvider>
       </LoadingProvider>
     </AuthProvider>
   );

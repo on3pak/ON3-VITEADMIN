@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Employee, VacationMonth, ClothingSizes, ClothingSize, ShoeSize } from '../../types';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_SHIFTS, INITIAL_CITIES, INITIAL_EMPLOYEE_STATUSES } from '../../data/mockEmployees';
-import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, ShieldAlert, UserPlus, Save, CreditCard, Mail, Award, Shirt, Plus, Minus, Search, CheckCircle2, AlertCircle, FileText } from 'lucide-react';
 import { useEmployees } from '../../context/EmployeeContext';
+import { useLookupsContext } from '../../context/LookupContext';
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
@@ -18,6 +17,9 @@ const SHOE_SIZES = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
 
 export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, onClose, onSubmit, editingEmployee, profileMode = false }) => {
   const { employees, getNextEmployeeId } = useEmployees();
+  const {
+    employeeCategories, workDays, contractTypes, shifts, cities, employeeStatuses, workCenters,
+  } = useLookupsContext();
   const [name, setName] = useState('');
   const [last_name1, setLastName1] = useState('');
   const [last_name2, setLastName2] = useState('');
@@ -203,7 +205,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       start_time,
       end_time,
       vacation_month: vacation_month || null,
-      vacation_year: vacation_month ? new Date().getFullYear() : null,
+
       vacation_days,
       own_days,
       accumulated_days,
@@ -321,7 +323,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                   <label className="block text-xs font-bold text-app-text uppercase mb-1">Ciudad</label>
                   <select value={city_id} onChange={(e) => setCity_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                     <option value="">Seleccionar...</option>
-                    {INITIAL_CITIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                    {cities.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                   </select>
                 </div>
               </div>
@@ -337,32 +339,32 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
                     <select value={category_id} onChange={(e) => setCategory_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-                      {INITIAL_EMPLOYEE_CATEGORIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                      {employeeCategories.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
                     <select value={work_day_id} onChange={(e) => setWork_day_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-                      {INITIAL_WORK_DAYS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
+                      {workDays.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Turno</label>
                     <select value={shift_id} onChange={(e) => setShift_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">Seleccionar...</option>
-                      {INITIAL_SHIFTS.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                      {shifts.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
                     <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-                      {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
+                      {workCenters.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
                     <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-                      {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                      {employeeStatuses.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
                     </select>
                   </div>
                   <div>
@@ -482,7 +484,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
                     <select value={contract_type} onChange={(e) => setContract_type(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       <option value="">Seleccionar...</option>
-                      {INITIAL_CONTRACT_TYPES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                      {contractTypes.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                     </select>
                   </div>
                   <div>

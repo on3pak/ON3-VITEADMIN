@@ -77,6 +77,7 @@ async function request<T>(
     body?: unknown;
     params?: Record<string, string | number | undefined>;
     headers?: Record<string, string>;
+    skipAuth401?: boolean;
   },
 ): Promise<T> {
   const url = buildUrl(path, options?.params);
@@ -97,7 +98,15 @@ async function request<T>(
     );
   }
 
+  if (options?.skipAuth401 && res.status === 401) {
+    throw new ApiError(401, ['Sesión expirada'], 'Unauthorized');
+  }
+
   return handleResponse<T>(res);
+}
+
+function postRaw<T>(path: string, body: unknown): Promise<T> {
+  return request<T>('POST', path, { body, skipAuth401: true });
 }
 
 export const api = {
@@ -122,6 +131,7 @@ export const api = {
   deletePath: <T = void>(path: string) =>
     request<T>('DELETE', path),
 
+  postRaw,
   ApiError,
 };
 

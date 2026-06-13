@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
+import { useLookupsContext } from '../../../context/LookupContext';
 import { employeesApi } from '../../../api/services';
 import type { Employee } from '../../../types';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_SHIFTS, INITIAL_CITIES } from '../../../data/mockEmployees';
-import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, CreditCard, Award, Clock, Edit3, Trash2, ShieldAlert, Building2, Wallet, FileCheck, Activity, Shirt, Package, Briefcase } from 'lucide-react';
@@ -49,6 +48,10 @@ const StatusBadge: React.FC<{ id: string; statuses: { id: string; name: string }
 
 export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employeeId, onBack }) => {
   const { user: loggedInUser } = useAuth();
+  const {
+    resolveCategory, resolveStatus, resolveWorkCenter, resolveWorkDay,
+    resolveContractType, resolveCity, resolveShift, employeeStatuses,
+  } = useLookupsContext();
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -58,14 +61,6 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
   }, [employeeId]);
 
   const isReadOnly = loggedInUser?.role === 'USER';
-
-  const resolveCategory = (id: string) => INITIAL_EMPLOYEE_CATEGORIES.find(c => c.id === id)?.name ?? id;
-  const resolveStatus = (id: string) => INITIAL_EMPLOYEE_STATUSES.find(s => s.id === id)?.name ?? id;
-  const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find(w => w.id === id)?.name ?? id;
-  const resolveWorkDay = (id: string) => INITIAL_WORK_DAYS.find(w => w.id === id)?.name ?? id;
-  const resolveContractType = (id: string) => INITIAL_CONTRACT_TYPES.find(c => c.id === id)?.name ?? id;
-  const resolveCity = (id: string) => INITIAL_CITIES.find(c => c.id === id)?.name ?? id;
-  const resolveShift = (id: string) => INITIAL_SHIFTS.find(s => s.id === id)?.name ?? id;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode] = useState<'edit'>('edit');
@@ -129,7 +124,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             </div>
           </div>
           <div className="flex gap-2">
-            <StatusBadge id={employee.status_id} statuses={INITIAL_EMPLOYEE_STATUSES} />
+            <StatusBadge id={employee.status_id} statuses={employeeStatuses} />
           </div>
         </div>
 
@@ -166,7 +161,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
                   <div>
                     <div className="text-xs text-app-text-secondary font-medium">Mes asignado</div>
                     <div className="text-sm font-bold text-primary-700 dark:text-primary-300 capitalize">{employee.vacation_month || 'Sin asignar'}</div>
-                    {employee.vacation_year && <div className="text-[10px] text-app-text-secondary">{employee.vacation_year}</div>}
+                    {employee.vacation_month && <div className="text-[10px] text-app-text-secondary">{new Date().getFullYear()}</div>}
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
