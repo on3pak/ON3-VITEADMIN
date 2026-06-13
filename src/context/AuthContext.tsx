@@ -15,6 +15,7 @@ interface AuthState {
   error: string | null;
   employee: Employee | null;
   vacations: VacationRequest[];
+  darkMode: boolean;
 }
 
 interface AuthContextProps {
@@ -26,10 +27,12 @@ interface AuthContextProps {
   error: string | null;
   employee: Employee | null;
   vacations: VacationRequest[];
+  darkMode: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   hasRole: (roles: UserRole[]) => boolean;
   clearError: () => void;
+  setDarkMode: (dark: boolean) => void;
   triggerToast: (message: string, type: 'success' | 'error' | 'info') => void;
   toast: { message: string; type: 'success' | 'error' | 'info' } | null;
 }
@@ -38,8 +41,8 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 function mapApiUserToAppUser(apiUser: {
   id: string; employee_id: string | null; email: string; full_name: string;
-  role: string; status: 'ACTIVE' | 'INACTIVE'; language: 'ES' | 'EN';
-  avatar_url?: string | null; city_id?: string | null;
+  role: string; status: string; language: 'ES' | 'EN';
+  avatar_url?: string | null; city_id?: string | null; dark_mode?: boolean;
 }): User {
   return {
     id: apiUser.id,
@@ -49,13 +52,19 @@ function mapApiUserToAppUser(apiUser: {
     full_name: apiUser.full_name.split(' ').slice(0, 2).join(' '),
     password: '',
     role: apiUser.role as UserRole,
-    status: apiUser.status,
+    status: apiUser.status.toLowerCase() as 'active' | 'inactive',
     language: apiUser.language,
     city_id: apiUser.city_id ?? '',
     avatar_url: apiUser.avatar_url ?? undefined,
+    dark_mode: apiUser.dark_mode,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
+}
+
+function applyDarkMode(dark: boolean) {
+  document.documentElement.classList.toggle('dark', dark);
+  localStorage.setItem(STORAGE_KEYS.DARK_MODE, String(dark));
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -68,7 +77,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     error: null,
     employee: null,
     vacations: [],
+    darkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true',
   });
+
+  // Apply initial dark mode from localStorage to DOM immediately
+  useEffect(() => {
+    applyDarkMode(state.darkMode);
+  }, []);
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
@@ -95,6 +110,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const profile = await authApi.me();
         console.log('[Auth] init profile response:', profile);
         const appUser = mapApiUserToAppUser(profile.user);
+        const darkMode = profile.user.dark_mode ?? state.darkMode;
+        applyDarkMode(darkMode);
         localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(appUser));
         setState({
           isAuthenticated: true,
@@ -105,11 +122,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           error: null,
           employee: profile.employee,
           vacations: profile.vacations,
+          darkMode,
         });
       } catch {
         localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
         localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
-        setState({
+        setState(prev => ({
+          ...prev,
           isAuthenticated: false,
           user: null,
           token: null,
@@ -118,7 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           error: null,
           employee: null,
           vacations: [],
-        });
+        }));
       }
     };
 
@@ -140,6 +159,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let employee: Employee | null = null;
       let vacations: VacationRequest[] = [];
       let appUser: User;
+      let darkMode = state.darkMode;
 
       try {
         const profile = await authApi.me();
@@ -147,6 +167,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         appUser = mapApiUserToAppUser(profile.user);
         employee = profile.employee;
         vacations = profile.vacations;
+        darkMode = profile.user.dark_mode ?? state.darkMode;
+        applyDarkMode(darkMode);
       } catch {
         throw new api.ApiError(0, ['Error al obtener perfil del usuario'], 'ProfileError');
       }
@@ -162,6 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error: null,
         employee,
         vacations,
+        darkMode,
       });
 
       triggerToast(`¡Bienvenido, ${appUser.full_name}! Rol: ${appUser.role}`, 'success');
@@ -171,7 +194,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const serverMsg = err instanceof api.ApiError
         ? err.messages.join('. ')
         : 'Error de conexión con el servidor.';
-      setState({
+      setState(prev => ({
+        ...prev,
         isAuthenticated: false,
         user: null,
         token: null,
@@ -180,7 +204,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error: serverMsg,
         employee: null,
         vacations: [],
-      });
+      }));
       triggerToast(serverMsg, 'error');
       return false;
     }
@@ -190,7 +214,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     authApi.logout().catch(() => {});
     localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
-    setState({
+    setState(prev => ({
+      ...prev,
       isAuthenticated: false,
       user: null,
       token: null,
@@ -199,9 +224,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       error: null,
       employee: null,
       vacations: [],
-    });
+    }));
     triggerToast('Sesión cerrada correctamente.', 'info');
   };
+
+  const setDarkMode = useCallback((dark: boolean) => {
+    applyDarkMode(dark);
+    setState(prev => ({ ...prev, darkMode: dark }));
+    authApi.updateProfile({ dark_mode: dark }).catch(() => {});
+  }, []);
 
   const hasRole = (roles: UserRole[]): boolean => {
     if (!state.isAuthenticated || !state.user) return false;
@@ -213,7 +244,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, employee: state.employee, vacations: state.vacations, login, logout, hasRole, clearError, triggerToast, toast }}>
+    <AuthContext.Provider value={{ ...state, employee: state.employee, vacations: state.vacations, login, logout, hasRole, clearError, setDarkMode, triggerToast, toast }}>
       {children}
     </AuthContext.Provider>
   );

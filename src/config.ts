@@ -3,6 +3,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:65
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'on3_auth_token',
   AUTH_USER: 'on3_auth_user',
+  DARK_MODE: 'on3_dark_mode',
 } as const;
 
 export const PAGINATION = {

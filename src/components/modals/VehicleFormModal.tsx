@@ -16,7 +16,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
   const [model, setModel] = useState('');
   const [brand, setBrand] = useState('');
   const [vehicleTypeId, setVehicleTypeId] = useState('vt_1');
-  const [status, setStatus] = useState<VehicleStatus>('ACTIVE');
+  const [status, setStatus] = useState<VehicleStatus>('active');
   const [vin, setVin] = useState('');
   const [registrationDate, setRegistrationDate] = useState('');
   const [itvExpiration, setItvExpiration] = useState('');
@@ -55,7 +55,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setModel('');
       setBrand('');
       setVehicleTypeId('vt_1');
-      setStatus('ACTIVE');
+      setStatus('active');
       setVin('');
       setRegistrationDate('');
       setItvExpiration('');

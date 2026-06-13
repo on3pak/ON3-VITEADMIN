@@ -16,12 +16,8 @@ interface SidebarProps {
   setSidebarOpen?: (open: boolean) => void;
 }
 
-const canAccessUserCrud = (role?: string): boolean => {
-  return role === 'ROOT' || role === 'ADMIN';
-};
-
 const canSeeUserCrud = (role?: string): boolean => {
-  return role === 'ROOT' || role === 'ADMIN' || role === 'MANAGER';
+  return role === 'ROOT' || role === 'ADMIN';
 };
 
 const dashboardItems = (role?: string) => {
@@ -40,13 +36,13 @@ const dashboardItems = (role?: string) => {
 const adminItems = (role?: string) => {
   if (!canSeeUserCrud(role)) return [];
   return [
-    { id: 'USERS_CRUD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Roles, permisos y acceso', disabled: !canAccessUserCrud(role) },
-    { id: 'EMPLOYEES_CRUD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Personal, contratos y turnos', disabled: !canAccessUserCrud(role) },
-    { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Ubicaciones y áreas de trabajo', disabled: !canAccessUserCrud(role) },
-    { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Tareas, categorías y zonas', disabled: !canAccessUserCrud(role) },
-    { id: 'VEHICLES_CRUD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Flota, mantenimiento y combustible', disabled: !canAccessUserCrud(role) },
-    { id: 'MACHINERY_CRUD' as DashboardViewType, label: 'Maquinaria', icon: <Wrench className="h-5 w-5" />, description: 'Equipos y mantenimiento', disabled: !canAccessUserCrud(role) },
-    { id: 'INVENTORY_CRUD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Ropa y EPIs', disabled: !canAccessUserCrud(role) },
+    ...(role === 'ROOT' ? [{ id: 'USERS_CRUD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Roles, permisos y acceso' }] : []),
+    { id: 'EMPLOYEES_CRUD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Personal, contratos y turnos' },
+    { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Ubicaciones y áreas de trabajo' },
+    { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Tareas, categorías y zonas' },
+    { id: 'VEHICLES_CRUD' as DashboardViewType, label: 'Vehículos', icon: <Truck className="h-5 w-5" />, description: 'Flota, mantenimiento y combustible' },
+    { id: 'MACHINERY_CRUD' as DashboardViewType, label: 'Maquinaria', icon: <Wrench className="h-5 w-5" />, description: 'Equipos y mantenimiento' },
+    { id: 'INVENTORY_CRUD' as DashboardViewType, label: 'Inventario', icon: <Package className="h-5 w-5" />, description: 'Ropa y EPIs' },
   ];
 };
 
@@ -66,44 +62,10 @@ const profileItems = [
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarOpen, setSidebarOpen }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, darkMode, setDarkMode } = useAuth();
   const [activeSection, setActiveSection] = useState<'profile' | 'dashboard' | 'admin' | 'apps'>('profile');
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('on3_profile_prefs');
-    if (saved) {
-      const prefs = JSON.parse(saved);
-      return prefs.theme === 'oscuro';
-    }
-    return false;
-  });
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('on3_profile_prefs');
-    let theme = 'claro';
-    if (saved) {
-      const prefs = JSON.parse(saved);
-      theme = prefs.theme || 'claro';
-    }
-    if (theme === 'oscuro') {
-      document.documentElement.classList.add('dark');
-    } else if (theme === 'sistema') {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.classList.add('dark');
-      }
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    document.documentElement.classList.toggle('dark', next);
-    const saved = localStorage.getItem('on3_profile_prefs');
-    const prefs = saved ? JSON.parse(saved) : {};
-    prefs.theme = next ? 'oscuro' : 'claro';
-    localStorage.setItem('on3_profile_prefs', JSON.stringify(prefs));
-  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -298,7 +260,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                         Modo oscuro
                       </span>
                       <div
-                        onClick={toggleDarkMode}
+                        onClick={() => setDarkMode(!darkMode)}
                         className={`w-9 h-5 rounded-full relative cursor-pointer transition-colors ${darkMode ? 'bg-primary-500' : 'bg-sidebar-border'}`}
                       >
                         <div className={`w-3.5 h-3.5 bg-sidebar-text-active rounded-full shadow-xs absolute top-0.5 transition-transform ${darkMode ? 'translate-x-4' : 'left-0.5'}`} />

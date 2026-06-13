@@ -1,4 +1,4 @@
-export type TaskStatus = 'PENDING' | 'COMPLETED';
+export type TaskStatus = 'pending' | 'completed';
 
 export interface StaffRequirement {
   oficial: string | null;

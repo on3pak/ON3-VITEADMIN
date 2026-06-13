@@ -122,7 +122,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const updated = await usersApi.update(id, { status: 'DELETED' as const });
+      const updated = await usersApi.update(id, { status: 'deleted' as const });
       setUsers((prev) => prev.map(u => u.id === id ? updated : u));
       triggerToast(`Usuario ${target.username} dado de baja.`, 'success');
       return { success: true, message: 'Usuario dado de baja.' };
@@ -155,7 +155,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!target) return { success: false, message: 'Usuario no encontrado.' };
 
     try {
-      const updated = await usersApi.update(id, { status: 'ACTIVE' });
+      const updated = await usersApi.update(id, { status: 'active' });
       setUsers((prev) => prev.map(u => u.id === id ? updated : u));
       triggerToast(`Usuario ${target.username} restaurado.`, 'success');
       return { success: true, message: 'Usuario restaurado.' };

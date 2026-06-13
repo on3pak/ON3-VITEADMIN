@@ -25,8 +25,8 @@ export const DashboardUsersView: React.FC = () => {
     [users, userCityId]
   );
 
-  const activeUsers = scopedUsers.filter(u => u.status === 'ACTIVE');
-  const inactiveUsers = scopedUsers.filter(u => u.status === 'INACTIVE');
+  const activeUsers = scopedUsers.filter(u => u.status.toLowerCase() === 'active');
+  const inactiveUsers = scopedUsers.filter(u => u.status.toLowerCase() === 'inactive');
   const totalUsers = scopedUsers.length;
   const activeRate = totalUsers > 0 ? (activeUsers.length / totalUsers) * 100 : 0;
 

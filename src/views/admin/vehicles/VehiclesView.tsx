@@ -215,7 +215,7 @@ export const VehiclesView: React.FC<{ onViewVehicle?: (id: string) => void }> = 
                         <td className="py-3.5 px-4">
                           <div className="flex justify-center">
                             <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold rounded-full border text-center ${getBadgeStyle(v.status)}`}>
-                              {v.status === 'ACTIVE' ? 'Activo' : v.status === 'MAINTENANCE' ? 'Mantenimiento' : v.status === 'BROKEN' ? 'Averiado' : 'Baja'}
+                              {v.status.toLowerCase() === 'active' ? 'Activo' : v.status.toLowerCase() === 'maintenance' ? 'Mantenimiento' : v.status.toLowerCase() === 'broken' ? 'Averiado' : 'Baja'}
                             </span>
                           </div>
                         </td>

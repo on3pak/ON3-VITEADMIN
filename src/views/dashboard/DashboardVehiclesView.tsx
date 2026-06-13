@@ -38,10 +38,10 @@ export const DashboardVehiclesView: React.FC = () => {
     [vehicles, userCityId]
   );
 
-  const activeVehicles = scopedVehicles.filter(v => v.status === 'ACTIVE');
-  const maintenanceVehicles = scopedVehicles.filter(v => v.status === 'MAINTENANCE');
-  const brokenVehicles = scopedVehicles.filter(v => v.status === 'BROKEN');
-  const inactiveVehicles = scopedVehicles.filter(v => v.status === 'RETIRED');
+  const activeVehicles = scopedVehicles.filter(v => v.status.toLowerCase() === 'active');
+  const maintenanceVehicles = scopedVehicles.filter(v => v.status.toLowerCase() === 'maintenance');
+  const brokenVehicles = scopedVehicles.filter(v => v.status.toLowerCase() === 'broken');
+  const inactiveVehicles = scopedVehicles.filter(v => v.status.toLowerCase() === 'retired');
   const totalVehicles = scopedVehicles.length;
   const activeRate = totalVehicles > 0 ? (activeVehicles.length / totalVehicles) * 100 : 0;
 

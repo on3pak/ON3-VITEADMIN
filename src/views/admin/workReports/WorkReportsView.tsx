@@ -163,12 +163,12 @@ export const WorkReportsView: React.FC = () => {
     return getWorkReportById(workReportId);
   }, [workReportId, getWorkReportById]);
 
-  const canEdit = workReport ? workReport.status !== 'CONFIRMED' && !isSavedMode : true;
+  const canEdit = workReport ? workReport.status.toLowerCase() !== 'confirmed' && !isSavedMode : true;
   const isVehicleBroken = workReport ? !!workReport.vehicle_breakdown_type : false;
 
   const wcVehicles = useMemo(() => {
     if (!myEmployee?.work_center_id) return [];
-    return vehicles.filter((v) => v.work_center_id === myEmployee.work_center_id && v.status === 'ACTIVE');
+    return vehicles.filter((v) => v.work_center_id === myEmployee.work_center_id && v.status.toLowerCase() === 'active');
   }, [vehicles, myEmployee]);
 
   const machineryItems = useMemo(() => {
@@ -202,7 +202,7 @@ export const WorkReportsView: React.FC = () => {
   }, [selectedHistoryId, getWorkReportById]);
 
   const handleToggleCompleted = useCallback((serviceId: string, taskId: string) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     const updated = workReport.services.map((entry) => {
       if (entry.service_id !== serviceId) return entry;
       return {
@@ -216,7 +216,7 @@ export const WorkReportsView: React.FC = () => {
   }, [workReport, canEdit, updateServices]);
 
   const handleAddService = (serviceId: string) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     const service = services.find((s) => s.id === serviceId);
     if (!service) return;
     const entry: import('../../../types').WorkServiceEntry = {
@@ -228,7 +228,7 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleRemoveService = (serviceId: string) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     updateServices(workReport.id, workReport.services.filter((e) => e.service_id !== serviceId));
   };
 
@@ -242,7 +242,7 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleVehicleChange = (vehicleId: string, asReplacement?: boolean) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     if (asReplacement) {
       updateVehicle(workReport.id, { replacement_vehicle_id: vehicleId || undefined });
     } else {
@@ -251,12 +251,12 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleFieldChange = (field: string, value: number | undefined) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     updateVehicle(workReport.id, { [field]: value });
   };
 
   const handleToggleTool = (toolId: string) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     toggleTool(workReport.id, toolId);
   };
 
@@ -267,7 +267,7 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleConfirmBreakdown = () => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED' || !breakdownType) return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed' || !breakdownType) return;
     const label = BREAKDOWN_TYPES.find((b) => b.id === breakdownType)?.label ?? breakdownType;
     updateVehicle(workReport.id, {
       vehicle_breakdown_type: label,
@@ -279,7 +279,7 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleRemoveBreakdown = () => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     updateVehicle(workReport.id, {
       vehicle_breakdown_type: undefined,
       vehicle_breakdown_notes: undefined,
@@ -293,7 +293,7 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleRemoveReplacement = () => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     updateVehicle(workReport.id, {
       replacement_vehicle_id: undefined,
       replacement_km_start: undefined,
@@ -313,7 +313,7 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleConfirmMachineryBreakdown = () => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED' || !machineryBreakdownToolId || !machineryBreakdownType) return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed' || !machineryBreakdownToolId || !machineryBreakdownType) return;
     const label = BREAKDOWN_TYPES.find((b) => b.id === machineryBreakdownType)?.label ?? machineryBreakdownType;
     setMachineryBreakdown(workReport.id, machineryBreakdownToolId, label, machineryBreakdownNotes || undefined);
     setShowMachineryBreakdownModal(false);
@@ -323,13 +323,13 @@ export const WorkReportsView: React.FC = () => {
   };
 
   const handleRemoveMachineryBreakdown = (toolId: string) => {
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     setMachineryBreakdown(workReport.id, toolId, undefined);
   };
 
   const handleNotesChange = (value: string) => {
     setNotes(value);
-    if (!workReport || !canEdit || workReport.status === 'CONFIRMED') return;
+    if (!workReport || !canEdit || workReport.status.toLowerCase() === 'confirmed') return;
     updateNotes(workReport.id, value);
   };
 
@@ -389,7 +389,7 @@ export const WorkReportsView: React.FC = () => {
 
   const renderHoyTab = () => {
     if (!workReport) return null;
-    const isConfirmed = workReport.status === 'CONFIRMED';
+    const isConfirmed = workReport.status.toLowerCase() === 'confirmed';
 
     return (
       <div className="space-y-5">
@@ -998,7 +998,7 @@ export const WorkReportsView: React.FC = () => {
         <SectionCard
           icon={<Wrench className="h-4 w-4" />}
           title="Herramientas / Maquinaria"
-          action={canEdit && workReport.status !== 'CONFIRMED' ? (
+          action={canEdit && workReport.status.toLowerCase() !== 'confirmed' ? (
             <div className="relative">
               <button
                 onMouseDown={(e) => { e.stopPropagation(); setShowToolPicker(!showToolPicker); }}
@@ -1101,7 +1101,7 @@ export const WorkReportsView: React.FC = () => {
                             </button>
                           </>
                         )}
-                        {isBroken && canEdit && workReport.status !== 'CONFIRMED' && (
+                        {isBroken && canEdit && workReport.status.toLowerCase() !== 'confirmed' && (
                           <button
                             onClick={() => handleRemoveMachineryBreakdown(toolId)}
                             className="p-1.5 rounded-md hover:bg-amber-50 dark:hover:bg-amber-900/20 text-app-text-secondary hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
@@ -1381,7 +1381,7 @@ export const WorkReportsView: React.FC = () => {
             Historial
           </button>
         </div>
-        {activeTab === 'hoy' && workReport && workReport.status !== 'CONFIRMED' && canEdit && !isSavedMode && !saveMsg && (
+        {activeTab === 'hoy' && workReport && workReport.status.toLowerCase() !== 'confirmed' && canEdit && !isSavedMode && !saveMsg && (
           <button
             onClick={handleSave}
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold text-xs hover:bg-emerald-700 transition-colors shadow-sm shrink-0"

@@ -88,11 +88,11 @@ export const UsersView: React.FC = () => {
   };
 
   const activeUsers = useMemo(() => {
-    return users.filter((u) => u.status !== 'DELETED');
+    return users.filter((u) => u.status.toLowerCase() !== 'deleted');
   }, [users]);
 
   const deletedUsers = useMemo(() => {
-    return users.filter((u) => u.status === 'DELETED');
+    return users.filter((u) => u.status.toLowerCase() === 'deleted');
   }, [users]);
 
   const filteredActiveUsers = useMemo(() => {

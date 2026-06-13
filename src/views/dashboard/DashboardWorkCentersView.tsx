@@ -24,8 +24,8 @@ export const DashboardWorkCentersView: React.FC = () => {
     [workCenters, userCityId]
   );
 
-  const activeCenters = scopedWorkCenters.filter(w => w.status === 'ACTIVE');
-  const inactiveCenters = scopedWorkCenters.filter(w => w.status === 'INACTIVE');
+  const activeCenters = scopedWorkCenters.filter(w => w.status.toLowerCase() === 'active');
+  const inactiveCenters = scopedWorkCenters.filter(w => w.status.toLowerCase() === 'inactive');
   const totalCenters = scopedWorkCenters.length;
   const activeRate = totalCenters > 0 ? (activeCenters.length / totalCenters) * 100 : 0;
 

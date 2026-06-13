@@ -21,7 +21,7 @@ export interface VacationRequest {
   id: string;
   employee_id: string;
   type: 'MONTH_CHANGE' | 'FREE_DAYS' | 'VACATION_CHANGE';
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  status: 'pending' | 'approved' | 'rejected';
   requested_month?: VacationMonth;
   requested_days?: string[];
   notes?: string;

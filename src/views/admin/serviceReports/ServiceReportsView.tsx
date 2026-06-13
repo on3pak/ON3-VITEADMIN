@@ -35,15 +35,15 @@ function formatEmployeeName(emp: { name: string; last_name1: string; last_name2:
 }
 
 const ATTENDANCE_LABELS: Record<AttendanceStatus, string> = {
-  PRESENT: 'Presente',
-  ABSENT: 'Ausente',
-  JUSTIFIED_ABSENCE: 'Ausente Justificado',
+  present: 'Presente',
+  absent: 'Ausente',
+  justified_absence: 'Ausente Justificado',
 };
 
 const ATTENDANCE_COLORS: Record<AttendanceStatus, string> = {
-  PRESENT: 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800',
-  ABSENT: 'text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800',
-  JUSTIFIED_ABSENCE: 'text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800',
+  present: 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800',
+  absent: 'text-rose-600 bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800',
+  justified_absence: 'text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800',
 };
 
 export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diario' | 'historial') => void }> = ({ onTabChange }) => {
@@ -60,7 +60,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const userCityId = user?.role === 'ROOT' ? undefined : user?.city_id;
 
   const scopeWorkCenters = useMemo(
-    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId && wc.status === 'ACTIVE') : INITIAL_WORK_CENTERS.filter((wc) => wc.status === 'ACTIVE'),
+    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId && wc.status.toLowerCase() === 'active') : INITIAL_WORK_CENTERS.filter((wc) => wc.status.toLowerCase() === 'active'),
     [userCityId]
   );
 
@@ -211,9 +211,9 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   };
 
   const getAttendanceFor = (employeeId: string): AttendanceStatus => {
-    if (!currentReport) return 'PRESENT';
+    if (!currentReport) return 'present';
     const a = currentReport.attendance.find((at) => at.employee_id === employeeId);
-    return a?.status ?? 'PRESENT';
+    return a?.status ?? 'present';
   };
 
   const renderTabButton = (tab: Tab, icon: React.ReactNode, label: string) => (
@@ -279,7 +279,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
               if (!emp) return null;
               const attendance = getAttendanceFor(a.employee_id);
                   const isOficial = emp.category_id === 'ec_000003' || emp.category_id === 'ec_000004';
-                  const wcVehicles = vehicles.filter((v) => v.work_center_id === wcId && v.status === 'ACTIVE');
+                  const wcVehicles = vehicles.filter((v) => v.work_center_id === wcId && v.status.toLowerCase() === 'active');
                   return (
                     <div key={a.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-app-bg/50 border border-app-border/50">
                       <div className="flex items-center gap-2 min-w-0">
@@ -543,7 +543,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
         <div className="space-y-2">
           {historial.map((r) => {
             const totalAssignments = r.assignments.length;
-            const presentCount = r.attendance.filter((a) => a.status === 'PRESENT').length;
+            const presentCount = r.attendance.filter((a) => a.status.toLowerCase() === 'present').length;
             return (
               <div key={r.id} className="bg-app-card rounded-xl border border-app-card-border p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -556,7 +556,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                   </div>
                 </div>
                 <span className="text-[11px] font-mono text-app-text-secondary bg-app-bg px-2 py-0.5 rounded-full">
-                  {r.status === 'CONFIRMED' ? 'Confirmado' : 'Borrador'}
+                  {r.status.toLowerCase() === 'confirmed' ? 'Confirmado' : 'Borrador'}
                 </span>
               </div>
             );

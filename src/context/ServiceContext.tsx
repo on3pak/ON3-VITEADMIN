@@ -41,7 +41,7 @@ export const ServiceProvider: React.FC<{ children: ReactNode }> = ({ children })
       category: s.category,
       staff_requirement: s.staff_requirement,
       totalTasks: s.tasks?.length ?? 0,
-      completedTasks: s.tasks?.filter((t) => t.status === 'COMPLETED').length ?? 0,
+      completedTasks: s.tasks?.filter((t) => t.status.toLowerCase() === 'completed').length ?? 0,
     }));
   }, [services]);
 

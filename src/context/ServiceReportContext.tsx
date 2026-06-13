@@ -94,7 +94,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
       date: tomorrow,
       type: 'PREVIO',
       city_id: cityId,
-      status: 'DRAFT',
+      status: 'draft',
       assignments: [],
       attendance: [],
       created_at: now,
@@ -126,10 +126,10 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
       date: today,
       type: 'DIARIO',
       city_id: cityId,
-      status: 'DRAFT',
+      status: 'draft',
       assignments: previo ? [...previo.assignments] : [],
       attendance: previo
-        ? [...new Map(previo.assignments.map((a) => [a.employee_id, { employee_id: a.employee_id, status: 'PRESENT' as AttendanceStatus }])).values()]
+        ? [...new Map(previo.assignments.map((a) => [a.employee_id, { employee_id: a.employee_id, status: 'present' as AttendanceStatus }])).values()]
         : [],
       created_at: now,
       updated_at: now,
@@ -160,7 +160,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
         const attendance = r.type === 'DIARIO'
           ? (r.attendance.some((a) => a.employee_id === data.employee_id)
             ? r.attendance
-            : [...r.attendance, { employee_id: data.employee_id, status: 'PRESENT' as AttendanceStatus }])
+            : [...r.attendance, { employee_id: data.employee_id, status: 'present' as AttendanceStatus }])
           : r.attendance;
         return { ...r, assignments: [...r.assignments, newAssignment], attendance, updated_at: new Date().toISOString() };
       })
@@ -216,11 +216,11 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
           result = { success: false, error: 'Debe haber al menos una asignación para guardar el parte.' };
           return r;
         }
-        return { ...r, status: 'CONFIRMED', updated_at: new Date().toISOString() };
+        return { ...r, status: 'confirmed', updated_at: new Date().toISOString() };
       })
     );
     if (result.success && getToken()) {
-      serviceReportsApi.update(reportId, { status: 'CONFIRMED' }).catch(() => {});
+      serviceReportsApi.update(reportId, { status: 'confirmed' }).catch(() => {});
     }
     return result;
   }, [persist]);

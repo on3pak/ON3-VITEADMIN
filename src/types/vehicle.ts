@@ -6,7 +6,7 @@ export interface VehicleTypeOption {
   category: VehicleType;
 }
 
-export type VehicleStatus = 'ACTIVE' | 'MAINTENANCE' | 'BROKEN' | 'RETIRED';
+export type VehicleStatus = 'active' | 'maintenance' | 'broken' | 'retired';
 
 export type FuelType = 'DIESEL' | 'PETROL' | 'ELECTRIC' | 'LPG';
 

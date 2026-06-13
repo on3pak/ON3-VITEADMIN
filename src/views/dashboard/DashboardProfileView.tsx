@@ -110,7 +110,7 @@ export const DashboardProfileView: React.FC = () => {
     vacationsApi.create({
       employee_id: myEmployee.id,
       type: data.type,
-      status: 'PENDING',
+      status: 'pending',
       requested_month: data.requested_month,
     }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
     setCambioVacacionesOpen(false);
@@ -122,14 +122,14 @@ export const DashboardProfileView: React.FC = () => {
     vacationsApi.create({
       employee_id: myEmployee.id,
       type: data.type,
-      status: 'PENDING',
+      status: 'pending',
       requested_days: data.requested_days,
     }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
     setSolicitarDiasOpen(false);
   };
 
   const pendingRequests = useMemo(
-    () => myEmployee ? vacationRequests.filter((r) => r.employee_id === myEmployee.id && r.status === 'PENDING').length : 0,
+    () => myEmployee ? vacationRequests.filter((r) => r.employee_id === myEmployee.id && r.status.toLowerCase() === 'pending').length : 0,
     [myEmployee, vacationRequests]
   );
 

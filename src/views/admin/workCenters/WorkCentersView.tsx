@@ -208,20 +208,20 @@ export const WorkCentersView: React.FC = () => {
                           <div className="flex justify-center">
                             <button
                               onClick={async () => {
-                                const newStatus = wc.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+                                const newStatus = wc.status.toLowerCase() === 'active' ? 'inactive' : 'active';
                                 await workCentersApi.update(wc.id, { status: newStatus });
                                 loadWorkCenters();
                               }}
                               disabled={isReadOnlyOperator}
-                              title={wc.status === 'ACTIVE' ? 'Desactivar' : 'Activar'}
+                              title={wc.status.toLowerCase() === 'active' ? 'Desactivar' : 'Activar'}
                               className={`relative inline-flex h-5 w-9 items-center rounded-full transition-all cursor-pointer ${
-                                wc.status === 'ACTIVE'
+                                wc.status.toLowerCase() === 'active'
                                   ? 'bg-emerald-500 hover:bg-emerald-600 shadow-sm shadow-emerald-500/30'
                                   : 'bg-app-border hover:bg-app-text-secondary'
                               } ${isReadOnlyOperator ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                               <span className={`inline-block h-3 w-3 transform rounded-full bg-white shadow-sm transition-transform ${
-                                wc.status === 'ACTIVE' ? 'translate-x-4' : 'translate-x-1'
+                                wc.status.toLowerCase() === 'active' ? 'translate-x-4' : 'translate-x-1'
                               }`} />
                             </button>
                           </div>

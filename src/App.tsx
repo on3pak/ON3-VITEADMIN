@@ -180,6 +180,7 @@ const MainLayout: React.FC = () => {
   };
 
   return (
+    <LookupProvider>
     <div className="min-h-screen bg-[#f8f9fc] text-app-text font-sans antialiased flex">
       <Sidebar 
         currentView={currentView} 
@@ -218,6 +219,7 @@ const MainLayout: React.FC = () => {
 
       <Toast />
     </div>
+    </LookupProvider>
   );
 };
 
@@ -235,7 +237,6 @@ export default function App() {
   return (
     <AuthProvider>
       <LoadingProvider>
-        <LookupProvider>
         <UserProvider>
           <EmployeeProvider>
             <VehicleProvider>
@@ -255,7 +256,6 @@ export default function App() {
             </VehicleProvider>
           </EmployeeProvider>
         </UserProvider>
-        </LookupProvider>
       </LoadingProvider>
     </AuthProvider>
   );

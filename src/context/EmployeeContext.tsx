@@ -14,7 +14,7 @@ interface EmployeeContextType {
   deleteEmployee: (id: string) => Promise<void>;
   vacationRequests: VacationRequest[];
   createVacationRequest: (data: Omit<VacationRequest, 'id' | 'created_at' | 'resolved_at'>) => Promise<{ success: boolean }>;
-  resolveVacationRequest: (id: string, status: 'APPROVED' | 'REJECTED') => Promise<void>;
+  resolveVacationRequest: (id: string, status: 'approved' | 'rejected') => Promise<void>;
   getVacationRequestsByEmployee: (employeeId: string) => VacationRequest[];
 }
 
@@ -95,7 +95,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   }, []);
 
-  const resolveVacationRequest = useCallback(async (id: string, status: 'APPROVED' | 'REJECTED') => {
+  const resolveVacationRequest = useCallback(async (id: string, status: 'approved' | 'rejected') => {
     try {
       const updated = await vacationsApi.update(id, { status });
       setVacationRequests((prev) =>

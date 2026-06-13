@@ -21,7 +21,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<UserRole>('USER');
-  const [status, setStatus] = useState<'ACTIVE' | 'INACTIVE'>('ACTIVE');
+  const [status, setStatus] = useState<'active' | 'inactive'>('active');
   const [employeeId, setEmployeeId] = useState('');
   const [employeeLookupStatus, setEmployeeLookupStatus] = useState<'idle' | 'found' | 'taken' | 'not_found'>('idle');
   const [formError, setFormError] = useState<string | null>(null);
@@ -55,7 +55,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setUsername(editingUser.username);
       setEmail(editingUser.email);
       setRole(editingUser.role);
-      setStatus(editingUser.status);
+      setStatus(editingUser.status === 'deleted' ? 'active' : editingUser.status);
       setEmployeeId(editingUser.employee_id || '');
       setPassword(editingUser.password || '');
     } else {
@@ -63,7 +63,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setUsername('');
       setEmail('');
       setRole('USER');
-      setStatus('ACTIVE');
+      setStatus('active');
       setEmployeeId('');
     }
     setFormError(null);

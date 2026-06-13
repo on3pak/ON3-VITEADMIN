@@ -13,6 +13,7 @@ export interface AuthProfile {
     language: 'ES' | 'EN';
     avatar_url?: string | null;
     city_id?: string | null;
+    dark_mode?: boolean;
   };
   employee: Employee | null;
   vacations: VacationRequest[];
@@ -27,4 +28,6 @@ export const authApi = {
     api.get<AuthProfile>(`${BASE}/me`),
   logout: () =>
     api.postRaw<{ message: string }>(`${BASE}/logout`, {}),
+  updateProfile: (body: { dark_mode?: boolean }) =>
+    api.patch<AuthProfile>(BASE, 'me', body),
 };

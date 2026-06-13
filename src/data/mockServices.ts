@@ -55,7 +55,7 @@ function generateTasks(serviceId: string): ServiceTask[] {
         day_index: day,
         task_index: t,
         description: `${TASK_TEMPLATES[t]} - ${DAY_ZONES[day]}`,
-        status: 'PENDING',
+        status: 'pending',
         zone: DAY_ZONES[day],
         assigned_to: null,
         created_at: now,

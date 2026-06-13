@@ -62,7 +62,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
   const serviceProgress = useMemo(() => {
     if (!service) return { completed: 0, total: 0 };
     const relevantReports = workReports.filter((r) =>
-      r.services.some((s) => s.service_id === serviceId) && r.status === 'CONFIRMED'
+      r.services.some((s) => s.service_id === serviceId) && r.status.toLowerCase() === 'confirmed'
     );
     const completedTasks = new Set<string>();
     let totalTasks = service.tasks.length;

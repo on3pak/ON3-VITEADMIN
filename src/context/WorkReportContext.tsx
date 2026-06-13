@@ -78,7 +78,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
       id: crypto.randomUUID(),
       employee_id: employeeId,
       date: today,
-      status: 'DRAFT',
+      status: 'draft',
       services: prefillServices ?? [],
       tools: [],
       created_at: now,
@@ -92,7 +92,7 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
   }, [reports, persist]);
 
   const getWorkReportHistory = useCallback((employeeId: string): WorkReport[] => {
-    return reports.filter((r) => r.employee_id === employeeId && r.status === 'CONFIRMED');
+    return reports.filter((r) => r.employee_id === employeeId && r.status.toLowerCase() === 'confirmed');
   }, [reports]);
 
   const getWorkReportById = useCallback((id: string) => {
@@ -209,11 +209,11 @@ export const WorkReportProvider: React.FC<{ children: ReactNode }> = ({ children
           result = { success: false, error: 'Debe haber al menos un servicio para guardar el parte.' };
           return r;
         }
-        return { ...r, status: 'CONFIRMED', updated_at: new Date().toISOString() };
+        return { ...r, status: 'confirmed', updated_at: new Date().toISOString() };
       })
     );
     if (result.success && getToken()) {
-      workReportsApi.update(reportId, { status: 'CONFIRMED' }).catch(() => {});
+      workReportsApi.update(reportId, { status: 'confirmed' }).catch(() => {});
     }
     return result;
   }, [persist]);

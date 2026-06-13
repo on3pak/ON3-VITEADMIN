@@ -11,8 +11,8 @@ export type DashboardViewType =
   | 'PROFILE' | 'PROFILE_CONFIG';
 
 export const VIEW_ROLES: Record<DashboardViewType, string[]> = {
-  USER_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
-  USERS_CRUD: ['ROOT', 'ADMIN'],
+  USER_DASHBOARD: ['ROOT'],
+  USERS_CRUD: ['ROOT'],
   EMPLOYEES_CRUD: ['ROOT', 'ADMIN'],
   EMPLOYEE_DASHBOARD: ['ROOT', 'ADMIN', 'MANAGER'],
   EMPLOYEE_DETAIL: ['ROOT', 'ADMIN'],

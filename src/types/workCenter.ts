@@ -3,7 +3,7 @@ export interface WorkCenter {
   name: string;
   address: string;
   city_id: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: 'active' | 'inactive';
   created_at: string;
   updated_at: string;
 }

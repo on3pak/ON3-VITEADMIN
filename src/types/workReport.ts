@@ -1,4 +1,4 @@
-export type WorkReportStatus = 'DRAFT' | 'CONFIRMED';
+export type WorkReportStatus = 'draft' | 'confirmed';
 
 export interface TaskCompletion {
   task_id: string;

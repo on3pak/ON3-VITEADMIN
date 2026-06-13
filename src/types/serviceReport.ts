@@ -1,6 +1,6 @@
 export type ReportType = 'PREVIO' | 'DIARIO';
 
-export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'JUSTIFIED_ABSENCE';
+export type AttendanceStatus = 'present' | 'absent' | 'justified_absence';
 
 export interface ServiceAssignment {
   id: string;
@@ -23,7 +23,7 @@ export interface ServiceReport {
   date: string;
   type: ReportType;
   city_id: string;
-  status: 'DRAFT' | 'CONFIRMED';
+  status: 'draft' | 'confirmed';
   assignments: ServiceAssignment[];
   attendance: EmployeeAttendance[];
   created_at: string;

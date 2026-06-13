@@ -20,7 +20,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [cityId, setCityId] = useState('ci_000001');
-  const [status, setStatus] = useState<'ACTIVE' | 'INACTIVE'>('ACTIVE');
+  const [status, setStatus] = useState<'active' | 'inactive'>('active');
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
       setName('');
       setAddress('');
       setCityId('ci_000001');
-      setStatus('ACTIVE');
+      setStatus('active');
     }
     setFormError(null);
   }, [editingWorkCenter, isOpen]);
@@ -108,9 +108,9 @@ export const WorkCenterFormModal: React.FC<WorkCenterFormModalProps> = ({ isOpen
 
             <div>
               <label className="block text-xs font-bold text-app-text uppercase tracking-wide mb-1">Estado</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all text-app-text">
-                <option value="ACTIVE">Activo</option>
-                <option value="INACTIVE">Inactivo</option>
+              <select value={status} onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all text-app-text">
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
               </select>
             </div>
           </div>

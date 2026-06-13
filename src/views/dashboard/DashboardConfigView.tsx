@@ -69,13 +69,18 @@ function OptionGroup({ label, options, value, onChange }: {
 }
 
 export const DashboardConfigView: React.FC = () => {
-  const { user: loggedInUser } = useAuth();
+  const { user: loggedInUser, darkMode, setDarkMode } = useAuth();
   const [prefs, setPrefs] = useState<Prefs>(() => {
     const saved = localStorage.getItem('on3_profile_prefs');
-    return saved ? JSON.parse(saved) : { theme: 'sistema', language: 'es', notifications: true, emailReports: true, compactView: false, itemsPerPage: 10 };
+    return saved ? JSON.parse(saved) : { theme: darkMode ? 'oscuro' : 'sistema', language: 'es', notifications: true, emailReports: true, compactView: false, itemsPerPage: 10 };
   });
 
-  const savePrefs = (next: Prefs) => { setPrefs(next); localStorage.setItem('on3_profile_prefs', JSON.stringify(next)); };
+  const savePrefs = (next: Prefs) => {
+    setPrefs(next);
+    localStorage.setItem('on3_profile_prefs', JSON.stringify(next));
+    if (next.theme === 'oscuro') setDarkMode(true);
+    else if (next.theme === 'claro') setDarkMode(false);
+  };
 
   return (
     <div className="space-y-6">
