@@ -84,31 +84,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [toast]);
 
   useEffect(() => {
-    const initializeAuth = () => {
-      try {
-        const storedToken = getToken();
-        if (storedToken) {
-          const storedUser = localStorage.getItem(STORAGE_KEYS.AUTH_USER);
-          if (storedUser) {
-            const user = JSON.parse(storedUser) as User;
-            setState({
-              isAuthenticated: true,
-              user,
-              token: storedToken,
-              initializing: false,
-              submitting: false,
-              error: null,
-              employee: null,
-              vacations: [],
-            });
-            return;
-          }
-        }
-      } catch (err) {
-        console.error('Error auto-authenticating:', err);
+    const initializeAuth = async () => {
+      const storedToken = getToken();
+      if (!storedToken) {
+        setState(prev => ({ ...prev, initializing: false }));
+        return;
       }
 
-      setState(prev => ({ ...prev, initializing: false }));
+      try {
+        const profile = await authApi.me();
+        console.log('[Auth] init profile response:', profile);
+        const appUser = mapApiUserToAppUser(profile.user);
+        localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(appUser));
+        setState({
+          isAuthenticated: true,
+          user: appUser,
+          token: storedToken,
+          initializing: false,
+          submitting: false,
+          error: null,
+          employee: profile.employee,
+          vacations: profile.vacations,
+        });
+      } catch {
+        localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+        localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+        setState({
+          isAuthenticated: false,
+          user: null,
+          token: null,
+          initializing: false,
+          submitting: false,
+          error: null,
+          employee: null,
+          vacations: [],
+        });
+      }
     };
 
     const timer = setTimeout(initializeAuth, 600);
@@ -132,6 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       try {
         const profile = await authApi.me();
+        console.log('[Auth] profile response:', profile);
         appUser = mapApiUserToAppUser(profile.user);
         employee = profile.employee;
         vacations = profile.vacations;

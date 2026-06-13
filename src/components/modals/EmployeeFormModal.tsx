@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Employee, VacationMonth, ClothingSizes, ClothingSize, ShoeSize } from '../../types';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../data/mockEmployees';
+import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_SHIFTS, INITIAL_CITIES, INITIAL_EMPLOYEE_STATUSES } from '../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, ShieldAlert, UserPlus, Save, CreditCard, Mail, Award, Shirt, Plus, Minus, Search, CheckCircle2, AlertCircle, FileText } from 'lucide-react';
 import { useEmployees } from '../../context/EmployeeContext';
@@ -22,16 +22,23 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [last_name1, setLastName1] = useState('');
   const [last_name2, setLastName2] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [personal_email, setPersonal_email] = useState('');
   const [phone_fixed, setPhone_fixed] = useState('');
+  const [city_id, setCity_id] = useState('');
   const [category_id, setCategory_id] = useState('ec_000001');
   const [work_center_id, setWork_center_id] = useState('wc_000001');
   const [work_day_id, setWork_day_id] = useState('wd_1');
+  const [shift_id, setShift_id] = useState('');
   const [start_time, setStart_time] = useState('');
   const [end_time, setEnd_time] = useState('');
+  const [status_id, setStatus_id] = useState('es_1');
+  const [active, setActive] = useState(true);
   const [vacation_month, setVacation_month] = useState<'' | VacationMonth>('');
   const [vacation_days, setVacation_days] = useState(22);
   const [own_days, setOwn_days] = useState(0);
+  const [accumulated_days, setAccumulated_days] = useState(0);
+  const [excess_days, setExcess_days] = useState(0);
   const [irpf, setIrpf] = useState(0);
   const [iban, setIban] = useState('');
   const [lockers, setLockers] = useState<string[]>(['']);
@@ -56,17 +63,24 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setName(editingEmployee.name);
       setLastName1(editingEmployee.last_name1);
       setLastName2(editingEmployee.last_name2 || '');
+      setEmail(editingEmployee.email || '');
       setPhone(editingEmployee.phone);
       setPersonal_email(editingEmployee.personal_email || '');
       setPhone_fixed(editingEmployee.phone_fixed || '');
+      setCity_id(editingEmployee.city_id || '');
       setCategory_id(editingEmployee.category_id);
       setWork_center_id(editingEmployee.work_center_id);
       setWork_day_id(editingEmployee.work_day_id);
+      setShift_id(editingEmployee.shift_id || '');
       setStart_time(editingEmployee.start_time || '');
       setEnd_time(editingEmployee.end_time || '');
+      setStatus_id(editingEmployee.status_id);
+      setActive(editingEmployee.active);
       setVacation_month(editingEmployee.vacation_month || '');
       setVacation_days(editingEmployee.vacation_days);
       setOwn_days(editingEmployee.own_days);
+      setAccumulated_days(editingEmployee.accumulated_days || 0);
+      setExcess_days(editingEmployee.excess_days || 0);
       setIrpf(editingEmployee.irpf);
       setIban(editingEmployee.iban || '');
       setLockers(editingEmployee.lockers?.length ? editingEmployee.lockers : ['']);
@@ -87,17 +101,24 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setName('');
       setLastName1('');
       setLastName2('');
+      setEmail('');
       setPhone('');
       setPersonal_email('');
       setPhone_fixed('');
+      setCity_id('');
       setCategory_id('ec_000001');
       setWork_center_id('wc_000001');
       setWork_day_id('wd_1');
+      setShift_id('');
       setStart_time('');
       setEnd_time('');
+      setStatus_id('es_1');
+      setActive(true);
       setVacation_month('');
       setVacation_days(22);
       setOwn_days(0);
+      setAccumulated_days(0);
+      setExcess_days(0);
       setIrpf(0);
       setIban('');
       setLockers(['']);
@@ -168,25 +189,25 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     };
 
     const success = onSubmit({
-      city_id: editingEmployee?.city_id ?? null,
+      city_id: city_id || null,
       name: name.trim(),
       last_name1: last_name1.trim(),
       last_name2: last_name2.trim(),
-      email: '',
+      email: email.trim(),
       phone: phone.trim(),
       category_id,
-      status_id: 'es_1',
+      status_id,
       work_center_id,
-      active: true,
-      shift_id: editingEmployee?.shift_id ?? '',
+      active,
+      shift_id,
       start_time,
       end_time,
       vacation_month: vacation_month || null,
       vacation_year: vacation_month ? new Date().getFullYear() : null,
       vacation_days,
       own_days,
-      accumulated_days: 0,
-      excess_days: 0,
+      accumulated_days,
+      excess_days,
       personal_email: personal_email.trim(),
       phone_fixed: phone_fixed.trim(),
       work_day_id,
@@ -281,6 +302,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                   <input type="text" value={last_name2} onChange={(e) => setLastName2(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
                 </div>
                 <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Corporativo</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
                   <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Móvil</label>
                   <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
                 </div>
@@ -291,6 +316,13 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                 <div>
                   <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Personal</label>
                   <input type="email" value={personal_email} onChange={(e) => setPersonal_email(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Ciudad</label>
+                  <select value={city_id} onChange={(e) => setCity_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+                    <option value="">Seleccionar...</option>
+                    {INITIAL_CITIES.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -315,10 +347,33 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                     </select>
                   </div>
                   <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Turno</label>
+                    <select value={shift_id} onChange={(e) => setShift_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+                      <option value="">Seleccionar...</option>
+                      {INITIAL_SHIFTS.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                    </select>
+                  </div>
+                  <div>
                     <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
                     <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
                       {INITIAL_WORK_CENTERS.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
                     </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
+                    <select value={status_id} onChange={(e) => setStatus_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+                      {INITIAL_EMPLOYEE_STATUSES.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-app-text uppercase mb-1">Activo</label>
+                    <div className="flex items-center h-full">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="sr-only peer" />
+                        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span className="ms-2 text-sm text-app-text">{active ? 'Sí' : 'No'}</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -373,6 +428,24 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                     <option value="SEPTIEMBRE">Septiembre</option>
                   </select>
                   <p className="text-[11px] text-app-text-secondary/50 mt-1.5">Rota cada año</p>
+                </div>
+              </div>
+              <div className="col-span-2 flex gap-4 mt-2">
+                <div className="w-1/4">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Vacaciones</label>
+                  <input type="number" value={vacation_days} onChange={(e) => setVacation_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div className="w-1/4">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Propios</label>
+                  <input type="number" value={own_days} onChange={(e) => setOwn_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div className="w-1/4">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Acumulados</label>
+                  <input type="number" value={accumulated_days} onChange={(e) => setAccumulated_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
+                </div>
+                <div className="w-1/4">
+                  <label className="block text-xs font-bold text-app-text uppercase mb-1">Exceso</label>
+                  <input type="number" value={excess_days} onChange={(e) => setExcess_days(Number(e.target.value))} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm" />
                 </div>
               </div>
               <div className="col-span-2 flex flex-wrap gap-6">

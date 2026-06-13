@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { employeesApi } from '../../../api/services';
 import type { Employee } from '../../../types';
-import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES } from '../../../data/mockEmployees';
+import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_EMPLOYEE_STATUSES, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_SHIFTS, INITIAL_CITIES } from '../../../data/mockEmployees';
 import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { EmployeeFormModal } from '../../../components/modals/EmployeeFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, CreditCard, Award, Clock, Edit3, Trash2, ShieldAlert, Building2, Wallet, FileCheck, Activity, Shirt, Package } from 'lucide-react';
+import { ArrowLeft, User, Mail, Phone, MapPin, Calendar, CreditCard, Award, Clock, Edit3, Trash2, ShieldAlert, Building2, Wallet, FileCheck, Activity, Shirt, Package, Briefcase } from 'lucide-react';
 import { ProfileSkeleton } from '../../../components/ui';
 
 interface EmployeesDetailViewProps {
@@ -64,6 +64,8 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
   const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find(w => w.id === id)?.name ?? id;
   const resolveWorkDay = (id: string) => INITIAL_WORK_DAYS.find(w => w.id === id)?.name ?? id;
   const resolveContractType = (id: string) => INITIAL_CONTRACT_TYPES.find(c => c.id === id)?.name ?? id;
+  const resolveCity = (id: string) => INITIAL_CITIES.find(c => c.id === id)?.name ?? id;
+  const resolveShift = (id: string) => INITIAL_SHIFTS.find(s => s.id === id)?.name ?? id;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode] = useState<'edit'>('edit');
@@ -137,13 +139,21 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={employee.phone || '-'} />
             <InfoRow icon={<Mail className="h-4 w-4" />} label="Email Personal" value={employee.personal_email || '-'} />
             <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono Fijo" value={employee.phone_fixed || '-'} />
+            <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={employee.city_id ? resolveCity(employee.city_id) : '-'} />
           </SectionCard>
 
           <SectionCard icon={<Award className="h-4 w-4" />} title="Información Laboral">
             <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={resolveCategory(employee.category_id)} highlight />
             <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={resolveWorkCenter(employee.work_center_id)} highlight />
             <InfoRow icon={<Clock className="h-4 w-4" />} label="Jornada" value={resolveWorkDay(employee.work_day_id)} />
-            <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={employee.start_time && employee.end_time ? `${employee.start_time} - ${employee.end_time}` : '-'} />
+            <InfoRow icon={<Briefcase className="h-4 w-4" />} label="Turno" value={employee.shift_id ? resolveShift(employee.shift_id) : '-'} />
+            <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={employee.start_time && employee.end_time ? `${employee.start_time?.slice(0,5)} - ${employee.end_time?.slice(0,5)}` : '-'} />
+            <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={employee.lockers?.length ? employee.lockers.join(', ') : '-'} />
+          </SectionCard>
+
+          <SectionCard icon={<CreditCard className="h-4 w-4" />} title="Datos Bancarios">
+            <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={employee.iban || 'Sin registrar'} />
+            <InfoRow icon={<Wallet className="h-4 w-4" />} label="IRPF" value={employee.irpf ? `${employee.irpf}%` : '-'} />
           </SectionCard>
 
           <SectionCard icon={<Calendar className="h-4 w-4" />} title="Vacaciones">
@@ -156,6 +166,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
                   <div>
                     <div className="text-xs text-app-text-secondary font-medium">Mes asignado</div>
                     <div className="text-sm font-bold text-primary-700 dark:text-primary-300 capitalize">{employee.vacation_month || 'Sin asignar'}</div>
+                    {employee.vacation_year && <div className="text-[10px] text-app-text-secondary">{employee.vacation_year}</div>}
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
@@ -182,44 +193,35 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
             </div>
           </SectionCard>
 
-          <SectionCard icon={<CreditCard className="h-4 w-4" />} title="Datos Bancarios">
-            <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={employee.iban || 'Sin registrar'} />
-            <InfoRow icon={<Wallet className="h-4 w-4" />} label="IRPF" value={employee.irpf ? `${employee.irpf}%` : '-'} />
-            <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={employee.lockers?.length ? employee.lockers.join(', ') : '-'} />
-          </SectionCard>
-
           {employee.clothing_sizes && (
-            <SectionCard icon={<Shirt className="h-4 w-4" />} title="Uniformidad">
-              <div className="col-span-2">
-                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Camisas</div>
+            <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+              <div className="flex items-center gap-2 mb-3 text-app-text font-semibold text-sm">
+                <Shirt className="h-4 w-4" />
+                <span>Uniformidad</span>
               </div>
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={employee.clothing_sizes.summer_shirt || '-'} />
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={employee.clothing_sizes.winter_shirt || '-'} />
-              <div className="col-span-2 border-t border-app-card-border my-1" />
-              <div className="col-span-2">
-                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Pantalones</div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
+                <span className="text-app-text-secondary">Camisa Verano</span>
+                <span className="text-app-text">{employee.clothing_sizes.summer_shirt || '-'}</span>
+                <span className="text-app-text-secondary">Camisa Invierno</span>
+                <span className="text-app-text">{employee.clothing_sizes.winter_shirt || '-'}</span>
+                <span className="text-app-text-secondary">Pantalón Verano</span>
+                <span className="text-app-text">{employee.clothing_sizes.summer_pants || '-'}</span>
+                <span className="text-app-text-secondary">Pantalón Invierno</span>
+                <span className="text-app-text">{employee.clothing_sizes.winter_pants || '-'}</span>
+                <span className="text-app-text-secondary">Chaqueta Verano</span>
+                <span className="text-app-text">{employee.clothing_sizes.summer_jacket || '-'}</span>
+                <span className="text-app-text-secondary">Chaqueta Invierno</span>
+                <span className="text-app-text">{employee.clothing_sizes.winter_jacket || '-'}</span>
+                <span className="text-app-text-secondary">Chaquetón</span>
+                <span className="text-app-text">{employee.clothing_sizes.winter_coat || '-'}</span>
+                <span className="text-app-text-secondary">Gorra</span>
+                <span className="text-app-text">{employee.clothing_sizes.cap || '-'}</span>
+                <span className="text-app-text-secondary">Zapato Verano</span>
+                <span className="text-app-text">{employee.clothing_sizes.summer_shoe ? String(employee.clothing_sizes.summer_shoe) : '-'}</span>
+                <span className="text-app-text-secondary">Zapato Invierno</span>
+                <span className="text-app-text">{employee.clothing_sizes.winter_shoe ? String(employee.clothing_sizes.winter_shoe) : '-'}</span>
               </div>
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={employee.clothing_sizes.summer_pants || '-'} />
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={employee.clothing_sizes.winter_pants || '-'} />
-              <div className="col-span-2 border-t border-app-card-border my-1" />
-              <div className="col-span-2">
-                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Chaquetas</div>
-              </div>
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={employee.clothing_sizes.summer_jacket || '-'} />
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={employee.clothing_sizes.winter_jacket || '-'} />
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Chaquetón" value={employee.clothing_sizes.winter_coat || '-'} />
-              <div className="col-span-2 border-t border-app-card-border my-1" />
-              <div className="col-span-2">
-                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Gorra</div>
-              </div>
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Estándar" value={employee.clothing_sizes.cap || '-'} />
-              <div className="col-span-2 border-t border-app-card-border my-1" />
-              <div className="col-span-2">
-                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Zapatos / Botas</div>
-              </div>
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={employee.clothing_sizes.summer_shoe ? String(employee.clothing_sizes.summer_shoe) : '-'} />
-              <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={employee.clothing_sizes.winter_shoe ? String(employee.clothing_sizes.winter_shoe) : '-'} />
-            </SectionCard>
+            </div>
           )}
 
           <SectionCard icon={<FileCheck className="h-4 w-4" />} title="Contrato">

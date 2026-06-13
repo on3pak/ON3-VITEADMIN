@@ -82,11 +82,20 @@ async function request<T>(
   const url = buildUrl(path, options?.params);
   const headers = buildHeaders(options?.headers);
 
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: options?.body ? JSON.stringify(options.body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: options?.body ? JSON.stringify(options.body) : undefined,
+    });
+  } catch {
+    throw new ApiError(
+      0,
+      ['No se puede conectar con el servidor. Verifica tu conexión.'],
+      'ConnectionRefused',
+    );
+  }
 
   return handleResponse<T>(res);
 }

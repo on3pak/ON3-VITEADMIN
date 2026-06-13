@@ -1,10 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { employeesApi, vacationsApi, usersApi } from '../../api/services';
+import { employeesApi, vacationsApi } from '../../api/services';
 import type { Employee, VacationRequest } from '../../types';
 import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
-import { UserFormModal } from '../../components/modals/UserFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
 import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
 import { INITIAL_EMPLOYEE_CATEGORIES, INITIAL_SHIFTS, INITIAL_WORK_DAYS, INITIAL_CONTRACT_TYPES, INITIAL_CITIES } from '../../data/mockEmployees';
@@ -87,7 +86,6 @@ export const DashboardProfileView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
-  const [userFormModalOpen, setUserFormModalOpen] = useState(false);
   const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
   const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
@@ -103,7 +101,8 @@ export const DashboardProfileView: React.FC = () => {
 
   const categoryName = myEmployee ? catMap[myEmployee.category_id] || myEmployee.category_id : '';
   const shiftName = myEmployee ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id : '';
-  const scheduleDisplay = myEmployee ? `${myEmployee.start_time || '—'} — ${myEmployee.end_time || '—'}` : '—';
+  const fmtTime = (t: string | undefined | null) => t ? t.length > 5 ? t.slice(0, 5) : t : '—';
+  const scheduleDisplay = myEmployee ? `${fmtTime(myEmployee.start_time)} — ${fmtTime(myEmployee.end_time)}` : '—';
 
   const handleEmployeeSubmit = (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (isReadOnly) return false;
@@ -137,15 +136,6 @@ export const DashboardProfileView: React.FC = () => {
       requested_days: data.requested_days,
     }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
     setSolicitarDiasOpen(false);
-  };
-
-  const handleUserSubmit = (data: Omit<import('../../types').User, 'id' | 'created_at' | 'updated_at'>) => {
-    if (!loggedInUser) return false;
-    usersApi.update(loggedInUser.id, data).then(() => {
-      triggerToast('Usuario actualizado correctamente', 'success');
-      setUserFormModalOpen(false);
-    }).catch(() => {});
-    return true;
   };
 
   const pendingRequests = useMemo(
@@ -224,19 +214,6 @@ export const DashboardProfileView: React.FC = () => {
                   <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
                     <User className="h-4 w-4" />
                     <span className="flex-1">Información del Usuario</span>
-                    <button
-                      onClick={() => {
-                        if (loggedInUser.role === 'MANAGER' || loggedInUser.role === 'USER') {
-                          setRequestModalCard('personal');
-                        } else {
-                          setUserFormModalOpen(true);
-                        }
-                      }}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-500 hover:bg-primary-400 text-white shadow-xs transition-all active:scale-95"
-                      title="Editar perfil"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -315,48 +292,34 @@ export const DashboardProfileView: React.FC = () => {
                     </SectionCard>
 
                     {myEmployee.clothing_sizes && (
-                      <SectionCard
-                        icon={<Shirt className="h-4 w-4" />}
-                        title="Uniformidad"
-                      >
-                        <div className="col-span-2">
-                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Camisas</div>
+                      <div className="bg-app-bg rounded-xl border border-app-card-border p-4">
+                        <div className="flex items-center gap-2 mb-3 text-app-text font-semibold text-sm">
+                          <Shirt className="h-4 w-4" />
+                          <span>Uniformidad</span>
                         </div>
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_shirt || '—'} />
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_shirt || '—'} />
-
-                        <div className="col-span-2 border-t border-app-card-border my-1" />
-
-                        <div className="col-span-2">
-                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Pantalones</div>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
+                          <span className="text-app-text-secondary">Camisa Verano</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_shirt || '—'}</span>
+                          <span className="text-app-text-secondary">Camisa Invierno</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_shirt || '—'}</span>
+                          <span className="text-app-text-secondary">Pantalón Verano</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_pants || '—'}</span>
+                          <span className="text-app-text-secondary">Pantalón Invierno</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_pants || '—'}</span>
+                          <span className="text-app-text-secondary">Chaqueta Verano</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_jacket || '—'}</span>
+                          <span className="text-app-text-secondary">Chaqueta Invierno</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_jacket || '—'}</span>
+                          <span className="text-app-text-secondary">Chaquetón</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_coat || '—'}</span>
+                          <span className="text-app-text-secondary">Gorra</span>
+                          <span className="text-app-text">Sí</span>
+                          <span className="text-app-text-secondary">Zapato Verano</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_shoe ? String(myEmployee.clothing_sizes.summer_shoe) : '—'}</span>
+                          <span className="text-app-text-secondary">Zapato Invierno</span>
+                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_shoe ? String(myEmployee.clothing_sizes.winter_shoe) : '—'}</span>
                         </div>
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_pants || '—'} />
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_pants || '—'} />
-
-                        <div className="col-span-2 border-t border-app-card-border my-1" />
-
-                        <div className="col-span-2">
-                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Chaquetas</div>
-                        </div>
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_jacket || '—'} />
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_jacket || '—'} />
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Chaquetón" value={myEmployee.clothing_sizes.winter_coat || '—'} />
-
-                        <div className="col-span-2 border-t border-app-card-border my-1" />
-
-                        <div className="col-span-2">
-                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Gorra</div>
-                        </div>
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Estándar" value="Sí" />
-
-                        <div className="col-span-2 border-t border-app-card-border my-1" />
-
-                        <div className="col-span-2">
-                          <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Zapatos / Botas</div>
-                        </div>
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Verano" value={myEmployee.clothing_sizes.summer_shoe ? String(myEmployee.clothing_sizes.summer_shoe) : '—'} />
-                        <InfoRow icon={<Shirt className="h-4 w-4" />} label="Invierno" value={myEmployee.clothing_sizes.winter_shoe ? String(myEmployee.clothing_sizes.winter_shoe) : '—'} />
-                      </SectionCard>
+                      </div>
                     )}
                   </>
                 ) : (
@@ -492,13 +455,6 @@ export const DashboardProfileView: React.FC = () => {
         employeeId={myEmployee?.id || ''}
         disableWeekends={myEmployee?.work_day_id === 'wd_1'}
         onSubmit={handleSolicitarDias}
-      />
-
-      <UserFormModal
-        isOpen={userFormModalOpen}
-        onClose={() => setUserFormModalOpen(false)}
-        onSubmit={handleUserSubmit}
-        editingUser={loggedInUser}
       />
 
       {requestModalCard && (
