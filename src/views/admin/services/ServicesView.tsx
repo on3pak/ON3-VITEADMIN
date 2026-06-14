@@ -2,11 +2,10 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { servicesApi } from '../../../api/services';
 import { useServices } from '../../../context/ServiceContext';
 import { useAuth } from '../../../context/AuthContext';
-import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
+import { useLookupsContext } from '../../../context/LookupContext';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import { Service, ServiceOverview } from '../../../types';
-import { INITIAL_SHIFTS, INITIAL_EMPLOYEE_CATEGORIES } from '../../../data/mockEmployees';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,   ChevronDown, ChevronUp,
@@ -23,13 +22,14 @@ const CATEGORY_COLORS: Record<string, string> = {
   'VACIADO': 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
 };
 
-const wcCityMap = Object.fromEntries(
-  INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
-);
-
 export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = ({ onViewService }) => {
   const { getServiceOverviews, getServiceById, loadServices, loading } = useServices();
   const { user: loggedInUser } = useAuth();
+  const { workCenters, shifts, employeeCategories } = useLookupsContext();
+
+  const wcCityMap = useMemo(() => Object.fromEntries(
+    workCenters.map((wc) => [wc.id, wc.city_id])
+  ), [workCenters]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
@@ -69,8 +69,8 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
-    () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
-    [userCityId]
+    () => userCityId ? workCenters.filter((wc) => wc.city_id === userCityId) : workCenters,
+    [userCityId, workCenters]
   );
 
   const filteredServices = useMemo(() => {
@@ -201,7 +201,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                           <div className="flex justify-center">
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-app-bg text-app-text">
                               <Clock className="h-3 w-3" />
-                              {INITIAL_SHIFTS.find((sh) => sh.id === s.shift_id)?.name ?? s.shift_id}
+                              {shifts.find((sh) => sh.id === s.shift_id)?.name ?? s.shift_id}
                             </span>
                           </div>
                         </td>
@@ -219,7 +219,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
                             {s.staff_requirement.oficial ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-md bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
                                 <UserCog className="h-3 w-3" />
-                                {INITIAL_EMPLOYEE_CATEGORIES.find((c) => c.id === s.staff_requirement.oficial)?.name ?? 'Oficial'}
+                                {employeeCategories.find((c) => c.id === s.staff_requirement.oficial)?.name ?? 'Oficial'}
                               </span>
                             ) : null}
                             {s.staff_requirement.peones > 0 ? (

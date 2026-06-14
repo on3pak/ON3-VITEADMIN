@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MachineryItem } from '../../types';
+import { useLookupsContext } from '../../context/LookupContext';
 import { MACHINERY_SUBTYPES, MACHINERY_STATUSES } from '../../data/mockMachinery';
-import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, Save, Wrench } from 'lucide-react';
 
 interface MachineryFormModalProps {
@@ -12,6 +12,12 @@ interface MachineryFormModalProps {
 }
 
 export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, onClose, onSubmit, editingItem }) => {
+  const { workCenters } = useLookupsContext();
+
+  const wcCityMap = Object.fromEntries(
+    workCenters.map((wc) => [wc.id, wc.city_id])
+  );
+
   const [name, setName] = useState('');
   const [subtype_id, setSubtype_id] = useState('');
   const [status_id, setStatus_id] = useState('ms-1');
@@ -26,12 +32,6 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
   const [next_maintenance, setNext_maintenance] = useState('');
   const [notes, setNotes] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
-
-  const allWorkCenters = INITIAL_WORK_CENTERS;
-
-  const wcCityMap = Object.fromEntries(
-    allWorkCenters.map((wc) => [wc.id, wc.city_id])
-  );
 
   useEffect(() => {
     if (editingItem) {
@@ -138,7 +138,7 @@ export const MachineryFormModal: React.FC<MachineryFormModalProps> = ({ isOpen, 
               <div className="w-[30%]">
                 <label className="block text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-1.5">Centro</label>
                 <select value={work_center_id} onChange={(e) => setWork_center_id(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 text-app-text bg-app-card">
-                  {allWorkCenters.map((wc) => (
+                  {workCenters.map((wc) => (
                     <option key={wc.id} value={wc.id}>{wc.name}</option>
                   ))}
                 </select>

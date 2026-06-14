@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Service, ServiceTask, StaffRequirement } from '../../types';
 import { INITIAL_SERVICE_CATEGORIES } from '../../data/mockServices';
-import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
-import { INITIAL_SHIFTS } from '../../data/mockEmployees';
+import { useLookupsContext } from '../../context/LookupContext';
 import { WorkCenter } from '../../types';
 import { generateId } from '../../utils/id';
 import { X, ClipboardList, Save, Plus, Trash2, UserCog, Users } from 'lucide-react';
@@ -76,7 +75,7 @@ function generateTasks(serviceId: string): ServiceTask[] {
 }
 
 export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onClose, onSubmit, editingService, workCenters }) => {
-  const shifts = INITIAL_SHIFTS;
+  const { shifts } = useLookupsContext();
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('BARRIDO MIXTO');
@@ -237,7 +236,7 @@ export const ServiceFormModal: React.FC<ServiceFormModalProps> = ({ isOpen, onCl
                 onChange={(e) => setWork_center_id(e.target.value)}
                 className="w-full px-3 py-2 border border-app-border rounded-lg text-sm focus:outline-hidden focus:border-indigo-500"
               >
-                {(workCenters ?? INITIAL_WORK_CENTERS).map((wc) => (
+                {(workCenters ?? []).map((wc) => (
                   <option key={wc.id} value={wc.id}>{wc.name}</option>
                 ))}
               </select>

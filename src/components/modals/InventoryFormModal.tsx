@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { InventoryItem, InventoryAttributes } from '../../types';
+import { useLookupsContext } from '../../context/LookupContext';
 import { INVENTORY_WAREHOUSE_IDS, getSubtypesForCategory } from '../../data/mockInventory';
-import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { X, Save, Shirt } from 'lucide-react';
 
 const LETTER_SIZES = ['S', 'M', 'L', 'XL', 'XXL', 'ESTÁNDAR'];
@@ -32,6 +32,14 @@ interface InventoryFormModalProps {
 }
 
 export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, onClose, onSubmit, editingItem }) => {
+  const { workCenters } = useLookupsContext();
+
+  const wcCityMap = Object.fromEntries(
+    workCenters.map((wc) => [wc.id, wc.city_id])
+  );
+
+  const filteredWorkCenters = workCenters.filter((wc) => INVENTORY_WAREHOUSE_IDS.includes(wc.id));
+
   const [name, setName] = useState('');
   const [subtype_id, setSubtype_id] = useState('');
   const [customSubtype, setCustomSubtype] = useState('');
@@ -51,12 +59,6 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
   const sizeOptions = sizeGroup === 'SHOE' ? SHOE_SIZES : LETTER_SIZES;
 
   const filteredSubtypes = getSubtypesForCategory('CLOTHING');
-
-  const filteredWorkCenters = INITIAL_WORK_CENTERS.filter((wc) => INVENTORY_WAREHOUSE_IDS.includes(wc.id));
-
-  const wcCityMap = Object.fromEntries(
-    INITIAL_WORK_CENTERS.map((wc) => [wc.id, wc.city_id])
-  );
 
   useEffect(() => {
     if (editingItem) {

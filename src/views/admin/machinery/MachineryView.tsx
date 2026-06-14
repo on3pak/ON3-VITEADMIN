@@ -2,9 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { machineryApi } from '../../../api/services';
 import { useMachinery } from '../../../context/MachineryContext';
 import { useAuth } from '../../../context/AuthContext';
+import { useLookupsContext } from '../../../context/LookupContext';
 import { MACHINERY_SUBTYPES, MACHINERY_STATUSES } from '../../../data/mockMachinery';
-import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
-import { INITIAL_CITIES } from '../../../data/mockEmployees';
 import { MachineryFormModal } from '../../../components/modals/MachineryFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
 import {
@@ -17,8 +16,6 @@ import { TableSkeleton } from '../../../components/ui';
 
 const getSubtypeName = (id: string) => MACHINERY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
 const getStatusName = (id: string) => MACHINERY_STATUSES.find((s) => s.id === id)?.name ?? id;
-const getWcName = (id: string) => INITIAL_WORK_CENTERS.find((wc) => wc.id === id)?.name ?? id;
-const getCityName = (id: string) => INITIAL_CITIES.find((c) => c.id === id)?.name ?? id;
 
 const STATUS_COLORS: Record<string, string> = {
   'ms-1': 'text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-800',
@@ -30,6 +27,7 @@ const STATUS_COLORS: Record<string, string> = {
 export const MachineryView: React.FC = () => {
   const { getOverviews, getById, loadMachinery, loading } = useMachinery();
   const { user: loggedInUser } = useAuth();
+  const { cities, workCenters, resolveCity, resolveWorkCenter } = useLookupsContext();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -87,18 +85,18 @@ export const MachineryView: React.FC = () => {
   const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
 
   const scopeCities = userCityId
-    ? INITIAL_CITIES.filter((c) => c.id === userCityId)
-    : INITIAL_CITIES;
+    ? cities.filter((c) => c.id === userCityId)
+    : cities;
 
   const scopeWorkCenters = useMemo(() => {
     let base = userCityId
-      ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId)
-      : INITIAL_WORK_CENTERS;
+      ? workCenters.filter((wc) => wc.city_id === userCityId)
+      : workCenters;
     if (cityFilter !== 'ALL') {
       base = base.filter((wc) => wc.city_id === cityFilter);
     }
     return base;
-  }, [userCityId, cityFilter]);
+  }, [userCityId, cityFilter, workCenters]);
 
   const filteredItems = useMemo(() => {
     const q = searchQuery.toLowerCase();
@@ -246,7 +244,7 @@ export const MachineryView: React.FC = () => {
                                   <span className="font-mono text-primary-600 font-semibold">{item.id}</span>
                                   <span>•</span>
                                   <MapPin className="h-3 w-3 text-app-text-secondary" />
-                                  <span>{getWcName(item.work_center_id)}</span>
+                                  <span>{resolveWorkCenter(item.work_center_id)}</span>
                                 </div>
                               </div>
                             </div>
