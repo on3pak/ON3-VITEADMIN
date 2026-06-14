@@ -1,6 +1,6 @@
 export type VacationMonth = 'july' | 'august' | 'september' | 'split';
 
-export type ClothingSize = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
+export type ClothingSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
 
 export type ShoeSize = 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46;
 
