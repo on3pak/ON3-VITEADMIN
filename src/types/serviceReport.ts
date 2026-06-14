@@ -1,4 +1,4 @@
-export type ReportType = 'PREVIO' | 'DIARIO';
+export type ReportType = 'handover' | 'daily';
 
 export type AttendanceStatus = 'present' | 'absent' | 'justified_absence';
 

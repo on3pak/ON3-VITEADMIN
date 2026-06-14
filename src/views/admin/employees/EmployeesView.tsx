@@ -144,7 +144,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const selectedEmployee = modalMode === 'edit' && selectedEmployeeId ? getEmployeeById(selectedEmployeeId) : undefined;
   const employeeOverviews = getEmployeeOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
     () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,
@@ -185,7 +185,7 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const getBadgeStyle = (id: string) => STATUS_STYLES[id] ?? 'bg-app-bg text-app-text border-app-border';
   const getCategoryBadgeStyle = (id: string) => CATEGORY_COLORS[id] ?? 'bg-app-bg text-app-text border-app-border';
 
-  const isReadOnly = loggedInUser?.role === 'USER';
+  const isReadOnly = loggedInUser?.role === 'user';
 
   const renderLookupTab = (s: ReturnType<typeof useLookupState<NamedEntity>>, icon: React.ReactNode, singular: string, plural: string) => {
     const lookupFiltered = searchQuery ? s.allItems.filter((x) => x.name.toLowerCase().includes(searchQuery.toLowerCase())) : s.allItems;

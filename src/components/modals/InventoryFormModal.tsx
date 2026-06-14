@@ -58,7 +58,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
   const sizeGroup = SUBTYPE_SIZE_GROUPS[subtype_id] || 'LETTER';
   const sizeOptions = sizeGroup === 'SHOE' ? SHOE_SIZES : LETTER_SIZES;
 
-  const filteredSubtypes = getSubtypesForCategory('CLOTHING');
+  const filteredSubtypes = getSubtypesForCategory('clothing');
 
   useEffect(() => {
     if (editingItem) {
@@ -121,7 +121,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ isOpen, 
     const success = onSubmit({
       name: name.trim(),
       description: '',
-      category: 'CLOTHING',
+      category: 'clothing',
       subtype_id,
       status_id: 'rs-1',
       quantity,

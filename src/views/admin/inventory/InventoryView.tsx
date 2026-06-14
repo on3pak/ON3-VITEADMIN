@@ -16,8 +16,8 @@ import {
 import { TableSkeleton } from '../../../components/ui';
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
-  { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
-  { value: 'PPE', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
+  { value: 'clothing', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
+  { value: 'ppe', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
 ];
 
 const getSubtypeName = (id: string) => INVENTORY_SUBTYPES.find((st) => st.id === id)?.name ?? id;
@@ -27,7 +27,7 @@ export const InventoryView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { cities, workCenters, resolveWorkCenter } = useLookupsContext();
 
-  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('CLOTHING');
+  const [activeCategory, setActiveCategory] = useState<InventoryCategory>('clothing');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [subtypeFilter, setSubtypeFilter] = useState('ALL');
@@ -81,8 +81,8 @@ export const InventoryView: React.FC = () => {
   const selectedItem = modalMode === 'edit' && selectedItemId ? getById(selectedItemId) : undefined;
   const overviews = getOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
-  const isRoot = loggedInUser?.role === 'ROOT';
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
+  const isRoot = loggedInUser?.role === 'root';
 
   const scopeCities = userCityId
     ? cities.filter((c) => c.id === userCityId)
@@ -126,7 +126,7 @@ export const InventoryView: React.FC = () => {
     return { totalPages: t, paginatedItems: p };
   }, [filteredItems, currentPage, itemsPerPage]);
 
-  const isReadOnly = loggedInUser?.role === 'USER';
+  const isReadOnly = loggedInUser?.role === 'user';
 
   return (
     <div className="space-y-5">
@@ -253,8 +253,8 @@ export const InventoryView: React.FC = () => {
                           <td className="py-3.5 px-6">
                             <div className="flex items-center gap-3">
                               <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                                activeCategory === 'CLOTHING' ? 'bg-primary-100 text-primary-600 border border-primary-200 dark:bg-primary-900/30 dark:text-primary-300 dark:border-primary-800' :
-                                activeCategory === 'PPE' ? 'bg-amber-100 text-amber-600 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800' :
+                                activeCategory === 'clothing' ? 'bg-primary-100 text-primary-600 border border-primary-200 dark:bg-primary-900/30 dark:text-primary-300 dark:border-primary-800' :
+                                activeCategory === 'ppe' ? 'bg-amber-100 text-amber-600 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800' :
                                 'bg-cyan-100 text-cyan-600 border border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800'
                               }`}>
                                 {CATEGORY_TABS.find((t) => t.value === activeCategory)?.icon}

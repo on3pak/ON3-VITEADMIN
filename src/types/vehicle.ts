@@ -8,7 +8,7 @@ export interface VehicleTypeOption {
 
 export type VehicleStatus = 'active' | 'maintenance' | 'broken' | 'retired';
 
-export type FuelType = 'DIESEL' | 'PETROL' | 'ELECTRIC' | 'LPG';
+export type FuelType = 'diesel' | 'petrol' | 'electric' | 'lpg';
 
 export interface Vehicle {
   id: string;

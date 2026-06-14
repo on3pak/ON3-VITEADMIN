@@ -41,7 +41,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 function mapApiUserToAppUser(apiUser: {
   id: string; employee_id: string | null; email: string; full_name: string;
-  role: string; status: string; language: 'ES' | 'EN';
+  role: string; status: string; language: 'en' | 'es';
   avatar_url?: string | null; city_id?: string | null; dark_mode?: boolean;
 }): User {
   return {

@@ -38,7 +38,7 @@ export const DashboardServicesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { services, loadServices } = useServices();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   useEffect(() => { loadServices(); }, [loadServices]);
 

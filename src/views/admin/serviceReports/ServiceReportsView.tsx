@@ -57,7 +57,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
     loading,
   } = useServiceReports();
 
-  const userCityId = user?.role === 'ROOT' ? undefined : user?.city_id;
+  const userCityId = user?.role === 'root' ? undefined : user?.city_id;
 
   const scopeWorkCenters = useMemo(
     () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId && wc.status.toLowerCase() === 'active') : INITIAL_WORK_CENTERS.filter((wc) => wc.status.toLowerCase() === 'active'),
@@ -312,7 +312,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
                             ))}
                           </select>
                         )}
-                    {currentReport?.type === 'DIARIO' && (
+                    {currentReport?.type === 'daily' && (
                       <select
                         value={attendance}
                         onChange={(e) => handleAttendanceChange(a.employee_id, e.target.value as AttendanceStatus)}

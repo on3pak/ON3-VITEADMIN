@@ -17,7 +17,7 @@ interface SidebarProps {
 }
 
 const canSeeUserCrud = (role?: string): boolean => {
-  return role === 'ROOT' || role === 'ADMIN';
+  return role === 'root' || role === 'admin';
 };
 
 const dashboardItems = (role?: string) => {
@@ -36,7 +36,7 @@ const dashboardItems = (role?: string) => {
 const adminItems = (role?: string) => {
   if (!canSeeUserCrud(role)) return [];
   return [
-    ...(role === 'ROOT' ? [{ id: 'USERS_CRUD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Roles, permisos y acceso' }] : []),
+    ...(role === 'root' ? [{ id: 'USERS_CRUD' as DashboardViewType, label: 'Usuarios', icon: <Users className="h-5 w-5" />, description: 'Roles, permisos y acceso' }] : []),
     { id: 'EMPLOYEES_CRUD' as DashboardViewType, label: 'Empleados', icon: <UserSquare className="h-5 w-5" />, description: 'Personal, contratos y turnos' },
     { id: 'WORK_CENTERS_CRUD' as DashboardViewType, label: 'Centros', icon: <Building2 className="h-5 w-5" />, description: 'Ubicaciones y áreas de trabajo' },
     { id: 'SERVICES_CRUD' as DashboardViewType, label: 'Servicios', icon: <ClipboardList className="h-5 w-5" />, description: 'Tareas, categorías y zonas' },
@@ -48,10 +48,10 @@ const adminItems = (role?: string) => {
 
 const appsItems = (role?: string) => {
   const items: { id: DashboardViewType; label: string; icon: React.ReactNode; description: string }[] = [];
-  if (role === 'MANAGER') {
+  if (role === 'manager') {
     items.push({ id: 'SERVICE_REPORT' as DashboardViewType, label: 'Parte de Servicio', icon: <CalendarCheck className="h-5 w-5" />, description: 'Planificación y control diario' });
   }
-  if (['ROOT', 'ADMIN', 'MANAGER', 'USER'].includes(role || '')) {
+  if (['root', 'admin', 'manager', 'user'].includes(role || '')) {
     items.push({ id: 'WORK_REPORT' as DashboardViewType, label: 'Parte de Trabajo', icon: <ClipboardCheck className="h-5 w-5" />, description: 'Registro de tareas y servicios' });
   }
   return items;
@@ -100,9 +100,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
 
   const getRoleBadgeStyle = (role: string) => {
     switch (role) {
-      case 'ROOT': return 'bg-purple-500/10 text-purple-700 border-purple-200 dark:text-purple-300 dark:border-purple-800';
-      case 'ADMIN': return 'bg-primary-500/10 text-primary-700 border-primary-200 dark:text-primary-300 dark:border-primary-800';
-      case 'MANAGER': return 'bg-amber-500/10 text-amber-700 border-amber-200 dark:text-amber-300 dark:border-amber-800';
+      case 'root': return 'bg-purple-500/10 text-purple-700 border-purple-200 dark:text-purple-300 dark:border-purple-800';
+      case 'admin': return 'bg-primary-500/10 text-primary-700 border-primary-200 dark:text-primary-300 dark:border-primary-800';
+      case 'manager': return 'bg-amber-500/10 text-amber-700 border-amber-200 dark:text-amber-300 dark:border-amber-800';
       default: return 'bg-sidebar-hover text-sidebar-text border-sidebar-border';
     }
   };
@@ -227,7 +227,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, sidebarO
                       </div>
                     </div>
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${getRoleBadgeStyle(user?.role || '')}`}>
-                      {user?.role === 'ROOT' ? 'Root' : user?.role === 'ADMIN' ? 'Admin' : user?.role === 'MANAGER' ? 'Mngr' : 'User'}
+                      {user?.role === 'root' ? 'Root' : user?.role === 'admin' ? 'Admin' : user?.role === 'manager' ? 'Mngr' : 'User'}
                     </span>
                   </div>
 

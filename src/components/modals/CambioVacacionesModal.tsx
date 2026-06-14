@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { X, Calendar, Sun, Check, Send, Loader2, Split } from 'lucide-react';
 
-const OPTIONS: Array<{ key: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT'; label: string; icon: React.ReactNode }> = [
-  { key: 'JULIO', label: 'Julio', icon: <Sun className="w-6 h-6" /> },
-  { key: 'AGOSTO', label: 'Agosto', icon: <Sun className="w-6 h-6" /> },
-  { key: 'SEPTIEMBRE', label: 'Septiembre', icon: <Sun className="w-6 h-6" /> },
-  { key: 'SPLIT', label: 'Partidas', icon: <Split className="w-6 h-6" /> },
+const OPTIONS: Array<{ key: 'july' | 'august' | 'september' | 'split'; label: string; icon: React.ReactNode }> = [
+  { key: 'july', label: 'Julio', icon: <Sun className="w-6 h-6" /> },
+  { key: 'august', label: 'Agosto', icon: <Sun className="w-6 h-6" /> },
+  { key: 'september', label: 'Septiembre', icon: <Sun className="w-6 h-6" /> },
+  { key: 'split', label: 'Partidas', icon: <Split className="w-6 h-6" /> },
 ];
 
 interface CambioVacacionesModalProps {
@@ -13,17 +13,17 @@ interface CambioVacacionesModalProps {
   onClose: () => void;
   currentMonth: string | null;
   employeeId: string;
-  onSubmit: (data: { type: 'VACATION_CHANGE'; requested_month: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' }) => void;
+  onSubmit: (data: { type: 'vacation_change'; requested_month: 'july' | 'august' | 'september' | 'split' }) => void;
 }
 
 export const CambioVacacionesModal: React.FC<CambioVacacionesModalProps> = ({ isOpen, onClose, currentMonth, employeeId, onSubmit }) => {
-  const [selected, setSelected] = useState<'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' | null>(null);
+  const [selected, setSelected] = useState<'july' | 'august' | 'september' | 'split' | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = () => {
     if (!selected) return;
     setSubmitting(true);
-    onSubmit({ type: 'VACATION_CHANGE', requested_month: selected });
+    onSubmit({ type: 'vacation_change', requested_month: selected });
     setSubmitting(false);
     onClose();
   };
@@ -61,7 +61,7 @@ export const CambioVacacionesModal: React.FC<CambioVacacionesModalProps> = ({ is
 
             <div className="grid grid-cols-2 gap-3">
               {OPTIONS.map((opt) => {
-                const isCurrent = !['JULIO', 'AGOSTO', 'SEPTIEMBRE'].includes(opt.key)
+                const isCurrent = !['july', 'august', 'september'].includes(opt.key)
                   ? false
                   : currentMonth === opt.key;
                 const isSelected = selected === opt.key;
@@ -94,7 +94,7 @@ export const CambioVacacionesModal: React.FC<CambioVacacionesModalProps> = ({ is
         <div className="px-5 py-4 border-t border-app-border flex items-center justify-between shrink-0 bg-app-bg/50">
           <span className="text-[11px] text-app-text-secondary">
             {selected
-              ? selected === 'SPLIT'
+              ? selected === 'split'
                 ? 'Solicitar cambio a Partidas'
                 : `Solicitar cambio a ${selected}`
               : 'Selecciona una opción'}

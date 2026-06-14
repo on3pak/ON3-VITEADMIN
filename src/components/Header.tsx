@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
   };
 
   const info = getBreadcrumbInfo();
-  const [lang, setLang] = useState<'ES' | 'EN'>('ES');
+  const [lang, setLang] = useState<'es' | 'en'>('es');
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -205,12 +205,12 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
           {/* Right: Actions */}
           <div className="flex items-center flex-wrap gap-2">
             <button
-              onClick={() => { setLang(lang === 'ES' ? 'EN' : 'ES'); triggerToast(`Idioma cambiado a ${lang === 'ES' ? 'English' : 'Español'}`, 'info'); }}
+              onClick={() => { setLang(lang === 'es' ? 'en' : 'es'); triggerToast(`Idioma cambiado a ${lang === 'es' ? 'English' : 'Español'}`, 'info'); }}
               className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-app-text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all border border-transparent hover:border-primary-200 dark:hover:border-primary-800 text-xs font-semibold"
               title="Idioma"
             >
               <Languages className="h-[18px] w-[18px] group-hover:text-primary-600" />
-              <span>{lang === 'ES' ? 'ES' : 'EN'}/{lang === 'ES' ? 'EN' : 'ES'}</span>
+              <span>{lang === 'es' ? 'es' : 'en'}/{lang === 'es' ? 'en' : 'es'}</span>
             </button>
             <button
               onClick={() => triggerToast('Tamaño de texto — En desarrollo', 'info')}

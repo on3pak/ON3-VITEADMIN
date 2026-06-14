@@ -15,7 +15,7 @@ export const DashboardWorkCentersView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { workCenters, loadWorkCenters } = useWorkCenters();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   useEffect(() => { loadWorkCenters(); }, [loadWorkCenters]);
 

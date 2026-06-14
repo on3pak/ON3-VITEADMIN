@@ -11,8 +11,8 @@ import {
 } from 'lucide-react';
 
 const CATEGORY_TABS: { value: InventoryCategory; label: string; icon: React.ReactNode }[] = [
-  { value: 'CLOTHING', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
-  { value: 'PPE', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
+  { value: 'clothing', label: 'Ropa', icon: <Shirt className="h-4 w-4" /> },
+  { value: 'ppe', label: 'EPIs', icon: <Shield className="h-4 w-4" /> },
 ];
 
 const stNameMap = Object.fromEntries(INVENTORY_SUBTYPES.map((st) => [st.id, st.name]));
@@ -20,7 +20,7 @@ const wcNameMap = Object.fromEntries(INITIAL_WORK_CENTERS.map((w) => [w.id, w.na
 const cityNameMap = Object.fromEntries(INITIAL_CITIES.map((c) => [c.id, c.name]));
 
 const statusNameMap: Record<string, string> = {};
-for (const cat of ['CLOTHING', 'PPE'] as const) {
+for (const cat of ['clothing', 'ppe'] as const) {
   for (const s of getStatusesForCategory(cat)) {
     statusNameMap[s.id] = s.name;
   }
@@ -101,7 +101,7 @@ const TabContent: React.FC<{ items: typeof import('../../types').InventoryItem[]
   const getStatColor = (color: string) => statColors[color] || statColors.primary;
 
   const stats = [
-    { title: category === 'CLOTHING' ? 'Total Prendas' : category === 'PPE' ? 'Total EPIs' : 'Total Máquinas', value: totalCount, sub: `${totalUnits} unidades`, icon: <Box className="h-5 w-5" />, color: 'primary' },
+    { title: category === 'clothing' ? 'Total Prendas' : category === 'ppe' ? 'Total EPIs' : 'Total Máquinas', value: totalCount, sub: `${totalUnits} unidades`, icon: <Box className="h-5 w-5" />, color: 'primary' },
     { title: 'Disponibles', value: disponibles, sub: `${filteredCount > 0 ? ((disponibles / filteredCount) * 100).toFixed(0) : 0}%`, icon: <TrendingUp className="h-5 w-5" />, color: 'emerald' },
     { title: 'Agotados', value: agotados, sub: `${filteredCount > 0 ? ((agotados / filteredCount) * 100).toFixed(0) : 0}%`, icon: <AlertTriangle className="h-5 w-5" />, color: 'rose' },
     { title: 'Stock Bajo', value: stockBajo, sub: 'por debajo del mínimo', icon: <Ruler className="h-5 w-5" />, color: 'amber' },
@@ -238,11 +238,11 @@ export const DashboardInventoryView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { items, loadInventory } = useInventory();
 
-  const [activeTab, setActiveTab] = useState<InventoryCategory>('CLOTHING');
+  const [activeTab, setActiveTab] = useState<InventoryCategory>('clothing');
 
   useEffect(() => { loadInventory(); }, [loadInventory]);
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   const scopedItems = useMemo(
     () => userCityId ? items.filter((i) => i.city_id === userCityId) : items,

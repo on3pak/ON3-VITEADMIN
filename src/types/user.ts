@@ -1,4 +1,4 @@
-export type UserRole = 'ROOT' | 'ADMIN' | 'MANAGER' | 'USER';
+export type UserRole = 'root' | 'admin' | 'manager' | 'user';
 
 export interface User {
   id: string;
@@ -9,7 +9,7 @@ export interface User {
   password: string;
   role: UserRole;
   status: 'active' | 'inactive' | 'deleted';
-  language: 'EN' | 'ES';
+  language: 'en' | 'es';
   created_at: string;
   updated_at: string;
   avatar_url?: string;

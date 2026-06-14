@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { X, Calendar, Sun, Check, ChevronLeft, ChevronRight, Send, Loader2 } from 'lucide-react';
 
-const MONTHS: Array<{ key: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE'; label: string }> = [
-  { key: 'JULIO', label: 'Julio' },
-  { key: 'AGOSTO', label: 'Agosto' },
-  { key: 'SEPTIEMBRE', label: 'Septiembre' },
+const MONTHS: Array<{ key: 'july' | 'august' | 'september'; label: string }> = [
+  { key: 'july', label: 'Julio' },
+  { key: 'august', label: 'Agosto' },
+  { key: 'september', label: 'Septiembre' },
 ];
 
-type TabType = 'MONTH_CHANGE' | 'FREE_DAYS';
+type TabType = 'month_change' | 'free_days';
 
 function getDaysRemainingInYear(): Date[] {
   const today = new Date();
@@ -46,12 +46,12 @@ interface VacationRequestModalProps {
   onClose: () => void;
   currentMonth: string | null;
   employeeId: string;
-  onSubmit: (data: { type: 'MONTH_CHANGE' | 'FREE_DAYS'; requested_month?: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE'; requested_days?: string[] }) => void;
+  onSubmit: (data: { type: 'month_change' | 'free_days'; requested_month?: 'july' | 'august' | 'september'; requested_days?: string[] }) => void;
 }
 
 export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOpen, onClose, currentMonth, employeeId, onSubmit }) => {
-  const [tab, setTab] = useState<TabType>('FREE_DAYS');
-  const [selectedMonth, setSelectedMonth] = useState<'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | null>(null);
+  const [tab, setTab] = useState<TabType>('free_days');
+  const [selectedMonth, setSelectedMonth] = useState<'july' | 'august' | 'september' | null>(null);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
   const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
@@ -73,16 +73,16 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
 
   const handleSubmit = () => {
     setSubmitting(true);
-    if (tab === 'MONTH_CHANGE' && selectedMonth) {
-      onSubmit({ type: 'MONTH_CHANGE', requested_month: selectedMonth });
-    } else if (tab === 'FREE_DAYS' && selectedDays.length > 0) {
-      onSubmit({ type: 'FREE_DAYS', requested_days: selectedDays });
+    if (tab === 'month_change' && selectedMonth) {
+      onSubmit({ type: 'month_change', requested_month: selectedMonth });
+    } else if (tab === 'free_days' && selectedDays.length > 0) {
+      onSubmit({ type: 'free_days', requested_days: selectedDays });
     }
     setSubmitting(false);
     onClose();
   };
 
-  const canSubmit = tab === 'MONTH_CHANGE' ? !!selectedMonth : selectedDays.length > 0;
+  const canSubmit = tab === 'month_change' ? !!selectedMonth : selectedDays.length > 0;
 
   const monthDays = useMemo(() => getMonthDays(calendarYear, calendarMonth), [calendarYear, calendarMonth]);
 
@@ -126,9 +126,9 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
 
         <div className="flex border-b border-app-border shrink-0">
           <button
-            onClick={() => setTab('FREE_DAYS')}
+            onClick={() => setTab('free_days')}
             className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition-all ${
-              tab === 'FREE_DAYS'
+              tab === 'free_days'
               ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30 dark:bg-primary-900/30'
               : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
             }`}
@@ -136,9 +136,9 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
             Solicitar Días
           </button>
           <button
-            onClick={() => setTab('MONTH_CHANGE')}
+            onClick={() => setTab('month_change')}
             className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition-all ${
-              tab === 'MONTH_CHANGE'
+              tab === 'month_change'
               ? 'text-primary-600 border-b-2 border-primary-500 bg-primary-50/30 dark:bg-primary-900/30'
               : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg'
             }`}
@@ -148,7 +148,7 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
         </div>
 
         <div className="flex-1 overflow-y-auto p-5">
-          {tab === 'FREE_DAYS' && (
+          {tab === 'free_days' && (
             <div className="space-y-4">
               <div>
                 <h4 className="text-sm font-bold text-app-text mb-1">Selecciona los días que deseas solicitar</h4>
@@ -221,7 +221,7 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
             </div>
           )}
 
-          {tab === 'MONTH_CHANGE' && (
+          {tab === 'month_change' && (
             <div className="space-y-4">
               <div>
                 <h4 className="text-sm font-bold text-app-text mb-1">Solicitar cambio de mes vacacional</h4>
@@ -263,7 +263,7 @@ export const VacationRequestModal: React.FC<VacationRequestModalProps> = ({ isOp
 
         <div className="px-5 py-4 border-t border-app-border flex items-center justify-between shrink-0 bg-app-bg/50">
           <span className="text-[11px] text-app-text-secondary">
-            {tab === 'FREE_DAYS'
+            {tab === 'free_days'
               ? `${selectedDays.length} día${selectedDays.length !== 1 ? 's' : ''} seleccionado${selectedDays.length !== 1 ? 's' : ''}`
               : selectedMonth
                 ? `Solicitar cambio a ${selectedMonth}`

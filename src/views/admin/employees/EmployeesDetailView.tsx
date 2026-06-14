@@ -60,7 +60,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
     employeesApi.getById(employeeId).then(setEmployee).finally(() => setLoading(false)).catch(() => {});
   }, [employeeId]);
 
-  const isReadOnly = loggedInUser?.role === 'USER';
+  const isReadOnly = loggedInUser?.role === 'user';
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode] = useState<'edit'>('edit');
@@ -171,7 +171,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-app-text-secondary font-medium">Próximo</div>
-                    <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 capitalize">{(() => { const m = ['JULIO','AGOSTO','SEPTIEMBRE']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
+                    <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 capitalize">{(() => { const m = ['july','august','september']; const i = m.indexOf(employee.vacation_month || ''); return i >= 0 ? m[(i + 1) % 3] : '—'; })()}</div>
                   </div>
                 </div>
               </div>
@@ -235,9 +235,6 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
               </span>
               <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.works_holidays ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
                 {employee.works_holidays ? '✓ Festivos' : '○ Festivos'}
-              </span>
-              <span className={`px-3 py-1.5 text-xs font-medium rounded-lg ${employee.vaccinated ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-app-bg text-app-text-secondary'}`}>
-                {employee.vaccinated ? '✓ Vacunación' : '○ Vacunación'}
               </span>
             </div>
           </SectionCard>

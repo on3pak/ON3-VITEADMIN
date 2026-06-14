@@ -52,10 +52,10 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
 const vehicleTypeMap = Object.fromEntries(INITIAL_VEHICLE_TYPES.map(vt => [vt.id, vt.category]));
 const resolveWorkCenter = (id: string) => INITIAL_WORK_CENTERS.find(w => w.id === id)?.name ?? id;
 const fuelTypeLabels: Record<string, string> = {
-  'DIESEL': 'Diésel',
-  'PETROL': 'Gasolina',
-  'ELECTRIC': 'Eléctrico',
-  'LPG': 'Gas',
+  'diesel': 'Diésel',
+  'petrol': 'Gasolina',
+  'electric': 'Eléctrico',
+  'lpg': 'Gas',
 };
 
 export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleId, onBack }) => {

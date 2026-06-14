@@ -16,7 +16,7 @@ export const DashboardUsersView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { users, loadUsers } = useUsers();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   useEffect(() => { loadUsers(); }, [loadUsers]);
 
@@ -44,10 +44,10 @@ export const DashboardUsersView: React.FC = () => {
   ];
 
   const roleStats = [
-    { label: 'ROOT', count: countByRole('ROOT'), color: 'bg-purple-500' },
-    { label: 'ADMIN', count: countByRole('ADMIN'), color: 'bg-blue-500' },
-    { label: 'MANAGER', count: countByRole('MANAGER'), color: 'bg-amber-500' },
-    { label: 'USER', count: countByRole('USER'), color: 'bg-app-bg0' },
+    { label: 'root', count: countByRole('root'), color: 'bg-purple-500' },
+    { label: 'admin', count: countByRole('admin'), color: 'bg-blue-500' },
+    { label: 'manager', count: countByRole('manager'), color: 'bg-amber-500' },
+    { label: 'user', count: countByRole('user'), color: 'bg-app-bg0' },
   ];
 
   const statColor = (color: string) => {

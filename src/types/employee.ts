@@ -1,4 +1,4 @@
-export type VacationMonth = 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT';
+export type VacationMonth = 'july' | 'august' | 'september' | 'split';
 
 export type ClothingSize = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
 
@@ -20,7 +20,7 @@ export interface ClothingSizes {
 export interface VacationRequest {
   id: string;
   employee_id: string;
-  type: 'MONTH_CHANGE' | 'FREE_DAYS' | 'VACATION_CHANGE';
+  type: 'month_change' | 'free_days' | 'vacation_change';
   status: 'pending' | 'approved' | 'rejected';
   requested_month?: VacationMonth;
   requested_days?: string[];
@@ -46,6 +46,7 @@ export interface Employee {
   end_time: string;
   vacation_month: VacationMonth | null;
   vacation_days: number;
+  vacation_year: number | null;
   own_days: number;
   accumulated_days: number;
   excess_days: number;
@@ -58,7 +59,6 @@ export interface Employee {
   lockers: string[];
   clothing_sizes: ClothingSizes | null;
   medical_check: boolean;
-  vaccinated: boolean;
   works_holidays: boolean;
   contract_type: string;
   contract_start_date: string;

@@ -50,7 +50,7 @@ export const ServicesDetailView: React.FC<ServicesDetailViewProps> = ({ serviceI
     servicesApi.getById(serviceId).then(setService).finally(() => setLoading(false)).catch(() => {});
   }, [serviceId]);
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
     () => userCityId ? INITIAL_WORK_CENTERS.filter((wc) => wc.city_id === userCityId) : INITIAL_WORK_CENTERS,

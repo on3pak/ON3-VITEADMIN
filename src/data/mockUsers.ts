@@ -4,7 +4,7 @@ export const TEST_ACCOUNTS = [
   {
     username: 'm.torres1',
     password: 'root1',
-    role: 'ROOT' as const,
+    role: 'root' as const,
     fullName: 'Miguel Ángel Torres López',
     email: 'm.torres1@on3.com',
     description: 'Acceso total sin restricciones al sistema, configuraciones globales y pruebas.'
@@ -12,7 +12,7 @@ export const TEST_ACCOUNTS = [
   {
     username: 'a.mendoza2',
     password: 'admin2',
-    role: 'ADMIN' as const,
+    role: 'admin' as const,
     fullName: 'Alejandro Mendoza García',
     email: 'a.mendoza2@on3.com',
     description: 'Gestor de usuarios, reportes y supervisión de managers y operarios.'
@@ -20,7 +20,7 @@ export const TEST_ACCOUNTS = [
   {
     username: 'b.salazar3',
     password: 'manager3',
-    role: 'MANAGER' as const,
+    role: 'manager' as const,
     fullName: 'Beatriz Salazar Ruiz',
     email: 'b.salazar3@on3.com',
     description: 'Gestión intermedio de personal, creación de usuarios y visualización.'
@@ -28,7 +28,7 @@ export const TEST_ACCOUNTS = [
   {
     username: 'c.fuentes4',
     password: 'user4',
-    role: 'USER' as const,
+    role: 'user' as const,
     fullName: 'Carlos Fuentes Martínez',
     email: 'c.fuentes4@on3.com',
     description: 'Rol de lectura y consulta básica. No posee permisos de modificación.'
@@ -43,9 +43,9 @@ export const INITIAL_USERS: User[] = [
     email: 'm.torres1@on3.com',
     full_name: 'Miguel Ángel Torres López',
     password: 'root1',
-    role: 'ROOT',
+    role: 'root',
     status: 'active',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-01-10T08:30:00Z',
     updated_at: '2025-01-10T08:30:00Z',
     city_id: 'ci_000001'
@@ -57,9 +57,9 @@ export const INITIAL_USERS: User[] = [
     email: 'a.mendoza2@on3.com',
     full_name: 'Alejandro Mendoza García',
     password: 'admin2',
-    role: 'ADMIN',
+    role: 'admin',
     status: 'active',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-01-15T10:15:00Z',
     updated_at: '2025-01-15T10:15:00Z',
     city_id: 'ci_000001'
@@ -71,9 +71,9 @@ export const INITIAL_USERS: User[] = [
     email: 'b.salazar3@on3.com',
     full_name: 'Beatriz Salazar Ruiz',
     password: 'manager3',
-    role: 'MANAGER',
+    role: 'manager',
     status: 'active',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-02-01T14:22:00Z',
     updated_at: '2025-02-01T14:22:00Z',
     city_id: 'ci_000001'
@@ -85,9 +85,9 @@ export const INITIAL_USERS: User[] = [
     email: 'c.fuentes4@on3.com',
     full_name: 'Carlos Fuentes Martínez',
     password: 'user4',
-    role: 'USER',
+    role: 'user',
     status: 'active',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-02-12T09:05:00Z',
     updated_at: '2025-02-12T09:05:00Z',
     city_id: 'ci_000001'
@@ -99,9 +99,9 @@ export const INITIAL_USERS: User[] = [
     email: 'd.reyes5@on3.com',
     full_name: 'Diana Reyes Morales',
     password: 'manager5',
-    role: 'MANAGER',
+    role: 'manager',
     status: 'active',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-02-14T11:40:00Z',
     updated_at: '2025-02-14T11:40:00Z',
     city_id: 'ci_000002'
@@ -113,9 +113,9 @@ export const INITIAL_USERS: User[] = [
     email: 'e.gomez6@on3.com',
     full_name: 'Eduardo Gómez Fernández',
     password: 'user6',
-    role: 'USER',
+    role: 'user',
     status: 'inactive',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-02-18T16:50:00Z',
     updated_at: '2025-02-18T16:50:00Z',
     city_id: 'ci_000002'
@@ -127,9 +127,9 @@ export const INITIAL_USERS: User[] = [
     email: 'g.vaca7@on3.com',
     full_name: 'Gabriela Vaca Rodríguez',
     password: 'admin7',
-    role: 'ADMIN',
+    role: 'admin',
     status: 'inactive',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-01-20T13:12:00Z',
     updated_at: '2025-01-20T13:12:00Z',
     city_id: 'ci_000002'
@@ -141,9 +141,9 @@ export const INITIAL_USERS: User[] = [
     email: 'h.perez8@on3.com',
     full_name: 'Hugo Pérez López',
     password: 'user8',
-    role: 'USER',
+    role: 'user',
     status: 'active',
-    language: 'ES',
+    language: 'es',
     created_at: '2025-02-20T10:00:00Z',
     updated_at: '2025-02-20T10:00:00Z',
     city_id: 'ci_000001'

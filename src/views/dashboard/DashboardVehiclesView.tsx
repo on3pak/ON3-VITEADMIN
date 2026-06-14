@@ -29,7 +29,7 @@ export const DashboardVehiclesView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { vehicles, loadVehicles } = useVehicles();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   useEffect(() => { loadVehicles(); }, [loadVehicles]);
 

@@ -31,9 +31,9 @@ export const WorkCenterProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const checkPermission = (action: 'CREATE' | 'UPDATE' | 'DELETE'): { allowed: boolean; reason?: string } => {
     if (!user) return { allowed: false, reason: 'No autenticado' };
-    if (user.role === 'ROOT' || user.role === 'ADMIN') return { allowed: true };
-    if (user.role === 'MANAGER' && action !== 'DELETE') return { allowed: true };
-    if (user.role === 'MANAGER' && action === 'DELETE') return { allowed: false, reason: 'MANAGER no puede eliminar centros de trabajo.' };
+    if (user.role === 'root' || user.role === 'admin') return { allowed: true };
+    if (user.role === 'manager' && action !== 'DELETE') return { allowed: true };
+    if (user.role === 'manager' && action === 'DELETE') return { allowed: false, reason: 'MANAGER no puede eliminar centros de trabajo.' };
     return { allowed: false, reason: 'Tu rol es de solo lectura.' };
   };
 

@@ -82,7 +82,7 @@ export const MachineryView: React.FC = () => {
   const selectedItem = modalMode === 'edit' && selectedItemId ? getById(selectedItemId) : undefined;
   const overviews = getOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   const scopeCities = userCityId
     ? cities.filter((c) => c.id === userCityId)
@@ -124,7 +124,7 @@ export const MachineryView: React.FC = () => {
     return { totalPages: t, paginatedItems: p };
   }, [filteredItems, currentPage, itemsPerPage]);
 
-  const isReadOnly = loggedInUser?.role === 'USER';
+  const isReadOnly = loggedInUser?.role === 'user';
 
   return (
     <div className="space-y-5">
@@ -330,7 +330,7 @@ export const MachineryView: React.FC = () => {
         </div>
 
         <div className="hidden xl:flex xl:flex-col xl:w-64 flex-shrink-0 xl:space-y-3">
-          {loggedInUser?.role === 'ROOT' && (() => {
+          {loggedInUser?.role === 'root' && (() => {
             const open = openSections.ciudad;
             return (
             <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">

@@ -8,9 +8,9 @@ export interface AuthProfile {
     employee_id: string | null;
     email: string;
     full_name: string;
-    role: 'ROOT' | 'ADMIN' | 'MANAGER' | 'USER';
-    status: 'ACTIVE' | 'INACTIVE';
-    language: 'ES' | 'EN';
+    role: 'root' | 'admin' | 'manager' | 'user';
+    status: 'active' | 'inactive';
+    language: 'en' | 'es';
     avatar_url?: string | null;
     city_id?: string | null;
     dark_mode?: boolean;

@@ -85,14 +85,14 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
 
   const getPrevioForTomorrow = useCallback((cityId: string): ServiceReport => {
     const tomorrow = getTomorrowDateString();
-    const existing = reports.find((r) => r.date === tomorrow && r.type === 'PREVIO' && r.city_id === cityId);
+    const existing = reports.find((r) => r.date === tomorrow && r.type === 'handover' && r.city_id === cityId);
     if (existing) return existing;
 
     const now = new Date().toISOString();
     const newReport: ServiceReport = {
       id: crypto.randomUUID(),
       date: tomorrow,
-      type: 'PREVIO',
+      type: 'handover',
       city_id: cityId,
       status: 'draft',
       assignments: [],
@@ -109,11 +109,11 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
 
   const getDiarioForToday = useCallback((cityId: string): { report: ServiceReport; warnings: string[] } => {
     const today = getTodayDateString();
-    const existing = reports.find((r) => r.date === today && r.type === 'DIARIO' && r.city_id === cityId);
+    const existing = reports.find((r) => r.date === today && r.type === 'daily' && r.city_id === cityId);
     if (existing) return { report: existing, warnings: [] };
 
     const yesterday = getYesterdayDateString();
-    const previo = reports.find((r) => r.date === yesterday && r.type === 'PREVIO' && r.city_id === cityId);
+    const previo = reports.find((r) => r.date === yesterday && r.type === 'handover' && r.city_id === cityId);
     const warnings: string[] = [];
 
     if (previo) {
@@ -124,7 +124,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
     const newReport: ServiceReport = {
       id: crypto.randomUUID(),
       date: today,
-      type: 'DIARIO',
+      type: 'daily',
       city_id: cityId,
       status: 'draft',
       assignments: previo ? [...previo.assignments] : [],
@@ -146,7 +146,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
     const today = new Date();
     today.setDate(today.getDate() - 3);
     const cutoff = getDateString(today);
-    return reports.filter((r) => r.type === 'DIARIO' && r.city_id === cityId && r.date < cutoff);
+    return reports.filter((r) => r.type === 'daily' && r.city_id === cityId && r.date < cutoff);
   }, [reports]);
 
   const addAssignment = useCallback((reportId: string, data: { work_center_id: string; shift_id: string; employee_id: string; service_id: string; vehicle_id?: string }) => {
@@ -157,7 +157,7 @@ export const ServiceReportProvider: React.FC<{ children: ReactNode }> = ({ child
           id: crypto.randomUUID(),
           ...data,
         };
-        const attendance = r.type === 'DIARIO'
+        const attendance = r.type === 'daily'
           ? (r.attendance.some((a) => a.employee_id === data.employee_id)
             ? r.attendance
             : [...r.attendance, { employee_id: data.employee_id, status: 'present' as AttendanceStatus }])

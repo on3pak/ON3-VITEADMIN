@@ -42,7 +42,7 @@ export const DashboardMachineryView: React.FC = () => {
   const { user: loggedInUser } = useAuth();
   const { items, loadMachinery } = useMachinery();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   useEffect(() => { loadMachinery(); }, [loadMachinery]);
 

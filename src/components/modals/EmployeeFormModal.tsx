@@ -50,7 +50,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [winter_coat, setWinter_coat] = useState('');
   const [shoeSize, setShoeSize] = useState('');
   const [medical_check, setMedical_check] = useState(true);
-  const [vaccinated, setVaccinated] = useState(true);
+
   const [works_holidays, setWorks_holidays] = useState(true);
   const [contract_type, setContract_type] = useState('');
   const [contract_start_date, setContract_start_date] = useState('');
@@ -96,7 +96,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setWinter_coat(cs?.winter_coat || '');
       setShoeSize(cs?.summer_shoe ? String(cs.summer_shoe) : '');
       setMedical_check(editingEmployee.medical_check);
-      setVaccinated(editingEmployee.vaccinated);
       setWorks_holidays(editingEmployee.works_holidays);
       setContract_type(editingEmployee.contract_type || '');
       setContract_start_date(editingEmployee.contract_start_date || '');
@@ -219,7 +218,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       lockers: lockers.filter((l) => l.trim() !== ''),
       clothing_sizes: clothingSizesRecord,
       medical_check,
-      vaccinated,
       works_holidays,
       contract_type,
       contract_start_date,
@@ -461,10 +459,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={works_holidays} onChange={(e) => setWorks_holidays(e.target.checked)} className="rounded" />
                   <span>Trabaja Festivos</span>
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={vaccinated} onChange={(e) => setVaccinated(e.target.checked)} className="rounded" />
-                  <span>Vacunación</span>
                 </label>
               </div>
 

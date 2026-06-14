@@ -50,7 +50,7 @@ export const UsersView: React.FC = () => {
 
   const handleFormSubmit = async (formData: Omit<User, 'id' | 'created_at' | 'updated_at'>) => {
     if (selectedUserForEdit) {
-      if (selectedUserForEdit.role === 'ROOT' && loggedInUser?.role !== 'ROOT') {
+      if (selectedUserForEdit.role === 'root' && loggedInUser?.role !== 'root') {
         alert('⚠️ No se puede modificar la cuenta ROOT. Esta cuenta está protegida por el sistema.');
         return false;
       }
@@ -129,19 +129,19 @@ export const UsersView: React.FC = () => {
 
   const getRoleBadgeStyle = (role: UserRole) => {
     switch (role) {
-      case 'ROOT': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800';
-      case 'ADMIN': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800';
-      case 'MANAGER': return 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800';
-      case 'USER': return 'bg-app-bg text-app-text border-app-border';
+      case 'root': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800';
+      case 'admin': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+      case 'manager': return 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800';
+      case 'user': return 'bg-app-bg text-app-text border-app-border';
     }
   };
 
-  const isReadOnlyOperator = loggedInUser?.role === 'USER';
+  const isReadOnlyOperator = loggedInUser?.role === 'user';
 
   const canModifyUser = (targetUser: User): boolean => {
     if (isReadOnlyOperator) return false;
     if (targetUser.id === loggedInUser?.id) return false;
-    if (targetUser.role === 'ROOT' && loggedInUser?.role !== 'ROOT') return false;
+    if (targetUser.role === 'root' && loggedInUser?.role !== 'root') return false;
     return true;
   };
 
@@ -404,7 +404,7 @@ export const UsersView: React.FC = () => {
             {o && (
             <div className="px-4 pt-2 pb-3 space-y-1">
               <button onClick={() => setRoleFilter('ALL')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === 'ALL' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>Todos los Roles</button>
-              {(['ROOT', 'ADMIN', 'MANAGER', 'USER'] as const).map((role) => (
+              {(['root', 'admin', 'manager', 'user'] as const).map((role) => (
                 <button key={role} onClick={() => setRoleFilter(role)} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${roleFilter === role ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold' : 'text-app-text-secondary hover:bg-app-bg'}`}>{role}</button>
               ))}
             </div>

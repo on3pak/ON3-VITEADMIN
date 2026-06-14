@@ -13,7 +13,7 @@ export const WorkCentersView: React.FC = () => {
   const { workCenters, loadWorkCenters, loading } = useWorkCenters();
   const { user: loggedInUser } = useAuth();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [cityFilter, setCityFilter] = useState<string>(userCityId || 'ALL');
@@ -80,7 +80,7 @@ export const WorkCentersView: React.FC = () => {
     }
   };
 
-  const isReadOnlyOperator = loggedInUser?.role === 'USER';
+  const isReadOnlyOperator = loggedInUser?.role === 'user';
 
   return (
     <div className="space-y-5">

@@ -1,4 +1,4 @@
-export type InventoryCategory = 'CLOTHING' | 'PPE';
+export type InventoryCategory = 'clothing' | 'ppe';
 
 export interface InventoryCategoryOption {
   id: string;

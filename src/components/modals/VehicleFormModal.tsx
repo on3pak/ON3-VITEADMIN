@@ -22,7 +22,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
   const [itvExpiration, setItvExpiration] = useState('');
   const [insuranceExpiration, setInsuranceExpiration] = useState('');
   const [taxExpiration, setTaxExpiration] = useState('');
-  const [fuelType, setFuelType] = useState<FuelType>('DIESEL');
+  const [fuelType, setFuelType] = useState<FuelType>('diesel');
   const [kilometers, setKilometers] = useState(0);
   const [lastReviewDate, setLastReviewDate] = useState('');
   const [nextReviewKilometers, setNextReviewKilometers] = useState(0);
@@ -61,7 +61,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({ isOpen, onCl
       setItvExpiration('');
       setInsuranceExpiration('');
       setTaxExpiration('');
-      setFuelType('DIESEL');
+      setFuelType('diesel');
       setKilometers(0);
       setLastReviewDate('');
       setNextReviewKilometers(0);

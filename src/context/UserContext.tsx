@@ -38,24 +38,24 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const currentRole = user.role;
 
-    if (currentRole === 'ROOT') return { allowed: true };
+    if (currentRole === 'root') return { allowed: true };
 
-    if (currentRole === 'USER') {
+    if (currentRole === 'user') {
       return { allowed: false, reason: 'Tu rol USER es de SÓLO LECTURA. Requieres permisos elevados.' };
     }
 
-    if (currentRole === 'MANAGER') {
+    if (currentRole === 'manager') {
       if (action === 'DELETE') {
         return { allowed: false, reason: 'El rol MANAGER no tiene permitido eliminar registros. Acción exclusiva de ADMIN y ROOT.' };
       }
-      if (targetRole === 'ROOT' || targetRole === 'ADMIN' || originalTarget?.role === 'ROOT' || originalTarget?.role === 'ADMIN') {
+      if (targetRole === 'root' || targetRole === 'admin' || originalTarget?.role === 'root' || originalTarget?.role === 'admin') {
         return { allowed: false, reason: 'El rol MANAGER no puede crear ni modificar usuarios de jerarquía ROOT o ADMIN.' };
       }
       return { allowed: true };
     }
 
-    if (currentRole === 'ADMIN') {
-      if (originalTarget?.role === 'ROOT' || targetRole === 'ROOT') {
+    if (currentRole === 'admin') {
+      if (originalTarget?.role === 'root' || targetRole === 'root') {
         return { allowed: false, reason: 'No puedes modificar usuarios ROOT.' };
       }
       return { allowed: true };

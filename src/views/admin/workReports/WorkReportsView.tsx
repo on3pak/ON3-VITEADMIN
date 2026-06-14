@@ -106,7 +106,7 @@ export const WorkReportsView: React.FC = () => {
   );
 
   const userCityId = useMemo(() => {
-    if (user?.role === 'ROOT') return undefined;
+    if (user?.role === 'root') return undefined;
     return user?.city_id;
   }, [user]);
 

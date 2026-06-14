@@ -4,10 +4,10 @@ import { TopProgressBar } from '../../components/ui';
 import { ShieldCheck, Lock, User, Eye, EyeOff, ShieldAlert, AlertCircle, CheckCircle } from 'lucide-react';
 
 const DEV_ACCOUNTS = [
-  { role: 'ROOT', name: 'Miguel Torres', email: 'm.torres1@on3.com', password: 'root1' },
-  { role: 'ADMIN', name: 'Alejandro Mendoza', email: 'a.mendoza2@on3.com', password: 'admin2' },
-  { role: 'MANAGER', name: 'Beatriz Salazar', email: 'b.salazar3@on3.com', password: 'manager3' },
-  { role: 'USER', name: 'Carlos Fuentes', email: 'c.fuentes4@on3.com', password: 'user4' },
+  { role: 'root', name: 'Miguel Torres', email: 'm.torres1@on3.com', password: 'root1' },
+  { role: 'admin', name: 'Alejandro Mendoza', email: 'a.mendoza2@on3.com', password: 'admin2' },
+  { role: 'manager', name: 'Beatriz Salazar', email: 'b.salazar3@on3.com', password: 'manager3' },
+  { role: 'user', name: 'Carlos Fuentes', email: 'c.fuentes4@on3.com', password: 'user4' },
 ] as const;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

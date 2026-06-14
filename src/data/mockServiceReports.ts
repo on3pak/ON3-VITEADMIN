@@ -15,7 +15,7 @@ export const INITIAL_SERVICE_REPORTS: ServiceReport[] = [
   {
     id: 'sr_mock_diario_01',
     date: today,
-    type: 'DIARIO',
+    type: 'daily',
     city_id: 'ci_000001',
     status: 'draft',
     assignments: [

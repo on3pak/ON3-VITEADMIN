@@ -20,7 +20,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState<UserRole>('USER');
+  const [role, setRole] = useState<UserRole>('user');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
   const [employeeId, setEmployeeId] = useState('');
   const [employeeLookupStatus, setEmployeeLookupStatus] = useState<'idle' | 'found' | 'taken' | 'not_found'>('idle');
@@ -62,7 +62,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       setFullName('');
       setUsername('');
       setEmail('');
-      setRole('USER');
+      setRole('user');
       setStatus('active');
       setEmployeeId('');
     }
@@ -128,7 +128,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
         password: password.trim(),
         role,
         status,
-        language: 'ES',
+        language: 'es',
         employee_id: employeeId.trim() || null,
       });
       if (success) onClose();
@@ -156,7 +156,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       return;
     }
 
-    if (role === 'ROOT' && currentLoggedUser?.role !== 'ROOT') {
+    if (role === 'root' && currentLoggedUser?.role !== 'root') {
       setFormError('Solo el usuario ROOT puede crear cuentas con rol ROOT.');
       return;
     }
@@ -178,7 +178,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
       password: password.trim(),
       role,
       status,
-      language: 'ES',
+      language: 'es',
       employee_id: employeeId.trim() || null,
     });
 
@@ -190,16 +190,16 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
   // Helper notice text on role hierarchies depending on current operator role
   const isRoleSelectionDisabled = (roleOption: UserRole) => {
     if (!currentLoggedUser) return true;
-    if (currentLoggedUser.role === 'ROOT') return false;
+    if (currentLoggedUser.role === 'root') return false;
     
     // ADMIN can choose ADMIN, MANAGER, USER but can never select or assign ROOT role
-    if (currentLoggedUser.role === 'ADMIN') {
-      return roleOption === 'ROOT';
+    if (currentLoggedUser.role === 'admin') {
+      return roleOption === 'root';
     }
     
     // MANAGER can only choose USER or MANAGER, can't assign ADMIN or ROOT roles
-    if (currentLoggedUser.role === 'MANAGER') {
-      return roleOption === 'ROOT' || roleOption === 'ADMIN';
+    if (currentLoggedUser.role === 'manager') {
+      return roleOption === 'root' || roleOption === 'admin';
     }
 
     return true; // USER role cannot select anything
@@ -372,10 +372,10 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ isOpen, onClose, o
                 onChange={(e) => setRole(e.target.value as UserRole)}
                 className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30 transition-all text-app-text"
               >
-                <option value="USER" disabled={isRoleSelectionDisabled('USER')}>USER (Lectura Básica)</option>
-                <option value="MANAGER" disabled={isRoleSelectionDisabled('MANAGER')}>MANAGER (Gestión Media)</option>
-                <option value="ADMIN" disabled={isRoleSelectionDisabled('ADMIN')}>ADMIN (Alto Control)</option>
-                <option value="ROOT" disabled={isRoleSelectionDisabled('ROOT')}>ROOT (Acceso Total)</option>
+                <option value="USER" disabled={isRoleSelectionDisabled('user')}>USER (Lectura Básica)</option>
+                <option value="MANAGER" disabled={isRoleSelectionDisabled('manager')}>MANAGER (Gestión Media)</option>
+                <option value="ADMIN" disabled={isRoleSelectionDisabled('admin')}>ADMIN (Alto Control)</option>
+                <option value="ROOT" disabled={isRoleSelectionDisabled('root')}>ROOT (Acceso Total)</option>
               </select>
             </div>
 

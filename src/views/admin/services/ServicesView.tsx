@@ -66,7 +66,7 @@ export const ServicesView: React.FC<{ onViewService?: (id: string) => void }> = 
   const selectedService = modalMode === 'edit' && selectedServiceId ? getServiceById(selectedServiceId) : undefined;
   const serviceOverviews = getServiceOverviews();
 
-  const userCityId = loggedInUser?.role === 'ROOT' ? undefined : loggedInUser?.city_id;
+  const userCityId = loggedInUser?.role === 'root' ? undefined : loggedInUser?.city_id;
 
   const scopeWorkCenters = useMemo(
     () => userCityId ? workCenters.filter((wc) => wc.city_id === userCityId) : workCenters,

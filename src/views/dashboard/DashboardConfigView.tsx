@@ -172,9 +172,9 @@ export const DashboardConfigView: React.FC = () => {
               <div className="flex items-center justify-between py-1">
                 <span className="text-sm text-app-text-secondary">Rol</span>
                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-lg ${
-                  loggedInUser?.role === 'ROOT' ? 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300' :
-                  loggedInUser?.role === 'ADMIN' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' :
-                  loggedInUser?.role === 'MANAGER' ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300' :
+                  loggedInUser?.role === 'root' ? 'bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300' :
+                  loggedInUser?.role === 'admin' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' :
+                  loggedInUser?.role === 'manager' ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300' :
                   'bg-app-bg text-app-text-secondary'
                 }`}>
                   <Shield className="w-3 h-3" /> {loggedInUser?.role}

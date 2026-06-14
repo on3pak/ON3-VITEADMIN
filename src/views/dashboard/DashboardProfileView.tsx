@@ -19,7 +19,7 @@ import {
   Plus, X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart, Shirt,
 } from 'lucide-react';
 
-const VACATION_MONTHS = ['JULIO', 'AGOSTO', 'SEPTIEMBRE'] as const;
+const VACATION_MONTHS = ['july', 'august', 'september'] as const;
 
 function getCurrentVacationMonth(month: string | null): string | null {
   if (!month) return null;
@@ -53,7 +53,7 @@ export const DashboardProfileView: React.FC = () => {
   const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast } = useAuth();
   const { cityMap, categoryMap, shiftMap, workDayMap, workCenterMap, contractTypeMap } = useLookupsContext();
 
-  const isReadOnly = loggedInUser?.role === 'USER';
+  const isReadOnly = loggedInUser?.role === 'user';
 
   const [myEmployee, setMyEmployee] = useState<Employee | undefined>(profileEmployee ?? undefined);
   const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>(profileVacations ?? []);
@@ -105,7 +105,7 @@ export const DashboardProfileView: React.FC = () => {
     return true;
   };
 
-  const handleCambioVacaciones = (data: { type: 'VACATION_CHANGE'; requested_month: 'JULIO' | 'AGOSTO' | 'SEPTIEMBRE' | 'SPLIT' }) => {
+  const handleCambioVacaciones = (data: { type: 'vacation_change'; requested_month: 'july' | 'august' | 'september' | 'split' }) => {
     if (!myEmployee || isReadOnly) return;
     vacationsApi.create({
       employee_id: myEmployee.id,
@@ -117,7 +117,7 @@ export const DashboardProfileView: React.FC = () => {
     setCambioSubmitted(true);
   };
 
-  const handleSolicitarDias = (data: { type: 'FREE_DAYS'; requested_days: string[] }) => {
+  const handleSolicitarDias = (data: { type: 'free_days'; requested_days: string[] }) => {
     if (!myEmployee || isReadOnly) return;
     vacationsApi.create({
       employee_id: myEmployee.id,
@@ -279,7 +279,6 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={myEmployee?.lockers?.length ? myEmployee.lockers.join(', ') : '—'} />
                       <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={myEmployee ? `${myEmployee.irpf}%` : '—'} />
                        <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
-                       <InfoRow icon={<Heart className="h-4 w-4" />} label="Vacunación" value={myEmployee?.vaccinated ? 'Sí' : 'No'} />
                     </SectionCard>
 
                     {myEmployee.clothing_sizes && (
@@ -488,7 +487,7 @@ export const DashboardProfileView: React.FC = () => {
                           <li>• Email: <strong>{loggedInUser.email || '—'}</strong></li>
                           <li>• Rol: <strong>{loggedInUser.role || '—'}</strong></li>
                           <li>• Ciudad: <strong>{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</strong></li>
-                          <li>• Idioma: <strong>{loggedInUser.language === 'ES' ? 'Español' : loggedInUser.language === 'EN' ? 'Inglés' : loggedInUser.language || '—'}</strong></li>
+                          <li>• Idioma: <strong>{loggedInUser.language === 'es' ? 'Español' : loggedInUser.language === 'en' ? 'Inglés' : loggedInUser.language || '—'}</strong></li>
                         </>
                       ) : (
                         <>
