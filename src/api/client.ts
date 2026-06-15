@@ -1,5 +1,16 @@
-import { API_BASE_URL, STORAGE_KEYS } from '../config';
+import { API_BASE_URL, API_BASE_URL_FALLBACK, STORAGE_KEYS } from '../config';
 import type { ApiErrorResponse, ApiPaginatedResponse } from './types';
+
+const MAX_RETRIES = 3;
+
+let activeBaseUrl: string | null = null;
+
+function setActiveBaseUrl(url: string): void {
+  if (activeBaseUrl === url) return;
+  activeBaseUrl = url;
+  const env = url.includes('localhost') ? 'localhost' : '192.168.1.9 (Docker)';
+  console.log(`[API] Conectado a: ${env}`);
+}
 
 class ApiError extends Error {
   constructor(
@@ -58,8 +69,8 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return JSON.parse(text);
 }
 
-function buildUrl(path: string, params?: Record<string, string | number | undefined>): string {
-  const url = new URL(`${API_BASE_URL}${path}`);
+function buildUrl(path: string, params?: Record<string, string | number | undefined>, baseUrl?: string): string {
+  const url = new URL(`${baseUrl ?? API_BASE_URL}${path}`);
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== '') {
@@ -80,22 +91,47 @@ async function request<T>(
     skipAuth401?: boolean;
   },
 ): Promise<T> {
-  const url = buildUrl(path, options?.params);
   const headers = buildHeaders(options?.headers);
 
-  let res: Response;
-  try {
-    res = await fetch(url, {
+  async function doFetch(baseUrl: string): Promise<Response> {
+    const url = buildUrl(path, options?.params, baseUrl);
+    return fetch(url, {
       method,
       headers,
       body: options?.body ? JSON.stringify(options.body) : undefined,
     });
+  }
+
+  let res: Response;
+  let lastNetworkError: unknown;
+
+  if (activeBaseUrl === null || activeBaseUrl === API_BASE_URL) {
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        res = await doFetch(API_BASE_URL);
+        setActiveBaseUrl(API_BASE_URL);
+        if (options?.skipAuth401 && res.status === 401) {
+          throw new ApiError(401, ['Sesión expirada'], 'Unauthorized');
+        }
+        return handleResponse<T>(res);
+      } catch (e) {
+        if (e instanceof ApiError && e.statusCode !== 0) {
+          throw e;
+        }
+        lastNetworkError = e;
+        if (attempt < MAX_RETRIES) continue;
+        console.log(`[API] ${API_BASE_URL} no disponible tras ${MAX_RETRIES} intentos, cambiando a ${API_BASE_URL_FALLBACK}...`);
+      }
+    }
+  }
+
+  setActiveBaseUrl(API_BASE_URL_FALLBACK);
+  try {
+    res = await doFetch(API_BASE_URL_FALLBACK);
   } catch {
-    throw new ApiError(
-      0,
-      ['No se puede conectar con el servidor. Verifica tu conexión.'],
-      'ConnectionRefused',
-    );
+    throw lastNetworkError instanceof ApiError
+      ? lastNetworkError
+      : new ApiError(0, ['No se puede conectar con el servidor. Verifica tu conexión.'], 'ConnectionRefused');
   }
 
   if (options?.skipAuth401 && res.status === 401) {

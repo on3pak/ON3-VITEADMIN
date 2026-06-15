@@ -1,5 +1,7 @@
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6543/api';
 
+export const API_BASE_URL_FALLBACK = import.meta.env.VITE_API_URL_FALLBACK || 'http://192.168.1.9:6543/api';
+
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'on3_auth_token',
   AUTH_USER: 'on3_auth_user',
