@@ -151,7 +151,7 @@ export const DashboardProfileView: React.FC = () => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
     if (!cityName) return '/cover.jpg';
 
-    const citySlug = cityName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const citySlug = cityName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
     const mode = darkMode ? 'dark' : 'light';
     const bgFromApi = profileBackgrounds.find(
       (bg) => bg.mode === mode && bg.name.toLowerCase().includes(citySlug)
