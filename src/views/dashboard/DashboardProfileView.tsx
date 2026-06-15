@@ -51,7 +51,7 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ icon, title, action, children }) => (
   <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
     <div className="flex items-center gap-3 mb-4">
-      <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+      <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
         {icon}
       </span>
       <div className="flex-1 min-w-0">
@@ -167,7 +167,7 @@ export const DashboardProfileView: React.FC = () => {
       {loggedInUser && (
         <>
           {/* Cover + Header Bar */}
-            <div className="card-uiverse flex flex-col overflow-hidden">
+            <div>
               {/* Cover Image */}
               <div>
                 <img
@@ -215,16 +215,17 @@ export const DashboardProfileView: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+          </div>
 
           {/* Tab Content */}
-          <div className="mx-auto flex w-full max-w-4xl flex-auto justify-center p-6">
+          <div className="bg-gray-100/80 dark:bg-gray-950/50 flex-auto">
+            <div className="mx-auto flex w-full max-w-6xl justify-center p-6">
             {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-5">
                 {/* Compact employee card — same layout as SectionCard */}
                 <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+                    <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
                       <User className="h-4 w-4" />
                     </span>
                     <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Información del Usuario</span>
@@ -262,7 +263,7 @@ export const DashboardProfileView: React.FC = () => {
                       action={
                         <button
                           onClick={() => setRequestModalCard('employee')}
-                          className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-500 hover:bg-primary-400 text-white shadow-xs transition-all active:scale-95"
+                          className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500 hover:bg-amber-400 text-white shadow-xs transition-all active:scale-95"
                           title="Solicitar cambio"
                         >
                           <Pencil className="h-4 w-4" />
@@ -308,7 +309,7 @@ export const DashboardProfileView: React.FC = () => {
                     {myEmployee.clothing_sizes && (
                       <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
                         <div className="flex items-center gap-3 mb-4">
-                          <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+                          <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
                             <Shirt className="h-4 w-4" />
                           </span>
                           <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Uniformidad</span>
@@ -368,7 +369,7 @@ export const DashboardProfileView: React.FC = () => {
 
                     <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
                           <Calendar className="h-4 w-4" />
                         </span>
                         <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Vacaciones</span>
@@ -448,7 +449,8 @@ export const DashboardProfileView: React.FC = () => {
               </div>
             )}
           </div>
-        </>
+        </div>
+      </>
       )}
 
       <EmployeeFormModal
