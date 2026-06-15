@@ -95,6 +95,11 @@ export const DashboardProfileView: React.FC = () => {
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
   const [requestModalCard, setRequestModalCard] = useState<'personal' | 'employee' | null>(null);
   const [requestText, setRequestText] = useState('');
+  const [coverError, setCoverError] = useState(false);
+
+  useEffect(() => {
+    setCoverError(false);
+  }, [coverSrc]);
 
   const currentVacationMonth = useMemo(
     () => myEmployee ? getCurrentVacationMonth(myEmployee.vacation_month) : null,
@@ -163,6 +168,16 @@ export const DashboardProfileView: React.FC = () => {
       : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
   }, [loggedInUser?.city_id, cityMap, darkMode, profileBackgrounds]);
 
+  const fallbackCover = useMemo(() => {
+    const cityName = cityMap[loggedInUser?.city_id || ''];
+    if (!cityName) return '/cover.jpg';
+    return darkMode
+      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
+      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
+  }, [loggedInUser?.city_id, cityMap, darkMode]);
+
+  const displayCover = coverError ? fallbackCover : coverSrc;
+
   return (
     <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">
       {isReadOnly && (
@@ -180,8 +195,9 @@ export const DashboardProfileView: React.FC = () => {
               <div>
                 <img
                   className="h-48 object-cover object-center lg:h-64 w-full"
-                  src={coverSrc}
+                  src={displayCover}
                   alt="Cover image"
+                  onError={() => setCoverError(true)}
                 />
               </div>
 
