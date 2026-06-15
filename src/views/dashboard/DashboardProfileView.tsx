@@ -22,13 +22,13 @@ import {
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
 
 const CITY_BG_IMAGES: Record<string, string> = {
-  'Alcalá de Henares': '/img/skyline_alcala_de_henares.png',
-  'Guadalajara': '/img/skyline_guadalajara.png',
+  'Alcalá de Henares': '/img/alcala-de-henares.jpg',
+  'Guadalajara': '/img/guadalajara.jpg',
 };
 
 const CITY_DARK_IMAGES: Record<string, string> = {
-  'Alcalá de Henares': '/img/skyline_dark_alcala_de_henares.png',
-  'Guadalajara': '/img/skyline_dark_guadalajara.png',
+  'Alcalá de Henares': '/img/alcala-de-henares-dark.jpg',
+  'Guadalajara': '/img/guadalajara-dark.jpg',
 };
 
 function getCurrentVacationMonth(month: string | null): string | null {
@@ -64,7 +64,7 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 );
 
 export const DashboardProfileView: React.FC = () => {
-  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast, darkMode } = useAuth();
+  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, profileBackgrounds, triggerToast, darkMode } = useAuth();
   const { cityMap, categoryMap, shiftMap, workDayMap, workCenterMap, contractTypeMap } = useLookupsContext();
 
   const isReadOnly = loggedInUser?.role === 'user';
@@ -150,10 +150,18 @@ export const DashboardProfileView: React.FC = () => {
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
     if (!cityName) return '/cover.jpg';
+
+    const citySlug = cityName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const mode = darkMode ? 'dark' : 'light';
+    const bgFromApi = profileBackgrounds.find(
+      (bg) => bg.mode === mode && bg.name.toLowerCase().includes(citySlug)
+    );
+    if (bgFromApi) return bgFromApi.url;
+
     return darkMode
       ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
       : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
-  }, [loggedInUser?.city_id, cityMap, darkMode]);
+  }, [loggedInUser?.city_id, cityMap, darkMode, profileBackgrounds]);
 
   return (
     <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">

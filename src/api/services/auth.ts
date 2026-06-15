@@ -2,6 +2,12 @@ import { api } from '../client';
 import type { LoginPayload, LoginResponse } from '../types';
 import type { Employee, VacationRequest } from '../../types';
 
+export interface ProfileBackground {
+  name: string;
+  url: string;
+  mode: 'light' | 'dark';
+}
+
 export interface AuthProfile {
   user: {
     id: string;
@@ -17,6 +23,7 @@ export interface AuthProfile {
   };
   employee: Employee | null;
   vacations: VacationRequest[];
+  profileBackgrounds?: ProfileBackground[];
 }
 
 const BASE = '/auth';

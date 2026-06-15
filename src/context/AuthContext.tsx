@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User, UserRole } from '../types';
 import { authApi } from '../api/services';
+import type { ProfileBackground } from '../api/services/auth';
 import { STORAGE_KEYS } from '../config';
 import { getToken, api } from '../api/client';
 
@@ -16,6 +17,7 @@ interface AuthState {
   employee: Employee | null;
   vacations: VacationRequest[];
   darkMode: boolean;
+  profileBackgrounds: ProfileBackground[];
 }
 
 interface AuthContextProps {
@@ -28,6 +30,7 @@ interface AuthContextProps {
   employee: Employee | null;
   vacations: VacationRequest[];
   darkMode: boolean;
+  profileBackgrounds: ProfileBackground[];
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   hasRole: (roles: UserRole[]) => boolean;
@@ -78,6 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     employee: null,
     vacations: [],
     darkMode: localStorage.getItem(STORAGE_KEYS.DARK_MODE) === 'true',
+    profileBackgrounds: [],
   });
 
   // Apply initial dark mode from localStorage to DOM immediately
@@ -128,6 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           error: null,
           employee: profile.employee,
           vacations: profile.vacations,
+          profileBackgrounds: profile.profileBackgrounds ?? [],
           darkMode,
         });
       } catch {
@@ -168,6 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let vacations: VacationRequest[] = [];
       let appUser: User;
       let darkMode = state.darkMode;
+      let profileBackgrounds: ProfileBackground[] = [];
 
       try {
         const profile = await authApi.me();
@@ -175,6 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         appUser = mapApiUserToAppUser(profile.user);
         employee = profile.employee;
         vacations = profile.vacations;
+        profileBackgrounds = profile.profileBackgrounds ?? [];
         darkMode = profile.user.dark_mode ?? state.darkMode;
         applyDarkMode(darkMode);
       } catch {
@@ -192,6 +199,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error: null,
         employee,
         vacations,
+        profileBackgrounds,
         darkMode,
       });
 
@@ -232,6 +240,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       error: null,
       employee: null,
       vacations: [],
+      profileBackgrounds: [],
     }));
     triggerToast('Sesión cerrada correctamente.', 'info');
   };
@@ -252,7 +261,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, employee: state.employee, vacations: state.vacations, login, logout, hasRole, clearError, setDarkMode, triggerToast, toast }}>
+    <AuthContext.Provider value={{ ...state, employee: state.employee, vacations: state.vacations, profileBackgrounds: state.profileBackgrounds, login, logout, hasRole, clearError, setDarkMode, triggerToast, toast }}>
       {children}
     </AuthContext.Provider>
   );
