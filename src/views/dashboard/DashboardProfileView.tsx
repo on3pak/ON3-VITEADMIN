@@ -97,6 +97,32 @@ export const DashboardProfileView: React.FC = () => {
   const [requestText, setRequestText] = useState('');
   const [coverError, setCoverError] = useState(false);
 
+  const coverSrc = useMemo(() => {
+    const cityName = cityMap[loggedInUser?.city_id || ''];
+    if (!cityName) return '/cover.jpg';
+
+    const citySlug = cityName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+    const mode = darkMode ? 'dark' : 'light';
+    const bgFromApi = profileBackgrounds.find(
+      (bg) => bg.mode === mode && bg.name.toLowerCase().includes(citySlug)
+    );
+    if (bgFromApi) return bgFromApi.url;
+
+    return darkMode
+      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
+      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
+  }, [loggedInUser?.city_id, cityMap, darkMode, profileBackgrounds]);
+
+  const fallbackCover = useMemo(() => {
+    const cityName = cityMap[loggedInUser?.city_id || ''];
+    if (!cityName) return '/cover.jpg';
+    return darkMode
+      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
+      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
+  }, [loggedInUser?.city_id, cityMap, darkMode]);
+
+  const displayCover = coverError ? fallbackCover : coverSrc;
+
   useEffect(() => {
     setCoverError(false);
   }, [coverSrc]);
@@ -151,32 +177,6 @@ export const DashboardProfileView: React.FC = () => {
     () => myEmployee ? vacationRequests.filter((r) => r.employee_id === myEmployee.id && r.status.toLowerCase() === 'pending').length : 0,
     [myEmployee, vacationRequests]
   );
-
-  const coverSrc = useMemo(() => {
-    const cityName = cityMap[loggedInUser?.city_id || ''];
-    if (!cityName) return '/cover.jpg';
-
-    const citySlug = cityName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
-    const mode = darkMode ? 'dark' : 'light';
-    const bgFromApi = profileBackgrounds.find(
-      (bg) => bg.mode === mode && bg.name.toLowerCase().includes(citySlug)
-    );
-    if (bgFromApi) return bgFromApi.url;
-
-    return darkMode
-      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
-      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
-  }, [loggedInUser?.city_id, cityMap, darkMode, profileBackgrounds]);
-
-  const fallbackCover = useMemo(() => {
-    const cityName = cityMap[loggedInUser?.city_id || ''];
-    if (!cityName) return '/cover.jpg';
-    return darkMode
-      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
-      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
-  }, [loggedInUser?.city_id, cityMap, darkMode]);
-
-  const displayCover = coverError ? fallbackCover : coverSrc;
 
   return (
     <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">
