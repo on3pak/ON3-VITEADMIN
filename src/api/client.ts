@@ -43,10 +43,17 @@ function buildHeaders(extra: Record<string, string> = {}): Record<string, string
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (res.status === 401 && getToken()) {
+    let errMsg = 'Sesión expirada. Inicia sesión de nuevo.';
+    try {
+      const body = await res.json();
+      if (body.message) errMsg = Array.isArray(body.message) ? body.message.join('. ') : body.message;
+      else if (body.error) errMsg = body.error;
+    } catch { /* fallback to default message */ }
     localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+    localStorage.setItem('on3_auth_error', errMsg);
     window.location.reload();
-    throw new ApiError(401, ['Sesión expirada'], 'Unauthorized');
+    throw new ApiError(401, [errMsg], 'Unauthorized');
   }
 
   if (!res.ok) {

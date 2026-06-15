@@ -252,7 +252,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
       : [];
 
     return (
-      <div key={service.id} className="bg-app-card rounded-xl border border-app-border p-4">
+      <div key={service.id} className="card-uiverse p-4">
         <div className="flex items-start justify-between mb-3">
           <div>
             <h4 className="text-sm font-bold text-app-text">{service.name}</h4>
@@ -424,7 +424,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
     const wcEmployees = getEmployeesForWC(wcId);
 
     return (
-      <div key={wcId} className="bg-app-card rounded-2xl border border-app-card-border">
+      <div key={wcId} className="card-uiverse">
         <button
           onClick={() => { setActiveWC(isOpen ? null : wcId); setOpenDropdown(null); }}
           className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-app-bg transition-colors"
@@ -495,7 +495,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const renderWcList = (isEmptyMsg: string) => {
     if (filteredWorkCenters.length === 0) {
       return (
-        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+        <div className="card-uiverse p-8 text-center">
           <Building2 className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
           <p className="text-app-text-secondary">{isEmptyMsg}</p>
         </div>
@@ -535,7 +535,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
   const renderHistorialTab = () => (
     <div className="space-y-4">
       {historial.length === 0 ? (
-        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+        <div className="card-uiverse p-8 text-center">
           <History className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
           <p className="text-app-text-secondary">No hay partes de servicio anteriores registrados.</p>
         </div>
@@ -545,7 +545,7 @@ export const ServiceReportsView: React.FC<{ onTabChange?: (tab: 'previo' | 'diar
             const totalAssignments = r.assignments.length;
             const presentCount = r.attendance.filter((a) => a.status.toLowerCase() === 'present').length;
             return (
-              <div key={r.id} className="bg-app-card rounded-xl border border-app-card-border p-4 flex items-center justify-between">
+              <div key={r.id} className="card-uiverse p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CalendarCheck className="h-5 w-5 text-app-text-secondary" />
                   <div>

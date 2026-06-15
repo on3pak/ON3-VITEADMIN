@@ -137,7 +137,7 @@ export const MachineryView: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+      <div className="card-uiverse p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
@@ -207,7 +207,7 @@ export const MachineryView: React.FC = () => {
       ) : (
       <div className="flex gap-5">
         <div className="flex-1">
-          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="card-uiverse overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -333,7 +333,7 @@ export const MachineryView: React.FC = () => {
           {loggedInUser?.role === 'root' && (() => {
             const open = openSections.ciudad;
             return (
-            <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <div className="card-uiverse overflow-hidden">
               <button onClick={() => toggleSection('ciudad')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
                 Ciudad
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
@@ -353,7 +353,7 @@ export const MachineryView: React.FC = () => {
           {(() => {
             const open = openSections.centros;
             return (
-            <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <div className="card-uiverse overflow-hidden">
               <button onClick={() => toggleSection('centros')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
                 Centros de Trabajo
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
@@ -373,7 +373,7 @@ export const MachineryView: React.FC = () => {
           {(() => {
             const open = openSections.subtipo;
             return (
-            <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <div className="card-uiverse overflow-hidden">
               <button onClick={() => toggleSection('subtipo')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
                 Subtipo
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
@@ -393,7 +393,7 @@ export const MachineryView: React.FC = () => {
           {(() => {
             const open = openSections.estado;
             return (
-            <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+            <div className="card-uiverse overflow-hidden">
               <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
                 Estado
                 {open ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}

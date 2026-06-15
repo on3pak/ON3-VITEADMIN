@@ -126,6 +126,31 @@ body {
   @apply w-full px-3.5 py-2 text-sm border border-app-border rounded-lg bg-white text-app-text placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all;
 }
 
+/* Uiverse-style card */
+.card-uiverse {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.dark .card-uiverse {
+  background-color: #07182E;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+}
+
+.card-uiverse:hover {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .card-uiverse:hover {
+  box-shadow: 0 0 30px rgba(0, 183, 255, 0.3), 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
 /* Top progress bar animation */
 @keyframes progress-indeterminate {
   0% { transform: translateX(-100%); }

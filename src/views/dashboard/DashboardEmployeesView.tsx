@@ -157,7 +157,7 @@ export const DashboardEmployeesView: React.FC = () => {
           return (
           <div
             key={i}
-            className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs"
+            className="card-uiverse p-5"
           >
             <div className={`p-2.5 rounded-xl ${sc.bg} border ${sc.border} w-fit mb-3`}>
               <div className={sc.text}>{stat.icon}</div>
@@ -172,7 +172,7 @@ export const DashboardEmployeesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs lg:col-span-2">
+        <div className="card-uiverse p-5 lg:col-span-2">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Distribución por Categoría</h3>
@@ -204,7 +204,7 @@ export const DashboardEmployeesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Por Centro de Trabajo</h3>
@@ -225,7 +225,7 @@ export const DashboardEmployeesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Estado Laboral</h3>
@@ -244,7 +244,7 @@ export const DashboardEmployeesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Distribución por Turno</h3>
@@ -277,7 +277,7 @@ export const DashboardEmployeesView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+      <div className="card-uiverse p-5">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h3 className="font-semibold text-app-text">Empleados Recientes</h3>

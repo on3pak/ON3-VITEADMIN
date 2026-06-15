@@ -33,7 +33,7 @@ const shiftMap = Object.fromEntries(INITIAL_SHIFTS.map((s) => [s.id, s.name]));
 const todayIndex = (new Date().getDay() + 6) % 7;
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ icon, title, action, children }) => (
-  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+  <div className="card-uiverse p-4">
     <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
       <span className="flex-1">{title}</span>
@@ -377,7 +377,7 @@ export const WorkReportsView: React.FC = () => {
 
   if (!myEmployee) {
     return (
-      <div className="bg-app-card rounded-2xl border border-app-card-border p-12 text-center">
+      <div className="card-uiverse p-12 text-center">
         <UserCog className="h-16 w-16 text-app-text-secondary mx-auto mb-4" />
         <h3 className="text-lg font-bold text-app-text mb-2">Sin perfil de empleado</h3>
         <p className="text-sm text-app-text-secondary max-w-md mx-auto">
@@ -462,7 +462,7 @@ export const WorkReportsView: React.FC = () => {
 
         {/* Global Progress */}
         {totalProgress.total > 0 && (
-          <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+          <div className="card-uiverse p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Progreso general</span>
               <span className="text-sm font-bold text-app-text">{totalProgress.completed}/{totalProgress.total} tareas</span>
@@ -1345,7 +1345,7 @@ export const WorkReportsView: React.FC = () => {
           }}
         />
         {history.length === 0 && (
-          <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+          <div className="card-uiverse p-8 text-center">
             <History className="h-10 w-10 text-app-text-secondary mx-auto mb-3" />
             <p className="text-app-text-secondary">No hay partes de trabajo anteriores registrados.</p>
           </div>

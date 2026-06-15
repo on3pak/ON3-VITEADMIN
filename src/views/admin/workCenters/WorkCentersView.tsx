@@ -94,7 +94,7 @@ export const WorkCentersView: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-app-card p-3 sm:p-4 rounded-2xl border border-app-card-border shadow-xs flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+      <div className="card-uiverse p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-app-text-secondary">
             <Search className="h-4 w-4" />
@@ -160,7 +160,7 @@ export const WorkCentersView: React.FC = () => {
       ) : (
       <div className="flex gap-5">
         <div className="flex-1">
-          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="card-uiverse overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -282,7 +282,7 @@ export const WorkCentersView: React.FC = () => {
 
         <div className="hidden xl:flex xl:flex-col xl:w-64 flex-shrink-0 xl:space-y-3">
           {(() => { const o = openSections.ciudad; return (
-          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="card-uiverse overflow-hidden">
             <button onClick={() => toggleSection('ciudad')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Ciudad
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}
@@ -299,7 +299,7 @@ export const WorkCentersView: React.FC = () => {
           )})()}
 
           {(() => { const o = openSections.estado; return (
-          <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+          <div className="card-uiverse overflow-hidden">
             <button onClick={() => toggleSection('estado')} className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-app-text-secondary uppercase tracking-wider hover:bg-app-bg transition-colors">
               Estado
               {o ? <ChevronUp className="h-3.5 w-3.5 text-app-text-secondary" /> : <ChevronDown className="h-3.5 w-3.5 text-app-text-secondary" />}

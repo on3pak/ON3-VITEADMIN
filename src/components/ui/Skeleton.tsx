@@ -29,7 +29,7 @@ export const TableSkeleton: React.FC<{ rows?: number; cols?: number }> = ({ rows
 export const CardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="bg-app-card rounded-xl border border-app-border/50 p-5 space-y-4">
+      <div key={i} className="card-uiverse p-5 space-y-4">
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-10 rounded-xl" />
           <div className="space-y-2 flex-1">

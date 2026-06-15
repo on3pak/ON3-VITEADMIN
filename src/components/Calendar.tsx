@@ -44,7 +44,7 @@ export const Calendar: React.FC<CalendarProps> = ({ markedDates, onDayClick, cla
 
   return (
     <div className={cn('space-y-4', className)}>
-      <div className="flex items-center justify-between bg-app-card rounded-xl border border-app-card-border px-4 py-3">
+      <div className="flex items-center justify-between card-uiverse px-4 py-3">
         <button onClick={goPrevMonth} className="p-1.5 hover:bg-app-bg rounded-lg transition-colors">
           <ChevronLeft className="h-4 w-4 text-app-text" />
         </button>
@@ -56,7 +56,7 @@ export const Calendar: React.FC<CalendarProps> = ({ markedDates, onDayClick, cla
         </button>
       </div>
 
-      <div className="bg-app-card rounded-xl border border-app-card-border overflow-hidden">
+      <div className="card-uiverse overflow-hidden">
         <div className="grid grid-cols-7">
           {DAY_NAMES.map((d) => (
             <div key={d} className="text-center text-[11px] font-semibold text-app-text-secondary py-2 bg-app-bg border-b border-app-border">

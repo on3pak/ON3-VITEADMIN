@@ -102,7 +102,7 @@ export const DashboardVehiclesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-primary-50 dark:bg-primary-900/20">
               <TruckIcon className="h-5 w-5 text-primary-600 dark:text-primary-300" />
@@ -114,7 +114,7 @@ export const DashboardVehiclesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20">
               <Truck className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />
@@ -126,7 +126,7 @@ export const DashboardVehiclesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20">
               <Wrench className="h-5 w-5 text-amber-600 dark:text-amber-300" />
@@ -138,7 +138,7 @@ export const DashboardVehiclesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-900/20">
               <AlertTriangle className="h-5 w-5 text-rose-600 dark:text-rose-300" />
@@ -152,7 +152,7 @@ export const DashboardVehiclesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+        <div className="lg:col-span-2 card-uiverse overflow-hidden">
           <div className="p-5 border-b border-app-border">
             <h3 className="font-semibold text-app-text">Estado de Flota</h3>
           </div>
@@ -180,7 +180,7 @@ export const DashboardVehiclesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+        <div className="card-uiverse overflow-hidden">
           <div className="p-5 border-b border-app-border">
             <h3 className="font-semibold text-app-text">Tipos de Vehículo</h3>
           </div>
@@ -199,7 +199,7 @@ export const DashboardVehiclesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+        <div className="card-uiverse overflow-hidden">
           <div className="p-5 border-b border-app-border">
             <h3 className="font-semibold text-app-text">Kilómetros Totales</h3>
           </div>
@@ -214,7 +214,7 @@ export const DashboardVehiclesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card rounded-2xl border border-app-card-border shadow-xs overflow-hidden">
+        <div className="card-uiverse overflow-hidden">
           <div className="p-5 border-b border-app-border">
             <h3 className="font-semibold text-app-text">Por Centro de Trabajo</h3>
           </div>

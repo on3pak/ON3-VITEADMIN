@@ -125,7 +125,7 @@ export const DashboardServicesView: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 w-fit mb-3">
             <ClipboardList className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
           </div>
@@ -133,7 +133,7 @@ export const DashboardServicesView: React.FC = () => {
           <p className="text-2xl font-bold text-app-text mt-1">{total}</p>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 w-fit mb-3">
             <UserCog className="h-5 w-5 text-amber-600 dark:text-amber-300" />
           </div>
@@ -142,7 +142,7 @@ export const DashboardServicesView: React.FC = () => {
           <p className="text-xs text-app-text-secondary mt-0.5">{staffStats.servicesConOficial} servicios cubiertos</p>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 w-fit mb-3">
             <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />
           </div>
@@ -151,7 +151,7 @@ export const DashboardServicesView: React.FC = () => {
           <p className="text-xs text-app-text-secondary mt-0.5">{total > 0 ? (staffStats.totalPeones / total).toFixed(1) : '0'} prom. por servicio</p>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800 w-fit mb-3">
             <Building2 className="h-5 w-5 text-sky-600 dark:text-sky-300" />
           </div>
@@ -162,7 +162,7 @@ export const DashboardServicesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Por Centro de Trabajo</h3>
@@ -191,7 +191,7 @@ export const DashboardServicesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Por Categoría</h3>
@@ -222,7 +222,7 @@ export const DashboardServicesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Distribución por Turno</h3>
@@ -251,7 +251,7 @@ export const DashboardServicesView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Composición de Personal</h3>
@@ -281,7 +281,7 @@ export const DashboardServicesView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+      <div className="card-uiverse p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="font-semibold text-app-text">Vista Rápida de Servicios</h3>

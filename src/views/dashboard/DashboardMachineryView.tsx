@@ -166,7 +166,7 @@ export const DashboardMachineryView: React.FC = () => {
         {stats.map((stat, i) => {
           const sc = getStatColor(stat.color);
           return (
-          <div key={i} className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+          <div key={i} className="card-uiverse p-5">
             <div className={`p-2 rounded-xl ${sc.bg} border ${sc.border} w-fit mb-2.5`}>
               <div className={sc.text}>{stat.icon}</div>
             </div>
@@ -179,7 +179,7 @@ export const DashboardMachineryView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-app-text">Por Tipo</h3>
@@ -205,7 +205,7 @@ export const DashboardMachineryView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-app-text">Por Estado</h3>
@@ -225,7 +225,7 @@ export const DashboardMachineryView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-app-text">Por Ciudad</h3>
@@ -248,7 +248,7 @@ export const DashboardMachineryView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-app-text">Próximos Mantenimientos</h3>

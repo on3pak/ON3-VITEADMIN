@@ -108,7 +108,7 @@ export const DashboardWorkCentersView: React.FC = () => {
         {stats.map((stat, i) => {
           const sc = getStatColor(stat.color);
           return (
-          <div key={i} className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+          <div key={i} className="card-uiverse p-5">
             <div className={`p-2.5 rounded-xl ${sc.bg} border ${sc.border} w-fit mb-3`}>
               <div className={sc.text}>{stat.icon}</div>
             </div>
@@ -122,7 +122,7 @@ export const DashboardWorkCentersView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs lg:col-span-2">
+        <div className="card-uiverse p-5 lg:col-span-2">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Distribución por Ciudad</h3>
@@ -154,7 +154,7 @@ export const DashboardWorkCentersView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Estado Actual</h3>
@@ -174,7 +174,7 @@ export const DashboardWorkCentersView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+      <div className="card-uiverse p-5">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h3 className="font-semibold text-app-text">Centros de Trabajo</h3>

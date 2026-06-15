@@ -24,7 +24,7 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string; h
 );
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
-  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+  <div className="card-uiverse p-4">
     <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
       <span>{title}</span>
@@ -77,7 +77,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
   if (!vehicle) {
     return (
       <div className="space-y-5">
-        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+        <div className="card-uiverse p-8 text-center">
           <p className="text-app-text-secondary">Vehículo no encontrado.</p>
           <button onClick={onBack} className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-xl">Volver</button>
         </div>
@@ -129,7 +129,7 @@ export const VehiclesDetailView: React.FC<VehiclesDetailViewProps> = ({ vehicleI
         </button>
       </div>
 
-      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
+      <div className="card-uiverse overflow-hidden">
         <div className="px-6 py-5 bg-gradient-to-r from-blue-600 to-blue-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">

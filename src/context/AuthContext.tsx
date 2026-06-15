@@ -102,7 +102,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initializeAuth = async () => {
       const storedToken = getToken();
       if (!storedToken) {
-        setState(prev => ({ ...prev, initializing: false }));
+        const storedError = localStorage.getItem('on3_auth_error');
+        if (storedError) {
+          localStorage.removeItem('on3_auth_error');
+          setState(prev => ({ ...prev, error: storedError, initializing: false }));
+        } else {
+          setState(prev => ({ ...prev, initializing: false }));
+        }
         return;
       }
 
@@ -127,6 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch {
         localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
         localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+        const storedError = localStorage.getItem('on3_auth_error');
+        if (storedError) localStorage.removeItem('on3_auth_error');
         setState(prev => ({
           ...prev,
           isAuthenticated: false,
@@ -134,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           token: null,
           initializing: false,
           submitting: false,
-          error: null,
+          error: storedError || null,
           employee: null,
           vacations: [],
         }));

@@ -24,7 +24,7 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | 
 );
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
-  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+  <div className="card-uiverse p-4">
     <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
       {icon}
       <span>{title}</span>
@@ -88,7 +88,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
   if (!employee) {
     return (
       <div className="space-y-5">
-        <div className="bg-app-card rounded-2xl border border-app-card-border p-8 text-center">
+        <div className="card-uiverse p-8 text-center">
           <p className="text-app-text-secondary">Empleado no encontrado.</p>
           <button onClick={onBack} className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-xl">Volver</button>
         </div>
@@ -112,7 +112,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
         </button>
       </div>
 
-      <div className="bg-app-card rounded-2xl border border-app-card-border shadow-sm overflow-hidden">
+      <div className="card-uiverse overflow-hidden">
         <div className="px-6 py-5 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/20 flex items-center justify-center">
@@ -195,7 +195,7 @@ export const EmployeesDetailView: React.FC<EmployeesDetailViewProps> = ({ employ
           </SectionCard>
 
           {employee.clothing_sizes && (
-            <div className="bg-app-card rounded-xl border border-app-card-border p-4">
+            <div className="card-uiverse p-4">
               <div className="flex items-center gap-2 mb-3 text-app-text font-semibold text-sm">
                 <Shirt className="h-4 w-4" />
                 <span>Uniformidad</span>

@@ -26,7 +26,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 
 function ConfigCard({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-app-card rounded-2xl border border-app-border shadow-xs overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="card-uiverse overflow-hidden">
       <div className="flex items-center gap-2.5 px-5 py-4 border-b border-app-border">
         <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
           {icon}

@@ -82,7 +82,7 @@ export const DashboardUsersView: React.FC = () => {
         {stats.map((stat, i) => (
           <div
             key={i}
-            className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs"
+            className="card-uiverse p-5"
           >
             <div className={`p-2.5 rounded-xl ${statColor(stat.color).bg} border ${statColor(stat.color).border} w-fit mb-3`}>
               <div className={`${statColor(stat.color).text}`}>{stat.icon}</div>
@@ -96,7 +96,7 @@ export const DashboardUsersView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs lg:col-span-2">
+        <div className="card-uiverse p-5 lg:col-span-2">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Distribución por Rol</h3>
@@ -128,7 +128,7 @@ export const DashboardUsersView: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+        <div className="card-uiverse p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="font-semibold text-app-text">Información de Sesión</h3>
@@ -174,7 +174,7 @@ export const DashboardUsersView: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-app-card p-5 rounded-2xl border border-app-card-border shadow-xs">
+      <div className="card-uiverse p-5">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h3 className="font-semibold text-app-text">Usuarios Recientes</h3>

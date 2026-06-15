@@ -21,6 +21,16 @@ import {
 
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
 
+const CITY_BG_IMAGES: Record<string, string> = {
+  'Alcalá de Henares': '/img/skyline_alcala_de_henares.png',
+  'Guadalajara': '/img/skyline_guadalajara.png',
+};
+
+const CITY_DARK_IMAGES: Record<string, string> = {
+  'Alcalá de Henares': '/img/skyline_dark_alcala_de_henares.png',
+  'Guadalajara': '/img/skyline_dark_guadalajara.png',
+};
+
 function getCurrentVacationMonth(month: string | null): string | null {
   if (!month) return null;
   const idx = VACATION_MONTHS.indexOf(month as typeof VACATION_MONTHS[number]);
@@ -39,18 +49,22 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | 
 );
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ icon, title, action, children }) => (
-  <div className="bg-app-card rounded-xl border border-app-card-border p-4">
-    <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
-      {icon}
-      <span className="flex-1">{title}</span>
-      {action}
+  <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+    <div className="flex items-center gap-3 mb-4">
+      <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+        {icon}
+      </span>
+      <div className="flex-1 min-w-0">
+        <span className="text-sm font-bold text-app-text dark:text-white/90 truncate block">{title}</span>
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{children}</div>
   </div>
 );
 
 export const DashboardProfileView: React.FC = () => {
-  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast } = useAuth();
+  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast, darkMode } = useAuth();
   const { cityMap, categoryMap, shiftMap, workDayMap, workCenterMap, contractTypeMap } = useLookupsContext();
 
   const isReadOnly = loggedInUser?.role === 'user';
@@ -133,6 +147,14 @@ export const DashboardProfileView: React.FC = () => {
     [myEmployee, vacationRequests]
   );
 
+  const coverSrc = useMemo(() => {
+    const cityName = cityMap[loggedInUser?.city_id || ''];
+    if (!cityName) return '/cover.jpg';
+    return darkMode
+      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
+      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
+  }, [loggedInUser?.city_id, cityMap, darkMode]);
+
   return (
     <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">
       {isReadOnly && (
@@ -145,18 +167,18 @@ export const DashboardProfileView: React.FC = () => {
       {loggedInUser && (
         <>
           {/* Cover + Header Bar */}
-            <div className="bg-app-card flex flex-col shadow-sm border-b border-app-border">
+            <div className="card-uiverse flex flex-col overflow-hidden">
               {/* Cover Image */}
               <div>
                 <img
-                  className="h-40 object-cover lg:h-56 w-full"
-                  src="/cover.jpg"
+                  className="h-48 object-cover object-center lg:h-64 w-full"
+                  src={coverSrc}
                   alt="Cover image"
                 />
               </div>
 
               {/* Bar with Avatar + Name + Nav */}
-              <div className="bg-app-card mx-auto flex w-full max-w-5xl flex-col items-center px-6 lg:h-20 lg:flex-row lg:px-8">
+              <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 lg:h-20 lg:flex-row lg:px-8">
                 {/* Avatar */}
                 <div className="-mt-16 rounded-full lg:-mt-20">
                   <span className="flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold uppercase tracking-wide text-app-text ring-4 ring-green-500 bg-app-bg shadow-md">
@@ -200,10 +222,12 @@ export const DashboardProfileView: React.FC = () => {
             {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-5">
                 {/* Compact employee card — same layout as SectionCard */}
-                <div className="bg-app-bg rounded-xl border border-app-card-border p-4">
-                  <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
-                    <User className="h-4 w-4" />
-                    <span className="flex-1">Información del Usuario</span>
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+                      <User className="h-4 w-4" />
+                    </span>
+                    <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Información del Usuario</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -282,10 +306,12 @@ export const DashboardProfileView: React.FC = () => {
                     </SectionCard>
 
                     {myEmployee.clothing_sizes && (
-                      <div className="bg-app-bg rounded-xl border border-app-card-border p-4">
-                        <div className="flex items-center gap-2 mb-3 text-app-text font-semibold text-sm">
-                          <Shirt className="h-4 w-4" />
-                          <span>Uniformidad</span>
+                      <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                        <div className="flex items-center gap-3 mb-4">
+                          <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+                            <Shirt className="h-4 w-4" />
+                          </span>
+                          <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Uniformidad</span>
                         </div>
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
                           <span className="text-app-text-secondary">Camisa Verano</span>
@@ -313,9 +339,9 @@ export const DashboardProfileView: React.FC = () => {
                     )}
                   </>
                 ) : (
-                  <div className="bg-app-card rounded-xl border border-app-card-border p-8 text-center">
-                    <Briefcase className="w-12 h-12 text-app-text-secondary/60 mx-auto mb-3" />
-                    <p className="text-sm text-app-text-secondary">Sin información de empleado</p>
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg p-8 text-center">
+                    <Briefcase className="w-12 h-12 text-app-text-secondary/60 dark:text-white/40 mx-auto mb-3" />
+                    <p className="text-sm text-app-text-secondary dark:text-white/60">Sin información de empleado</p>
                     {!isReadOnly && (
                       <button
                         onClick={() => setEmployeeModalOpen(true)}
@@ -340,10 +366,12 @@ export const DashboardProfileView: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="bg-app-card rounded-xl border border-app-card-border p-4">
-                      <div className="flex items-center gap-2 mb-4 text-app-text font-semibold text-sm">
-                        <Calendar className="h-4 w-4" />
-                        <span>Vacaciones</span>
+                    <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg border border-white/20">
+                          <Calendar className="h-4 w-4" />
+                        </span>
+                        <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Vacaciones</span>
                       </div>
                       <div className="grid grid-cols-3 gap-4">
                         <div className="flex flex-col items-center rounded-xl bg-primary-50 dark:bg-primary-900/20 p-4">
@@ -398,9 +426,9 @@ export const DashboardProfileView: React.FC = () => {
                     )}
                   </>
                 ) : (
-                  <div className="bg-app-card rounded-xl border border-app-card-border p-8 text-center">
-                    <SunSnow className="w-12 h-12 text-app-text-secondary/60 mx-auto mb-3" />
-                    <p className="text-sm text-app-text-secondary">Sin información de vacaciones</p>
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg p-8 text-center">
+                    <SunSnow className="w-12 h-12 text-app-text-secondary/60 dark:text-white/40 mx-auto mb-3" />
+                    <p className="text-sm text-app-text-secondary dark:text-white/60">Sin información de vacaciones</p>
                     {!isReadOnly && (
                       <button
                         onClick={() => setEmployeeModalOpen(true)}
