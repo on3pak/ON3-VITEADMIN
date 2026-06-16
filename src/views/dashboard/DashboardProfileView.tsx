@@ -125,11 +125,6 @@ export const DashboardProfileView: React.FC = () => {
     img.src = coverSrc;
   }, [coverSrc]);
 
-  const currentVacationMonth = useMemo(
-    () => myEmployee ? getCurrentVacationMonth(empVacationMonth) : null,
-    [myEmployee, empVacationMonth]
-  );
-
   const fullName = loggedInUser?.full_name || '';
 
   const categoryName = myEmployee
@@ -170,6 +165,11 @@ export const DashboardProfileView: React.FC = () => {
   const empMedicalCheck = empExtras?.medical_check ?? myEmployee?.medical_check;
   const empVaccinated = empExtras?.vaccinated ?? myEmployee?.vaccinated;
   const empVacationMonth = empContracts?.vacation_month ?? myEmployee?.vacation_month;
+
+  const currentVacationMonth = useMemo(
+    () => myEmployee ? getCurrentVacationMonth(empVacationMonth) : null,
+    [myEmployee, empVacationMonth]
+  );
 
   const handleEmployeeSubmit = (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (isReadOnly) return false;
