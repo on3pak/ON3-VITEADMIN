@@ -6,7 +6,7 @@ import { INITIAL_WORK_CENTERS } from '../../../data/mockWorkCenters';
 import { INITIAL_VEHICLE_TYPES } from '../../../data/mockVehicles';
 import { VehicleFormModal } from '../../../components/modals/VehicleFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { Vehicle, VehicleOverview, VehicleType } from '../../types';
+import { Vehicle, VehicleType } from '../../types';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ChevronUp, Truck,

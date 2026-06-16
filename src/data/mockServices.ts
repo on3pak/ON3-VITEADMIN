@@ -42,16 +42,15 @@ const TASK_TEMPLATES: string[] = [
   'Limpieza de mobiliario urbano',
 ];
 
-function generateTasks(serviceId: string): ServiceTask[] {
+function generateTasks(_serviceId: string): ServiceTask[] {
   const tasks: ServiceTask[] = [];
-  let taskId = 0;
   const now = new Date().toISOString();
 
   for (let day = 0; day < 7; day++) {
     for (let t = 0; t < 20; t++) {
       tasks.push({
-        id: `${serviceId}-task-${taskId++}`,
-        service_id: serviceId,
+        id: `st_${String(taskIdx++).padStart(6, '0')}`,
+        service_id: _serviceId,
         day_index: day,
         task_index: t,
         description: `${TASK_TEMPLATES[t]} - ${DAY_ZONES[day]}`,
@@ -68,6 +67,7 @@ function generateTasks(serviceId: string): ServiceTask[] {
 
 const services: Service[] = [];
 let svcIdx = 1;
+let taskIdx = 1;
 
 function staffReq(i: number): { oficial: string | null; peones: number } {
   const n = (i % 3);
@@ -80,7 +80,7 @@ function staffReq(i: number): { oficial: string | null; peones: number } {
 // 10 BMIX (Barrido Mixto) in Nave
 const bmixShift = (i: number) => i < 7 ? 's_1' : i < 9 ? 's_2' : 's_3';
 for (let i = 0; i < 10; i++) {
-  const id = `sv_${svcIdx++}`;
+  const id = `sv_${String(svcIdx++).padStart(6, '0')}`;
   services.push({
     id,
     work_center_id: 'wc_000001',

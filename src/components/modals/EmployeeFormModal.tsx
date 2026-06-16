@@ -52,6 +52,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [medical_check, setMedical_check] = useState(true);
 
   const [works_holidays, setWorks_holidays] = useState(true);
+  const [vaccinated, setVaccinated] = useState(false);
   const [contract_type, setContract_type] = useState('');
   const [contract_start_date, setContract_start_date] = useState('');
   const [contract_end_date, setContract_end_date] = useState('');
@@ -97,6 +98,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setShoeSize(cs?.summer_shoe ? String(cs.summer_shoe) : '');
       setMedical_check(editingEmployee.medical_check);
       setWorks_holidays(editingEmployee.works_holidays);
+      setVaccinated(editingEmployee.vaccinated ?? false);
       setContract_type(editingEmployee.contract_type || '');
       setContract_start_date(editingEmployee.contract_start_date || '');
       setContract_end_date(editingEmployee.contract_end_date || '');
@@ -132,6 +134,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setShoeSize('');
       setMedical_check(true);
       setWorks_holidays(true);
+      setVaccinated(false);
       setContract_type('');
       setContract_start_date(new Date().toISOString().split('T')[0]);
       setContract_end_date('');
@@ -219,6 +222,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       clothing_sizes: clothingSizesRecord,
       medical_check,
       works_holidays,
+      vaccinated,
       contract_type,
       contract_start_date,
       contract_end_date: contract_end_date || null,
@@ -459,6 +463,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={works_holidays} onChange={(e) => setWorks_holidays(e.target.checked)} className="rounded" />
                   <span>Trabaja Festivos</span>
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={vaccinated} onChange={(e) => setVaccinated(e.target.checked)} className="rounded" />
+                  <span>Vacunado</span>
                 </label>
               </div>
 

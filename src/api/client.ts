@@ -127,7 +127,7 @@ async function request<T>(
         }
         lastNetworkError = e;
         if (attempt < MAX_RETRIES) continue;
-        console.log(`[API] ${API_BASE_URL} no disponible tras ${MAX_RETRIES} intentos, cambiando a ${API_BASE_URL_FALLBACK}...`);
+
       }
     }
   }
@@ -171,8 +171,13 @@ export const api = {
   delete: (path: string, id: string) =>
     request<void>('DELETE', `${path}/${id}`),
 
-  deletePath: <T = void>(path: string) =>
-    request<T>('DELETE', path),
+  upload: <T>(path: string, form: FormData) => {
+    const headers: Record<string, string> = {};
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const url = buildUrl(path);
+    return fetch(url, { method: 'POST', headers, body: form }).then<T>(handleResponse);
+  },
 
   postRaw,
   ApiError,

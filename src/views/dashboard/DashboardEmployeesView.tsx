@@ -51,7 +51,7 @@ export const DashboardEmployeesView: React.FC = () => {
       count: countByCategory(catId),
       color: name.includes('Encargado') || name.includes('Jefe') ? 'bg-purple-600'
         : name.includes('Mecánico') || name.includes('Mantenimiento') ? 'bg-blue-600'
-        : 'bg-app-bg0'
+        : 'bg-app-bg'
     };
   });
 

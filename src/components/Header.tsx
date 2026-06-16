@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardViewType } from '../types';
-import { Menu, Search, User, Settings, LogOut, Moon, Grid, Languages, Bell, Maximize2, Minimize2, Type, Star } from 'lucide-react';
+import { Menu, Search, User, Settings, LogOut, Grid, Languages, Bell, Maximize2, Minimize2, Type, Star } from 'lucide-react';
 
 
 interface HeaderProps {

@@ -16,7 +16,7 @@ import {
   Sparkles,
   Send, Sun, ClipboardCheck,
   Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
-  Plus, X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart, Shirt,
+  X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart, Shirt,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;

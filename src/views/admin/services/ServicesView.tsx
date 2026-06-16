@@ -5,7 +5,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useLookupsContext } from '../../../context/LookupContext';
 import { ServiceFormModal } from '../../../components/modals/ServiceFormModal';
 import { ConfirmDialog } from '../../../components/modals/ConfirmDialog';
-import { Service, ServiceOverview } from '../../../types';
+import { Service } from '../../../types';
 import {
   Search, Plus, Edit3, Trash2, Filter, Eye,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,   ChevronDown, ChevronUp,

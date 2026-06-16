@@ -1,5 +1,4 @@
 export * from './user';
-export * from './test';
 export * from './view';
 export * from './employee';
 export * from './city';

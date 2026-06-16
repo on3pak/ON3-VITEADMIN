@@ -36,7 +36,7 @@ export const INITIAL_WORK_DAYS: WorkDay[] = [
 
 export const INITIAL_SHIFTS: Shift[] = [
   { id: 's_1', name: 'Mañana' },
-  { id: 's_4', name: 'Mañana esp' },
+
   { id: 's_2', name: 'Tarde' },
   { id: 's_3', name: 'Noche' },
 ];
@@ -80,6 +80,7 @@ const BASE: Omit<Employee, 'id' | 'name' | 'last_name1' | 'last_name2' | 'catego
   lockers: ['001'],
   clothing_sizes: DEFAULT_CLOTHING_SIZES,
   medical_check: true,
+  vaccinated: false,
   works_holidays: false,
   contract_type: 'ct_1',
   contract_start_date: '2025-01-01',

@@ -51,22 +51,46 @@ All entity IDs follow a consistent pattern — `{prefix}_{6-digit-zero-padded}`:
 | Entity | Prefix | Example | Notes |
 |--------|--------|---------|-------|
 | User | (none) | `a1b2c3d4-e5f6-47a7-b8i9-0k1l2m3n4o5p` | Raw UUID, no prefix |
-| Employee | (none) | `000001` | Bare 6-digit number |
-| Work Report | (none) | `crypto.randomUUID()` | UUID generated at runtime |
-| Vehicle | `vh_` | `vh_000001` | |
-| Service | `sv_` | `sv_000001` | |
-| WorkCenter | `wc_` | `wc_000001` | |
-| City | `ci_` | `ci_000001` | |
-| EmployeeCategory | `ec_` | `ec_000001` | |
-| EmployeeStatus | `es_` | `es_1` | **Not zero-padded** (unchanged) |
-| Shift | `s_` | `s_1` | **Not zero-padded** (unchanged) |
-| WorkDay | `wd_` | `wd_1` | **Not zero-padded** (unchanged) |
-| ContractType | `ct_` | `ct_1` | **Not zero-padded** (unchanged) |
-| VehicleType | `vt-` | `vt-1` | **Not zero-padded** (unchanged) |
-| InventoryItem | `inv_` | `inv_000001` | |
-| InventoryCategory | `ic-` | `ic-1` | **Not zero-padded** (unchanged) |
-| InventorySubtype | `ist-` | `ist-1` | **Not zero-padded** — added `ist-5` (Chaquetón), `ist-6` (Gorra), `ist-7` (Zapatos), `ist-8` (Botas) |
-| InventoryStatus | `rs-`/`es-`/`ms-` | `rs-1` | **Not zero-padded** (unchanged) |
+| Employee | (none) | `000001` | Bare 6-digit zero-padded |
+| Work Report | `wr_` | `wr_000001` | 6-digit zero-padded |
+| Vehicle | `vh_` | `vh_000001` | 6-digit zero-padded |
+| Service | `sv_` | `sv_000001` | 6-digit zero-padded |
+| ServiceTask | `st_` | `st_000001` | 6-digit zero-padded |
+| ServiceReport | `sr_` | `sr_000001` | 6-digit zero-padded |
+| WorkCenter | `wc_` | `wc_000001` | 6-digit zero-padded |
+| City | `ci_` | `ci_000001` | 6-digit zero-padded |
+| EmployeeCategory | `ec_` | `ec_000001` | 6-digit zero-padded |
+| EmployeeStatus | `es_` | `es_1` | **Not zero-padded** |
+| Shift | `s_` | `s_1` | **Not zero-padded** |
+| WorkDay | `wd_` | `wd_1` | **Not zero-padded** |
+| ContractType | `ct_` | `ct_1` | **Not zero-padded** |
+| VehicleType | `vt-` | `vt-1` | **Hyphen separator, not zero-padded** |
+| InventoryItem | `inv_` | `inv_000001` | 6-digit zero-padded |
+| InventoryCategory | `ic-` | `ic-1` | **Hyphen, not zero-padded** (frontend-only; DB uses ENUM) |
+| InventorySubtype | `ist-` | `ist-1` | **Hyphen, not zero-padded** |
+| InventoryStatus | `rs-`/`es-` | `rs-1` | **Hyphen, not zero-padded** (`rs-` = repair status, `es-` = exit status) |
+| Machinery | `mch_` | `mch_000001` | 6-digit zero-padded |
+| MachinerySubtype | `mst-` | `mst-1` | **Hyphen, not zero-padded** |
+| MachineryStatus | `ms-` | `ms-1` | **Hyphen, not zero-padded** |
+| EmployeeSchedule | `esch_` | `esch_000001` | 6-digit zero-padded (1:1 with employee) |
+| EmployeeContract | `econ_` | `econ_000001` | 6-digit zero-padded (1:1 with employee) |
+| EmployeePayroll | `epay_` | `epay_000001` | 6-digit zero-padded (1:1 with employee) |
+| EmployeeExtras | `eext_` | `eext_000001` | 6-digit zero-padded (1:1 with employee) |
+| EmployeeSize | `esiz_` | `esiz_000001` | 6-digit zero-padded |
+| EmployeeLeaveBalance | `elb_` | `elb_000001` | 6-digit zero-padded |
+| EmployeeDrivingLicense | `edl_` | `edl_000001` | 6-digit zero-padded |
+| EmployeeDocument | `edoc_` | `edoc_000001` | 6-digit zero-padded |
+| EmployeeClothing | `ecl_` | `ecl_000001` | 6-digit zero-padded |
+| VacationRequest | `vr_` | `vr_000001` | 6-digit zero-padded |
+| VacationRequestDay | `vrd_` | `vrd_000001` | 6-digit zero-padded |
+| LeaveRequest | `lr_` | `lr_000001` | 6-digit zero-padded |
+| LeaveType | `lt-` | `lt-1` | **Hyphen, not zero-padded** |
+| Size (clothing/shoe) | `sz-` | `sz-1` | **Hyphen, not zero-padded** |
+| AdvancePayment | `ap_` | `ap_000001` | 6-digit zero-padded |
+| RepayableLoan | `rl_` | `rl_000001` | 6-digit zero-padded |
+| SocialFundRequest | `sfr_` | `sfr_000001` | 6-digit zero-padded |
+| Sabbatical | `sab_` | `sab_000001` | 6-digit zero-padded |
+| SabbaticalType | `et-` | `et-1` | **Hyphen, not zero-padded** |
 
 ### Mock Data
 

@@ -75,57 +75,6 @@ body {
   background: #a0a0a0;
 }
 
-/* Metronic-style card */
-.metronic-card {
-  background-color: var(--color-app-card);
-  border: 1px solid var(--color-app-card-border);
-  border-radius: 0.75rem;
-}
-
-.metronic-card-header {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--color-app-card-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.metronic-card-body {
-  padding: 1.25rem;
-}
-
-/* Metronic-style table wrapper */
-.metronic-table {
-  @apply w-full;
-}
-
-.metronic-table th {
-  @apply text-xs font-semibold uppercase tracking-wider text-app-text-secondary px-4 py-3 text-left bg-app-bg border-b border-app-border;
-}
-
-.metronic-table td {
-  @apply text-sm text-app-text px-4 py-3 border-b border-app-border;
-}
-
-/* Metronic badge variant */
-.metronic-badge {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
-}
-
-/* Metronic button variant */
-.metronic-btn-primary {
-  @apply inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg hover:bg-primary-700 transition-colors;
-}
-
-.metronic-btn-light {
-  @apply inline-flex items-center gap-1.5 px-4 py-2 bg-app-bg text-app-text text-sm font-semibold rounded-lg hover:bg-app-border transition-colors;
-}
-
-/* Metronic input variant */
-.metronic-input {
-  @apply w-full px-3.5 py-2 text-sm border border-app-border rounded-lg bg-white text-app-text placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all;
-}
-
 /* Uiverse-style card */
 .card-uiverse {
   position: relative;

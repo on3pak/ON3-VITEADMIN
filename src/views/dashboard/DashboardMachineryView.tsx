@@ -5,7 +5,7 @@ import { MACHINERY_SUBTYPES, MACHINERY_STATUSES } from '../../data/mockMachinery
 import { INITIAL_WORK_CENTERS } from '../../data/mockWorkCenters';
 import { INITIAL_CITIES } from '../../data/mockEmployees';
 import {
-  Wrench, TrendingUp,
+  TrendingUp,
   AlertTriangle, MapPin, Calendar, Box, Clock,
 } from 'lucide-react';
 

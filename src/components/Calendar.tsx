@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, CircleCheckBig } from 'lucide-react';
-import { cn } from '../utils/cn';
+import { cn } from '../lib/utils';
 
 interface CalendarProps {
   markedDates?: Set<string>;

@@ -47,7 +47,7 @@ export const DashboardUsersView: React.FC = () => {
     { label: 'root', count: countByRole('root'), color: 'bg-purple-500' },
     { label: 'admin', count: countByRole('admin'), color: 'bg-blue-500' },
     { label: 'manager', count: countByRole('manager'), color: 'bg-amber-500' },
-    { label: 'user', count: countByRole('user'), color: 'bg-app-bg0' },
+    { label: 'user', count: countByRole('user'), color: 'bg-app-bg' },
   ];
 
   const statColor = (color: string) => {

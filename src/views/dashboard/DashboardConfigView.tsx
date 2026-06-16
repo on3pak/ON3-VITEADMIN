@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import {
-  Palette, Bell, Globe, CheckCircle, ShieldAlert,
+  Palette, Bell, Globe, CheckCircle,
   Monitor, Moon, Sun,
   User, Shield,
 } from 'lucide-react';
