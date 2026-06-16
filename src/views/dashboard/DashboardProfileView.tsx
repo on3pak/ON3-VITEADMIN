@@ -22,13 +22,13 @@ import {
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
 
 const CITY_BG_IMAGES: Record<string, string> = {
-  'Alcalá de Henares': '/img/alcala-de-henares.jpg',
-  'Guadalajara': '/img/guadalajara.jpg',
+  'Alcalá de Henares': '/img/alcala-de-henares.webp',
+  'Guadalajara': '/img/guadalajara.webp',
 };
 
 const CITY_DARK_IMAGES: Record<string, string> = {
-  'Alcalá de Henares': '/img/alcala-de-henares-dark.jpg',
-  'Guadalajara': '/img/guadalajara-dark.jpg',
+  'Alcalá de Henares': '/img/alcala-de-henares-dark.webp',
+  'Guadalajara': '/img/guadalajara-dark.webp',
 };
 
 function getCurrentVacationMonth(month: string | null): string | null {
@@ -96,27 +96,33 @@ export const DashboardProfileView: React.FC = () => {
   const [requestModalCard, setRequestModalCard] = useState<'personal' | 'employee' | null>(null);
   const [requestText, setRequestText] = useState('');
   const [coverError, setCoverError] = useState(false);
+  const [coverLoaded, setCoverLoaded] = useState(false);
 
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
-    if (!cityName) return '/cover.jpg';
+    if (!cityName) return '/img/alcala-de-henares.webp';
     return darkMode
-      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
-      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
+      ? (CITY_DARK_IMAGES[cityName] || '/img/alcala-de-henares-dark.webp')
+      : (CITY_BG_IMAGES[cityName] || '/img/alcala-de-henares.webp');
   }, [loggedInUser?.city_id, cityMap, darkMode]);
 
   const fallbackCover = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
-    if (!cityName) return '/cover.jpg';
+    if (!cityName) return '/img/alcala-de-henares.webp';
     return darkMode
-      ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
-      : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
+      ? (CITY_DARK_IMAGES[cityName] || '/img/alcala-de-henares-dark.webp')
+      : (CITY_BG_IMAGES[cityName] || '/img/alcala-de-henares.webp');
   }, [loggedInUser?.city_id, cityMap, darkMode]);
 
   const displayCover = coverError ? fallbackCover : coverSrc;
 
   useEffect(() => {
     setCoverError(false);
+    setCoverLoaded(false);
+    const img = new Image();
+    img.onload = () => setCoverLoaded(true);
+    img.onerror = () => { setCoverError(true); setCoverLoaded(true); };
+    img.src = coverSrc;
   }, [coverSrc]);
 
   const currentVacationMonth = useMemo(
@@ -169,6 +175,23 @@ export const DashboardProfileView: React.FC = () => {
     () => myEmployee ? vacationRequests.filter((r) => r.employee_id === myEmployee.id && r.status.toLowerCase() === 'pending').length : 0,
     [myEmployee, vacationRequests]
   );
+
+  if (!coverLoaded) {
+    return (
+      <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">
+        <div className="h-48 lg:h-64 w-full bg-app-bg animate-pulse" />
+        <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 lg:h-20 lg:flex-row lg:px-8">
+          <div className="-mt-16 lg:-mt-20">
+            <div className="h-24 w-24 rounded-full bg-app-bg animate-pulse ring-4 ring-app-border" />
+          </div>
+          <div className="mt-2 flex flex-col items-center lg:ml-6 lg:mt-0 lg:items-start gap-2">
+            <div className="h-5 w-48 rounded bg-app-bg animate-pulse" />
+            <div className="h-4 w-32 rounded bg-app-bg animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">
