@@ -64,7 +64,7 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: Rea
 );
 
 export const DashboardProfileView: React.FC = () => {
-  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, profileBackgrounds, triggerToast, darkMode } = useAuth();
+  const { user: loggedInUser, employee: profileEmployee, vacations: profileVacations, triggerToast, darkMode } = useAuth();
   const { cityMap, categoryMap, shiftMap, workDayMap, workCenterMap, contractTypeMap } = useLookupsContext();
 
   const isReadOnly = loggedInUser?.role === 'user';
@@ -100,18 +100,10 @@ export const DashboardProfileView: React.FC = () => {
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
     if (!cityName) return '/cover.jpg';
-
-    const citySlug = cityName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
-    const mode = darkMode ? 'dark' : 'light';
-    const bgFromApi = profileBackgrounds.find(
-      (bg) => bg.mode === mode && bg.name.toLowerCase().includes(citySlug)
-    );
-    if (bgFromApi) return bgFromApi.url;
-
     return darkMode
       ? (CITY_DARK_IMAGES[cityName] || '/cover.jpg')
       : (CITY_BG_IMAGES[cityName] || '/cover.jpg');
-  }, [loggedInUser?.city_id, cityMap, darkMode, profileBackgrounds]);
+  }, [loggedInUser?.city_id, cityMap, darkMode]);
 
   const fallbackCover = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
