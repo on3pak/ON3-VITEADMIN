@@ -126,17 +126,14 @@ export const DashboardProfileView: React.FC = () => {
   }, [coverSrc]);
 
   const currentVacationMonth = useMemo(
-    () => myEmployee ? getCurrentVacationMonth(myEmployee.vacation_month) : null,
-    [myEmployee]
+    () => myEmployee ? getCurrentVacationMonth(empVacationMonth) : null,
+    [myEmployee, empVacationMonth]
   );
 
   const fullName = loggedInUser?.full_name || '';
 
   const categoryName = myEmployee
     ? (myEmployee as EmployeeDetail).category?.name || categoryMap[myEmployee.category_id] || myEmployee.category_id
-    : '';
-  const shiftName = myEmployee
-    ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id
     : '';
   const workCenterName = myEmployee
     ? (myEmployee as EmployeeDetail).work_center?.name || workCenterMap[myEmployee.work_center_id] || myEmployee.work_center_id
@@ -147,11 +144,32 @@ export const DashboardProfileView: React.FC = () => {
   const statusName = myEmployee
     ? (myEmployee as EmployeeDetail).status?.name || ''
     : '';
-  const contractTypeName = myEmployee
-    ? (myEmployee as EmployeeDetail).contract_type?.name || contractTypeMap[myEmployee.contract_type as string] || (myEmployee.contract_type as string) || '—'
-    : '';
+  const empDetail = myEmployee as EmployeeDetail | undefined;
+  const empPayroll = empDetail?.payroll;
+  const empExtras = empDetail?.extras;
+  const empSchedule = empDetail?.schedule;
+  const empContracts = empDetail?.contract || (empDetail as Record<string, any>)?.contracts;
+  const empLeaveBalances = empDetail?.leave_balances ?? [];
+  const currentLeaveBalance = empLeaveBalances.length > 0 ? empLeaveBalances[0] : null;
+
+  const contractTypeId = empContracts?.contract_type ?? myEmployee?.contract_type;
+  const contractTypeName = contractTypeId
+    ? contractTypeMap[contractTypeId] || contractTypeId
+    : '—';
+  const shiftId = empSchedule?.shift_id ?? myEmployee?.shift_id;
+  const shiftName = shiftId ? shiftMap[shiftId] || shiftId : '';
+  const workDayId = empSchedule?.work_day_id ?? myEmployee?.work_day_id;
+  const scheduleStart = empSchedule?.start_time ?? myEmployee?.start_time;
+  const scheduleEnd = empSchedule?.end_time ?? myEmployee?.end_time;
   const fmtTime = (t: string | undefined | null) => t ? t.length > 5 ? t.slice(0, 5) : t : '—';
-  const scheduleDisplay = myEmployee ? `${fmtTime(myEmployee.start_time)} — ${fmtTime(myEmployee.end_time)}` : '—';
+  const scheduleDisplay = `${fmtTime(scheduleStart)} — ${fmtTime(scheduleEnd)}`;
+
+  const empIban = empPayroll?.iban ?? myEmployee?.iban;
+  const empIrpf = empPayroll?.irpf ?? myEmployee?.irpf;
+  const empLockers = empExtras?.lockers ?? myEmployee?.lockers;
+  const empMedicalCheck = empExtras?.medical_check ?? myEmployee?.medical_check;
+  const empVaccinated = empExtras?.vaccinated ?? myEmployee?.vaccinated;
+  const empVacationMonth = empContracts?.vacation_month ?? myEmployee?.vacation_month;
 
   const handleEmployeeSubmit = (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (isReadOnly) return false;
@@ -354,7 +372,7 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
                       <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={workCenterName || '—'} />
                       <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={statusName || '—'} />
-                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? workDayMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
+                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={workDayId ? workDayMap[workDayId] || workDayId : '—'} />
                       <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={contractTypeName} />
 
                       {/* Separator */}
@@ -364,11 +382,11 @@ export const DashboardProfileView: React.FC = () => {
                       <div className="col-span-2">
                         <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Administración</div>
                       </div>
-                      <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={myEmployee?.iban || '—'} />
-                      <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={myEmployee?.lockers?.length ? myEmployee.lockers.join(', ') : '—'} />
-                      <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={myEmployee ? `${myEmployee.irpf}%` : '—'} />
-                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
-                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Vacunado" value={myEmployee?.vaccinated ? 'Sí' : 'No'} />
+                      <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={empIban || '—'} />
+                      <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={empLockers?.length ? empLockers.join(', ') : '—'} />
+                      <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={empIrpf != null ? `${empIrpf}%` : '—'} />
+                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={empMedicalCheck ? 'Sí' : 'No'} />
+                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Vacunado" value={empVaccinated ? 'Sí' : 'No'} />
                     </SectionCard>
 
                     {(() => {
@@ -505,15 +523,15 @@ export const DashboardProfileView: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-3 gap-4">
                         <div className="flex flex-col items-center rounded-xl bg-primary-50 dark:bg-primary-900/20 p-4">
-                          <div className="text-3xl font-bold text-primary-600 dark:text-primary-300">{myEmployee.own_days ?? '—'}</div>
+                          <div className="text-3xl font-bold text-primary-600 dark:text-primary-300">{currentLeaveBalance?.own_days ?? myEmployee?.own_days ?? '—'}</div>
                           <div className="mt-1 text-center text-xs font-medium text-primary-700 dark:text-primary-300">Días Propios</div>
                         </div>
                         <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-4">
-                          <div className="text-3xl font-bold text-amber-600 dark:text-amber-300">{myEmployee.accumulated_days ?? '—'}</div>
+                          <div className="text-3xl font-bold text-amber-600 dark:text-amber-300">{currentLeaveBalance?.accumulated_days ?? myEmployee?.accumulated_days ?? '—'}</div>
                           <div className="mt-1 text-center text-xs font-medium text-amber-700 dark:text-amber-300">Acumulados</div>
                         </div>
                         <div className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-4">
-                          <div className="text-3xl font-bold text-violet-600 dark:text-violet-300">{myEmployee.vacation_days ?? '—'}</div>
+                          <div className="text-3xl font-bold text-violet-600 dark:text-violet-300">{currentLeaveBalance?.vacation_days ?? myEmployee?.vacation_days ?? '—'}</div>
                           <div className="mt-1 text-center text-xs font-medium text-violet-700 dark:text-violet-300">Vacaciones</div>
                         </div>
                       </div>
@@ -526,6 +544,15 @@ export const DashboardProfileView: React.FC = () => {
                             <div className="text-sm font-medium text-app-text">{currentVacationMonth || 'No asignado'}</div>
                           </div>
                         </div>
+                        {empContracts?.vacation_year && (
+                          <div className="flex items-center gap-2 mt-2">
+                            <Calendar className="h-4 w-4 text-primary-500 shrink-0" />
+                            <div>
+                              <div className="text-xs text-app-text-secondary">Año de Vacaciones</div>
+                              <div className="text-sm font-medium text-app-text">{empContracts.vacation_year}</div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -602,7 +629,7 @@ export const DashboardProfileView: React.FC = () => {
         isOpen={solicitarDiasOpen}
         onClose={() => setSolicitarDiasOpen(false)}
         employeeId={myEmployee?.id || ''}
-        disableWeekends={myEmployee?.work_day_id === 'wd_1'}
+        disableWeekends={workDayId === 'wd_1'}
         onSubmit={handleSolicitarDias}
       />
 
