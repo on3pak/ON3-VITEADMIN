@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLookupsContext } from '../../context/LookupContext';
 import { employeesApi, vacationsApi } from '../../api/services';
-import type { Employee, VacationRequest } from '../../types';
+import type { EmployeeDetail, VacationRequest, ArticleType } from '../../types';
 import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
@@ -69,7 +69,7 @@ export const DashboardProfileView: React.FC = () => {
 
   const isReadOnly = loggedInUser?.role === 'user';
 
-  const [myEmployee, setMyEmployee] = useState<Employee | undefined>(profileEmployee ?? undefined);
+  const [myEmployee, setMyEmployee] = useState<EmployeeDetail | undefined>(profileEmployee ?? undefined);
   const [vacationRequests, setVacationRequests] = useState<VacationRequest[]>(profileVacations ?? []);
 
   useEffect(() => {
@@ -132,8 +132,24 @@ export const DashboardProfileView: React.FC = () => {
 
   const fullName = loggedInUser?.full_name || '';
 
-  const categoryName = myEmployee ? categoryMap[myEmployee.category_id] || myEmployee.category_id : '';
-  const shiftName = myEmployee ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id : '';
+  const categoryName = myEmployee
+    ? (myEmployee as EmployeeDetail).category?.name || categoryMap[myEmployee.category_id] || myEmployee.category_id
+    : '';
+  const shiftName = myEmployee
+    ? shiftMap[myEmployee.shift_id] || myEmployee.shift_id
+    : '';
+  const workCenterName = myEmployee
+    ? (myEmployee as EmployeeDetail).work_center?.name || workCenterMap[myEmployee.work_center_id] || myEmployee.work_center_id
+    : '';
+  const cityName = myEmployee
+    ? (myEmployee as EmployeeDetail).city?.name || cityMap[myEmployee.city_id || ''] || myEmployee.city_id || ''
+    : '';
+  const statusName = myEmployee
+    ? (myEmployee as EmployeeDetail).status?.name || ''
+    : '';
+  const contractTypeName = myEmployee
+    ? (myEmployee as EmployeeDetail).contract_type?.name || contractTypeMap[myEmployee.contract_type as string] || (myEmployee.contract_type as string) || '—'
+    : '';
   const fmtTime = (t: string | undefined | null) => t ? t.length > 5 ? t.slice(0, 5) : t : '—';
   const scheduleDisplay = myEmployee ? `${fmtTime(myEmployee.start_time)} — ${fmtTime(myEmployee.end_time)}` : '—';
 
@@ -269,12 +285,19 @@ export const DashboardProfileView: React.FC = () => {
                     </span>
                     <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Información del Usuario</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <User className="h-4 w-4 text-primary-500 shrink-0" />
                       <div className="min-w-0">
                         <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Empleado</p>
                         <p className="text-sm font-semibold text-app-text truncate">{fullName}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <User className="h-4 w-4 text-primary-500 shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Usuario</p>
+                        <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.username || '—'}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -316,7 +339,8 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<User className="h-4 w-4" />} label="Nombre completo" value={fullName} />
                       <InfoRow icon={<Mail className="h-4 w-4" />} label="Email Personal" value={myEmployee?.personal_email || '—'} />
                       <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee?.phone || '—'} />
-                      <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'} />
+                      <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono Fijo" value={myEmployee?.phone_fixed || '—'} />
+                      <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityName || '—'} />
 
                       {/* Separator */}
                       <div className="col-span-2 border-t border-app-card-border my-1" />
@@ -328,9 +352,10 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
                       <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
-                      <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={myEmployee.contract_type ? contractTypeMap[myEmployee.contract_type] || myEmployee.contract_type : '—'} />
-                      <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={myEmployee.work_center_id ? (workCenterMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'} />
+                      <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={workCenterName || '—'} />
+                      <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={statusName || '—'} />
                       <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={myEmployee.work_day_id ? workDayMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'} />
+                      <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={contractTypeName} />
 
                       {/* Separator */}
                       <div className="col-span-2 border-t border-app-card-border my-1" />
@@ -342,41 +367,106 @@ export const DashboardProfileView: React.FC = () => {
                       <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={myEmployee?.iban || '—'} />
                       <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={myEmployee?.lockers?.length ? myEmployee.lockers.join(', ') : '—'} />
                       <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={myEmployee ? `${myEmployee.irpf}%` : '—'} />
-                       <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
+                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={myEmployee?.medical_check ? 'Sí' : 'No'} />
+                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Vacunado" value={myEmployee?.vaccinated ? 'Sí' : 'No'} />
                     </SectionCard>
 
-                    {myEmployee.clothing_sizes && (
-                      <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                        <div className="flex items-center gap-3 mb-4">
-                          <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                            <Shirt className="h-4 w-4" />
-                          </span>
-                          <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Uniformidad</span>
+                    {(() => {
+                      const emp = myEmployee as EmployeeDetail;
+                      const sizes = emp.sizes ?? [];
+                      const hasSizes = sizes.length > 0;
+                      const hasClothing = !!emp.clothing_sizes;
+                      if (!hasSizes && !hasClothing) return null;
+                      const sizeMap = new Map(sizes.map(s => [s.article_type, s.size]));
+                      const getSize = (type: ArticleType) => sizeMap.get(type) || '—';
+                      const LABELS: Record<string, string> = {
+                        shirt: 'Camisa', pants: 'Pantalón', jacket: 'Chaqueta',
+                        coat: 'Chaquetón', cap: 'Gorra', shoe: 'Zapatos',
+                      };
+                      return (
+                        <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                          <div className="flex items-center gap-3 mb-4">
+                            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
+                              <Shirt className="h-4 w-4" />
+                            </span>
+                            <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Uniformidad</span>
+                          </div>
+                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
+                            {(['shirt', 'pants', 'jacket', 'coat', 'cap', 'shoe'] as ArticleType[]).map(type => (
+                              <React.Fragment key={type}>
+                                <span className="text-app-text-secondary">{LABELS[type]}</span>
+                                <span className="text-app-text">{getSize(type)}</span>
+                              </React.Fragment>
+                            ))}
+                          </div>
                         </div>
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
-                          <span className="text-app-text-secondary">Camisa Verano</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_shirt || '—'}</span>
-                          <span className="text-app-text-secondary">Camisa Invierno</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_shirt || '—'}</span>
-                          <span className="text-app-text-secondary">Pantalón Verano</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_pants || '—'}</span>
-                          <span className="text-app-text-secondary">Pantalón Invierno</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_pants || '—'}</span>
-                          <span className="text-app-text-secondary">Chaqueta Verano</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_jacket || '—'}</span>
-                          <span className="text-app-text-secondary">Chaqueta Invierno</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_jacket || '—'}</span>
-                          <span className="text-app-text-secondary">Chaquetón</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_coat || '—'}</span>
-                          <span className="text-app-text-secondary">Gorra</span>
-                          <span className="text-app-text">Sí</span>
-                          <span className="text-app-text-secondary">Zapato Verano</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.summer_shoe ? String(myEmployee.clothing_sizes.summer_shoe) : '—'}</span>
-                          <span className="text-app-text-secondary">Zapato Invierno</span>
-                          <span className="text-app-text">{myEmployee.clothing_sizes.winter_shoe ? String(myEmployee.clothing_sizes.winter_shoe) : '—'}</span>
+                      );
+                    })()}
+
+                    {(() => {
+                      const emp = myEmployee as EmployeeDetail;
+                      const balances = emp.leave_balances ?? [];
+                      if (balances.length === 0) return null;
+                      return (
+                        <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                          <div className="flex items-center gap-3 mb-4">
+                            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
+                              <Calendar className="h-4 w-4" />
+                            </span>
+                            <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Saldos de Vacaciones</span>
+                          </div>
+                          <div className="flex flex-col gap-3">
+                            {balances.map(b => (
+                              <div key={b.year} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                <span className="text-sm font-semibold text-app-text">{b.year}</span>
+                                <div className="flex gap-4 text-xs">
+                                  <span className="text-primary-600 dark:text-primary-300 font-medium">{b.vacation_days} vac.</span>
+                                  <span className="text-amber-600 dark:text-amber-300 font-medium">{b.own_days} prop.</span>
+                                  <span className="text-violet-600 dark:text-violet-300 font-medium">{b.accumulated_days} acum.</span>
+                                  {b.excess_days > 0 && <span className="text-red-500 font-medium">{b.excess_days} exc.</span>}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      );
+                    })()}
+
+                    {(() => {
+                      const emp = myEmployee as EmployeeDetail;
+                      const licenses = emp.driving_licenses ?? [];
+                      if (licenses.length === 0) return null;
+                      const LICENSE_LABELS: Record<string, string> = {
+                        am: 'AM', a1: 'A1', a2: 'A2', a: 'A', b: 'B',
+                        be: 'B+E', c1: 'C1', c1e: 'C1+E', c: 'C', ce: 'C+E',
+                        d1: 'D1', d1e: 'D1+E', d: 'D', de: 'D+E',
+                      };
+                      return (
+                        <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                          <div className="flex items-center gap-3 mb-4">
+                            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
+                              <Shield className="h-4 w-4" />
+                            </span>
+                            <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Permisos de Conducir</span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {licenses.map((l, i) => (
+                              <span
+                                key={l.id || i}
+                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold ${
+                                  l.has_license
+                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                                    : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-800'
+                                }`}
+                              >
+                                {LICENSE_LABELS[l.license_type] || l.license_type}
+                                {!l.has_license && <X className="h-3 w-3" />}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </>
                 ) : (
                   <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg p-8 text-center">
@@ -555,15 +645,15 @@ export const DashboardProfileView: React.FC = () => {
                           <li>• Nombre completo: <strong>{fullName}</strong></li>
                           <li>• Email: <strong>{loggedInUser.email || '—'}</strong></li>
                           <li>• Rol: <strong>{loggedInUser.role || '—'}</strong></li>
-                          <li>• Ciudad: <strong>{cityMap[loggedInUser.city_id || ''] || loggedInUser.city_id || '—'}</strong></li>
+                          <li>• Ciudad: <strong>{cityName}</strong></li>
                           <li>• Idioma: <strong>{loggedInUser.language === 'es' ? 'Español' : loggedInUser.language === 'en' ? 'Inglés' : loggedInUser.language || '—'}</strong></li>
                         </>
                       ) : (
                         <>
                           <li>• Categoría: <strong>{categoryName || '—'}</strong></li>
                           <li>• Turno: <strong>{shiftName || '—'}</strong></li>
-                          <li>• Contrato: <strong>{myEmployee?.contract_type ? contractTypeMap[myEmployee.contract_type] || myEmployee.contract_type : '—'}</strong></li>
-                          <li>• Centro: <strong>{myEmployee?.work_center_id ? (workCenterMap[myEmployee.work_center_id] || myEmployee.work_center_id) : '—'}</strong></li>
+                          <li>• Contrato: <strong>{contractTypeName}</strong></li>
+                          <li>• Centro: <strong>{workCenterName}</strong></li>
                           <li>• Días Laborables: <strong>{myEmployee?.work_day_id ? workDayMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}</strong></li>
                         </>
                       )}

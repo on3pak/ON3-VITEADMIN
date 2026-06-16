@@ -25,4 +25,13 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   accessToken: string;
+  user: {
+    sub: string;
+    email: string;
+    role: string;
+    employee_id: string | null;
+    city_id: string | null;
+    token_version: number;
+  };
+  employee: Record<string, unknown> | null;
 }

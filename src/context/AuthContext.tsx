@@ -5,7 +5,7 @@ import { authApi } from '../api/services';
 import { STORAGE_KEYS } from '../config';
 import { getToken, api } from '../api/client';
 
-import type { Employee, VacationRequest } from '../types';
+import type { EmployeeDetail, VacationRequest } from '../types';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -14,7 +14,7 @@ interface AuthState {
   initializing: boolean;
   submitting: boolean;
   error: string | null;
-  employee: Employee | null;
+  employee: EmployeeDetail | null;
   vacations: VacationRequest[];
   darkMode: boolean;
 }
@@ -26,7 +26,7 @@ interface AuthContextProps {
   initializing: boolean;
   submitting: boolean;
   error: string | null;
-  employee: Employee | null;
+  employee: EmployeeDetail | null;
   vacations: VacationRequest[];
   darkMode: boolean;
   login: (email: string, password: string) => Promise<boolean>;
@@ -115,6 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       try {
         const profile = await authApi.me();
+        console.log('[Auth] /me response:', JSON.stringify(profile, null, 2));
         const appUser = mapApiUserToAppUser(profile.user);
         const darkMode = profile.user.dark_mode ?? state.darkMode;
         applyDarkMode(darkMode);
@@ -127,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           submitting: false,
           error: null,
           employee: profile.employee,
-          vacations: profile.vacations,
+          vacations: profile.employee?.vacations ?? [],
           darkMode,
         });
       } catch {
@@ -164,7 +165,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       await minDelay;
 
-      let employee: Employee | null = null;
+      let employee: EmployeeDetail | null = null;
       let vacations: VacationRequest[] = [];
       let appUser: User;
       let darkMode = state.darkMode;
@@ -172,7 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const profile = await authApi.me();
         appUser = mapApiUserToAppUser(profile.user);
         employee = profile.employee;
-        vacations = profile.vacations;
+        vacations = profile.employee?.vacations ?? [];
         darkMode = profile.user.dark_mode ?? state.darkMode;
         applyDarkMode(darkMode);
       } catch {

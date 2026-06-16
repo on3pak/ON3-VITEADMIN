@@ -1,6 +1,6 @@
 import { api } from '../client';
 import type { LoginPayload, LoginResponse } from '../types';
-import type { Employee, VacationRequest } from '../../types';
+import type { EmployeeDetail } from '../../types';
 
 export interface AuthProfile {
   user: {
@@ -14,9 +14,10 @@ export interface AuthProfile {
     avatar_url?: string | null;
     city_id?: string | null;
     dark_mode?: boolean;
+    token_version?: number;
+    is_logged?: boolean;
   };
-  employee: Employee | null;
-  vacations: VacationRequest[];
+  employee: EmployeeDetail | null;
 }
 
 const BASE = '/auth';
