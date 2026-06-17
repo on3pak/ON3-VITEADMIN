@@ -16,7 +16,7 @@ import {
   Sparkles,
   Send, Sun, ClipboardCheck,
   Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
-  X, AlertTriangle, Pencil, CreditCard, Package, Percent, Heart, Shirt,
+  CreditCard, Percent, Shirt, Download, Eye, X, History,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
@@ -47,6 +47,13 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: string | 
     </div>
   </div>
 );
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  return dateStr;
+}
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ icon, title, action, children }) => (
   <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
@@ -92,11 +99,13 @@ export const DashboardProfileView: React.FC = () => {
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
   const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
+  const [solicitarExcedenciaOpen, setSolicitarExcedenciaOpen] = useState(false);
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
-  const [requestModalCard, setRequestModalCard] = useState<'personal' | 'employee' | null>(null);
-  const [requestText, setRequestText] = useState('');
+  const [visualizarLicenseOpen, setVisualizarLicenseOpen] = useState(false);
+
   const [coverError, setCoverError] = useState(false);
   const [coverLoaded, setCoverLoaded] = useState(false);
+  const [activeEmployeeTab, setActiveEmployeeTab] = useState<string>('personal');
 
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
@@ -165,6 +174,13 @@ export const DashboardProfileView: React.FC = () => {
   const empMedicalCheck = empExtras?.medical_check ?? myEmployee?.medical_check;
   const empVaccinated = empExtras?.vaccinated ?? myEmployee?.vaccinated;
   const empVacationMonth = empContracts?.vacation_month ?? myEmployee?.vacation_month;
+  const empDrivingLicenses = empDetail?.driving_licenses ?? [];
+  const empSizes = empDetail?.sizes ?? [];
+  const empClothing = empDetail?.clothing ?? [];
+  const empAdvances = empDetail?.advances ?? [];
+  const empLoans = empDetail?.loans ?? [];
+  const empSabbaticals = empDetail?.sabbaticals ?? [];
+  const empVacationRequests = empDetail?.vacations ?? [];
 
   const currentVacationMonth = useMemo(
     () => myEmployee ? getCurrentVacationMonth(empVacationMonth) : null,
@@ -209,6 +225,20 @@ export const DashboardProfileView: React.FC = () => {
     () => myEmployee ? vacationRequests.filter((r) => r.employee_id === myEmployee.id && r.status.toLowerCase() === 'pending').length : 0,
     [myEmployee, vacationRequests]
   );
+
+  const employeeTabs = (() => {
+    type TabKey = 'personal' | 'nomina' | 'vacaciones' | 'uniformidad' | 'adelantos' | 'excedencias';
+    const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [];
+    tabs.push({ key: 'personal', label: 'Personal', icon: <User className="h-4 w-4" /> });
+    tabs.push({ key: 'nomina', label: 'Nómina y Extras', icon: <CreditCard className="h-4 w-4" /> });
+    tabs.push({ key: 'vacaciones', label: 'Vacaciones y Días', icon: <Calendar className="h-4 w-4" /> });
+    tabs.push({ key: 'uniformidad', label: 'Uniformidad y Permisos', icon: <Shirt className="h-4 w-4" /> });
+    tabs.push({ key: 'adelantos', label: 'Adelantos y Préstamos', icon: <Send className="h-4 w-4" /> });
+    tabs.push({ key: 'excedencias', label: 'Excedencias', icon: <Calendar className="h-4 w-4" /> });
+    return tabs;
+  })();
+
+  const safeActiveTab = employeeTabs.some(t => t.key === activeEmployeeTab) ? activeEmployeeTab : (employeeTabs[0]?.key || 'personal');
 
   if (!coverLoaded) {
     return (
@@ -295,196 +325,473 @@ export const DashboardProfileView: React.FC = () => {
             <div className="mx-auto flex w-full max-w-6xl justify-center p-6">
             {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-5">
-                {/* Compact employee card — same layout as SectionCard */}
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                      <User className="h-4 w-4" />
-                    </span>
-                    <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Información del Usuario</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <User className="h-4 w-4 text-primary-500 shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Empleado</p>
-                        <p className="text-sm font-semibold text-app-text truncate">{fullName}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <User className="h-4 w-4 text-primary-500 shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Usuario</p>
-                        <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.username || '—'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Mail className="h-4 w-4 text-primary-500 shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Email</p>
-                        <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.email || '—'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Shield className="h-4 w-4 text-primary-500 shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-app-text-secondary uppercase tracking-wider font-medium">Rol</p>
-                        <p className="text-sm font-semibold text-app-text truncate">{loggedInUser.role || '—'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {myEmployee ? (
                   <>
-                    <SectionCard
-                      icon={<Award className="h-4 w-4" />}
-                      title="Información del Empleado"
-                      action={
-                        <button
-                          onClick={() => setRequestModalCard('employee')}
-                          className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500 hover:bg-amber-400 text-white shadow-xs transition-all active:scale-95"
-                          title="Solicitar cambio"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                      }
-                    >
-                      {/* Contacto */}
-                      <div className="col-span-2">
-                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Contacto</div>
+                    <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
+                          <Award className="h-4 w-4" />
+                        </span>
+                        <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Información del Empleado</span>
                       </div>
-                      <InfoRow icon={<User className="h-4 w-4" />} label="Nombre completo" value={fullName} />
-                      <InfoRow icon={<Mail className="h-4 w-4" />} label="Email Personal" value={myEmployee?.personal_email || '—'} />
-                      <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee?.phone || '—'} />
-                      <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono Fijo" value={myEmployee?.phone_fixed || '—'} />
-                      <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityName || '—'} />
 
-                      {/* Separator */}
-                      <div className="col-span-2 border-t border-app-card-border my-1" />
-
-                      {/* Laboral */}
-                      <div className="col-span-2">
-                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Datos Laborales</div>
-                      </div>
-                      <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
-                      <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
-                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
-                      <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={workCenterName || '—'} />
-                      <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={statusName || '—'} />
-                      <InfoRow icon={<Calendar className="h-4 w-4" />} label="Días Laborables" value={workDayId ? workDayMap[workDayId] || workDayId : '—'} />
-                      <InfoRow icon={<IdCard className="h-4 w-4" />} label="Contrato" value={contractTypeName} />
-
-                      {/* Separator */}
-                      <div className="col-span-2 border-t border-app-card-border my-1" />
-
-                      {/* Administración */}
-                      <div className="col-span-2">
-                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3 mt-1">Administración</div>
-                      </div>
-                      <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={empIban || '—'} />
-                      <InfoRow icon={<Package className="h-4 w-4" />} label="Taquillas" value={empLockers?.length ? empLockers.join(', ') : '—'} />
-                      <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={empIrpf != null ? `${empIrpf}%` : '—'} />
-                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Revisión Médica" value={empMedicalCheck ? 'Sí' : 'No'} />
-                      <InfoRow icon={<Heart className="h-4 w-4" />} label="Vacunado" value={empVaccinated ? 'Sí' : 'No'} />
-                    </SectionCard>
-
-                    {(() => {
-                      const emp = myEmployee as EmployeeDetail;
-                      const sizes = emp.sizes ?? [];
-                      const hasSizes = sizes.length > 0;
-                      const hasClothing = !!emp.clothing_sizes;
-                      if (!hasSizes && !hasClothing) return null;
-                      const sizeMap = new Map(sizes.map(s => [s.article_type, s.size]));
-                      const getSize = (type: ArticleType) => sizeMap.get(type) || '—';
-                      const LABELS: Record<string, string> = {
-                        shirt: 'Camisa', pants: 'Pantalón', jacket: 'Chaqueta',
-                        coat: 'Chaquetón', cap: 'Gorra', shoe: 'Zapatos',
-                      };
-                      return (
-                        <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                              <Shirt className="h-4 w-4" />
-                            </span>
-                            <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Uniformidad</span>
-                          </div>
-                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
-                            {(['shirt', 'pants', 'jacket', 'coat', 'cap', 'shoe'] as ArticleType[]).map(type => (
-                              <React.Fragment key={type}>
-                                <span className="text-app-text-secondary">{LABELS[type]}</span>
-                                <span className="text-app-text">{getSize(type)}</span>
-                              </React.Fragment>
-                            ))}
-                          </div>
+                      {employeeTabs.length > 1 && (
+                        <div className="flex gap-1 overflow-x-auto mb-4 pb-1 border-b border-app-card-border">
+                          {employeeTabs.map(tab => (
+                            <button
+                              key={tab.key}
+                              onClick={() => setActiveEmployeeTab(tab.key)}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap shrink-0 ${
+                                safeActiveTab === tab.key
+                                  ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 shadow-xs'
+                                  : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg/50'
+                              }`}
+                            >
+                              {tab.icon} {tab.label}
+                            </button>
+                          ))}
                         </div>
-                      );
-                    })()}
+                      )}
 
-                    {(() => {
-                      const emp = myEmployee as EmployeeDetail;
-                      const balances = emp.leave_balances ?? [];
-                      if (balances.length === 0) return null;
-                      return (
-                        <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                              <Calendar className="h-4 w-4" />
-                            </span>
-                            <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Saldos de Vacaciones</span>
-                          </div>
-                          <div className="flex flex-col gap-3">
-                            {balances.map(b => (
-                              <div key={b.year} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
-                                <span className="text-sm font-semibold text-app-text">{b.year}</span>
-                                <div className="flex gap-4 text-xs">
-                                  <span className="text-primary-600 dark:text-primary-300 font-medium">{b.vacation_days} vac.</span>
-                                  <span className="text-amber-600 dark:text-amber-300 font-medium">{b.own_days} prop.</span>
-                                  <span className="text-violet-600 dark:text-violet-300 font-medium">{b.accumulated_days} acum.</span>
-                                  {b.excess_days > 0 && <span className="text-red-500 font-medium">{b.excess_days} exc.</span>}
+                      <div>
+                        {safeActiveTab === 'personal' && (
+                          <div className="space-y-4">
+                            {/* Datos Personales */}
+                            <div>
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Datos Personales</div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                                <InfoRow icon={<User className="h-4 w-4" />} label="Nombre" value={`${myEmployee.name} ${myEmployee.last_name1} ${myEmployee.last_name2 || ''}`.trim()} />
+                                <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={myEmployee.email || '—'} />
+                                <InfoRow icon={<Mail className="h-4 w-4" />} label="Email Personal" value={myEmployee.personal_email || '—'} />
+                                <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee.phone || '—'} />
+                                <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono Fijo" value={myEmployee.phone_fixed || '—'} />
+                                <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityName || '—'} />
+                              </div>
+                            </div>
+
+                            {/* DATOS PROFESIONALES */}
+                            <div className="border-t border-app-card-border pt-3">
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">DATOS PROFESIONALES</div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
+                                <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
+                                <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={workCenterName || '—'} />
+                                <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={statusName || '—'} />
+                              </div>
+                            </div>
+
+                            {/* Horario */}
+                            <div className="border-t border-app-card-border pt-3">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
+                                <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
+                                <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
+                                <InfoRow icon={<Calendar className="h-4 w-4" />} label="Jornada" value={workDayId ? workDayMap[workDayId] || workDayId : '—'} />
+                              </div>
+                            </div>
+
+                            {/* Contrato */}
+                            <div className="border-t border-app-card-border pt-3">
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Contrato</div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
+                                <InfoRow icon={<IdCard className="h-4 w-4" />} label="Tipo de Contrato" value={contractTypeName} />
+                                <InfoRow icon={<Calendar className="h-4 w-4" />} label="Fecha Inicio" value={empContracts?.contract_start_date || '—'} />
+                                <InfoRow icon={<Calendar className="h-4 w-4" />} label="Fecha Fin" value={empContracts?.contract_end_date || '—'} />
+                              </div>
+                            </div>
+
+                            {/* Permisos de Conducir — listado */}
+                            {empDrivingLicenses.length > 0 && (
+                              <div className="border-t border-app-card-border pt-3">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Permisos de Conducir</div>
+                                  <button
+                                    onClick={() => setVisualizarLicenseOpen(true)}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
+                                  >
+                                    <Eye className="h-3.5 w-3.5" /> Ver Documento
+                                  </button>
+                                </div>
+                                {(() => {
+                                  const LICENSE_LABELS: Record<string, string> = {
+                                    am: 'AM', a1: 'A1', a2: 'A2', a: 'A', b: 'B',
+                                    be: 'B+E', c1: 'C1', c1e: 'C1+E', c: 'C', ce: 'C+E',
+                                    d1: 'D1', d1e: 'D1+E', d: 'D', de: 'D+E',
+                                  };
+                                  return (
+                                    <div className="space-y-1">
+                                      {empDrivingLicenses.map((l, i) => (
+                                        <div key={l.id || i} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                          <span className="text-sm font-semibold text-app-text">{LICENSE_LABELS[l.license_type] || l.license_type}</span>
+                                          <span className="text-[11px] text-app-text-secondary">{l.start_date || '—'} → {l.expiry_date || l.end_date || '—'}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            )}
+
+                            {/* Extras */}
+                            <div className="border-t border-app-card-border pt-3">
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Extras</div>
+                              <div className="flex flex-wrap gap-4">
+                                {empLockers?.length > 0 && (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-app-text-secondary">Taquillas</span>
+                                    <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-sky-100 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300">
+                                      {empLockers.join(', ')}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-app-text-secondary">Trabaja Festivos</span>
+                                  <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${empExtras?.works_holidays ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'}`}>
+                                    {empExtras?.works_holidays ? 'Sí' : 'No'}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-app-text-secondary">Revisión Médica</span>
+                                  <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${empExtras?.medical_check ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'}`}>
+                                    {empExtras?.medical_check ? 'Sí' : 'No'}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-app-text-secondary">Vacunado</span>
+                                  <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${empExtras?.vaccinated ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'}`}>
+                                    {empExtras?.vaccinated ? 'Sí' : 'No'}
+                                  </span>
                                 </div>
                               </div>
-                            ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        )}
 
-                    {(() => {
-                      const emp = myEmployee as EmployeeDetail;
-                      const licenses = emp.driving_licenses ?? [];
-                      if (licenses.length === 0) return null;
-                      const LICENSE_LABELS: Record<string, string> = {
-                        am: 'AM', a1: 'A1', a2: 'A2', a: 'A', b: 'B',
-                        be: 'B+E', c1: 'C1', c1e: 'C1+E', c: 'C', ce: 'C+E',
-                        d1: 'D1', d1e: 'D1+E', d: 'D', de: 'D+E',
-                      };
-                      return (
-                        <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                              <Shield className="h-4 w-4" />
-                            </span>
-                            <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Permisos de Conducir</span>
+                        {safeActiveTab === 'nomina' && (
+                          <div className="space-y-4">
+                            <div>
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Nóminas 2026</div>
+                                <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                  <History className="h-3.5 w-3.5" /> Historial
+                                </button>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                                <InfoRow icon={<IdCard className="h-4 w-4" />} label="DNI/NIE" value={empPayroll?.dni || '—'} />
+                                <InfoRow icon={<Shield className="h-4 w-4" />} label="Nº Seguridad Social" value={empPayroll?.social_security_number || '—'} />
+                                <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={empIban || '—'} />
+                                <InfoRow icon={<Percent className="h-4 w-4" />} label="IRPF" value={empIrpf != null ? `${empIrpf}%` : '—'} />
+                              </div>
+                            </div>
+
+                            {/* 12 Month Cards */}
+                            <div className="border-t border-app-card-border pt-3">
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Nóminas mensuales</div>
+                              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                                {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((m, i) => {
+                                  const hasDoc = i === 3 || i === 4; // mock: abril and mayo have docs
+                                  return (
+                                    <div key={m} className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-app-bg/50 border border-app-border">
+                                      <span className="text-xs font-semibold text-app-text">{m}</span>
+                                      <button className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-lg transition-all ${
+                                        hasDoc
+                                          ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/30'
+                                          : 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300 cursor-not-allowed opacity-60'
+                                      }`}>
+                                        <Download className="h-3 w-3" /> {hasDoc ? 'Descargar' : 'No disponible'}
+                                      </button>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex flex-wrap gap-2">
-                            {licenses.map((l, i) => (
-                              <span
-                                key={l.id || i}
-                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold ${
-                                  l.has_license
-                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                                    : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-800'
-                                }`}
-                              >
-                                {LICENSE_LABELS[l.license_type] || l.license_type}
-                                {!l.has_license && <X className="h-3 w-3" />}
-                              </span>
-                            ))}
+                        )}
+
+                        {safeActiveTab === 'vacaciones' && (
+                          <div className="space-y-4">
+                            {(() => {
+                              const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                              const MONTH_MAP: Record<string, number> = { july: 6, august: 7, september: 8 };
+                              const MONTH_EN_TO_ES: Record<string, string> = {
+                                january: 'enero', february: 'febrero', march: 'marzo', april: 'abril',
+                                may: 'mayo', june: 'junio', july: 'julio', august: 'agosto',
+                                september: 'septiembre', october: 'octubre', november: 'noviembre', december: 'diciembre',
+                              };
+                              const vacMonthIdx = currentVacationMonth ? MONTH_MAP[currentVacationMonth] ?? -1 : -1;
+
+                              return (
+                                <>
+                                  {/* Balance */}
+                                  {empLeaveBalances.length > 0 && (
+                                    <div>
+                                      <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Mes de Vacaciones</div>
+                                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        {(() => {
+                                          const b = empLeaveBalances[0];
+                                          return (
+                                            <>
+                                              <div className="flex flex-col items-center rounded-xl bg-primary-50 dark:bg-primary-900/20 p-3">
+                                                <div className="text-2xl font-bold text-primary-600 dark:text-primary-300">{b.vacation_days}</div>
+                                                <div className="text-[10px] font-semibold text-primary-700 dark:text-primary-300 uppercase mt-0.5">Vacaciones</div>
+                                              </div>
+                                              <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">
+                                                <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
+                                                <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
+                                              </div>
+                                              <div className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-3">
+                                                <div className="text-2xl font-bold text-violet-600 dark:text-violet-300">{b.accumulated_days}</div>
+                                                <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Acumulados</div>
+                                              </div>
+                                              <div className={`flex flex-col items-center rounded-xl p-3 ${b.excess_days > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-app-bg/50'}`}>
+                                                <div className={`text-2xl font-bold ${b.excess_days > 0 ? 'text-red-600 dark:text-red-300' : 'text-app-text-secondary'}`}>{b.excess_days}</div>
+                                                <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Excesos</div>
+                                              </div>
+                                            </>
+                                          );
+                                        })()}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Mes de Vacaciones */}
+                                  <div className="border-t border-app-card-border pt-3">
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-2">
+                                        <SunSnow className="h-4 w-4 text-primary-500 shrink-0" />
+                                        <div>
+                                          <div className="text-xs text-app-text-secondary">Mes de Vacaciones</div>
+                                          <div className="text-sm font-bold text-app-text">{currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}</div>
+                                        </div>
+                                      </div>
+                                      {!isReadOnly && (
+                                        <button
+                                          onClick={() => setCambioVacacionesOpen(true)}
+                                          disabled={cambioSubmitted}
+                                          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] ${
+                                            cambioSubmitted
+                                              ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-not-allowed'
+                                              : 'text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30'
+                                          }`}
+                                        >
+                                          <Calendar className="h-3.5 w-3.5" />
+                                          {cambioSubmitted ? 'Pendiente' : 'Solicitar Cambio'}
+                                        </button>
+                                      )}
+                                    </div>
+                                    {currentVacationMonth && vacMonthIdx >= 0 && (
+                                      <div className="mt-2 flex flex-wrap gap-2">
+                                        {VACATION_MONTHS.filter(m => m !== currentVacationMonth).map(m => (
+                                          <span key={m} className="text-[11px] px-2 py-1 rounded-md bg-app-bg/50 text-app-text-secondary">
+                                            {MONTH_NAMES[MONTH_MAP[m]] || m}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Solicitar Días */}
+                                  {!isReadOnly && (
+                                    <div className="border-t border-app-card-border pt-3 flex justify-end">
+                                      <button
+                                        onClick={() => setSolicitarDiasOpen(true)}
+                                        className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30"
+                                      >
+                                        <Sun className="h-3.5 w-3.5" /> Solicitar Días
+                                      </button>
+                                    </div>
+                                  )}
+
+                                  {/* Requests list */}
+                                  {(vacationRequests.length > 0 || empVacationRequests.length > 0) && (
+                                    <div className="border-t border-app-card-border pt-3">
+                                      <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Solicitudes</div>
+                                      {[...(vacationRequests.length > 0 ? vacationRequests : []), ...(empVacationRequests.filter(vr => !vacationRequests.some(r => r.id === vr.id)))].map((vr, idx) => (
+                                        <div key={vr.id || idx} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5 mb-1.5">
+                                          <div className="flex flex-col">
+                                            <span className="text-sm font-semibold text-app-text">
+                                              {vr.type === 'free_days'
+                                                ? `Día libre — ${vr.requested_days?.join(', ') || ''}`
+                                                : vr.type === 'vacation_change' || vr.type === 'month_change'
+                                                ? `Cambio mes — ${vr.requested_month ? (MONTH_EN_TO_ES[vr.requested_month.toLowerCase()] || vr.requested_month) : ''}`
+                                                : vr.type}
+                                            </span>
+                                          </div>
+                                          <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                                            vr.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
+                                            vr.status === 'pending' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
+                                            'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
+                                          }`}>
+                                            {vr.status === 'approved' ? 'Aprobado' : vr.status === 'pending' ? 'Pendiente' : 'Rechazado'}
+                                          </span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            })()}
                           </div>
-                        </div>
-                      );
-                    })()}
+                        )}
+
+                        {safeActiveTab === 'uniformidad' && (
+                          <div className="space-y-4">
+                            {empSizes.length > 0 && (
+                              <div>
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Tallas</div>
+                                {(() => {
+                                  const LABELS: Record<string, string> = {
+                                    shirt: 'Camisa', pants: 'Pantalón', jacket: 'Chaqueta',
+                                    coat: 'Chaquetón', cap: 'Gorra', shoe: 'Zapatos',
+                                  };
+                                  return (
+                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
+                                      {(['shirt', 'pants', 'jacket', 'coat', 'cap', 'shoe'] as ArticleType[]).map(type => {
+                                        const size = empSizes.find(s => s.article_type === type)?.size || '—';
+                                        return (
+                                          <React.Fragment key={type}>
+                                            <span className="text-app-text-secondary">{LABELS[type]}</span>
+                                            <span className="text-app-text">{size}</span>
+                                          </React.Fragment>
+                                        );
+                                      })}
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            )}
+                            {empClothing.length > 0 && (
+                              <div className="border-t border-app-card-border pt-3">
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Prendas {new Date().getFullYear()}</div>
+                                <div className="space-y-1.5">
+                                  {empClothing.map((c, i) => (
+                                    <div key={c.id || i} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-bold text-app-text">{c.article_type || 'Prenda'} — {c.size} — {c.notes || 'Asignación'}</span>
+                                        <span className="text-[11px] text-app-text-secondary">{c.delivery_date ? formatDate(c.delivery_date) : ''}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {empSizes.length === 0 && empClothing.length === 0 && (
+                              <p className="text-sm text-app-text-secondary text-center py-4">Sin datos de uniformidad</p>
+                            )}
+                          </div>
+                        )}
+
+                        {safeActiveTab === 'adelantos' && (
+                          <div className="space-y-4">
+                            {empAdvances.length > 0 && (
+                              <div>
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Adelantos</div>
+                                <div className="space-y-1.5">
+                                  {empAdvances.map(a => (
+                                    <div key={a.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-semibold text-app-text">{a.amount}€</span>
+                                        <span className="text-[11px] text-app-text-secondary">{a.month}/{a.year}</span>
+                                      </div>
+                                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                                        a.status === 'accepted' || a.status === 'paid' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
+                                        'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
+                                      }`}>
+                                        {a.status === 'accepted' || a.status === 'paid' ? 'Aceptado' : 'Rechazado'}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                                {!isReadOnly && (
+                                  <div className="flex justify-center mt-3">
+                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                      <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {empLoans.length > 0 && (
+                              <div className={empAdvances.length > 0 ? 'border-t border-app-card-border pt-3' : ''}>
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Préstamos</div>
+                                <div className="space-y-1.5">
+                                  {empLoans.map(l => (
+                                    <div key={l.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-semibold text-app-text">{l.amount}€</span>
+                                        <span className="text-[11px] text-app-text-secondary">{l.start_date || '—'} → {l.end_date || '—'}</span>
+                                      </div>
+                                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                                        l.status === 'active' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
+                                        l.status === 'paid' || l.status === 'accepted' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
+                                        'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
+                                      }`}>
+                                        {l.status === 'active' ? 'Activo' : l.status === 'paid' || l.status === 'accepted' ? 'Aceptado' : 'Rechazado'}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                                {!isReadOnly && (
+                                  <div className="flex justify-end mt-3">
+                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                      <Send className="h-3.5 w-3.5" /> Solicitar Préstamo
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {empAdvances.length === 0 && empLoans.length === 0 && (
+                              <div>
+                                <p className="text-sm text-app-text-secondary text-center py-4">Sin adelantos ni préstamos</p>
+                                {!isReadOnly && (
+                                  <div className="flex justify-end gap-3">
+                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                      <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
+                                    </button>
+                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                      <Send className="h-3.5 w-3.5" /> Solicitar Préstamo
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {safeActiveTab === 'excedencias' && (
+                          <div className="space-y-4">
+                            {empSabbaticals.length > 0 && (
+                              <div>
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Excedencias</div>
+                                <div className="space-y-1.5">
+                                  {empSabbaticals.map(s => (
+                                    <div key={s.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-semibold text-app-text">Excedencia</span>
+                                        <span className="text-[11px] text-app-text-secondary">{s.notes || ''}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {empSabbaticals.length === 0 && (
+                              <p className="text-sm text-app-text-secondary text-center py-4">Sin excedencias</p>
+                            )}
+                            {!isReadOnly && (
+                              <div className="border-t border-app-card-border pt-3 flex justify-end">
+                                <button
+                                  onClick={() => setSolicitarExcedenciaOpen(true)}
+                                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
+                                >
+                                  <Calendar className="h-3.5 w-3.5" /> Solicitar Excedencia
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+
+                      </div>
+                    </div>
                   </>
                 ) : (
                   <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg p-8 text-center">
@@ -633,99 +940,118 @@ export const DashboardProfileView: React.FC = () => {
         onSubmit={handleSolicitarDias}
       />
 
-      {requestModalCard && (
+      {solicitarExcedenciaOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
-          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-lg border border-app-card-border overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-md border border-app-card-border overflow-hidden max-h-[90vh] flex flex-col">
             <div className="px-5 py-4 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/20 text-white">
-                  <User className="w-5 h-5" />
+                  <Calendar className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-sm">Solicitar cambio</h3>
-                  <p className="text-xs text-white/70">
-                    {requestModalCard === 'personal' ? 'Información Personal' : 'Información del Empleado'}
-                  </p>
+                  <h3 className="font-bold text-white text-sm">Solicitar Excedencia</h3>
+                  <p className="text-xs text-white/70">Selecciona el tipo y fecha de inicio</p>
                 </div>
               </div>
-              <button onClick={() => { setRequestModalCard(null); setRequestText(''); }} className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+              <button onClick={() => setSolicitarExcedenciaOpen(false)} className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>
-
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
               <div>
-                <h4 className="text-sm font-bold text-app-text mb-1">Describe qué dato necesita ser modificado</h4>
-                <p className="text-[11px] text-app-text-secondary">
-                  Indica el campo y el nuevo valor. Un administrador revisará tu solicitud y hará el cambio en el panel correspondiente.
-                </p>
-              </div>
-
-              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3">
-                <div className="flex items-start gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-                  <div className="text-xs text-amber-800 dark:text-amber-300">
-                    <p className="font-semibold mb-0.5">Campos actuales:</p>
-                    <ul className="space-y-0.5 text-amber-700 dark:text-amber-400">
-                      {requestModalCard === 'personal' ? (
-                        <>
-                          <li>• Nombre completo: <strong>{fullName}</strong></li>
-                          <li>• Email: <strong>{loggedInUser.email || '—'}</strong></li>
-                          <li>• Rol: <strong>{loggedInUser.role || '—'}</strong></li>
-                          <li>• Ciudad: <strong>{cityName}</strong></li>
-                          <li>• Idioma: <strong>{loggedInUser.language === 'es' ? 'Español' : loggedInUser.language === 'en' ? 'Inglés' : loggedInUser.language || '—'}</strong></li>
-                        </>
-                      ) : (
-                        <>
-                          <li>• Categoría: <strong>{categoryName || '—'}</strong></li>
-                          <li>• Turno: <strong>{shiftName || '—'}</strong></li>
-                          <li>• Contrato: <strong>{contractTypeName}</strong></li>
-                          <li>• Centro: <strong>{workCenterName}</strong></li>
-                          <li>• Días Laborables: <strong>{myEmployee?.work_day_id ? workDayMap[myEmployee.work_day_id] || myEmployee.work_day_id : '—'}</strong></li>
-                        </>
-                      )}
-                    </ul>
-                  </div>
+                <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Tipo de Excedencia</label>
+                <div className="space-y-2">
+                  {[
+                    { id: 'voluntaria', label: 'Voluntaria', desc: '4 meses a 5 años (mín. 1 año de servicio)' },
+                    { id: 'cuidado_hijos', label: 'Cuidado de hijos/familiares', desc: 'Reincorporación posible en cualquier momento' },
+                    { id: 'forzosa', label: 'Forzosa', desc: 'Cargos públicos o sindicales — reincorporación inmediata' },
+                  ].map(t => (
+                    <label key={t.id} className="flex items-start gap-3 p-3 rounded-xl border border-app-border hover:bg-app-bg/50 cursor-pointer transition-colors">
+                      <input type="radio" name="excedencia_type" className="mt-0.5" />
+                      <div>
+                        <div className="text-sm font-semibold text-app-text">{t.label}</div>
+                        <div className="text-[11px] text-app-text-secondary">{t.desc}</div>
+                      </div>
+                    </label>
+                  ))}
                 </div>
               </div>
-
-              <div>
-                <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Describe el cambio solicitado</label>
-                <textarea
-                  value={requestText}
-                  onChange={(e) => setRequestText(e.target.value)}
-                  placeholder="Ej: Cambiar teléfono a 612345678"
-                  rows={4}
-                  className="w-full rounded-xl border border-app-border px-4 py-3 text-sm bg-app-card text-app-text resize-none placeholder:text-app-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all"
-                />
+              <div className="border-t border-app-card-border pt-3">
+                <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Fecha de Inicio</label>
+                <input type="date" className="w-full rounded-xl border border-app-border px-4 py-2.5 text-sm bg-app-card text-app-text focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all" />
               </div>
             </div>
-
             <div className="px-5 py-4 border-t border-app-border flex items-center justify-between shrink-0 bg-app-bg/50">
-              <span className="text-[11px] text-app-text-secondary">
-                {requestText.trim() ? 'Solicitud lista para enviar' : 'Escribe tu solicitud'}
-              </span>
+              <span className="text-[11px] text-app-text-secondary">Revisión por administrador</span>
               <div className="flex items-center gap-2">
-                <button onClick={() => { setRequestModalCard(null); setRequestText(''); }} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors">
+                <button onClick={() => setSolicitarExcedenciaOpen(false)} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors">
                   Cancelar
                 </button>
                 <button
                   onClick={() => {
-                    if (!requestText.trim()) return;
-                    triggerToast('Solicitud enviada correctamente. Un administrador revisará los cambios.', 'success');
-                    setRequestModalCard(null);
-                    setRequestText('');
+                    triggerToast('Solicitud de excedencia enviada correctamente', 'success');
+                    setSolicitarExcedenciaOpen(false);
                   }}
-                  disabled={!requestText.trim()}
-                  className={`inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold rounded-xl shadow-xs transition-all ${
-                    requestText.trim()
-                      ? 'text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 active:scale-95'
-                      : 'text-app-text-secondary bg-app-bg cursor-not-allowed'
-                  }`}
+                  className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl shadow-xs hover:from-primary-500 hover:to-primary-400 transition-all active:scale-95"
                 >
-                  <Send className="w-4 h-4" />
-                  Enviar Solicitud
+                  <Send className="w-4 h-4" /> Enviar Solicitud
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {visualizarLicenseOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-md border border-app-card-border overflow-hidden">
+            <div className="px-5 py-4 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/20 text-white">
+                  <Eye className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Permisos de Conducir</h3>
+                  <p className="text-xs text-white/70">Documento de permisos</p>
+                </div>
+              </div>
+              <button onClick={() => setVisualizarLicenseOpen(false)} className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-5 space-y-3">
+              {(() => {
+                const LABELS: Record<string, string> = {
+                  am: 'AM', a1: 'A1', a2: 'A2', a: 'A', b: 'B',
+                  be: 'B+E', c1: 'C1', c1e: 'C1+E', c: 'C', ce: 'C+E',
+                  d1: 'D1', d1e: 'D1+E', d: 'D', de: 'D+E',
+                };
+                return empDrivingLicenses.map((l, i) => (
+                  <div key={l.id || i} className="rounded-xl bg-app-bg/50 p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-app-text">{LABELS[l.license_type] || l.license_type}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <span className="text-[10px] text-app-text-secondary block">Fecha Inicio</span>
+                        <span className="text-sm font-semibold text-app-text">{l.start_date || '—'}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-app-text-secondary block">Fecha Caducidad</span>
+                        <span className="text-sm font-semibold text-app-text">{l.expiry_date || l.end_date || '—'}</span>
+                      </div>
+                    </div>
+                    {l.notes && (
+                      <div>
+                        <span className="text-[10px] text-app-text-secondary block">Notas</span>
+                        <span className="text-sm text-app-text">{l.notes}</span>
+                      </div>
+                    )}
+                  </div>
+                ));
+              })()}
+              <div className="border-t border-app-border pt-3 mt-3 text-center">
+                <p className="text-[11px] text-app-text-secondary">Visualización de documento no disponible</p>
               </div>
             </div>
           </div>
