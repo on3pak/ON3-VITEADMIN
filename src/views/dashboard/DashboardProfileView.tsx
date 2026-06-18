@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
+const VACATION_MONTH_INDEX: Record<string, number> = { july: 6, august: 7, september: 8 };
 
 const CITY_BG_IMAGES: Record<string, string> = {
   'Alcalá de Henares': '/img/wallpapers/alcala.webp',
@@ -202,6 +203,7 @@ export const DashboardProfileView: React.FC = () => {
     () => myEmployee ? getCurrentVacationMonth(empVacationMonth) : null,
     [myEmployee, empVacationMonth]
   );
+  const vacationMonthIndex = currentVacationMonth ? VACATION_MONTH_INDEX[currentVacationMonth] : -1;
 
   const handleEmployeeSubmit = (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
     if (isReadOnly) return false;
@@ -876,6 +878,7 @@ export const DashboardProfileView: React.FC = () => {
                             `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                           const isHoliday = (d: Date) => holidays.includes(dateStr(d.getFullYear(), d.getMonth(), d.getDate()));
                           const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
+                          const isVacationDay = (d: Date) => vacationMonthIndex >= 0 && d.getMonth() === vacationMonthIndex;
                           const isNonWorking = (d: Date) => isWeekend(d) || isHoliday(d);
                           const isToday = (d: Date) =>
                             d.getFullYear() === today.getFullYear() &&
@@ -903,6 +906,7 @@ export const DashboardProfileView: React.FC = () => {
                             }
                             const date = new Date(calYear, month, day);
                             const working = !isNonWorking(date);
+                            const vac = !isOutside && isVacationDay(date);
                             const todayFlag = isToday(date);
                             const pastFlag = isPast(date);
 
@@ -911,16 +915,21 @@ export const DashboardProfileView: React.FC = () => {
                                 ${isOutside ? 'opacity-30' : ''}
                                 ${todayFlag ? 'bg-primary-50 dark:bg-primary-900/20 z-10' : ''}
                                 ${!isOutside && !working ? 'bg-rose-50/50 dark:bg-rose-900/10' : ''}
+                                ${vac && working ? 'bg-teal-50/60 dark:bg-teal-900/15' : ''}
                               `}>
                                 <span className={`font-semibold leading-none
                                   ${todayFlag ? 'text-primary-600 dark:text-primary-300' : ''}
                                   ${!isOutside && !working ? 'text-rose-500 dark:text-rose-400' : ''}
                                   ${!isOutside && working ? (pastFlag ? 'text-app-text' : 'text-app-text-secondary') : ''}
+                                  ${vac && working ? 'text-teal-600 dark:text-teal-400' : ''}
                                 `}>
                                   {day}
                                 </span>
                                 {!isOutside && !working && (
                                   <span className="text-[9px] leading-none mt-0.5 text-rose-400 dark:text-rose-500 font-medium">F</span>
+                                )}
+                                {vac && working && (
+                                  <span className="text-[9px] leading-none mt-0.5 text-teal-500 dark:text-teal-400 font-medium">V</span>
                                 )}
                                 {todayFlag && (
                                   <div className="absolute bottom-0.5 size-1 rounded-full bg-primary-500" />
@@ -938,6 +947,10 @@ export const DashboardProfileView: React.FC = () => {
                       <div className="flex items-center gap-1.5 text-xs text-app-text-secondary">
                         <div className="size-3 rounded bg-rose-50 dark:bg-rose-900/10 border border-app-card-border" />
                         Festivo
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-app-text-secondary">
+                        <div className="size-3 rounded bg-teal-50 dark:bg-teal-900/15 border border-app-card-border" />
+                        Vacaciones
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-app-text-secondary">
                         <div className="size-3 rounded bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800" />
