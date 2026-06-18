@@ -2,19 +2,18 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLookupsContext } from '../../context/LookupContext';
 import { employeesApi, vacationsApi } from '../../api/services';
+import { api } from '../../api/client';
 import type { EmployeeDetail, VacationRequest, ArticleType } from '../../types';
-import { WorkReportsView } from '../admin/workReports/WorkReportsView';
 import { EmployeeFormModal } from '../../components/modals/EmployeeFormModal';
 import { CambioVacacionesModal } from '../../components/modals/CambioVacacionesModal';
 import { SolicitarDiasModal } from '../../components/modals/SolicitarDiasModal';
 import {
-  User, Calendar,
-  CheckCircle,
+  User, Calendar, ChevronLeft, ChevronRight,
   ShieldAlert,
   Mail, Phone,
   SunSnow,
   Sparkles,
-  Send, Sun, ClipboardCheck,
+  Send, Sun,
   Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
   CreditCard, Percent, Shirt, Download, Eye, X, History,
 } from 'lucide-react';
@@ -93,7 +92,7 @@ export const DashboardProfileView: React.FC = () => {
     employeesApi.getById(loggedInUser.employee_id).then(setMyEmployee).catch(() => {});
   }, [loggedInUser?.employee_id, myEmployee]);
 
-  type ProfileTab = 'info' | 'solicitar' | 'parte';
+  type ProfileTab = 'info' | 'calendario';
   const [activeTab, setActiveTab] = useState<ProfileTab>('info');
 
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
@@ -106,6 +105,23 @@ export const DashboardProfileView: React.FC = () => {
   const [coverError, setCoverError] = useState(false);
   const [coverLoaded, setCoverLoaded] = useState(false);
   const [activeEmployeeTab, setActiveEmployeeTab] = useState<string>('personal');
+
+  // Calendar state
+  const today = useMemo(() => new Date(), []);
+  const [calMonth, setCalMonth] = useState(today.getMonth());
+  const calYear = today.getFullYear();
+  const [holidays, setHolidays] = useState<string[]>([]);
+  const [holidaysLoading, setHolidaysLoading] = useState(false);
+
+  useEffect(() => {
+    const cityId = myEmployee?.city_id || loggedInUser?.city_id;
+    if (!cityId) return;
+    setHolidaysLoading(true);
+    api.get<{ data: { date: string }[] }>('/holidays', { city_id: cityId, year: calYear })
+      .then((res) => setHolidays((res?.data || []).map((h) => h.date)))
+      .catch(() => setHolidays([]))
+      .finally(() => setHolidaysLoading(false));
+  }, [myEmployee?.city_id, loggedInUser?.city_id]);
 
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
@@ -300,8 +316,7 @@ export const DashboardProfileView: React.FC = () => {
                   <div className="flex gap-1 bg-app-bg rounded-xl p-1 flex-wrap justify-center">
                     {([
                       { key: 'info' as const, label: 'Info', icon: <User className="h-4 w-4" /> },
-                      { key: 'solicitar' as const, label: 'Solicitar', icon: <Calendar className="h-4 w-4" /> },
-                      { key: 'parte' as const, label: 'Parte de Trabajo', icon: <ClipboardCheck className="h-4 w-4" /> },
+                      { key: 'calendario' as const, label: 'Calendario', icon: <Calendar className="h-4 w-4" /> },
                     ]).map((tab) => (
                       <button
                         key={tab.key}
@@ -808,107 +823,142 @@ export const DashboardProfileView: React.FC = () => {
               </div>
             )}
 
-            {activeTab === 'solicitar' && (
+            {activeTab === 'calendario' && (
               <div className="w-full flex flex-col gap-4 sm:gap-5">
                 {myEmployee ? (
                   <>
-                    {pendingRequests > 0 && (
-                      <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg text-xs font-medium text-amber-800 dark:text-amber-300">
-                        <Send className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                        Tienes {pendingRequests} solicitud{pendingRequests !== 1 ? 'es' : ''} pendiente{pendingRequests !== 1 ? 's' : ''}
-                      </div>
-                    )}
-
-                    <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                          <Calendar className="h-4 w-4" />
-                        </span>
-                        <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Vacaciones</span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="flex flex-col items-center rounded-xl bg-primary-50 dark:bg-primary-900/20 p-4">
-                          <div className="text-3xl font-bold text-primary-600 dark:text-primary-300">{currentLeaveBalance?.own_days ?? myEmployee?.own_days ?? '—'}</div>
-                          <div className="mt-1 text-center text-xs font-medium text-primary-700 dark:text-primary-300">Días Propios</div>
-                        </div>
-                        <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-4">
-                          <div className="text-3xl font-bold text-amber-600 dark:text-amber-300">{currentLeaveBalance?.accumulated_days ?? myEmployee?.accumulated_days ?? '—'}</div>
-                          <div className="mt-1 text-center text-xs font-medium text-amber-700 dark:text-amber-300">Acumulados</div>
-                        </div>
-                        <div className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-4">
-                          <div className="text-3xl font-bold text-violet-600 dark:text-violet-300">{currentLeaveBalance?.vacation_days ?? myEmployee?.vacation_days ?? '—'}</div>
-                          <div className="mt-1 text-center text-xs font-medium text-violet-700 dark:text-violet-300">Vacaciones</div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 pt-4 border-t border-app-card-border">
-                        <div className="flex items-center gap-2">
-                          <SunSnow className="h-4 w-4 text-primary-500 shrink-0" />
-                          <div>
-                            <div className="text-xs text-app-text-secondary">Mes de Vacaciones</div>
-                            <div className="text-sm font-medium text-app-text">{currentVacationMonth || 'No asignado'}</div>
-                          </div>
-                        </div>
-                        {empContracts?.vacation_year && (
-                          <div className="flex items-center gap-2 mt-2">
-                            <Calendar className="h-4 w-4 text-primary-500 shrink-0" />
-                            <div>
-                              <div className="text-xs text-app-text-secondary">Año de Vacaciones</div>
-                              <div className="text-sm font-medium text-app-text">{empContracts.vacation_year}</div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                  {/* Calendar */}
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
+                    {/* Month navigation */}
+                    <div className="flex items-center justify-between mb-5">
+                      <button
+                        onClick={() => { if (calMonth > 0) setCalMonth(m => m - 1); }}
+                        disabled={calMonth === 0}
+                        className="flex items-center justify-center size-9 rounded-lg text-app-text-secondary hover:text-app-text hover:bg-app-bg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <span className="text-base font-bold text-app-text">
+                        {new Date(calYear, calMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).replace(/^\w/, c => c.toUpperCase())}
+                      </span>
+                      <button
+                        onClick={() => { if (calMonth < 11) setCalMonth(m => m + 1); }}
+                        disabled={calMonth === 11}
+                        className="flex items-center justify-center size-9 rounded-lg text-app-text-secondary hover:text-app-text hover:bg-app-bg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
                     </div>
 
-                    {!isReadOnly && (
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <button
-                          onClick={() => setCambioVacacionesOpen(true)}
-                          disabled={cambioSubmitted}
-                          className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all active:scale-[0.98] ${
-                            cambioSubmitted
-                              ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-not-allowed'
-                              : 'text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 shadow-sm'
-                          }`}
-                        >
-                          {cambioSubmitted ? (
-                            <><CheckCircle className="w-4 h-4" /> Pendiente</>
-                          ) : (
-                            <><Calendar className="w-4 h-4" /> Cambio de Mes</>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => setSolicitarDiasOpen(true)}
-                          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-xl hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-sm active:scale-[0.98]"
-                        >
-                          <Sun className="w-4 h-4" /> Solicitar Días
-                        </button>
+                    {/* Day-of-week header */}
+                    <div className="grid grid-cols-7 mb-2">
+                      {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(d => (
+                        <div key={d} className="text-center text-xs font-semibold text-app-text-secondary py-1.5">
+                          {d}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Calendar grid */}
+                    {holidaysLoading ? (
+                      <div className="flex items-center justify-center py-12">
+                        <div className="size-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-7">
+                        {(() => {
+                          const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+                          const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+                          const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+                          const offset = firstDay === 0 ? 6 : firstDay - 1; // Mon=0
+                          const totalSlots = Math.ceil((offset + daysInMonth) / 7) * 7;
+                          const dateStr = (y: number, m: number, d: number) =>
+                            `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                          const isHoliday = (d: Date) => holidays.includes(dateStr(d.getFullYear(), d.getMonth(), d.getDate()));
+                          const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
+                          const isNonWorking = (d: Date) => isWeekend(d) || isHoliday(d);
+                          const isToday = (d: Date) =>
+                            d.getFullYear() === today.getFullYear() &&
+                            d.getMonth() === today.getMonth() &&
+                            d.getDate() === today.getDate();
+                          const isPast = (d: Date) => d < today;
+                          const isFuture = (d: Date) => d > today;
+
+                          const cells: React.ReactNode[] = [];
+                          for (let i = 0; i < totalSlots; i++) {
+                            let day: number;
+                            let month: number;
+                            let isOutside = false;
+                            if (i < offset) {
+                              day = daysInPrev - offset + i + 1;
+                              month = calMonth - 1;
+                              isOutside = true;
+                            } else if (i >= offset + daysInMonth) {
+                              day = i - offset - daysInMonth + 1;
+                              month = calMonth + 1;
+                              isOutside = true;
+                            } else {
+                              day = i - offset + 1;
+                              month = calMonth;
+                            }
+                            const date = new Date(calYear, month, day);
+                            const working = !isNonWorking(date);
+                            const todayFlag = isToday(date);
+                            const pastFlag = isPast(date);
+
+                            cells.push(
+                              <div key={i} className={`relative min-h-[48px] sm:min-h-[56px] flex flex-col items-center justify-center border border-app-card-border text-xs transition-colors
+                                ${isOutside ? 'opacity-30' : ''}
+                                ${todayFlag ? 'bg-primary-50 dark:bg-primary-900/20 z-10' : ''}
+                                ${!isOutside && !working ? 'bg-rose-50/50 dark:bg-rose-900/10' : ''}
+                              `}>
+                                <span className={`font-semibold leading-none
+                                  ${todayFlag ? 'text-primary-600 dark:text-primary-300' : ''}
+                                  ${!isOutside && !working ? 'text-rose-500 dark:text-rose-400' : ''}
+                                  ${!isOutside && working ? (pastFlag ? 'text-app-text' : 'text-app-text-secondary') : ''}
+                                `}>
+                                  {day}
+                                </span>
+                                {!isOutside && !working && (
+                                  <span className="text-[9px] leading-none mt-0.5 text-rose-400 dark:text-rose-500 font-medium">F</span>
+                                )}
+                                {todayFlag && (
+                                  <div className="absolute bottom-0.5 size-1 rounded-full bg-primary-500" />
+                                )}
+                              </div>
+                            );
+                          }
+                          return cells;
+                        })()}
                       </div>
                     )}
+
+                    {/* Legend */}
+                    <div className="flex items-center gap-4 mt-4 pt-4 border-t border-app-card-border flex-wrap">
+                      <div className="flex items-center gap-1.5 text-xs text-app-text-secondary">
+                        <div className="size-3 rounded bg-rose-50 dark:bg-rose-900/10 border border-app-card-border" />
+                        Festivo
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-app-text-secondary">
+                        <div className="size-3 rounded bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800" />
+                        Hoy
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-app-text-secondary">
+                        <div className="size-3 rounded bg-white dark:bg-transparent border border-app-card-border" />
+                        Laborable
+                      </div>
+                    </div>
+                  </div>
                   </>
                 ) : (
                   <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg p-8 text-center">
-                    <SunSnow className="w-12 h-12 text-app-text-secondary/60 dark:text-white/40 mx-auto mb-3" />
-                    <p className="text-sm text-app-text-secondary dark:text-white/60">Sin información de vacaciones</p>
-                    {!isReadOnly && (
-                      <button
-                        onClick={() => setEmployeeModalOpen(true)}
-                        className="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
-                      >
-                        <Sparkles className="w-4 h-4" /> Crear Ficha
-                      </button>
-                    )}
+                    <Calendar className="w-12 h-12 text-app-text-secondary/60 dark:text-white/40 mx-auto mb-3" />
+                    <p className="text-sm text-app-text-secondary dark:text-white/60">Sin información de calendario</p>
                   </div>
                 )}
               </div>
             )}
 
-            {activeTab === 'parte' && (
-              <div className="w-full">
-                <WorkReportsView />
-              </div>
-            )}
           </div>
         </div>
       </>
