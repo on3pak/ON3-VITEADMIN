@@ -230,10 +230,10 @@ export const DashboardProfileView: React.FC = () => {
     type TabKey = 'personal' | 'nomina' | 'vacaciones' | 'uniformidad' | 'adelantos' | 'excedencias';
     const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [];
     tabs.push({ key: 'personal', label: 'Personal', icon: <User className="h-4 w-4" /> });
-    tabs.push({ key: 'nomina', label: 'Nómina y Extras', icon: <CreditCard className="h-4 w-4" /> });
-    tabs.push({ key: 'vacaciones', label: 'Vacaciones y Días', icon: <Calendar className="h-4 w-4" /> });
-    tabs.push({ key: 'uniformidad', label: 'Uniformidad y Permisos', icon: <Shirt className="h-4 w-4" /> });
-    tabs.push({ key: 'adelantos', label: 'Adelantos y Préstamos', icon: <Send className="h-4 w-4" /> });
+    tabs.push({ key: 'nomina', label: 'Nómina', icon: <CreditCard className="h-4 w-4" /> });
+    tabs.push({ key: 'vacaciones', label: 'Vacaciones', icon: <Calendar className="h-4 w-4" /> });
+    tabs.push({ key: 'uniformidad', label: 'Uniformidad', icon: <Shirt className="h-4 w-4" /> });
+    tabs.push({ key: 'adelantos', label: 'Adelantos', icon: <Send className="h-4 w-4" /> });
     tabs.push({ key: 'excedencias', label: 'Excedencias', icon: <Calendar className="h-4 w-4" /> });
     return tabs;
   })();
