@@ -22,13 +22,13 @@ import {
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
 
 const CITY_BG_IMAGES: Record<string, string> = {
-  'Alcalá de Henares': '/img/alcala-de-henares.webp',
-  'Guadalajara': '/img/guadalajara.webp',
+  'Alcalá de Henares': '/img/wallpapers/alcala.webp',
+  'Guadalajara': '/img/wallpapers/guadalajara.webp',
 };
 
 const CITY_DARK_IMAGES: Record<string, string> = {
-  'Alcalá de Henares': '/img/alcala-de-henares-dark.webp',
-  'Guadalajara': '/img/guadalajara-dark.webp',
+  'Alcalá de Henares': '/img/wallpapers/alcala-dark.webp',
+  'Guadalajara': '/img/wallpapers/guadalajara-dark.webp',
 };
 
 function getCurrentVacationMonth(month: string | null): string | null {
@@ -109,18 +109,18 @@ export const DashboardProfileView: React.FC = () => {
 
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
-    if (!cityName) return '/img/alcala-de-henares.webp';
+    if (!cityName) return '/img/wallpapers/alcala.webp';
     return darkMode
-      ? (CITY_DARK_IMAGES[cityName] || '/img/alcala-de-henares-dark.webp')
-      : (CITY_BG_IMAGES[cityName] || '/img/alcala-de-henares.webp');
+      ? (CITY_DARK_IMAGES[cityName] || '/img/wallpapers/alcala-dark.webp')
+      : (CITY_BG_IMAGES[cityName] || '/img/wallpapers/alcala.webp');
   }, [loggedInUser?.city_id, cityMap, darkMode]);
 
   const fallbackCover = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];
-    if (!cityName) return '/img/alcala-de-henares.webp';
+    if (!cityName) return '/img/wallpapers/alcala.webp';
     return darkMode
-      ? (CITY_DARK_IMAGES[cityName] || '/img/alcala-de-henares-dark.webp')
-      : (CITY_BG_IMAGES[cityName] || '/img/alcala-de-henares.webp');
+      ? (CITY_DARK_IMAGES[cityName] || '/img/wallpapers/alcala-dark.webp')
+      : (CITY_BG_IMAGES[cityName] || '/img/wallpapers/alcala.webp');
   }, [loggedInUser?.city_id, cityMap, darkMode]);
 
   const displayCover = coverError ? fallbackCover : coverSrc;
@@ -243,7 +243,7 @@ export const DashboardProfileView: React.FC = () => {
   if (!coverLoaded) {
     return (
       <div className="-mx-5 -mt-5 flex min-w-0 flex-auto flex-col">
-        <div className="h-48 lg:h-64 w-full bg-app-bg animate-pulse" />
+                <div className="h-[16vh] sm:h-[18vh] md:h-[20vh] lg:h-[22vh] xl:h-[25vh] w-full bg-app-bg animate-pulse" />
         <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 lg:h-20 lg:flex-row lg:px-8">
           <div className="-mt-16 lg:-mt-20">
             <div className="h-24 w-24 rounded-full bg-app-bg animate-pulse ring-4 ring-app-border" />
@@ -273,7 +273,7 @@ export const DashboardProfileView: React.FC = () => {
               {/* Cover Image */}
               <div>
                 <img
-                  className="h-48 object-cover object-center lg:h-64 w-full"
+                  className="h-[16vh] sm:h-[18vh] md:h-[20vh] lg:h-[22vh] xl:h-[25vh] object-cover object-center w-full"
                   src={displayCover}
                   alt="Cover image"
                   onError={() => setCoverError(true)}
@@ -296,8 +296,8 @@ export const DashboardProfileView: React.FC = () => {
                 </div>
 
                 {/* Nav Tabs — pill style */}
-                <div className="mb-4 mt-5 lg:mb-0 lg:ml-auto lg:mt-0">
-                  <div className="flex gap-1.5 bg-app-bg rounded-xl p-1 overflow-x-auto">
+                <div className="mb-4 mt-5 w-full lg:mb-0 lg:ml-auto lg:mt-0 lg:w-auto">
+                  <div className="flex gap-1 bg-app-bg rounded-xl p-1 flex-wrap justify-center">
                     {([
                       { key: 'info' as const, label: 'Info', icon: <User className="h-4 w-4" /> },
                       { key: 'solicitar' as const, label: 'Solicitar', icon: <Calendar className="h-4 w-4" /> },
@@ -306,7 +306,7 @@ export const DashboardProfileView: React.FC = () => {
                       <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap sm:px-4 sm:py-2 sm:text-sm sm:gap-2 ${
                           activeTab === tab.key
                             ? 'bg-app-card text-primary-700 shadow-xs'
                             : 'text-app-text-secondary hover:text-app-text'
@@ -321,30 +321,24 @@ export const DashboardProfileView: React.FC = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="bg-gray-100/80 dark:bg-gray-950/50 flex-auto">
-            <div className="mx-auto flex w-full max-w-6xl justify-center p-6">
+          <div className="bg-gray-100/80 dark:bg-gray-950/50 flex-auto min-h-0 overflow-y-auto">
+            <div className="mx-auto flex w-full max-w-6xl justify-center p-4 sm:p-6">
             {activeTab === 'info' && (
               <div className="w-full flex flex-col gap-5">
-                {myEmployee ? (
+                  {myEmployee ? (
                   <>
-                    <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-5">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg border border-white/20">
-                          <Award className="h-4 w-4" />
-                        </span>
-                        <span className="text-sm font-bold text-app-text dark:text-white/90 truncate">Información del Empleado</span>
-                      </div>
+                    <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 bg-white dark:bg-[#07182E] shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,183,255,0.3)] p-4 sm:p-5">
 
                       {employeeTabs.length > 1 && (
-                        <div className="flex gap-1 overflow-x-auto mb-4 pb-1 border-b border-app-card-border">
+                        <div className="flex gap-1 bg-app-bg rounded-xl p-1 mb-5 flex-wrap justify-center">
                           {employeeTabs.map(tab => (
                             <button
                               key={tab.key}
                               onClick={() => setActiveEmployeeTab(tab.key)}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap shrink-0 ${
+                              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap shrink-0 sm:px-4 sm:py-2 sm:text-sm sm:gap-2 ${
                                 safeActiveTab === tab.key
-                                  ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 shadow-xs'
-                                  : 'text-app-text-secondary hover:text-app-text hover:bg-app-bg/50'
+                                  ? 'bg-app-card text-primary-700 shadow-xs'
+                                  : 'text-app-text-secondary hover:text-app-text'
                               }`}
                             >
                               {tab.icon} {tab.label}
@@ -355,46 +349,52 @@ export const DashboardProfileView: React.FC = () => {
 
                       <div>
                         {safeActiveTab === 'personal' && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             {/* Datos Personales */}
                             <div>
                               <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Datos Personales</div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                              <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-[3fr_3fr_4fr]">
                                 <InfoRow icon={<User className="h-4 w-4" />} label="Nombre" value={`${myEmployee.name} ${myEmployee.last_name1} ${myEmployee.last_name2 || ''}`.trim()} />
                                 <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={myEmployee.email || '—'} />
+                                <div className="hidden md:block" />
                                 <InfoRow icon={<Mail className="h-4 w-4" />} label="Email Personal" value={myEmployee.personal_email || '—'} />
                                 <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono" value={myEmployee.phone || '—'} />
+                                <div className="hidden md:block" />
                                 <InfoRow icon={<Phone className="h-4 w-4" />} label="Teléfono Fijo" value={myEmployee.phone_fixed || '—'} />
                                 <InfoRow icon={<MapPin className="h-4 w-4" />} label="Ciudad" value={cityName || '—'} />
+                                <div className="hidden md:block" />
                               </div>
                             </div>
 
                             {/* DATOS PROFESIONALES */}
                             <div className="border-t border-app-card-border pt-3">
                               <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">DATOS PROFESIONALES</div>
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
+                              <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-4">
                                 <InfoRow icon={<Award className="h-4 w-4" />} label="Categoría" value={categoryName || '—'} />
                                 <InfoRow icon={<Building2 className="h-4 w-4" />} label="Centro de Trabajo" value={workCenterName || '—'} />
                                 <InfoRow icon={<Shield className="h-4 w-4" />} label="Estado" value={statusName || '—'} />
+                                <div className="hidden md:block" />
                               </div>
                             </div>
 
                             {/* Horario */}
                             <div className="border-t border-app-card-border pt-3">
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
+                              <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-4">
                                 <InfoRow icon={<Clock className="h-4 w-4" />} label="Turno" value={shiftName || '—'} />
                                 <InfoRow icon={<Calendar className="h-4 w-4" />} label="Horario" value={scheduleDisplay} />
                                 <InfoRow icon={<Calendar className="h-4 w-4" />} label="Jornada" value={workDayId ? workDayMap[workDayId] || workDayId : '—'} />
+                                <div className="hidden md:block" />
                               </div>
                             </div>
 
                             {/* Contrato */}
                             <div className="border-t border-app-card-border pt-3">
                               <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Contrato</div>
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
+                              <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-4">
                                 <InfoRow icon={<IdCard className="h-4 w-4" />} label="Tipo de Contrato" value={contractTypeName} />
                                 <InfoRow icon={<Calendar className="h-4 w-4" />} label="Fecha Inicio" value={empContracts?.contract_start_date || '—'} />
                                 <InfoRow icon={<Calendar className="h-4 w-4" />} label="Fecha Fin" value={empContracts?.contract_end_date || '—'} />
+                                <div className="hidden md:block" />
                               </div>
                             </div>
 
@@ -466,15 +466,15 @@ export const DashboardProfileView: React.FC = () => {
                         )}
 
                         {safeActiveTab === 'nomina' && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             <div>
                               <div className="flex items-center justify-between mb-3">
-                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Nóminas 2026</div>
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Nóminas</div>
                                 <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
                                   <History className="h-3.5 w-3.5" /> Historial
                                 </button>
                               </div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                              <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-4">
                                 <InfoRow icon={<IdCard className="h-4 w-4" />} label="DNI/NIE" value={empPayroll?.dni || '—'} />
                                 <InfoRow icon={<Shield className="h-4 w-4" />} label="Nº Seguridad Social" value={empPayroll?.social_security_number || '—'} />
                                 <InfoRow icon={<CreditCard className="h-4 w-4" />} label="IBAN" value={empIban || '—'} />
@@ -484,7 +484,7 @@ export const DashboardProfileView: React.FC = () => {
 
                             {/* 12 Month Cards */}
                             <div className="border-t border-app-card-border pt-3">
-                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Nóminas mensuales</div>
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Nóminas {new Date().getFullYear()}</div>
                               <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
                                 {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((m, i) => {
                                   const hasDoc = i === 3 || i === 4; // mock: abril and mayo have docs
@@ -507,7 +507,7 @@ export const DashboardProfileView: React.FC = () => {
                         )}
 
                         {safeActiveTab === 'vacaciones' && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             {(() => {
                               const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
                               const MONTH_MAP: Record<string, number> = { july: 6, august: 7, september: 8 };
@@ -520,19 +520,25 @@ export const DashboardProfileView: React.FC = () => {
 
                               return (
                                 <>
-                                  {/* Balance */}
+                                  {/* Balance — Días */}
                                   {empLeaveBalances.length > 0 && (
                                     <div>
-                                      <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Mes de Vacaciones</div>
-                                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                      <div className="flex items-center justify-between mb-3">
+                                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Días</div>
+                                        {!isReadOnly && (
+                                          <button
+                                            onClick={() => setSolicitarDiasOpen(true)}
+                                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30"
+                                          >
+                                            <Sun className="h-3.5 w-3.5" /> Solicitar Días
+                                          </button>
+                                        )}
+                                      </div>
+                                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                         {(() => {
                                           const b = empLeaveBalances[0];
                                           return (
                                             <>
-                                              <div className="flex flex-col items-center rounded-xl bg-primary-50 dark:bg-primary-900/20 p-3">
-                                                <div className="text-2xl font-bold text-primary-600 dark:text-primary-300">{b.vacation_days}</div>
-                                                <div className="text-[10px] font-semibold text-primary-700 dark:text-primary-300 uppercase mt-0.5">Vacaciones</div>
-                                              </div>
                                               <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">
                                                 <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
                                                 <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
@@ -554,19 +560,13 @@ export const DashboardProfileView: React.FC = () => {
 
                                   {/* Mes de Vacaciones */}
                                   <div className="border-t border-app-card-border pt-3">
-                                    <div className="flex items-center justify-between">
-                                      <div className="flex items-center gap-2">
-                                        <SunSnow className="h-4 w-4 text-primary-500 shrink-0" />
-                                        <div>
-                                          <div className="text-xs text-app-text-secondary">Mes de Vacaciones</div>
-                                          <div className="text-sm font-bold text-app-text">{currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}</div>
-                                        </div>
-                                      </div>
+                                    <div className="flex items-center justify-between mb-3">
+                                      <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Mes de Vacaciones</div>
                                       {!isReadOnly && (
                                         <button
                                           onClick={() => setCambioVacacionesOpen(true)}
                                           disabled={cambioSubmitted}
-                                          className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] ${
+                                          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] ${
                                             cambioSubmitted
                                               ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-not-allowed'
                                               : 'text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30'
@@ -577,28 +577,13 @@ export const DashboardProfileView: React.FC = () => {
                                         </button>
                                       )}
                                     </div>
-                                    {currentVacationMonth && vacMonthIdx >= 0 && (
-                                      <div className="mt-2 flex flex-wrap gap-2">
-                                        {VACATION_MONTHS.filter(m => m !== currentVacationMonth).map(m => (
-                                          <span key={m} className="text-[11px] px-2 py-1 rounded-md bg-app-bg/50 text-app-text-secondary">
-                                            {MONTH_NAMES[MONTH_MAP[m]] || m}
-                                          </span>
-                                        ))}
+                                    <div className="flex flex-col items-center rounded-xl bg-teal-50 dark:bg-teal-900/20 p-3 w-full">
+                                      <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
+                                        {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
                                       </div>
-                                    )}
-                                  </div>
-
-                                  {/* Solicitar Días */}
-                                  {!isReadOnly && (
-                                    <div className="border-t border-app-card-border pt-3 flex justify-end">
-                                      <button
-                                        onClick={() => setSolicitarDiasOpen(true)}
-                                        className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30"
-                                      >
-                                        <Sun className="h-3.5 w-3.5" /> Solicitar Días
-                                      </button>
+                                      <div className="text-[10px] font-semibold text-teal-700 dark:text-teal-300 uppercase mt-0.5">Mes de Vacaciones</div>
                                     </div>
-                                  )}
+                                  </div>
 
                                   {/* Requests list */}
                                   {(vacationRequests.length > 0 || empVacationRequests.length > 0) && (
@@ -633,7 +618,7 @@ export const DashboardProfileView: React.FC = () => {
                         )}
 
                         {safeActiveTab === 'uniformidad' && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             {empSizes.length > 0 && (
                               <div>
                                 <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Tallas</div>
@@ -680,10 +665,17 @@ export const DashboardProfileView: React.FC = () => {
                         )}
 
                         {safeActiveTab === 'adelantos' && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             {empAdvances.length > 0 && (
                               <div>
-                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Adelantos</div>
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Adelantos</div>
+                                  {!isReadOnly && (
+                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                      <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
+                                    </button>
+                                  )}
+                                </div>
                                 <div className="space-y-1.5">
                                   {empAdvances.map(a => (
                                     <div key={a.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
@@ -700,18 +692,18 @@ export const DashboardProfileView: React.FC = () => {
                                     </div>
                                   ))}
                                 </div>
-                                {!isReadOnly && (
-                                  <div className="flex justify-center mt-3">
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
-                                      <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
-                                    </button>
-                                  </div>
-                                )}
                               </div>
                             )}
                             {empLoans.length > 0 && (
                               <div className={empAdvances.length > 0 ? 'border-t border-app-card-border pt-3' : ''}>
-                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Préstamos</div>
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Préstamos</div>
+                                  {!isReadOnly && (
+                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                                      <Send className="h-3.5 w-3.5" /> Solicitar Préstamo
+                                    </button>
+                                  )}
+                                </div>
                                 <div className="space-y-1.5">
                                   {empLoans.map(l => (
                                     <div key={l.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
@@ -729,20 +721,13 @@ export const DashboardProfileView: React.FC = () => {
                                     </div>
                                   ))}
                                 </div>
-                                {!isReadOnly && (
-                                  <div className="flex justify-end mt-3">
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
-                                      <Send className="h-3.5 w-3.5" /> Solicitar Préstamo
-                                    </button>
-                                  </div>
-                                )}
                               </div>
                             )}
                             {empAdvances.length === 0 && empLoans.length === 0 && (
                               <div>
                                 <p className="text-sm text-app-text-secondary text-center py-4">Sin adelantos ni préstamos</p>
                                 {!isReadOnly && (
-                                  <div className="flex justify-end gap-3">
+                                  <div className="flex justify-center gap-3">
                                     <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
                                       <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
                                     </button>
@@ -757,10 +742,20 @@ export const DashboardProfileView: React.FC = () => {
                         )}
 
                         {safeActiveTab === 'excedencias' && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             {empSabbaticals.length > 0 && (
                               <div>
-                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Excedencias</div>
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Excedencias</div>
+                                  {!isReadOnly && (
+                                    <button
+                                      onClick={() => setSolicitarExcedenciaOpen(true)}
+                                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
+                                    >
+                                      <Calendar className="h-3.5 w-3.5" /> Solicitar Excedencia
+                                    </button>
+                                  )}
+                                </div>
                                 <div className="space-y-1.5">
                                   {empSabbaticals.map(s => (
                                     <div key={s.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
@@ -774,16 +769,19 @@ export const DashboardProfileView: React.FC = () => {
                               </div>
                             )}
                             {empSabbaticals.length === 0 && (
-                              <p className="text-sm text-app-text-secondary text-center py-4">Sin excedencias</p>
-                            )}
-                            {!isReadOnly && (
-                              <div className="border-t border-app-card-border pt-3 flex justify-end">
-                                <button
-                                  onClick={() => setSolicitarExcedenciaOpen(true)}
-                                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
-                                >
-                                  <Calendar className="h-3.5 w-3.5" /> Solicitar Excedencia
-                                </button>
+                              <div>
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Excedencias</div>
+                                  {!isReadOnly && (
+                                    <button
+                                      onClick={() => setSolicitarExcedenciaOpen(true)}
+                                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
+                                    >
+                                      <Calendar className="h-3.5 w-3.5" /> Solicitar Excedencia
+                                    </button>
+                                  )}
+                                </div>
+                                <p className="text-sm text-app-text-secondary text-center py-4">Sin excedencias</p>
                               </div>
                             )}
                           </div>
@@ -811,7 +809,7 @@ export const DashboardProfileView: React.FC = () => {
             )}
 
             {activeTab === 'solicitar' && (
-              <div className="w-full flex flex-col gap-5">
+              <div className="w-full flex flex-col gap-4 sm:gap-5">
                 {myEmployee ? (
                   <>
                     {pendingRequests > 0 && (

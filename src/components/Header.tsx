@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, sid
   return (
     <>
       {/* Mobile Header (lg:hidden) */}
-      <header className="flex lg:hidden items-center fixed z-10 top-0 start-0 end-0 shrink-0 bg-[#f8f9fc] h-16 border-b border-app-border">
+      <header className="flex lg:hidden items-center fixed z-10 top-0 start-0 end-0 shrink-0 bg-[#f8f9fc] dark:bg-[#07182E] h-16 border-b border-app-border">
         <div className="flex items-center justify-between w-full px-4">
           <button
             onClick={() => setSidebarOpen?.(!sidebarOpen)}
