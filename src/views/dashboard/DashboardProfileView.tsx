@@ -16,6 +16,7 @@ import {
   Send, Sun,
   Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
   CreditCard, Percent, Shirt, Download, Eye, X, History,
+  HandHeart, Book, Stethoscope, Glasses, Paperclip,
 } from 'lucide-react';
 
 const VACATION_MONTHS = ['july', 'august', 'september'] as const;
@@ -99,8 +100,10 @@ export const DashboardProfileView: React.FC = () => {
   const [employeeModalOpen, setEmployeeModalOpen] = useState(false);
   const [cambioVacacionesOpen, setCambioVacacionesOpen] = useState(false);
   const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
+  const [solicitarDiasType, setSolicitarDiasType] = useState<'own' | 'accumulated' | 'excess'>('own');
   const [solicitarExcedenciaOpen, setSolicitarExcedenciaOpen] = useState(false);
   const [cambioSubmitted, setCambioSubmitted] = useState(false);
+  const [socialFundModalOpen, setSocialFundModalOpen] = useState(false);
   const [visualizarLicenseOpen, setVisualizarLicenseOpen] = useState(false);
 
   const [coverError, setCoverError] = useState(false);
@@ -196,6 +199,7 @@ export const DashboardProfileView: React.FC = () => {
   const empClothing = empDetail?.clothing ?? [];
   const empAdvances = empDetail?.advances ?? [];
   const empLoans = empDetail?.loans ?? [];
+  const empSocialFund = empDetail?.social_fund ?? [];
   const empSabbaticals = empDetail?.sabbaticals ?? [];
   const empVacationRequests = empDetail?.vacations ?? [];
 
@@ -228,11 +232,12 @@ export const DashboardProfileView: React.FC = () => {
     setCambioSubmitted(true);
   };
 
-  const handleSolicitarDias = (data: { type: 'free_days'; requested_days: string[] }) => {
+  const handleSolicitarDias = (data: { type: 'free_days'; day_type: 'own' | 'accumulated' | 'excess'; requested_days: string[] }) => {
     if (!myEmployee || isReadOnly) return;
     vacationsApi.create({
       employee_id: myEmployee.id,
       type: data.type,
+      day_type: data.day_type,
       status: 'pending',
       requested_days: data.requested_days,
     }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
@@ -542,36 +547,89 @@ export const DashboardProfileView: React.FC = () => {
                                     <div>
                                       <div className="flex items-center justify-between mb-3">
                                         <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Días</div>
-                                        {!isReadOnly && (
-                                          <button
-                                            onClick={() => setSolicitarDiasOpen(true)}
-                                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30"
-                                          >
-                                            <Sun className="h-3.5 w-3.5" /> Solicitar Días
-                                          </button>
-                                        )}
                                       </div>
-                                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                        {(() => {
-                                          const b = empLeaveBalances[0];
-                                          return (
-                                            <>
-                                              <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">
-                                                <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
-                                                <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
-                                              </div>
-                                              <div className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-3">
-                                                <div className="text-2xl font-bold text-violet-600 dark:text-violet-300">{b.accumulated_days}</div>
-                                                <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Acumulados</div>
-                                              </div>
-                                              <div className={`flex flex-col items-center rounded-xl p-3 ${b.excess_days > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-app-bg/50'}`}>
-                                                <div className={`text-2xl font-bold ${b.excess_days > 0 ? 'text-red-600 dark:text-red-300' : 'text-app-text-secondary'}`}>{b.excess_days}</div>
-                                                <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Excesos</div>
-                                              </div>
-                                            </>
-                                          );
-                                        })()}
-                                      </div>
+                                      {!isReadOnly ? (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
+                                          {(() => {
+                                            const b = empLeaveBalances[0];
+                                            return (
+                                              <>
+                                                <button
+                                                  onClick={() => { setSolicitarDiasType('own'); setSolicitarDiasOpen(true); }}
+                                                  disabled={b.own_days === 0}
+                                                  className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all cursor-pointer relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-50 dark:disabled:hover:bg-amber-900/20"
+                                                >
+                                                  <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
+                                                  <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
+                                                  <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
+                                                    b.own_days === 0
+                                                      ? 'bg-gray-300 dark:bg-gray-600'
+                                                      : 'bg-gradient-to-r from-amber-500 to-amber-400 dark:from-amber-600 dark:to-amber-500'
+                                                  }`}>
+                                                    <Sun className="h-3 w-3" /> Solicitar
+                                                  </div>
+                                                </button>
+                                                <button
+                                                  onClick={() => { setSolicitarDiasType('accumulated'); setSolicitarDiasOpen(true); }}
+                                                  disabled={b.accumulated_days === 0}
+                                                  className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-3 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-all cursor-pointer relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-violet-50 dark:disabled:hover:bg-violet-900/20"
+                                                >
+                                                  <div className="text-2xl font-bold text-violet-600 dark:text-violet-300">{b.accumulated_days}</div>
+                                                  <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Acumulados</div>
+                                                  <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
+                                                    b.accumulated_days === 0
+                                                      ? 'bg-gray-300 dark:bg-gray-600'
+                                                      : 'bg-gradient-to-r from-violet-500 to-violet-400 dark:from-violet-600 dark:to-violet-500'
+                                                  }`}>
+                                                    <Sun className="h-3 w-3" /> Solicitar
+                                                  </div>
+                                                </button>
+                                                <button
+                                                  onClick={() => { setSolicitarDiasType('excess'); setSolicitarDiasOpen(true); }}
+                                                  disabled={b.excess_days === 0}
+                                                  className={`flex flex-col items-center rounded-xl p-3 transition-all relative overflow-hidden ${
+                                                    b.excess_days > 0
+                                                      ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 cursor-pointer'
+                                                      : 'bg-app-bg/50 cursor-not-allowed opacity-50'
+                                                  }`}
+                                                >
+                                                  <div className={`text-2xl font-bold ${b.excess_days > 0 ? 'text-red-600 dark:text-red-300' : 'text-app-text-secondary'}`}>{b.excess_days}</div>
+                                                  <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Excesos</div>
+                                                  <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
+                                                    b.excess_days === 0
+                                                      ? 'bg-gray-300 dark:bg-gray-600'
+                                                      : 'bg-gradient-to-r from-red-500 to-red-400 dark:from-red-600 dark:to-red-500'
+                                                  }`}>
+                                                    <Sun className="h-3 w-3" /> Solicitar
+                                                  </div>
+                                                </button>
+                                              </>
+                                            );
+                                          })()}
+                                        </div>
+                                      ) : (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                          {(() => {
+                                            const b = empLeaveBalances[0];
+                                            return (
+                                              <>
+                                                <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">
+                                                  <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
+                                                  <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
+                                                </div>
+                                                <div className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-3">
+                                                  <div className="text-2xl font-bold text-violet-600 dark:text-violet-300">{b.accumulated_days}</div>
+                                                  <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Acumulados</div>
+                                                </div>
+                                                <div className={`flex flex-col items-center rounded-xl p-3 ${b.excess_days > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-app-bg/50'}`}>
+                                                  <div className={`text-2xl font-bold ${b.excess_days > 0 ? 'text-red-600 dark:text-red-300' : 'text-app-text-secondary'}`}>{b.excess_days}</div>
+                                                  <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Excesos</div>
+                                                </div>
+                                              </>
+                                            );
+                                          })()}
+                                        </div>
+                                      )}
                                     </div>
                                   )}
 
@@ -579,27 +637,38 @@ export const DashboardProfileView: React.FC = () => {
                                   <div className="border-t border-app-card-border pt-3">
                                     <div className="flex items-center justify-between mb-3">
                                       <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Mes de Vacaciones</div>
-                                      {!isReadOnly && (
-                                        <button
-                                          onClick={() => setCambioVacacionesOpen(true)}
-                                          disabled={cambioSubmitted}
-                                          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all active:scale-[0.98] ${
-                                            cambioSubmitted
-                                              ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-not-allowed'
-                                              : 'text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30'
-                                          }`}
-                                        >
-                                          <Calendar className="h-3.5 w-3.5" />
+                                    </div>
+                                    {!isReadOnly ? (
+                                      <button
+                                        onClick={() => setCambioVacacionesOpen(true)}
+                                        disabled={cambioSubmitted}
+                                        className={`flex flex-col items-center rounded-xl p-3 w-full transition-all relative overflow-hidden ${
+                                          cambioSubmitted
+                                            ? 'bg-teal-50 dark:bg-teal-900/20 opacity-70 cursor-not-allowed'
+                                            : 'bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30 cursor-pointer'
+                                        }`}
+                                      >
+                                        <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
+                                          {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
+                                        </div>
+                                        <div className="text-[10px] font-semibold text-teal-700 dark:text-teal-300 uppercase mt-0.5">Mes de Vacaciones</div>
+                                        <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
+                                          cambioSubmitted
+                                            ? 'bg-amber-400 dark:bg-amber-500'
+                                            : 'bg-gradient-to-r from-teal-500 to-teal-400 dark:from-teal-600 dark:to-teal-500'
+                                        }`}>
+                                          <Calendar className="h-3 w-3" />
                                           {cambioSubmitted ? 'Pendiente' : 'Solicitar Cambio'}
-                                        </button>
-                                      )}
-                                    </div>
-                                    <div className="flex flex-col items-center rounded-xl bg-teal-50 dark:bg-teal-900/20 p-3 w-full">
-                                      <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
-                                        {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
+                                        </div>
+                                      </button>
+                                    ) : (
+                                      <div className="flex flex-col items-center rounded-xl bg-teal-50 dark:bg-teal-900/20 p-3 w-full">
+                                        <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
+                                          {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
+                                        </div>
+                                        <div className="text-[10px] font-semibold text-teal-700 dark:text-teal-300 uppercase mt-0.5">Mes de Vacaciones</div>
                                       </div>
-                                      <div className="text-[10px] font-semibold text-teal-700 dark:text-teal-300 uppercase mt-0.5">Mes de Vacaciones</div>
-                                    </div>
+                                    )}
                                   </div>
 
                                   {/* Requests list */}
@@ -611,9 +680,9 @@ export const DashboardProfileView: React.FC = () => {
                                           <div className="flex flex-col">
                                             <span className="text-sm font-semibold text-app-text">
                                               {vr.type === 'free_days'
-                                                ? `Día libre — ${vr.requested_days?.join(', ') || ''}`
+                                                ? `Día libre${vr.day_type ? ` (${vr.day_type === 'own' ? 'Propios' : vr.day_type === 'accumulated' ? 'Acumulados' : 'Excesos'})` : ''} — ${vr.requested_days?.join(', ') || ''}`
                                                 : vr.type === 'vacation_change' || vr.type === 'month_change'
-                                                ? `Cambio mes — ${vr.requested_month ? (MONTH_EN_TO_ES[vr.requested_month.toLowerCase()] || vr.requested_month) : ''}`
+                                                ? `Cambio vacaciones — ${vr.requested_month ? (MONTH_EN_TO_ES[vr.requested_month.toLowerCase()] || vr.requested_month) : ''}`
                                                 : vr.type}
                                             </span>
                                           </div>
@@ -682,124 +751,122 @@ export const DashboardProfileView: React.FC = () => {
                         )}
 
                         {safeActiveTab === 'adelantos' && (
-                          <div className="space-y-3 sm:space-y-4">
-                            {empAdvances.length > 0 && (
-                              <div>
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Adelantos</div>
-                                  {!isReadOnly && (
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
-                                      <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
-                                    </button>
-                                  )}
-                                </div>
-                                <div className="space-y-1.5">
-                                  {empAdvances.map(a => (
-                                    <div key={a.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
-                                      <div className="flex flex-col">
-                                        <span className="text-sm font-semibold text-app-text">{a.amount}€</span>
-                                        <span className="text-[11px] text-app-text-secondary">{a.month}/{a.year}</span>
-                                      </div>
-                                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                                        a.status === 'accepted' || a.status === 'paid' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
-                                        'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
-                                      }`}>
-                                        {a.status === 'accepted' || a.status === 'paid' ? 'Aceptado' : 'Rechazado'}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {empLoans.length > 0 && (
-                              <div className={empAdvances.length > 0 ? 'border-t border-app-card-border pt-3' : ''}>
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Préstamos</div>
-                                  {!isReadOnly && (
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
-                                      <Send className="h-3.5 w-3.5" /> Solicitar Préstamo
-                                    </button>
-                                  )}
-                                </div>
-                                <div className="space-y-1.5">
-                                  {empLoans.map(l => (
-                                    <div key={l.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
-                                      <div className="flex flex-col">
-                                        <span className="text-sm font-semibold text-app-text">{l.amount}€</span>
-                                        <span className="text-[11px] text-app-text-secondary">{l.start_date || '—'} → {l.end_date || '—'}</span>
-                                      </div>
-                                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                                        l.status === 'active' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
-                                        l.status === 'paid' || l.status === 'accepted' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
-                                        'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
-                                      }`}>
-                                        {l.status === 'active' ? 'Activo' : l.status === 'paid' || l.status === 'accepted' ? 'Aceptado' : 'Rechazado'}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {empAdvances.length === 0 && empLoans.length === 0 && (
-                              <div>
-                                <p className="text-sm text-app-text-secondary text-center py-4">Sin adelantos ni préstamos</p>
-                                {!isReadOnly && (
-                                  <div className="flex justify-center gap-3">
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
-                                      <Send className="h-3.5 w-3.5" /> Solicitar Adelanto
-                                    </button>
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
-                                      <Send className="h-3.5 w-3.5" /> Solicitar Préstamo
-                                    </button>
+                          <div className="space-y-4 sm:space-y-5">
+                            {/* 3 botones en fila */}
+                            {!isReadOnly && (
+                              <div className="grid grid-cols-3 gap-3">
+                                <button
+                                  className="flex flex-col items-center rounded-xl bg-sky-50 dark:bg-sky-900/20 p-3 hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-all cursor-pointer"
+                                >
+                                  <Send className="h-5 w-5 text-sky-600 dark:text-sky-300 mb-1" />
+                                  <div className="text-[11px] font-semibold text-sky-700 dark:text-sky-300 text-center leading-tight">Adelanto</div>
+                                  <div className="mt-2 w-full flex items-center justify-center gap-1 text-[10px] font-bold text-white bg-gradient-to-r from-sky-500 to-sky-400 dark:from-sky-600 dark:to-sky-500 px-2 py-1 rounded-lg shadow-xs">
+                                    Solicitar
                                   </div>
-                                )}
+                                </button>
+                                <button
+                                  className="flex flex-col items-center rounded-xl bg-indigo-50 dark:bg-indigo-900/20 p-3 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all cursor-pointer"
+                                >
+                                  <Send className="h-5 w-5 text-indigo-600 dark:text-indigo-300 mb-1" />
+                                  <div className="text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 text-center leading-tight">Préstamo</div>
+                                  <div className="mt-2 w-full flex items-center justify-center gap-1 text-[10px] font-bold text-white bg-gradient-to-r from-indigo-500 to-indigo-400 dark:from-indigo-600 dark:to-indigo-500 px-2 py-1 rounded-lg shadow-xs">
+                                    Solicitar
+                                  </div>
+                                </button>
+                                <button
+                                  onClick={() => setSocialFundModalOpen(true)}
+                                  className="flex flex-col items-center rounded-xl bg-rose-50 dark:bg-rose-900/20 p-3 hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-all cursor-pointer"
+                                >
+                                  <HandHeart className="h-5 w-5 text-rose-600 dark:text-rose-300 mb-1" />
+                                  <div className="text-[11px] font-semibold text-rose-700 dark:text-rose-300 text-center leading-tight">Fondo Social</div>
+                                  <div className="mt-2 w-full flex items-center justify-center gap-1 text-[10px] font-bold text-white bg-gradient-to-r from-rose-500 to-rose-400 dark:from-rose-600 dark:to-rose-500 px-2 py-1 rounded-lg shadow-xs">
+                                    Solicitar
+                                  </div>
+                                </button>
                               </div>
                             )}
+
+                            {/* Solicitudes unificadas */}
+                            <div>
+                              <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Solicitudes</div>
+                              {(() => {
+                                const allRequests = [
+                                  ...empAdvances.map(a => ({ ...a, _type: 'Adelanto' as const, _color: 'sky' as const })),
+                                  ...empLoans.map(l => ({ ...l, _type: 'Préstamo' as const, _color: 'indigo' as const })),
+                                  ...empSocialFund.map(sf => ({ ...sf, _type: 'Fondo Social' as const, _color: 'rose' as const })),
+                                ];
+                                if (allRequests.length === 0) {
+                                  return <p className="text-sm text-app-text-secondary text-center py-4">Sin solicitudes</p>;
+                                }
+                                return (
+                                  <div className="space-y-1.5">
+                                    {allRequests.map((r, i) => (
+                                      <div key={r.id || i} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                        <div className="flex flex-col">
+                                          <div className="flex items-center gap-2">
+                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                                              r._color === 'sky' ? 'bg-sky-100 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300' :
+                                              r._color === 'indigo' ? 'bg-indigo-100 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300' :
+                                              'bg-rose-100 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300'
+                                            }`}>{r._type}</span>
+                                            <span className="text-sm font-semibold text-app-text">
+                                              {'amount' in r ? `${r.amount}€` : ''}
+                                              {'reason' in r ? (r as any).reason || '' : ''}
+                                            </span>
+                                          </div>
+                                          <span className="text-[11px] text-app-text-secondary mt-0.5">
+                                            {'month' in r ? `${(r as any).month}/${(r as any).year}` : ''}
+                                            {'start_date' in r ? `${(r as any).start_date || '—'} → ${(r as any).end_date || '—'}` : ''}
+                                          </span>
+                                        </div>
+                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                                          r.status === 'approved' || r.status === 'paid' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
+                                          r.status === 'pending' || r.status === 'active' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
+                                          'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
+                                        }`}>
+                                          {r.status === 'approved' || r.status === 'paid' ? 'Aceptado' :
+                                           r.status === 'active' ? 'Activo' :
+                                           r.status === 'pending' ? 'Pendiente' : 'Rechazado'}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                );
+                              })()}
+                            </div>
                           </div>
                         )}
 
                         {safeActiveTab === 'excedencias' && (
                           <div className="space-y-3 sm:space-y-4">
-                            {empSabbaticals.length > 0 && (
-                              <div>
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Excedencias</div>
-                                  {!isReadOnly && (
-                                    <button
-                                      onClick={() => setSolicitarExcedenciaOpen(true)}
-                                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
-                                    >
-                                      <Calendar className="h-3.5 w-3.5" /> Solicitar Excedencia
-                                    </button>
-                                  )}
+                            {!isReadOnly && (
+                              <button
+                                onClick={() => setSolicitarExcedenciaOpen(true)}
+                                className="w-full flex flex-col items-center rounded-xl bg-emerald-50 dark:bg-emerald-900/20 p-4 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all cursor-pointer"
+                              >
+                                <Calendar className="h-6 w-6 text-emerald-600 dark:text-emerald-300 mb-1" />
+                                <div className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Solicitar Excedencia</div>
+                                <div className="mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-500 px-3 py-1.5 rounded-lg shadow-xs">
+                                  <Calendar className="h-3 w-3" /> Solicitar
                                 </div>
-                                <div className="space-y-1.5">
-                                  {empSabbaticals.map(s => (
-                                    <div key={s.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
-                                      <div className="flex flex-col">
-                                        <span className="text-sm font-semibold text-app-text">Excedencia</span>
-                                        <span className="text-[11px] text-app-text-secondary">{s.notes || ''}</span>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
+                              </button>
                             )}
-                            {empSabbaticals.length === 0 && (
-                              <div>
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Excedencias</div>
-                                  {!isReadOnly && (
-                                    <button
-                                      onClick={() => setSolicitarExcedenciaOpen(true)}
-                                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/20 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
-                                    >
-                                      <Calendar className="h-3.5 w-3.5" /> Solicitar Excedencia
-                                    </button>
-                                  )}
-                                </div>
-                                <p className="text-sm text-app-text-secondary text-center py-4">Sin excedencias</p>
+
+                            <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Solicitudes</div>
+
+                            {empSabbaticals.length > 0 ? (
+                              <div className="space-y-1.5">
+                                {empSabbaticals.map(s => (
+                                  <div key={s.id} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
+                                    <div className="flex flex-col">
+                                      <span className="text-sm font-semibold text-app-text">Excedencia</span>
+                                      <span className="text-[11px] text-app-text-secondary">{s.notes || ''}</span>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
+                            ) : (
+                              <p className="text-sm text-app-text-secondary text-center py-4">Sin excedencias</p>
                             )}
                           </div>
                         )}
@@ -998,8 +1065,78 @@ export const DashboardProfileView: React.FC = () => {
         onClose={() => setSolicitarDiasOpen(false)}
         employeeId={myEmployee?.id || ''}
         disableWeekends={workDayId === 'wd_1'}
+        dayType={solicitarDiasType}
         onSubmit={handleSolicitarDias}
       />
+
+      {socialFundModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-lg border border-app-card-border overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="px-5 py-4 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/20 text-white">
+                  <HandHeart className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Fondo Social</h3>
+                  <p className="text-xs text-white/70">Selecciona el tipo de ayuda</p>
+                </div>
+              </div>
+              <button onClick={() => setSocialFundModalOpen(false)} className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              <div>
+                <h4 className="text-sm font-bold text-app-text mb-1">¿Qué tipo de ayuda necesitas?</h4>
+                <p className="text-[11px] text-app-text-secondary mb-4">Selecciona una opción para tu solicitud de fondo social.</p>
+                <div className="space-y-2">
+                  {[
+                    { id: 'ayuda_libros', label: 'Ayuda Libros', icon: <Book className="w-5 h-5" /> },
+                    { id: 'dentista', label: 'Dentista', icon: <Stethoscope className="w-5 h-5" /> },
+                    { id: 'podologo', label: 'Podólogo', icon: <Stethoscope className="w-5 h-5" /> },
+                    { id: 'gafas', label: 'Gafas', icon: <Glasses className="w-5 h-5" /> },
+                  ].map(opt => (
+                    <label key={opt.id} className="flex items-center gap-3 p-3 rounded-xl border border-app-border hover:bg-app-bg/50 cursor-pointer transition-colors">
+                      <input type="radio" name="social_fund_type" className="shrink-0" />
+                      <span className="text-app-text-secondary">{opt.icon}</span>
+                      <span className="text-sm font-semibold text-app-text">{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-app-card-border pt-3">
+                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Adjuntar documento</div>
+                <button className="flex items-center gap-2 w-full px-4 py-3 rounded-xl border-2 border-dashed border-app-border hover:border-primary-300 hover:bg-primary-50/50 dark:hover:bg-primary-900/20 transition-all text-app-text-secondary hover:text-primary-600 dark:hover:text-primary-300 cursor-pointer">
+                  <Paperclip className="h-5 w-5" />
+                  <span className="text-sm font-semibold">Seleccionar imagen o PDF</span>
+                </button>
+                <p className="text-[10px] text-app-text-secondary mt-1.5">Formatos: JPG, PNG, PDF (máx. 5MB)</p>
+              </div>
+            </div>
+
+            <div className="px-5 py-4 border-t border-app-border flex items-center justify-between shrink-0 bg-app-bg/50">
+              <span className="text-[11px] text-app-text-secondary">Revisión por administrador</span>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setSocialFundModalOpen(false)} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors">
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    triggerToast('Solicitud de fondo social enviada correctamente', 'success');
+                    setSocialFundModalOpen(false);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl shadow-xs hover:from-primary-500 hover:to-primary-400 transition-all active:scale-95"
+                >
+                  <Send className="w-4 h-4" /> Enviar Solicitud
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {solicitarExcedenciaOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">

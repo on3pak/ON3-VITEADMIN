@@ -22,10 +22,11 @@ interface SolicitarDiasModalProps {
   onClose: () => void;
   employeeId: string;
   disableWeekends: boolean;
-  onSubmit: (data: { type: 'free_days'; requested_days: string[] }) => void;
+  dayType: 'own' | 'accumulated' | 'excess';
+  onSubmit: (data: { type: 'free_days'; day_type: 'own' | 'accumulated' | 'excess'; requested_days: string[] }) => void;
 }
 
-export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, onClose, employeeId, disableWeekends, onSubmit }) => {
+export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, onClose, employeeId, disableWeekends, dayType, onSubmit }) => {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
   const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
@@ -46,7 +47,7 @@ export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, 
   const handleSubmit = () => {
     if (selectedDays.length === 0) return;
     setSubmitting(true);
-    onSubmit({ type: 'free_days', requested_days: selectedDays });
+    onSubmit({ type: 'free_days', day_type: dayType, requested_days: selectedDays });
     setSubmitting(false);
     onClose();
   };
@@ -94,7 +95,9 @@ export const SolicitarDiasModal: React.FC<SolicitarDiasModalProps> = ({ isOpen, 
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-white text-sm">Solicitar Días</h3>
+              <h3 className="font-bold text-white text-sm">
+                Solicitar Días — {dayType === 'own' ? 'Propios' : dayType === 'accumulated' ? 'Acumulados' : 'Excesos'}
+              </h3>
               <p className="text-xs text-white/70">Selecciona los días que deseas solicitar</p>
             </div>
           </div>
