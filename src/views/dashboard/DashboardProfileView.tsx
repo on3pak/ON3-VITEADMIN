@@ -13,7 +13,7 @@ import {
   Mail, Phone,
   SunSnow,
   Sparkles,
-  Send, Sun,
+  Send, Sun, Check,
   Briefcase, Shield, MapPin, Clock, Building2, IdCard, Award,
   CreditCard, Percent, Shirt, Download, Eye, X, History,
   HandHeart, Book, Stethoscope, Glasses, Paperclip,
@@ -102,7 +102,16 @@ export const DashboardProfileView: React.FC = () => {
   const [solicitarDiasOpen, setSolicitarDiasOpen] = useState(false);
   const [solicitarDiasType, setSolicitarDiasType] = useState<'own' | 'accumulated' | 'excess'>('own');
   const [solicitarExcedenciaOpen, setSolicitarExcedenciaOpen] = useState(false);
-  const [cambioSubmitted, setCambioSubmitted] = useState(false);
+  const [hasPendingCambioState, setCambioSubmittedState] = useState(false);
+  const hasPendingCambio = useMemo(
+    () => myEmployee
+      ? hasPendingCambioState || vacationRequests.some(
+          (r) => r.employee_id === myEmployee.id && r.type === 'vacation_change' && r.status === 'pending'
+        )
+      : false,
+    [myEmployee, vacationRequests, hasPendingCambioState],
+  );
+
   const [socialFundModalOpen, setSocialFundModalOpen] = useState(false);
   const [visualizarLicenseOpen, setVisualizarLicenseOpen] = useState(false);
 
@@ -126,10 +135,16 @@ export const DashboardProfileView: React.FC = () => {
 
   useEffect(() => {
     const cityId = myEmployee?.city_id || loggedInUser?.city_id;
-    if (!cityId) return;
     setHolidaysLoading(true);
-    api.get<{ data: { date: string }[] }>('/holidays', { city_id: cityId, year: calYear })
-      .then((res) => setHolidays((res?.data || []).map((h) => h.date)))
+    const params: Record<string, string | number> = { year: calYear };
+    if (cityId) params.city_id = cityId;
+    api.get<unknown>('/holidays', params)
+      .then((res) => {
+        const dates: string[] = Array.isArray(res)
+          ? (res as { date: string }[]).map((h) => h.date)
+          : ((res as { data?: { date: string }[] })?.data || []).map((h) => h.date);
+        setHolidays(dates);
+      })
       .catch(() => setHolidays([]))
       .finally(() => setHolidaysLoading(false));
   }, [myEmployee?.city_id, loggedInUser?.city_id]);
@@ -236,7 +251,7 @@ export const DashboardProfileView: React.FC = () => {
       requested_month: data.requested_month,
     }).then((created) => setVacationRequests((prev) => [...prev, created])).catch(() => {});
     setCambioVacacionesOpen(false);
-    setCambioSubmitted(true);
+    setCambioSubmittedState(true);
   };
 
   const handleSolicitarDias = (data: { type: 'free_days'; day_type: 'own' | 'accumulated' | 'excess'; requested_days: string[] }) => {
@@ -642,98 +657,127 @@ export const DashboardProfileView: React.FC = () => {
                                     {!isReadOnly ? (
                                       <button
                                         onClick={() => setCambioVacacionesOpen(true)}
-                                        disabled={cambioSubmitted}
+                                        disabled={hasPendingCambio}
                                         className={`flex flex-col items-center rounded-xl p-3 w-full transition-all relative overflow-hidden ${
-                                          cambioSubmitted
+                                          hasPendingCambio
                                             ? 'bg-teal-50 dark:bg-teal-900/20 opacity-70 cursor-not-allowed'
                                             : 'bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30 cursor-pointer'
                                         }`}
                                       >
-                                        <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
-                                          {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
-                                        </div>
-                                        <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
-                                          cambioSubmitted
-                                            ? 'bg-amber-400 dark:bg-amber-500'
-                                            : 'bg-gradient-to-r from-teal-500 to-teal-400 dark:from-teal-600 dark:to-teal-500'
-                                        }`}>
-                                          <Calendar className="h-3 w-3" />
-                                          {cambioSubmitted ? 'Pendiente' : 'Solicitar Cambio'}
-                                        </div>
-                                      </button>
-                                    ) : (
-                                      <div className="flex flex-col items-center rounded-xl bg-teal-50 dark:bg-teal-900/20 p-3 w-full">
-                                        <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
-                                          {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
-                                        </div>
-                                      </div>
-                                    )}
+                                         <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
+                                           {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
+                                         </div>
+                                         <div className="text-[10px] font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider mt-0.5">Mes de vacaciones</div>
+                                         <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
+                                           hasPendingCambio
+                                             ? 'bg-amber-400 dark:bg-amber-500'
+                                             : 'bg-gradient-to-r from-teal-500 to-teal-400 dark:from-teal-600 dark:to-teal-500'
+                                         }`}>
+                                           <Calendar className="h-3 w-3" />
+                                           {hasPendingCambio ? 'Pendiente' : 'Solicitar Cambio'}
+                                         </div>
+                                       </button>
+                                     ) : (
+                                       <div className="flex flex-col items-center rounded-xl bg-teal-50 dark:bg-teal-900/20 p-3 w-full">
+                                         <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
+                                           {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
+                                         </div>
+                                         <div className="text-[10px] font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider mt-0.5">Mes de vacaciones</div>
+                                       </div>
+                                     )}
                                   </div>
 
                                   {/* Requests list */}
-                                  {(vacationRequests.length > 0 || empVacationRequests.length > 0) && (
-                                    <div className="border-t border-app-card-border pt-3">
-                                      <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Solicitudes</div>
+                                   {(vacationRequests.length > 0 || empVacationRequests.length > 0) && (
+                                     <div className="border-t border-app-card-border pt-3">
+                                       <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Solicitudes</div>
                                        {(() => {
                                          const allReqs = [...(vacationRequests.length > 0 ? vacationRequests : []), ...(empVacationRequests.filter(vr => !vacationRequests.some(r => r.id === vr.id)))];
-                                         const freeDays = allReqs.filter(vr => vr.type === 'free_days');
-                                         const changes = allReqs.filter(vr => vr.type !== 'free_days');
                                          const badgeColors: Record<string, string> = {
                                            own: 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300',
                                            accumulated: 'bg-violet-100 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300',
                                            excess: 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300',
                                            change: 'bg-teal-100 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300',
                                          };
-                                         const renderItem = (vr: VacationRequest, idx: number) => {
-                                           const isFreeDays = vr.type === 'free_days';
-                                           const colorKey = isFreeDays
-                                             ? vr.day_type === 'own' ? 'own'
-                                               : vr.day_type === 'accumulated' ? 'accumulated' : 'excess'
-                                             : 'change';
-                                            const badgeLabel = isFreeDays
+                                         const borderColors: Record<string, string> = {
+                                           own: 'border-l-amber-400',
+                                           accumulated: 'border-l-violet-400',
+                                           excess: 'border-l-red-400',
+                                           change: 'border-l-teal-400',
+                                         };
+                                         const statusColors: Record<string, string> = {
+                                           pending: 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300',
+                                           approved: 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300',
+                                           rejected: 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300',
+                                         };
+                                         const MONTH_NAMES_ES: Record<string, string> = {
+                                           january: 'Enero', february: 'Febrero', march: 'Marzo', april: 'Abril',
+                                           may: 'Mayo', june: 'Junio', july: 'Julio', august: 'Agosto',
+                                           september: 'Septiembre', october: 'Octubre', november: 'Noviembre', december: 'Diciembre',
+                                         };
+                                         const ES_MONTH_NAMES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+                                         const fmtMonth = (m: string) => {
+                                           const lower = m.toLowerCase();
+                                           return MONTH_NAMES_ES[lower] || (ES_MONTH_NAMES.includes(lower) ? lower.charAt(0).toUpperCase() + lower.slice(1) : m);
+                                         };
+                                          const renderGroup = (vr: VacationRequest, idx: number) => {
+                                            const isDias = vr.type === 'free_days';
+                                            const colorKey = isDias
+                                              ? vr.day_type === 'own' ? 'own'
+                                                : vr.day_type === 'accumulated' ? 'accumulated' : 'excess'
+                                              : 'change';
+                                            const badgeLabel = isDias
                                               ? vr.day_type === 'own' ? 'Días propios'
                                                 : vr.day_type === 'accumulated' ? 'Días acumulados' : 'Días exceso'
-                                              : (() => {
-                                                  const raw = vr.requested_month || '';
-                                                  const lower = raw.toLowerCase();
-                                                  const SPANISH_MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-                                                  return `Cambio Vacaciones ${MONTH_EN_TO_ES[lower] || (SPANISH_MONTHS.includes(lower) ? lower.charAt(0).toUpperCase() + lower.slice(1) : raw)}`;
-                                                })();
-                                            const mainText = isFreeDays
-                                              ? vr.requested_days?.map(formatDate).join(', ') || ''
-                                              : '';
+                                              : 'Cambio vacaciones';
                                             const createdDate = vr.created_at ? formatDate(vr.created_at.split('T')[0]) : '';
+                                            const resolvedDate = vr.resolved_at ? formatDate(vr.resolved_at.split('T')[0]) : '';
+                                            interface RowData { detail: string; }
+                                            const rows: RowData[] = [];
+                                            if (isDias) {
+                                              (vr.requested_days || []).forEach(d => rows.push({ detail: formatDate(d) }));
+                                            } else {
+                                              const current = empVacationMonth ? fmtMonth(empVacationMonth) : '';
+                                              const requested = vr.requested_month ? fmtMonth(vr.requested_month) : '';
+                                              rows.push({ detail: vr.requested_month === 'split' ? 'Dividido' : `${current} × ${requested}` });
+                                            }
                                             return (
-                                              <div key={vr.id || idx} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5 mb-1.5">
-                                                <div className="flex flex-col">
-                                                  <div className="flex items-center">
-                                                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${badgeColors[colorKey]}`}>{badgeLabel}</span>
-                                                    {mainText && <span className="text-sm font-semibold text-app-text ml-2">{mainText}</span>}
-                                                  </div>
-                                                  <span className="text-[11px] text-app-text-secondary mt-0.5">Solicitado: {createdDate}</span>
+                                              <div key={vr.id || idx} className={`rounded-xl bg-app-bg/50 mb-1.5 border-l-[3px] ${borderColors[colorKey]} overflow-hidden`}>
+                                                <div className="divide-y divide-app-card-border/40">
+                                                  {rows.map((row, ri) => (
+                                                    <div key={ri} className="grid grid-cols-[auto_auto_1fr_auto_auto] gap-x-3 items-center px-3 py-1.5">
+                                                      <Send className="h-3.5 w-3.5 text-app-text-secondary shrink-0" />
+                                                      <div className="flex flex-col items-center gap-0.5">
+                                                        <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded leading-tight ${badgeColors[colorKey]}`}>{badgeLabel}</span>
+                                                        <span className="text-[11px] text-app-text">{row.detail}</span>
+                                                      </div>
+                                                      <div />
+                                                      <div className="flex flex-col items-center gap-0.5">
+                                                        <span className="text-[11px] font-semibold text-app-text">Solicitado</span>
+                                                        <span className="text-[11px] text-app-text-secondary">{createdDate}</span>
+                                                      </div>
+                                                      <div className="flex flex-col items-center gap-0.5">
+                                                        {vr.status === 'pending' ? (
+                                                          <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300">Pendiente</span>
+                                                        ) : (
+                                                          <>
+                                                            <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${statusColors[vr.status]}`}>
+                                                              {vr.status === 'approved' ? 'Aprobado' : 'Rechazado'}
+                                                            </span>
+                                                            <span className="text-[11px] text-app-text-secondary">{resolvedDate}</span>
+                                                          </>
+                                                        )}
+                                                      </div>
+                                                    </div>
+                                                  ))}
                                                 </div>
-                                               <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                                                 vr.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
-                                                 vr.status === 'pending' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
-                                                 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
-                                               }`}>
-                                                 {vr.status === 'approved' ? 'Aprobado' : vr.status === 'pending' ? 'Pendiente' : 'Rechazado'}
-                                               </span>
-                                             </div>
-                                           );
+                                              </div>
+                                            );
                                          };
-                                         return (
-                                           <>
-                                             {freeDays.map(renderItem)}
-                                             {freeDays.length > 0 && changes.length > 0 && (
-                                               <div className="border-t border-app-card-border my-2" />
-                                             )}
-                                             {changes.map(renderItem)}
-                                           </>
-                                         );
+                                         return <>{allReqs.map(renderGroup)}</>;
                                        })()}
-                                    </div>
-                                  )}
+                                     </div>
+                                   )}
                                 </>
                               );
                             })()}
