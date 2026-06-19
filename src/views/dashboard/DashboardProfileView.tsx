@@ -106,6 +106,13 @@ export const DashboardProfileView: React.FC = () => {
   const [socialFundModalOpen, setSocialFundModalOpen] = useState(false);
   const [visualizarLicenseOpen, setVisualizarLicenseOpen] = useState(false);
 
+  const [clothingRequestOpen, setClothingRequestOpen] = useState(false);
+  const [clothingRequestType, setClothingRequestType] = useState<ArticleType>('shirt');
+  const [clothingRequestSeason, setClothingRequestSeason] = useState<'summer' | 'winter'>('summer');
+  const [clothingRequestSize, setClothingRequestSize] = useState('');
+  const [clothingRequestReason, setClothingRequestReason] = useState('reposicion');
+  const [clothingRequestColor, setClothingRequestColor] = useState('verde');
+
   const [coverError, setCoverError] = useState(false);
   const [coverLoaded, setCoverLoaded] = useState(false);
   const [activeEmployeeTab, setActiveEmployeeTab] = useState<string>('personal');
@@ -545,9 +552,6 @@ export const DashboardProfileView: React.FC = () => {
                                   {/* Balance — Días */}
                                   {empLeaveBalances.length > 0 && (
                                     <div>
-                                      <div className="flex items-center justify-between mb-3">
-                                        <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Días</div>
-                                      </div>
                                       {!isReadOnly ? (
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
                                           {(() => {
@@ -560,7 +564,7 @@ export const DashboardProfileView: React.FC = () => {
                                                   className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all cursor-pointer relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-50 dark:disabled:hover:bg-amber-900/20"
                                                 >
                                                   <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
-                                                  <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
+                                                  <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Días propios</div>
                                                   <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
                                                     b.own_days === 0
                                                       ? 'bg-gray-300 dark:bg-gray-600'
@@ -575,7 +579,7 @@ export const DashboardProfileView: React.FC = () => {
                                                   className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-3 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-all cursor-pointer relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-violet-50 dark:disabled:hover:bg-violet-900/20"
                                                 >
                                                   <div className="text-2xl font-bold text-violet-600 dark:text-violet-300">{b.accumulated_days}</div>
-                                                  <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Acumulados</div>
+                                                  <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Días acumulados</div>
                                                   <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
                                                     b.accumulated_days === 0
                                                       ? 'bg-gray-300 dark:bg-gray-600'
@@ -594,7 +598,7 @@ export const DashboardProfileView: React.FC = () => {
                                                   }`}
                                                 >
                                                   <div className={`text-2xl font-bold ${b.excess_days > 0 ? 'text-red-600 dark:text-red-300' : 'text-app-text-secondary'}`}>{b.excess_days}</div>
-                                                  <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Excesos</div>
+                                                  <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Días exceso</div>
                                                   <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
                                                     b.excess_days === 0
                                                       ? 'bg-gray-300 dark:bg-gray-600'
@@ -615,15 +619,15 @@ export const DashboardProfileView: React.FC = () => {
                                               <>
                                                 <div className="flex flex-col items-center rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">
                                                   <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{b.own_days}</div>
-                                                  <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Propios</div>
+                                                  <div className="text-[10px] font-semibold text-amber-700 dark:text-amber-300 uppercase mt-0.5">Días propios</div>
                                                 </div>
                                                 <div className="flex flex-col items-center rounded-xl bg-violet-50 dark:bg-violet-900/20 p-3">
                                                   <div className="text-2xl font-bold text-violet-600 dark:text-violet-300">{b.accumulated_days}</div>
-                                                  <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Acumulados</div>
+                                                  <div className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 uppercase mt-0.5">Días acumulados</div>
                                                 </div>
                                                 <div className={`flex flex-col items-center rounded-xl p-3 ${b.excess_days > 0 ? 'bg-red-50 dark:bg-red-900/20' : 'bg-app-bg/50'}`}>
                                                   <div className={`text-2xl font-bold ${b.excess_days > 0 ? 'text-red-600 dark:text-red-300' : 'text-app-text-secondary'}`}>{b.excess_days}</div>
-                                                  <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Excesos</div>
+                                                  <div className={`text-[10px] font-semibold uppercase mt-0.5 ${b.excess_days > 0 ? 'text-red-700 dark:text-red-300' : 'text-app-text-secondary'}`}>Días exceso</div>
                                                 </div>
                                               </>
                                             );
@@ -635,9 +639,6 @@ export const DashboardProfileView: React.FC = () => {
 
                                   {/* Mes de Vacaciones */}
                                   <div className="border-t border-app-card-border pt-3">
-                                    <div className="flex items-center justify-between mb-3">
-                                      <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider">Mes de Vacaciones</div>
-                                    </div>
                                     {!isReadOnly ? (
                                       <button
                                         onClick={() => setCambioVacacionesOpen(true)}
@@ -651,7 +652,6 @@ export const DashboardProfileView: React.FC = () => {
                                         <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
                                           {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
                                         </div>
-                                        <div className="text-[10px] font-semibold text-teal-700 dark:text-teal-300 uppercase mt-0.5">Mes de Vacaciones</div>
                                         <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs ${
                                           cambioSubmitted
                                             ? 'bg-amber-400 dark:bg-amber-500'
@@ -666,7 +666,6 @@ export const DashboardProfileView: React.FC = () => {
                                         <div className="text-2xl font-bold text-teal-600 dark:text-teal-300">
                                           {currentVacationMonth ? MONTH_NAMES[MONTH_MAP[currentVacationMonth]] ?? currentVacationMonth : 'No asignado'}
                                         </div>
-                                        <div className="text-[10px] font-semibold text-teal-700 dark:text-teal-300 uppercase mt-0.5">Mes de Vacaciones</div>
                                       </div>
                                     )}
                                   </div>
@@ -675,26 +674,64 @@ export const DashboardProfileView: React.FC = () => {
                                   {(vacationRequests.length > 0 || empVacationRequests.length > 0) && (
                                     <div className="border-t border-app-card-border pt-3">
                                       <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Solicitudes</div>
-                                      {[...(vacationRequests.length > 0 ? vacationRequests : []), ...(empVacationRequests.filter(vr => !vacationRequests.some(r => r.id === vr.id)))].map((vr, idx) => (
-                                        <div key={vr.id || idx} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5 mb-1.5">
-                                          <div className="flex flex-col">
-                                            <span className="text-sm font-semibold text-app-text">
-                                              {vr.type === 'free_days'
-                                                ? `Día libre${vr.day_type ? ` (${vr.day_type === 'own' ? 'Propios' : vr.day_type === 'accumulated' ? 'Acumulados' : 'Excesos'})` : ''} — ${vr.requested_days?.join(', ') || ''}`
-                                                : vr.type === 'vacation_change' || vr.type === 'month_change'
-                                                ? `Cambio vacaciones — ${vr.requested_month ? (MONTH_EN_TO_ES[vr.requested_month.toLowerCase()] || vr.requested_month) : ''}`
-                                                : vr.type}
-                                            </span>
-                                          </div>
-                                          <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                                            vr.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
-                                            vr.status === 'pending' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
-                                            'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
-                                          }`}>
-                                            {vr.status === 'approved' ? 'Aprobado' : vr.status === 'pending' ? 'Pendiente' : 'Rechazado'}
-                                          </span>
-                                        </div>
-                                      ))}
+                                       {(() => {
+                                         const allReqs = [...(vacationRequests.length > 0 ? vacationRequests : []), ...(empVacationRequests.filter(vr => !vacationRequests.some(r => r.id === vr.id)))];
+                                         const freeDays = allReqs.filter(vr => vr.type === 'free_days');
+                                         const changes = allReqs.filter(vr => vr.type !== 'free_days');
+                                         const badgeColors: Record<string, string> = {
+                                           own: 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300',
+                                           accumulated: 'bg-violet-100 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300',
+                                           excess: 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300',
+                                           change: 'bg-teal-100 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300',
+                                         };
+                                         const renderItem = (vr: VacationRequest, idx: number) => {
+                                           const isFreeDays = vr.type === 'free_days';
+                                           const colorKey = isFreeDays
+                                             ? vr.day_type === 'own' ? 'own'
+                                               : vr.day_type === 'accumulated' ? 'accumulated' : 'excess'
+                                             : 'change';
+                                            const badgeLabel = isFreeDays
+                                              ? vr.day_type === 'own' ? 'Días propios'
+                                                : vr.day_type === 'accumulated' ? 'Días acumulados' : 'Días exceso'
+                                              : (() => {
+                                                  const raw = vr.requested_month || '';
+                                                  const lower = raw.toLowerCase();
+                                                  const SPANISH_MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+                                                  return `Cambio Vacaciones ${MONTH_EN_TO_ES[lower] || (SPANISH_MONTHS.includes(lower) ? lower.charAt(0).toUpperCase() + lower.slice(1) : raw)}`;
+                                                })();
+                                            const mainText = isFreeDays
+                                              ? vr.requested_days?.map(formatDate).join(', ') || ''
+                                              : '';
+                                            const createdDate = vr.created_at ? formatDate(vr.created_at.split('T')[0]) : '';
+                                            return (
+                                              <div key={vr.id || idx} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5 mb-1.5">
+                                                <div className="flex flex-col">
+                                                  <div className="flex items-center">
+                                                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${badgeColors[colorKey]}`}>{badgeLabel}</span>
+                                                    {mainText && <span className="text-sm font-semibold text-app-text ml-2">{mainText}</span>}
+                                                  </div>
+                                                  <span className="text-[11px] text-app-text-secondary mt-0.5">Solicitado: {createdDate}</span>
+                                                </div>
+                                               <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                                                 vr.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300' :
+                                                 vr.status === 'pending' ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300' :
+                                                 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-300'
+                                               }`}>
+                                                 {vr.status === 'approved' ? 'Aprobado' : vr.status === 'pending' ? 'Pendiente' : 'Rechazado'}
+                                               </span>
+                                             </div>
+                                           );
+                                         };
+                                         return (
+                                           <>
+                                             {freeDays.map(renderItem)}
+                                             {freeDays.length > 0 && changes.length > 0 && (
+                                               <div className="border-t border-app-card-border my-2" />
+                                             )}
+                                             {changes.map(renderItem)}
+                                           </>
+                                         );
+                                       })()}
                                     </div>
                                   )}
                                 </>
@@ -707,21 +744,44 @@ export const DashboardProfileView: React.FC = () => {
                           <div className="space-y-3 sm:space-y-4">
                             {empSizes.length > 0 && (
                               <div>
-                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Tallas</div>
                                 {(() => {
                                   const LABELS: Record<string, string> = {
                                     shirt: 'Camisa', pants: 'Pantalón', jacket: 'Chaqueta',
                                     coat: 'Chaquetón', cap: 'Gorra', shoe: 'Zapatos',
                                   };
+                                  const COLORS: Record<string, { bg: string; text: string; gradient: string }> = {
+                                    shirt: { bg: 'bg-amber-50 dark:bg-amber-900/20', text: 'text-amber-700 dark:text-amber-300', gradient: 'from-amber-500 to-amber-400 dark:from-amber-600 dark:to-amber-500' },
+                                    pants: { bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-700 dark:text-blue-300', gradient: 'from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-500' },
+                                    jacket: { bg: 'bg-emerald-50 dark:bg-emerald-900/20', text: 'text-emerald-700 dark:text-emerald-300', gradient: 'from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-500' },
+                                    coat: { bg: 'bg-purple-50 dark:bg-purple-900/20', text: 'text-purple-700 dark:text-purple-300', gradient: 'from-purple-500 to-purple-400 dark:from-purple-600 dark:to-purple-500' },
+                                    cap: { bg: 'bg-rose-50 dark:bg-rose-900/20', text: 'text-rose-700 dark:text-rose-300', gradient: 'from-rose-500 to-rose-400 dark:from-rose-600 dark:to-rose-500' },
+                                    shoe: { bg: 'bg-teal-50 dark:bg-teal-900/20', text: 'text-teal-700 dark:text-teal-300', gradient: 'from-teal-500 to-teal-400 dark:from-teal-600 dark:to-teal-500' },
+                                  };
+                                  const ORDER: ArticleType[] = ['shirt', 'pants', 'jacket', 'coat', 'cap', 'shoe'];
                                   return (
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-1.5 text-sm">
-                                      {(['shirt', 'pants', 'jacket', 'coat', 'cap', 'shoe'] as ArticleType[]).map(type => {
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                      {ORDER.map(type => {
                                         const size = empSizes.find(s => s.article_type === type)?.size || '—';
+                                        const c = COLORS[type];
                                         return (
-                                          <React.Fragment key={type}>
-                                            <span className="text-app-text-secondary">{LABELS[type]}</span>
-                                            <span className="text-app-text">{size}</span>
-                                          </React.Fragment>
+                                          <button
+                                            key={type}
+                                            onClick={() => {
+                                              setClothingRequestType(type);
+                                              setClothingRequestSeason('summer');
+                                              setClothingRequestSize(size !== '—' ? size : '');
+                                              setClothingRequestReason('reposicion');
+                                              setClothingRequestColor('verde');
+                                              setClothingRequestOpen(true);
+                                            }}
+                                            className={`flex flex-col items-center rounded-xl ${c.bg} p-3 hover:brightness-95 dark:hover:brightness-110 transition-all cursor-pointer relative overflow-hidden`}
+                                          >
+                                            <div className={`text-[10px] font-semibold ${c.text} uppercase mt-0.5`}>{LABELS[type]}</div>
+                                            <div className={`text-2xl font-bold ${c.text}`}>{size}</div>
+                                            <div className={`mt-2 w-full flex items-center justify-center gap-1 text-[11px] font-bold text-white px-3 py-1 rounded-lg shadow-xs bg-gradient-to-r ${c.gradient}`}>
+                                              <Shirt className="h-3 w-3" /> Solicitar
+                                            </div>
+                                          </button>
                                         );
                                       })}
                                     </div>
@@ -731,17 +791,17 @@ export const DashboardProfileView: React.FC = () => {
                             )}
                             {empClothing.length > 0 && (
                               <div className="border-t border-app-card-border pt-3">
-                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Prendas {new Date().getFullYear()}</div>
+                                <div className="text-xs font-semibold text-app-text-secondary uppercase tracking-wider mb-3">Solicitados</div>
                                 <div className="space-y-1.5">
                                   {empClothing.map((c, i) => (
                                     <div key={c.id || i} className="flex items-center justify-between rounded-xl bg-app-bg/50 px-4 py-2.5">
                                       <div className="flex flex-col">
                                         <span className="text-sm font-bold text-app-text">{c.article_type || 'Prenda'} — {c.size} — {c.notes || 'Asignación'}</span>
                                         <span className="text-[11px] text-app-text-secondary">{c.delivery_date ? formatDate(c.delivery_date) : ''}</span>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
+                                        </div>
+                                        </div>
+                                      ))}
+                                  </div>
                               </div>
                             )}
                             {empSizes.length === 0 && empClothing.length === 0 && (
@@ -1250,6 +1310,149 @@ export const DashboardProfileView: React.FC = () => {
               })()}
               <div className="border-t border-app-border pt-3 mt-3 text-center">
                 <p className="text-[11px] text-app-text-secondary">Visualización de documento no disponible</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {clothingRequestOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-sidebar/80 backdrop-blur-xs">
+          <div className="bg-app-card rounded-2xl shadow-xl w-full max-w-md border border-app-card-border overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="px-5 py-4 bg-gradient-to-r from-primary-600 to-primary-500 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/20 text-white">
+                  <Shirt className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Solicitar Prenda</h3>
+                  <p className="text-xs text-white/70">Rellena los datos de la prenda</p>
+                </div>
+              </div>
+              <button onClick={() => setClothingRequestOpen(false)} className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {(() => {
+                const LABELS: Record<string, string> = {
+                  shirt: 'Camisa', pants: 'Pantalón', jacket: 'Chaqueta',
+                  coat: 'Chaquetón', cap: 'Gorra', shoe: 'Zapatos',
+                };
+                const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                const SHOE_SIZES = ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'];
+                const REASONS = [
+                  { id: 'reposicion', label: 'Reposición' },
+                  { id: 'nueva', label: 'Nueva' },
+                  { id: 'rotura', label: 'Rotura' },
+                  { id: 'desgaste', label: 'Desgaste' },
+                ];
+                const isCap = clothingRequestType === 'cap';
+                const sizeOptions = clothingRequestType === 'shoe' ? SHOE_SIZES : clothingRequestType === 'cap' ? ['ESTANDAR'] : CLOTHING_SIZES;
+
+                return (
+                  <>
+                    <div>
+                      <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Tipo</label>
+                      <div className="w-full rounded-xl border border-app-border px-4 py-2.5 text-sm bg-app-bg/50 text-app-text font-semibold">
+                        {LABELS[clothingRequestType]}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Talla</label>
+                      <select
+                        value={clothingRequestSize}
+                        onChange={(e) => setClothingRequestSize(e.target.value)}
+                        className="w-full rounded-xl border border-app-border px-4 py-2.5 text-sm bg-app-card text-app-text focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all appearance-none"
+                      >
+                        <option value="">Selecciona talla</option>
+                        {sizeOptions.map(s => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {!isCap && (
+                      <div>
+                        <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Temporada</label>
+                        <div className="flex gap-2">
+                          {(['summer', 'winter'] as const).map(season => (
+                            <button
+                              key={season}
+                              type="button"
+                              onClick={() => setClothingRequestSeason(season)}
+                              className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl border transition-all ${
+                                clothingRequestSeason === season
+                                  ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-300 dark:border-primary-600 text-primary-700 dark:text-primary-300'
+                                  : 'border-app-border text-app-text-secondary hover:bg-app-bg/50'
+                              }`}
+                            >
+                              {season === 'summer' ? 'Verano' : 'Invierno'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Color</label>
+                      <div className="flex gap-2">
+                        {(['verde', 'azul', 'blanco'] as const).map(color => (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() => setClothingRequestColor(color)}
+                            className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl border transition-all ${
+                              clothingRequestColor === color
+                                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-300 dark:border-primary-600 text-primary-700 dark:text-primary-300'
+                                : 'border-app-border text-app-text-secondary hover:bg-app-bg/50'
+                            }`}
+                          >
+                            {color.charAt(0).toUpperCase() + color.slice(1)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-medium text-app-text-secondary mb-1.5 block">Motivo</label>
+                      <select
+                        value={clothingRequestReason}
+                        onChange={(e) => setClothingRequestReason(e.target.value)}
+                        className="w-full rounded-xl border border-app-border px-4 py-2.5 text-sm bg-app-card text-app-text focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all appearance-none"
+                      >
+                        {REASONS.map(r => (
+                          <option key={r.id} value={r.id}>{r.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+
+            <div className="px-5 py-4 border-t border-app-border flex items-center justify-between shrink-0 bg-app-bg/50">
+              <span className="text-[11px] text-app-text-secondary">Revisión por administrador</span>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setClothingRequestOpen(false)} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-colors">
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    triggerToast('Solicitud de prenda enviada correctamente', 'success');
+                    setClothingRequestOpen(false);
+                  }}
+                  disabled={!clothingRequestSize}
+                  className={`inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold rounded-xl shadow-xs transition-all ${
+                    clothingRequestSize
+                      ? 'text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 active:scale-95'
+                      : 'text-app-text-secondary bg-app-bg cursor-not-allowed'
+                  }`}
+                >
+                  <Send className="w-4 h-4" /> Enviar Solicitud
+                </button>
               </div>
             </div>
           </div>
