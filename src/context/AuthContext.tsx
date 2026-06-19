@@ -115,7 +115,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       try {
         const profile = await authApi.me();
-        console.log('[Auth] /me response:', JSON.stringify(profile, null, 2));
         const appUser = mapApiUserToAppUser(profile.user);
         const darkMode = profile.user.dark_mode ?? state.darkMode;
         applyDarkMode(darkMode);
