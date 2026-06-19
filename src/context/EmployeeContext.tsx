@@ -9,6 +9,7 @@ interface EmployeeContextType {
   loadEmployees: () => void;
   getEmployeeOverviews: () => EmployeeOverview[];
   getEmployeeById: (id: string) => Employee | undefined;
+  getNextEmployeeId: () => string;
   createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => Promise<{ success: boolean }>;
   updateEmployee: (id: string, data: Partial<Employee>) => Promise<{ success: boolean }>;
   deleteEmployee: (id: string) => Promise<void>;
@@ -53,6 +54,19 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const getEmployeeById = useCallback((id: string) => {
     return employees.find((emp) => emp.id === id);
+  }, [employees]);
+
+  const getNextEmployeeId = useCallback(() => {
+    if (employees.length === 0) return '000001';
+    const nums = employees
+      .map((e) => parseInt(e.id, 10))
+      .filter((n) => !isNaN(n))
+      .sort((a, b) => a - b);
+    if (nums.length === 0) return '000001';
+    for (let i = 0; i < nums.length; i++) {
+      if (nums[i] !== i + 1) return String(i + 1).padStart(6, '0');
+    }
+    return String(nums.length + 1).padStart(6, '0');
   }, [employees]);
 
   const createEmployee = useCallback(async (
@@ -111,7 +125,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
       <EmployeeContext.Provider
         value={{
-          employees, loading, loadEmployees, getEmployeeOverviews, getEmployeeById,
+          employees, loading, loadEmployees, getEmployeeOverviews, getEmployeeById, getNextEmployeeId,
           createEmployee, updateEmployee, deleteEmployee,
           vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
         }}
