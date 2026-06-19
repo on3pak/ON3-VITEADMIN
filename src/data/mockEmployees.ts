@@ -36,7 +36,6 @@ export const INITIAL_WORK_DAYS: WorkDay[] = [
 
 export const INITIAL_SHIFTS: Shift[] = [
   { id: 's_1', name: 'Mañana' },
-
   { id: 's_2', name: 'Tarde' },
   { id: 's_3', name: 'Noche' },
 ];

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Employee, VacationMonth, ClothingSizes, ClothingSize, ShoeSize, UserRole } from '../../types';
 import {
   X, ShieldAlert, UserPlus, Save, CreditCard, Award, Shirt, Plus, Minus,
-  Search, CheckCircle2, AlertCircle, FileText, Calendar,
+  Search, CheckCircle2, AlertCircle, FileText, Calendar, Upload, Trash2,
   ChevronLeft, ChevronRight, User,
 } from 'lucide-react';
 import { useEmployees } from '../../context/EmployeeContext';
@@ -21,6 +21,35 @@ const CLOTHING_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const SHOE_SIZES = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
 const STEPS = ['Identificación', 'Laboral', 'Vacaciones', 'Uniformidad'];
 const STORAGE_KEY = 'employee_form_draft';
+
+const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
+  const h = String(Math.floor(i / 2)).padStart(2, '0');
+  const m = i % 2 === 0 ? '00' : '30';
+  return `${h}:${m}`;
+});
+
+const CATEGORIES_BY_ROLE: Record<UserRole, string[]> = {
+  user: ['ec_000001', 'ec_000002', 'ec_000003', 'ec_000004', 'ec_000005', 'ec_000006'],
+  manager: ['ec_000007', 'ec_000008'],
+  admin: ['ec_000009', 'ec_000010'],
+  root: [],
+};
+
+const LICENSE_LABELS: Record<string, string> = {
+  am: 'AM', a1: 'A1', a2: 'A2', a: 'A', b: 'B',
+  be: 'B+E', c1: 'C1', c1e: 'C1+E', c: 'C', ce: 'C+E',
+  d1: 'D1', d1e: 'D1+E', d: 'D', de: 'D+E',
+};
+
+const LICENSE_TYPES: SpanishLicenseType[] = ['am', 'a1', 'a2', 'a', 'b', 'be', 'c1', 'c1e', 'c', 'ce', 'd1', 'd1e', 'd', 'de'];
+
+const SCHEDULE_OPTIONS = [
+  { value: '06:00-13:00', label: '06:00 - 13:00', start: '06:00', end: '13:00', shift: 's_1' },
+  { value: '08:00-15:00', label: '08:00 - 15:00', start: '08:00', end: '15:00', shift: 's_1' },
+  { value: '13:00-20:00', label: '13:00 - 20:00', start: '13:00', end: '20:00', shift: 's_2' },
+  { value: '14:00-21:00', label: '14:00 - 21:00', start: '14:00', end: '21:00', shift: 's_2' },
+  { value: '22:00-05:00', label: '22:00 - 05:00', start: '22:00', end: '05:00', shift: 's_3' },
+] as const;
 
 const capitalize = (v: string) => v.replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -66,8 +95,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [jacketSize, setJacketSize] = useState('');
   const [winter_coat, setWinter_coat] = useState('');
   const [shoeSize, setShoeSize] = useState('');
-  const [medical_check, setMedical_check] = useState(true);
-  const [works_holidays, setWorks_holidays] = useState(true);
+  const [medical_check, setMedical_check] = useState(false);
+  const [works_holidays, setWorks_holidays] = useState(false);
   const [vaccinated, setVaccinated] = useState(false);
   const [contract_type, setContract_type] = useState('');
   const [contract_start_date, setContract_start_date] = useState('');
@@ -80,6 +109,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userRole, setUserRole] = useState<UserRole>('user');
+  const [newLicenseType, setNewLicenseType] = useState<SpanishLicenseType | ''>('');
+  const [newLicenseStart, setNewLicenseStart] = useState('');
+  const [newLicenseEnd, setNewLicenseEnd] = useState('');
+  const [tempLicenses, setTempLicenses] = useState<{license_type: SpanishLicenseType; start_date: string; expiry_date: string}[]>([]);
 
   const autoEmail = generateCorporateEmail(name, last_name1, employeeId);
 
@@ -114,9 +147,9 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setLockers(d.lockers?.length ? d.lockers : ['']);
       setShirtSize(d.shirtSize || ''); setPantsSize(d.pantsSize || ''); setJacketSize(d.jacketSize || '');
       setWinter_coat(d.winter_coat || ''); setShoeSize(d.shoeSize || '');
-      setMedical_check(d.medical_check ?? true); setWorks_holidays(d.works_holidays ?? true);
+      setMedical_check(d.medical_check ?? false); setWorks_holidays(d.works_holidays ?? false);
       setVaccinated(d.vaccinated ?? false); setContract_type(d.contract_type || '');
-      setContract_start_date(d.contract_start_date || ''); setContract_end_date(d.contract_end_date || '');
+      setContract_start_date(d.contract_start_date || new Date().toISOString().slice(0, 10)); setContract_end_date(d.contract_end_date || '');
       setEmployeeId(d.employeeId || ''); setIdStatus(d.idStatus || 'idle');
       setCreateUser(d.createUser || false); setUserEmail(d.userEmail || ''); setUserPassword(d.userPassword || ''); setUserRole(d.userRole || 'user');
     } catch { /* ignore */ }
@@ -176,6 +209,38 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     setFormError(null);
     setFormSuccess(null);
   }, [editingEmployee, isOpen]);
+
+  useEffect(() => {
+    if (!city_id) return;
+    const validIds = workCenters.filter((wc) => wc.city_id === city_id).map((wc) => wc.id);
+    if (!validIds.includes(work_center_id) && validIds.length > 0) {
+      setWork_center_id(validIds[0]);
+    }
+  }, [city_id]);
+
+  useEffect(() => {
+    if (work_day_id === 'wd_2' && shift_id && shift_id !== 's_1') {
+      setShift_id('s_1');
+    }
+  }, [work_day_id]);
+
+  useEffect(() => {
+    const match = SCHEDULE_OPTIONS.find((s) => s.start === start_time && s.end === end_time);
+    if (match && match.shift !== shift_id) {
+      setStart_time('');
+      setEnd_time('');
+    }
+  }, [shift_id]);
+
+  useEffect(() => {
+    if (contract_type === 'ct_1') {
+      setVacation_days(23);
+      setOwn_days(3);
+    } else {
+      setVacation_days(22);
+      setOwn_days(0);
+    }
+  }, [contract_type]);
 
   if (!isOpen) return null;
 
@@ -294,6 +359,15 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
         if (!userPassword || userPassword.length < 8) return false;
       }
     }
+    if (currentStep === 1) {
+      if (!category_id) return false;
+      if (!work_day_id) return false;
+      if (!shift_id) return false;
+      if (!work_center_id) return false;
+      if (!start_time || !end_time) return false;
+      if (!contract_type) return false;
+      if (!contract_start_date) return false;
+    }
     return true;
   };
 
@@ -390,7 +464,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             </select>
           </div>
         </div>
-
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Nombre *</label>
@@ -405,7 +478,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             <input type="text" value={last_name2} onChange={(e) => { setLastName2(capitalize(e.target.value)); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" placeholder="López" />
           </div>
         </div>
-
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Email Personal</label>
@@ -420,7 +492,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             <input type="text" value={phone_fixed} onChange={(e) => { setPhone_fixed(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" placeholder="934 123 456" />
           </div>
         </div>
-
         {createUser && (
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -477,95 +548,87 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     </>
   );
 
-  const renderStep1 = () => (
+  const renderStep1 = () => {
+    const filteredCategories = createUser && userRole !== 'root'
+      ? employeeCategories.filter((c) => CATEGORIES_BY_ROLE[userRole].includes(c.id))
+      : employeeCategories;
+
+    const filteredWorkCenters = workCenters.filter((wc) => wc.city_id === city_id);
+
+    const filteredShifts = work_day_id === 'wd_2'
+      ? shifts.filter((s) => s.id === 's_1')
+      : shifts;
+
+    const currentSchedule = SCHEDULE_OPTIONS.find((s) => s.start === start_time && s.end === end_time);
+
+    return (
     <>
       <div className="col-span-2">
-        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-2">
           <Award className="h-3 w-3" /> Laboral
+          <label className="flex items-center gap-1.5 ml-auto px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all select-none">
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={(e) => { setActive(e.target.checked); saveDraft(); }}
+              className="rounded border-primary-300 text-primary-600 focus:ring-primary-500 size-3"
+            />
+            {active ? 'Activo' : 'Inactivo'}
+          </label>
         </h4>
       </div>
-      <div className="col-span-2">
-        <div className="grid grid-cols-3 gap-4">
+      <div className="col-span-2 space-y-3">
+        <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría</label>
-            <select value={category_id} onChange={(e) => { setCategory_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-              {employeeCategories.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo *</label>
+            <select value={work_center_id} onChange={(e) => { setWork_center_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+              {filteredWorkCenters.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada</label>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría *</label>
+            <select value={category_id} onChange={(e) => { setCategory_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+              {filteredCategories.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+            </select>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Jornada *</label>
             <select value={work_day_id} onChange={(e) => { setWork_day_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
               {workDays.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Turno</label>
-            <select value={shift_id} onChange={(e) => { setShift_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Horario *</label>
+            <select
+              value={currentSchedule?.value ?? ''}
+              onChange={(e) => {
+                const opt = SCHEDULE_OPTIONS.find((s) => s.value === e.target.value);
+                if (opt) {
+                  setStart_time(opt.start);
+                  setEnd_time(opt.end);
+                  setShift_id(opt.shift);
+                } else {
+                  setStart_time('');
+                  setEnd_time('');
+                }
+                saveDraft();
+              }}
+              className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm"
+            >
               <option value="">Seleccionar...</option>
-              {shifts.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo</label>
-            <select value={work_center_id} onChange={(e) => { setWork_center_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-              {workCenters.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Estado</label>
-            <select value={status_id} onChange={(e) => { setStatus_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-              {employeeStatuses.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Activo</label>
-            <div className="flex items-center h-full">
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" checked={active} onChange={(e) => { setActive(e.target.checked); saveDraft(); }} className="sr-only peer" />
-                <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500" />
-                <span className="ms-2 text-sm text-app-text">{active ? 'Sí' : 'No'}</span>
-              </label>
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Entrada</label>
-            <input type="time" value={start_time} onChange={(e) => { setStart_time(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Hora Salida</label>
-            <input type="time" value={end_time} onChange={(e) => { setEnd_time(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
-            <div className="space-y-1.5">
-              {lockers.map((l, i) => (
-                <div key={i} className="flex items-center gap-1.5">
-                  <input
-                    type="text"
-                    value={l}
-                    onChange={(e) => {
-                      const next = [...lockers];
-                      next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
-                      setLockers(next);
-                      saveDraft();
-                    }}
-                    placeholder="001"
-                    maxLength={3}
-                    className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card"
-                  />
-                  {lockers.length > 1 && (
-                    <button type="button" onClick={() => { setLockers(lockers.filter((_, j) => j !== i)); saveDraft(); }} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg">
-                      <Minus className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
+              {SCHEDULE_OPTIONS.map((s) => (
+                <option key={s.value} value={s.value}>{s.label}</option>
               ))}
-              {lockers.length < 2 && (
-                <button type="button" onClick={() => { setLockers([...lockers, '']); saveDraft(); }} className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
-                  <Plus className="h-3 w-3" /> Añadir otra taquilla
-                </button>
-              )}
-            </div>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Turno *</label>
+            <select value={shift_id} disabled className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm cursor-not-allowed opacity-60">
+              <option value="">Seleccionar...</option>
+              {filteredShifts.map((s) => (<option key={s.id} value={s.id}>{s.name}</option>))}
+            </select>
           </div>
         </div>
       </div>
@@ -575,42 +638,43 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           <FileText className="h-3 w-3" /> Contrato
         </h4>
       </div>
-      <div className="col-span-2">
+      <div className="col-span-2 space-y-3">
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato</label>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo Contrato *</label>
             <select value={contract_type} onChange={(e) => { setContract_type(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
               <option value="">Seleccionar...</option>
               {contractTypes.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio *</label>
             <input type="date" value={contract_start_date} onChange={(e) => { setContract_start_date(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
           </div>
+          {contract_type && contract_type !== 'ct_1' && (
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Fin</label>
             <input type="date" value={contract_end_date} onChange={(e) => { setContract_end_date(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
           </div>
+          )}
+        </div>
+        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+          <CreditCard className="h-3 w-3" /> Datos Bancarios
+        </h4>
+        <div className="grid grid-cols-4 gap-4">
+          <div className="col-span-3">
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
+            <input type="text" value={iban} onChange={(e) => { setIban(e.target.value); saveDraft(); }} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono bg-app-card" />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
+            <input type="number" value={irpf} onChange={(e) => { setIrpf(Number(e.target.value)); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
+          </div>
         </div>
       </div>
-
-      <div className="col-span-2 flex flex-wrap gap-6">
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input type="checkbox" checked={medical_check} onChange={(e) => { setMedical_check(e.target.checked); saveDraft(); }} className="rounded" />
-          <span className="font-medium text-app-text">Revisión Médica</span>
-        </label>
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input type="checkbox" checked={works_holidays} onChange={(e) => { setWorks_holidays(e.target.checked); saveDraft(); }} className="rounded" />
-          <span className="font-medium text-app-text">Trabaja Festivos</span>
-        </label>
-        <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input type="checkbox" checked={vaccinated} onChange={(e) => { setVaccinated(e.target.checked); saveDraft(); }} className="rounded" />
-          <span className="font-medium text-app-text">Vacunado</span>
-        </label>
-      </div>
     </>
-  );
+    );
+  };
 
   const renderStep2 = () => (
     <>
@@ -624,16 +688,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Mes de Vacaciones</label>
             <select value={vacation_month} onChange={(e) => { setVacation_month(e.target.value as VacationMonth | ''); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-              <option value="">Sin asignar</option>
               <option value="JULIO">Julio</option>
               <option value="AGOSTO">Agosto</option>
               <option value="SEPTIEMBRE">Septiembre</option>
             </select>
-            <p className="text-[10px] text-app-text-secondary/50 mt-1">Rota cada año</p>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Vacaciones</label>
-            <input type="number" value={vacation_days} onChange={(e) => { setVacation_days(Number(e.target.value)); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
           </div>
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Propios</label>
@@ -651,20 +709,165 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       </div>
 
       <div className="col-span-2">
-        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-          <CreditCard className="h-3 w-3" /> Datos Bancarios
-        </h4>
-      </div>
-      <div className="col-span-2">
-        <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-3">
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">IBAN</label>
-            <input type="text" value={iban} onChange={(e) => { setIban(e.target.value); saveDraft(); }} placeholder="ES00..." className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono bg-app-card" />
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider flex items-center gap-1">
+            <FileText className="h-3 w-3" /> Carnets
+          </h4>
+          <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors">
+            <Upload className="h-3.5 w-3.5" />
+            Subir carnet
+            <input type="file" accept="image/*,application/pdf" className="hidden" />
+          </label>
+        </div>
+        <div className="grid grid-cols-3 gap-4 items-end">
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Tipo</label>
+            <select value={newLicenseType} onChange={(e) => setNewLicenseType(e.target.value as SpanishLicenseType | '')} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+              <option value="">Seleccionar</option>
+              {LICENSE_TYPES.map((lt) => (
+                <option key={lt} value={lt}>{LICENSE_LABELS[lt]}</option>
+              ))}
+            </select>
           </div>
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">IRPF %</label>
-            <input type="number" value={irpf} onChange={(e) => { setIrpf(Number(e.target.value)); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Inicio</label>
+            <input type="date" value={newLicenseStart} onChange={(e) => setNewLicenseStart(e.target.value)} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
           </div>
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Fecha Caducidad</label>
+            <div className="flex gap-2">
+              <input type="date" value={newLicenseEnd} onChange={(e) => setNewLicenseEnd(e.target.value)} className="flex-1 px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
+              <button
+                type="button"
+                onClick={() => {
+                  if (!newLicenseType) return;
+                  if (tempLicenses.some((l) => l.license_type === newLicenseType)) return;
+                  setTempLicenses([...tempLicenses, { license_type: newLicenseType as SpanishLicenseType, start_date: newLicenseStart, expiry_date: newLicenseEnd }]);
+                  setNewLicenseType('');
+                  setNewLicenseStart('');
+                  setNewLicenseEnd('');
+                  saveDraft();
+                }}
+                disabled={!newLicenseType}
+                className="px-3 py-2 text-xs font-semibold text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+        {tempLicenses.length > 0 && (
+          <div className="mt-3 space-y-1.5">
+            {tempLicenses.map((tl, i) => (
+              <div key={i} className="grid grid-cols-3 gap-4 items-end">
+                <div>
+                  <select value={tl.license_type} onChange={(e) => {
+                    const next = [...tempLicenses];
+                    next[i] = { ...next[i], license_type: e.target.value as SpanishLicenseType };
+                    setTempLicenses(next);
+                    saveDraft();
+                  }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+                    {LICENSE_TYPES.filter((lt) => lt === tl.license_type || !tempLicenses.some((t, j) => j !== i && t.license_type === lt)).map((lt) => (
+                      <option key={lt} value={lt}>{LICENSE_LABELS[lt]}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <input type="date" value={tl.start_date} onChange={(e) => {
+                    const next = [...tempLicenses];
+                    next[i] = { ...next[i], start_date: e.target.value };
+                    setTempLicenses(next);
+                    saveDraft();
+                  }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
+                </div>
+                <div>
+                  <div className="flex gap-2">
+                    <input type="date" value={tl.expiry_date} onChange={(e) => {
+                      const next = [...tempLicenses];
+                      next[i] = { ...next[i], expiry_date: e.target.value };
+                      setTempLicenses(next);
+                      saveDraft();
+                    }} className="flex-1 px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
+                    <button type="button" onClick={() => {
+                      setTempLicenses(tempLicenses.filter((_, j) => j !== i));
+                      saveDraft();
+                    }} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="col-span-2">
+        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+          <FileText className="h-3 w-3" /> Extras
+        </h4>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
+            <div className="flex items-center gap-1.5">
+              {lockers.map((l, i) => (
+                <div key={i} className="flex items-center gap-1.5">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={l}
+                      onChange={(e) => {
+                        const next = [...lockers];
+                        next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+                        setLockers(next);
+                        saveDraft();
+                      }}
+                      placeholder="001"
+                      maxLength={3}
+                      className="w-24 px-3 py-2 border border-app-border rounded-xl text-sm pe-8 bg-app-card"
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const taken = employees.flatMap((e) => e.lockers).filter(Boolean);
+                          const free = Array.from({ length: 999 }, (_, j) => String(j + 1).padStart(3, '0')).find((n) => !taken.includes(n)) || '001';
+                          const next = [...lockers];
+                          next[i] = free;
+                          setLockers(next);
+                          saveDraft();
+                        }}
+                        className="p-1 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all"
+                        title="Buscar taquilla libre"
+                      >
+                        <Search className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                  {lockers.length > 1 && (
+                    <button type="button" onClick={() => { setLockers(lockers.filter((_, j) => j !== i)); saveDraft(); }} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg">
+                      <Minus className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              {lockers.length < 2 && (
+                <button type="button" onClick={() => { setLockers([...lockers, '']); saveDraft(); }} className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                  <Plus className="h-3 w-3" /> Añadir
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-6">
+          <label className="flex items-center gap-2 text-sm cursor-pointer">
+            <input type="checkbox" checked={works_holidays} onChange={(e) => { setWorks_holidays(e.target.checked); saveDraft(); }} className="rounded" />
+            <span className="font-medium text-app-text">Trabaja Festivos</span>
+          </label>
+          <label className="flex items-center gap-2 text-sm cursor-pointer">
+            <input type="checkbox" checked={vaccinated} onChange={(e) => { setVaccinated(e.target.checked); saveDraft(); }} className="rounded" />
+            <span className="font-medium text-app-text">Vacuna</span>
+          </label>
+        </div>
         </div>
       </div>
     </>
@@ -743,7 +946,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
         {!editingEmployee && !profileMode && renderStepIndicator()}
 
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
+           <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
           {formError && (
             <div className="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-800 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-300 text-xs rounded-xl flex items-center gap-2 font-medium">
               <ShieldAlert className="h-4 w-4 text-rose-500 dark:text-rose-400 flex-shrink-0" />
