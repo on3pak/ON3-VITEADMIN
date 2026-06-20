@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLookupsContext } from '../../context/LookupContext';
 import { employeesApi, vacationsApi } from '../../api/services';
@@ -132,8 +132,11 @@ export const DashboardProfileView: React.FC = () => {
   const calYear = today.getFullYear();
   const [holidays, setHolidays] = useState<string[]>([]);
   const [holidaysLoading, setHolidaysLoading] = useState(false);
+  const holidaysLoaded = useRef(false);
 
   useEffect(() => {
+    if (activeTab !== 'calendario') return;
+    if (holidaysLoaded.current) return;
     const cityId = myEmployee?.city_id || loggedInUser?.city_id;
     setHolidaysLoading(true);
     const params: Record<string, string | number> = { year: calYear };
@@ -146,8 +149,8 @@ export const DashboardProfileView: React.FC = () => {
         setHolidays(dates);
       })
       .catch(() => setHolidays([]))
-      .finally(() => setHolidaysLoading(false));
-  }, [myEmployee?.city_id, loggedInUser?.city_id]);
+      .finally(() => { setHolidaysLoading(false); holidaysLoaded.current = true; });
+  }, [activeTab, myEmployee?.city_id, loggedInUser?.city_id]);
 
   const coverSrc = useMemo(() => {
     const cityName = cityMap[loggedInUser?.city_id || ''];

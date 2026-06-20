@@ -17,6 +17,8 @@ export const employeesApi = {
     api.get<EmployeeDetail>(`${BASE}/${id}/detail`),
   create: (body: Record<string, unknown>) =>
     api.post<Employee>(BASE, body),
+  wizard: (form: FormData) =>
+    api.upload<{ id: string }>(`${BASE}/wizard`, form),
   update: (id: string, body: Record<string, unknown>) =>
     api.patch<Employee>(BASE, id, body),
   delete: (id: string) =>

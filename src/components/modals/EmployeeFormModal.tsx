@@ -11,7 +11,7 @@ import { useLookupsContext } from '../../context/LookupContext';
 interface EmployeeFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => boolean;
+  onSubmit: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'> | FormData, employeeId?: string) => boolean | Promise<boolean>;
   onCreateUser?: (data: { email: string; password: string; role: string; employeeId?: string }) => void;
   editingEmployee?: Employee;
   profileMode?: boolean;
@@ -96,6 +96,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [excess_days, setExcess_days] = useState(0);
   const [irpf, setIrpf] = useState(0);
   const [iban, setIban] = useState('');
+  const [dni, setDni] = useState('');
+  const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
   const [lockers, setLockers] = useState<string[]>(['']);
   const [shirtSize, setShirtSize] = useState('');
   const [pantsSize, setPantsSize] = useState('');
@@ -110,6 +112,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [contract_end_date, setContract_end_date] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [employeeId, setEmployeeId] = useState('');
   const [idStatus, setIdStatus] = useState<'idle' | 'valid' | 'taken'>('idle');
   const [createUser, setCreateUser] = useState(false);
@@ -120,6 +123,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [newLicenseStart, setNewLicenseStart] = useState('');
   const [newLicenseEnd, setNewLicenseEnd] = useState('');
   const [tempLicenses, setTempLicenses] = useState<{license_type: SpanishLicenseType; start_date: string; expiry_date: string}[]>([]);
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  const [licenseFileError, setLicenseFileError] = useState<string | null>(null);
 
   const autoEmail = generateCorporateEmail(name, last_name1, employeeId);
 
@@ -128,7 +133,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     const draft = {
       name, last_name1, last_name2, phone, email, personal_email, phone_fixed, city_id,
       category_id, work_center_id, work_day_id, shift_id, start_time, end_time, status_id, active,
-      vacation_month, vacation_days, own_days, accumulated_days, excess_days, irpf, iban, lockers,
+      vacation_month, vacation_days, own_days, accumulated_days, excess_days, irpf, iban, dni, socialSecurityNumber, lockers,
       shirtSize, pantsSize, jacketSize, winter_coat, shoeSize, medical_check, works_holidays, vaccinated,
       contract_type, contract_start_date, contract_end_date, employeeId, idStatus, createUser, userEmail, userPassword, userRole,
     };
@@ -150,7 +155,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setVacation_month(d.vacation_month || '');
       setVacation_days(d.vacation_days ?? 22); setOwn_days(d.own_days ?? 0);
       setAccumulated_days(d.accumulated_days ?? 0); setExcess_days(d.excess_days ?? 0);
-      setIrpf(d.irpf ?? 0); setIban(d.iban || '');
+      setIrpf(d.irpf ?? 0); setIban(d.iban || ''); setDni(d.dni || ''); setSocialSecurityNumber(d.socialSecurityNumber || '');
       setLockers(d.lockers?.length ? d.lockers : ['']);
       setShirtSize(d.shirtSize || ''); setPantsSize(d.pantsSize || ''); setJacketSize(d.jacketSize || '');
       setWinter_coat(d.winter_coat || ''); setShoeSize(d.shoeSize || '');
@@ -191,6 +196,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setExcess_days(editingEmployee.excess_days || 0);
       setIrpf(editingEmployee.irpf);
       setIban(editingEmployee.iban || '');
+      setDni(editingEmployee.dni || '');
+      setSocialSecurityNumber(editingEmployee.social_security_number || '');
       setLockers(editingEmployee.lockers?.length ? editingEmployee.lockers : ['']);
       setEmployeeId(editingEmployee.id);
       setIdStatus('valid');
@@ -271,6 +278,9 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
   const prevStep = useRef(currentStep);
   useEffect(() => {
+    if (prevStep.current !== currentStep) {
+      setFormError(null);
+    }
     if (prevStep.current === 2 && currentStep === 1) {
       const d = createUser && userRole ? ROLE_DEFAULTS[userRole] : ROLE_DEFAULTS.user;
       setCategory_id(d.category_id);
@@ -305,32 +315,38 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
     setFormError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    console.log('[EmployeeFormModal] handleSubmit called');
     setFormError(null);
+    setSubmitting(true);
 
     if (!name.trim() || !last_name1.trim()) {
+      setSubmitting(false);
       setFormError('Los campos Nombre y Primer Apellido son obligatorios.');
       return;
     }
 
     if (!editingEmployee && !employeeId.trim()) {
       setFormError('Debes asignar un ID de empleado.');
+      setSubmitting(false);
       return;
     }
 
     if (!city_id) {
       setFormError('La ciudad es obligatoria.');
+      setSubmitting(false);
       return;
     }
 
     if (createUser) {
       if (!userEmail.trim()) {
         setFormError('El email de usuario es obligatorio.');
+        setSubmitting(false);
         return;
       }
       if (!userPassword || userPassword.length < 8) {
         setFormError('La contraseña debe tener al menos 8 caracteres.');
+        setSubmitting(false);
         return;
       }
     }
@@ -348,46 +364,120 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       winter_shoe: shoeSize ? Number(shoeSize) as ShoeSize : null,
     };
 
-    const success = onSubmit({
-      city_id: city_id || null,
-      name: name.trim(),
-      last_name1: last_name1.trim(),
-      last_name2: last_name2.trim(),
-      email: createUser ? autoEmail : email,
-      phone: phone.trim(),
-      category_id,
-      status_id,
-      work_center_id,
-      active,
-      shift_id,
-      start_time,
-      end_time,
-      vacation_month: vacation_month || null,
-      vacation_days,
-      own_days,
-      accumulated_days,
-      excess_days,
-      personal_email: personal_email.trim(),
-      phone_fixed: phone_fixed.trim(),
-      work_day_id,
-      iban: iban.trim(),
-      lockers: lockers.filter((l) => l.trim() !== ''),
-      clothing_sizes: clothingSizesRecord,
-      medical_check,
-      works_holidays,
-      vaccinated,
-      contract_type,
-      contract_start_date,
-      contract_end_date: contract_end_date || null,
-      irpf,
-    }, editingEmployee ? undefined : employeeId.trim());
+    const employeeIdValue = editingEmployee ? undefined : employeeId.trim();
 
-    if (success) {
-      if (createUser && onCreateUser) {
-        onCreateUser({ email: autoEmail, password: userPassword, role: userRole, employeeId: editingEmployee ? undefined : employeeId.trim() });
+    if (!editingEmployee) {
+      const fd = new FormData();
+      const payload: Record<string, unknown> = {
+        id: employeeIdValue || '',
+        city_id: city_id || '',
+        name: name.trim(),
+        last_name1: last_name1.trim(),
+        last_name2: last_name2.trim(),
+        email: createUser ? autoEmail : email,
+        category_id,
+        status_id,
+        work_center_id,
+        active,
+        shift_id,
+        start_time,
+        end_time,
+        work_day_id,
+        vacation_month: vacation_month || '',
+        vacation_days,
+        own_days,
+        accumulated_days,
+        excess_days,
+        personal_email: personal_email.trim() || null,
+        phone_fixed: phone_fixed.trim() || null,
+        iban: iban.trim() || null,
+        dni: dni.trim(),
+        social_security_number: socialSecurityNumber.trim(),
+        irpf,
+        contract_type,
+        contract_start_date,
+        contract_end_date: contract_end_date || '',
+        medical_check,
+        works_holidays,
+        vaccinated,
+        clothing_sizes: clothingSizesRecord,
+        lockers: lockers.filter((l) => l.trim() !== ''),
+        driving_licenses: tempLicenses,
+        create_user: createUser,
+      };
+      if (phone.trim()) payload.phone = phone.trim();
+      if (createUser) {
+        payload.user_email = autoEmail;
+        payload.user_password = userPassword;
+        payload.user_role = userRole;
       }
-      clearDraft();
-      onClose();
+      fd.append('data', JSON.stringify(payload));
+      if (licenseFile) {
+        fd.append('license_file', licenseFile);
+      }
+
+      try {
+        const success = await onSubmit(fd);
+        if (success) {
+          clearDraft();
+          onClose();
+        }
+      } catch (err) {
+        setFormError(err instanceof Error ? err.message : 'Error al crear empleado');
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    try {
+      const success = await onSubmit({
+        city_id: city_id || null,
+        name: name.trim(),
+        last_name1: last_name1.trim(),
+        last_name2: last_name2.trim(),
+        email: createUser ? autoEmail : email,
+        phone: phone.trim() || undefined,
+        category_id,
+        status_id,
+        work_center_id,
+        active,
+        shift_id,
+        start_time,
+        end_time,
+        vacation_month: vacation_month || null,
+        vacation_days,
+        own_days,
+        accumulated_days,
+        excess_days,
+        personal_email: personal_email.trim() || null,
+        phone_fixed: phone_fixed.trim() || null,
+        work_day_id,
+        iban: iban.trim() || null,
+        dni: dni.trim(),
+        social_security_number: socialSecurityNumber.trim(),
+        lockers: lockers.filter((l) => l.trim() !== ''),
+        clothing_sizes: clothingSizesRecord,
+        medical_check,
+        works_holidays,
+        vaccinated,
+        contract_type,
+        contract_start_date,
+        contract_end_date: contract_end_date || null,
+        irpf,
+      }, editingEmployee ? undefined : employeeId.trim());
+
+      if (success) {
+        if (createUser && onCreateUser) {
+          onCreateUser({ email: autoEmail, password: userPassword, role: userRole, employeeId: editingEmployee ? undefined : employeeId.trim() });
+        }
+        clearDraft();
+        onClose();
+      }
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Error al guardar cambios');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -526,7 +616,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           </div>
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Móvil</label>
-            <input type="text" value={phone} onChange={(e) => { setPhone(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" placeholder="612 345 678" />
+            <input type="tel" value={phone} onChange={(e) => { setPhone(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" placeholder="612 345 678" />
           </div>
           <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Teléfono Fijo</label>
@@ -703,6 +793,19 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           )}
         </div>
         <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+          <CreditCard className="h-3 w-3" /> Datos Personales
+        </h4>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">DNI</label>
+            <input type="text" value={dni} onChange={(e) => { setDni(e.target.value.toUpperCase()); saveDraft(); }} placeholder="00000000X" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm font-mono bg-app-card" />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Nº Seguridad Social</label>
+            <input type="text" value={socialSecurityNumber} onChange={(e) => { setSocialSecurityNumber(e.target.value); saveDraft(); }} placeholder="000000000000" className="w-full px-3 py-2 border border-app-border rounded-xl text-sm bg-app-card" />
+          </div>
+        </div>
+        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
           <CreditCard className="h-3 w-3" /> Datos Bancarios
         </h4>
         <div className="grid grid-cols-4 gap-4">
@@ -760,7 +863,23 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           <label className="cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
             <Upload className="h-3.5 w-3.5" />
             Subir carnet
-            <input type="file" accept="image/*,application/pdf" className="hidden" />
+            <input type="file" accept="image/*,application/pdf" className="hidden" onChange={(e) => {
+              setLicenseFileError(null);
+              const f = e.target.files?.[0];
+              if (!f) return;
+              const maxSize = 5 * 1024 * 1024;
+              if (f.size > maxSize) {
+                setLicenseFileError('El archivo supera los 5 MB');
+                e.target.value = '';
+                return;
+              }
+              if (!f.type.startsWith('image/') && f.type !== 'application/pdf') {
+                setLicenseFileError('Formato no válido. Usa imagen o PDF');
+                e.target.value = '';
+                return;
+              }
+              setLicenseFile(f);
+            }} />
           </label>
         </div>
         <div className="grid grid-cols-3 gap-4 items-end">
@@ -800,6 +919,22 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             </div>
           </div>
         </div>
+        {licenseFile && (
+          <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs">
+            <FileText className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="text-emerald-700 dark:text-emerald-300 font-medium truncate">{licenseFile.name}</span>
+            <span className="text-emerald-500 dark:text-emerald-400 shrink-0">{(licenseFile.size / 1024).toFixed(0)} KB</span>
+            <button type="button" onClick={() => { setLicenseFile(null); setLicenseFileError(null); }} className="ml-auto p-0.5 text-rose-500 hover:text-rose-600">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+        {licenseFileError && (
+          <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-xl text-xs">
+            <AlertCircle className="h-3.5 w-3.5 text-rose-500 shrink-0" />
+            <span className="text-rose-600 dark:text-rose-300">{licenseFileError}</span>
+          </div>
+        )}
         {tempLicenses.length > 0 && (
           <div className="mt-3 space-y-1.5">
             {tempLicenses.map((tl, i) => (
@@ -995,7 +1130,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
         {!editingEmployee && !profileMode && renderStepIndicator()}
 
-           <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
+           <form id="employee-form" className="flex-1 overflow-y-auto p-6">
           {formError && (
             <div className="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-800 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-300 text-xs rounded-xl flex items-center gap-2 font-medium">
               <ShieldAlert className="h-4 w-4 text-rose-500 dark:text-rose-400 flex-shrink-0" />
@@ -1024,17 +1159,21 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
             )}
           </div>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-all">
+            <button type="button" onClick={onClose} disabled={submitting} className="px-4 py-2 border border-app-border hover:bg-app-bg text-app-text-secondary text-sm font-semibold rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed">
               Cancelar
             </button>
             {profileMode || editingEmployee ? (
               <button
-                type="submit"
-                className={`px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs transition-all ${
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitting}
+                className={`px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                   editingEmployee ? 'bg-amber-600 hover:bg-amber-700' : 'bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400'
                 }`}
               >
-                {editingEmployee ? 'Guardar Cambios' : 'Registrar'}
+                {submitting ? (
+                  <span className="flex items-center gap-2"><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg> Guardando...</span>
+                ) : (editingEmployee ? 'Guardar Cambios' : 'Registrar')}
               </button>
             ) : currentStep < STEPS.length - 1 ? (
               <button
@@ -1047,10 +1186,14 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               </button>
             ) : (
               <button
-                type="submit"
-                className="px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 transition-all"
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="px-5 py-2 text-white text-sm font-semibold rounded-xl shadow-xs bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Registrar
+                {submitting ? (
+                  <span className="flex items-center gap-2"><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg> Guardando...</span>
+                ) : 'Registrar'}
               </button>
             )}
           </div>

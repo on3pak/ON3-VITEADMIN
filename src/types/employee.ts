@@ -56,6 +56,8 @@ export interface Employee {
   phone_fixed: string;
   work_day_id: string;
   iban: string;
+  dni: string;
+  social_security_number: string;
   lockers: string[];
   clothing_sizes: ClothingSizes | null;
   medical_check: boolean;

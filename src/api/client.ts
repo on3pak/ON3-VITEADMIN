@@ -175,8 +175,48 @@ export const api = {
     const headers: Record<string, string> = {};
     const token = getToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
-    const url = buildUrl(path);
-    return fetch(url, { method: 'POST', headers, body: form }).then<T>(handleResponse);
+
+    async function doUpload(baseUrl: string, signal: AbortSignal): Promise<Response> {
+      const url = buildUrl(path, undefined, baseUrl);
+      return fetch(url, { method: 'POST', headers, body: form, signal });
+    }
+
+    return Promise.race([
+      new Promise<never>((_, reject) => {
+        const timeout = 60000;
+        setTimeout(() => reject(new ApiError(0, ['La solicitud superó el tiempo de espera (60s).'], 'Timeout')), timeout);
+      }),
+      (async () => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        let lastNetworkError: unknown;
+
+        if (activeBaseUrl === null || activeBaseUrl === API_BASE_URL) {
+          for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+              const res = await doUpload(API_BASE_URL, signal);
+              setActiveBaseUrl(API_BASE_URL);
+              return handleResponse<T>(res);
+            } catch (e) {
+              if (e instanceof ApiError) throw e;
+              lastNetworkError = e;
+              if (attempt < MAX_RETRIES) continue;
+            }
+          }
+        }
+
+        try {
+          const res = await doUpload(API_BASE_URL_FALLBACK, signal);
+          setActiveBaseUrl(API_BASE_URL_FALLBACK);
+          return handleResponse<T>(res);
+        } catch {
+          controller.abort();
+          throw lastNetworkError instanceof ApiError
+            ? lastNetworkError
+            : new ApiError(0, ['No se puede conectar con el servidor. Verifica tu conexión.'], 'ConnectionRefused');
+        }
+      })(),
+    ]) as Promise<T>;
   },
 
   postRaw,

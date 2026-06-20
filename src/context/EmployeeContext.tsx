@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { Employee, EmployeeOverview, VacationRequest } from '../types';
 import { employeesApi, vacationsApi } from '../api/services';
 import { getToken } from '../api/client';
@@ -11,6 +11,7 @@ interface EmployeeContextType {
   getEmployeeById: (id: string) => Employee | undefined;
   getNextEmployeeId: () => string;
   createEmployee: (data: Omit<Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => Promise<{ success: boolean }>;
+  createEmployeeWizard: (form: FormData) => Promise<{ success: boolean }>;
   updateEmployee: (id: string, data: Partial<Employee>) => Promise<{ success: boolean }>;
   deleteEmployee: (id: string) => Promise<void>;
   vacationRequests: VacationRequest[];
@@ -35,6 +36,8 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     ])
       .catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => { loadEmployees(); }, [loadEmployees]);
 
   const getEmployeeOverviews = useCallback(() => {
     return employees.map((emp) => ({
@@ -76,6 +79,19 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
     try {
       const created = await employeesApi.create(data);
       setEmployees((prev) => [created, ...prev]);
+      return { success: true };
+    } catch {
+      return { success: false };
+    }
+  }, []);
+
+  const createEmployeeWizard = useCallback(async (form: FormData) => {
+    try {
+      const result = await employeesApi.wizard(form);
+      if (result.id) {
+        const created = await employeesApi.getById(result.id);
+        setEmployees((prev) => [created, ...prev]);
+      }
       return { success: true };
     } catch {
       return { success: false };
@@ -126,7 +142,7 @@ export const EmployeeProvider: React.FC<{ children: ReactNode }> = ({ children }
       <EmployeeContext.Provider
         value={{
           employees, loading, loadEmployees, getEmployeeOverviews, getEmployeeById, getNextEmployeeId,
-          createEmployee, updateEmployee, deleteEmployee,
+          createEmployee, createEmployeeWizard, updateEmployee, deleteEmployee,
           vacationRequests, createVacationRequest, resolveVacationRequest, getVacationRequestsByEmployee,
         }}
       >

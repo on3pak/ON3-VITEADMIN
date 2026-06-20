@@ -62,8 +62,6 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingEmployeeId, setDeletingEmployeeId] = useState<string | null>(null);
 
-  useEffect(() => { loadEmployees(); }, [loadEmployees]);
-
   type LookupTab = 'employees' | 'categories' | 'statuses' | 'workdays' | 'shifts' | 'contracts';
   const [activeTab, setActiveTab] = useState<LookupTab>('employees');
 
@@ -130,11 +128,13 @@ export const EmployeesView: React.FC<{ onViewEmployee?: (id: string) => void }> 
   const handleDelete = (id: string) => { setDeletingEmployeeId(id); setDeleteDialogOpen(true); };
   const handleConfirmDelete = async () => { if (deletingEmployeeId) { await employeesApi.delete(deletingEmployeeId); loadEmployees(); } setDeleteDialogOpen(false); setDeletingEmployeeId(null); };
 
-  const handleModalSubmit = async (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'>, employeeId?: string) => {
+  const handleModalSubmit = async (data: Omit<import('../../types').Employee, 'id' | 'created_at' | 'updated_at'> | FormData) => {
     if (modalMode === 'edit' && selectedEmployeeId) {
-      await employeesApi.update(selectedEmployeeId, data);
+      await employeesApi.update(selectedEmployeeId, data as Record<string, unknown>);
+    } else if (data instanceof FormData) {
+      await employeesApi.wizard(data);
     } else {
-      await employeesApi.create(data);
+      await employeesApi.create(data as Record<string, unknown>);
     }
     loadEmployees();
     setModalOpen(false);
