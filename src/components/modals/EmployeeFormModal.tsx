@@ -224,10 +224,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       .filter((wc) => wc.city_id === city_id)
       .filter((wc) => officeOnly ? wc.id === 'wc_000008' : true)
       .map((wc) => wc.id);
-    if (validIds.length > 0) {
+    if (validIds.length > 0 && !validIds.includes(work_center_id)) {
       setWork_center_id(validIds[0]);
     }
-  }, [city_id, category_id, createUser, userRole]);
+  }, [city_id, category_id, createUser, userRole, work_center_id]);
 
   useEffect(() => {
     if (work_day_id === 'wd_2' && shift_id && shift_id !== 's_1') {
@@ -757,7 +757,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
           <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider flex items-center gap-1">
             <FileText className="h-3 w-3" /> Carnets
           </h4>
-          <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors">
+          <label className="cursor-pointer flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
             <Upload className="h-3.5 w-3.5" />
             Subir carnet
             <input type="file" accept="image/*,application/pdf" className="hidden" />
@@ -793,7 +793,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
                   saveDraft();
                 }}
                 disabled={!newLicenseType}
-                className="px-3 py-2 text-xs font-semibold text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -846,74 +846,6 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
         )}
       </div>
 
-      <div className="col-span-2">
-        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-          <FileText className="h-3 w-3" /> Extras
-        </h4>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
-            <div className="flex items-center gap-1.5">
-              {lockers.map((l, i) => (
-                <div key={i} className="flex items-center gap-1.5">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={l}
-                      onChange={(e) => {
-                        const next = [...lockers];
-                        next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
-                        setLockers(next);
-                        saveDraft();
-                      }}
-                      placeholder="001"
-                      maxLength={3}
-                      className="w-24 px-3 py-2 border border-app-border rounded-xl text-sm pe-8 bg-app-card"
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const taken = employees.flatMap((e) => e.lockers).filter(Boolean);
-                          const free = Array.from({ length: 999 }, (_, j) => String(j + 1).padStart(3, '0')).find((n) => !taken.includes(n)) || '001';
-                          const next = [...lockers];
-                          next[i] = free;
-                          setLockers(next);
-                          saveDraft();
-                        }}
-                        className="p-1 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all"
-                        title="Buscar taquilla libre"
-                      >
-                        <Search className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                  {lockers.length > 1 && (
-                    <button type="button" onClick={() => { setLockers(lockers.filter((_, j) => j !== i)); saveDraft(); }} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg">
-                      <Minus className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
-              {lockers.length < 2 && (
-                <button type="button" onClick={() => { setLockers([...lockers, '']); saveDraft(); }} className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
-                  <Plus className="h-3 w-3" /> Añadir
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-6">
-          <label className="flex items-center gap-2 text-sm cursor-pointer">
-            <input type="checkbox" checked={works_holidays} onChange={(e) => { setWorks_holidays(e.target.checked); saveDraft(); }} className="rounded" />
-            <span className="font-medium text-app-text">Trabaja Festivos</span>
-          </label>
-          <label className="flex items-center gap-2 text-sm cursor-pointer">
-            <input type="checkbox" checked={vaccinated} onChange={(e) => { setVaccinated(e.target.checked); saveDraft(); }} className="rounded" />
-            <span className="font-medium text-app-text">Vacuna</span>
-          </label>
-        </div>
-        </div>
-      </div>
     </>
   );
 
@@ -961,6 +893,79 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
               {SHOE_SIZES.map((v) => (<option key={v} value={String(v)}>{v}</option>))}
             </select>
           </div>
+        </div>
+      </div>
+
+      <div className="col-span-2">
+        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+          <FileText className="h-3 w-3" /> Extras
+        </h4>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Taquillas</label>
+            <div className="flex items-center gap-1.5">
+              {lockers.map((l, i) => (
+                <div key={i} className="flex items-center gap-1.5">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={l}
+                      onChange={(e) => {
+                        const next = [...lockers];
+                        next[i] = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+                        setLockers(next);
+                        saveDraft();
+                      }}
+                      placeholder="001"
+                      maxLength={3}
+                      className="w-24 px-3 py-2 border border-app-border rounded-xl text-sm pe-8 bg-app-card"
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const taken = employees.flatMap((e) => e.lockers ?? []).filter(Boolean);
+                          const free = Array.from({ length: 999 }, (_, j) => String(j + 1).padStart(3, '0')).find((n) => !taken.includes(n)) || '001';
+                          const next = [...lockers];
+                          next[i] = free;
+                          setLockers(next);
+                          saveDraft();
+                        }}
+                        className="p-1 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-all"
+                        title="Buscar taquilla libre"
+                      >
+                        <Search className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                  {lockers.length > 1 && (
+                    <button type="button" onClick={() => { setLockers(lockers.filter((_, j) => j !== i)); saveDraft(); }} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg">
+                      <Minus className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              {lockers.length < 2 && (
+                <button type="button" onClick={() => { setLockers([...lockers, '']); saveDraft(); }} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all">
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+          <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all select-none">
+            <input type="checkbox" checked={medical_check} onChange={(e) => { setMedical_check(e.target.checked); saveDraft(); }} className="rounded border-primary-300 text-primary-600 focus:ring-primary-500 size-3" />
+            Revisión Médica
+          </label>
+          <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all select-none">
+            <input type="checkbox" checked={works_holidays} onChange={(e) => { setWorks_holidays(e.target.checked); saveDraft(); }} className="rounded border-primary-300 text-primary-600 focus:ring-primary-500 size-3" />
+            Trabaja Festivos
+          </label>
+          <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50/60 dark:bg-primary-900/15 text-[10px] font-semibold text-primary-700 dark:text-primary-300 cursor-pointer hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all select-none">
+            <input type="checkbox" checked={vaccinated} onChange={(e) => { setVaccinated(e.target.checked); saveDraft(); }} className="rounded border-primary-300 text-primary-600 focus:ring-primary-500 size-3" />
+            Vacuna
+          </label>
+        </div>
         </div>
       </div>
     </>
