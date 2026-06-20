@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Employee, VacationMonth, ClothingSizes, ClothingSize, ShoeSize, UserRole } from '../../types';
 import {
   X, ShieldAlert, UserPlus, Save, CreditCard, Award, Shirt, Plus, Minus,
@@ -29,10 +29,17 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
 });
 
 const CATEGORIES_BY_ROLE: Record<UserRole, string[]> = {
-  user: ['ec_000001', 'ec_000002', 'ec_000003', 'ec_000004', 'ec_000005', 'ec_000006'],
+  user: ['ec_000001', 'ec_000002', 'ec_000003', 'ec_000004', 'ec_000005', 'ec_000006', 'ec_000007', 'ec_000008', 'ec_000009', 'ec_000010'],
   manager: ['ec_000007', 'ec_000008'],
   admin: ['ec_000009', 'ec_000010'],
-  root: [],
+  root: ['ec_000010'],
+};
+
+const ROLE_DEFAULTS: Record<UserRole, { category_id: string; work_center_id: string }> = {
+  user: { category_id: 'ec_000001', work_center_id: 'wc_000001' },
+  manager: { category_id: 'ec_000007', work_center_id: 'wc_000001' },
+  admin: { category_id: 'ec_000010', work_center_id: 'wc_000008' },
+  root: { category_id: 'ec_000010', work_center_id: 'wc_000008' },
 };
 
 const LICENSE_LABELS: Record<string, string> = {
@@ -77,9 +84,9 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   const [category_id, setCategory_id] = useState('ec_000001');
   const [work_center_id, setWork_center_id] = useState('wc_000001');
   const [work_day_id, setWork_day_id] = useState('wd_1');
-  const [shift_id, setShift_id] = useState('');
-  const [start_time, setStart_time] = useState('');
-  const [end_time, setEnd_time] = useState('');
+  const [shift_id, setShift_id] = useState('s_1');
+  const [start_time, setStart_time] = useState('06:00');
+  const [end_time, setEnd_time] = useState('13:00');
   const [status_id, setStatus_id] = useState('es_1');
   const [active, setActive] = useState(true);
   const [vacation_month, setVacation_month] = useState<'' | VacationMonth>('');
@@ -137,8 +144,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setPhone(d.phone || ''); setEmail(d.email || ''); setPersonal_email(d.personal_email || '');
       setPhone_fixed(d.phone_fixed || ''); setCity_id(d.city_id || '');
       setCategory_id(d.category_id || 'ec_000001'); setWork_center_id(d.work_center_id || 'wc_000001');
-      setWork_day_id(d.work_day_id || 'wd_1'); setShift_id(d.shift_id || '');
-      setStart_time(d.start_time || ''); setEnd_time(d.end_time || '');
+      setWork_day_id(d.work_day_id || 'wd_1'); setShift_id(d.shift_id || 's_1');
+      setStart_time(d.start_time || '06:00'); setEnd_time(d.end_time || '13:00');
       setStatus_id(d.status_id || 'es_1'); setActive(d.active ?? true);
       setVacation_month(d.vacation_month || '');
       setVacation_days(d.vacation_days ?? 22); setOwn_days(d.own_days ?? 0);
@@ -212,11 +219,15 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
 
   useEffect(() => {
     if (!city_id) return;
-    const validIds = workCenters.filter((wc) => wc.city_id === city_id).map((wc) => wc.id);
-    if (!validIds.includes(work_center_id) && validIds.length > 0) {
+    const officeOnly = createUser && (userRole === 'admin' || userRole === 'root');
+    const validIds = workCenters
+      .filter((wc) => wc.city_id === city_id)
+      .filter((wc) => officeOnly ? wc.id === 'wc_000008' : true)
+      .map((wc) => wc.id);
+    if (validIds.length > 0) {
       setWork_center_id(validIds[0]);
     }
-  }, [city_id]);
+  }, [city_id, category_id, createUser, userRole]);
 
   useEffect(() => {
     if (work_day_id === 'wd_2' && shift_id && shift_id !== 's_1') {
@@ -241,6 +252,36 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       setOwn_days(0);
     }
   }, [contract_type]);
+
+  useEffect(() => {
+    if (createUser) {
+      setUserEmail(autoEmail);
+    }
+  }, [autoEmail, createUser]);
+
+  useEffect(() => {
+    const d = createUser && userRole ? ROLE_DEFAULTS[userRole] : ROLE_DEFAULTS.user;
+    setCategory_id(d.category_id);
+    setWork_center_id(d.work_center_id);
+    setStart_time('06:00');
+    setEnd_time('13:00');
+    setShift_id('s_1');
+    setWork_day_id('wd_1');
+  }, [userRole, createUser]);
+
+  const prevStep = useRef(currentStep);
+  useEffect(() => {
+    if (prevStep.current === 2 && currentStep === 1) {
+      const d = createUser && userRole ? ROLE_DEFAULTS[userRole] : ROLE_DEFAULTS.user;
+      setCategory_id(d.category_id);
+      setWork_center_id(d.work_center_id);
+      setStart_time('06:00');
+      setEnd_time('13:00');
+      setShift_id('s_1');
+      setWork_day_id('wd_1');
+    }
+    prevStep.current = currentStep;
+  }, [currentStep, createUser, userRole]);
 
   if (!isOpen) return null;
 
@@ -549,11 +590,14 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
   );
 
   const renderStep1 = () => {
-    const filteredCategories = createUser && userRole !== 'root'
+    const filteredCategories = createUser && userRole !== 'user'
       ? employeeCategories.filter((c) => CATEGORIES_BY_ROLE[userRole].includes(c.id))
       : employeeCategories;
 
-    const filteredWorkCenters = workCenters.filter((wc) => wc.city_id === city_id);
+    const officeOnly = createUser && (userRole === 'admin' || userRole === 'root');
+    const filteredWorkCenters = workCenters
+      .filter((wc) => wc.city_id === city_id)
+      .filter((wc) => officeOnly ? wc.id === 'wc_000008' : true);
 
     const filteredShifts = work_day_id === 'wd_2'
       ? shifts.filter((s) => s.id === 's_1')
@@ -580,15 +624,15 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ isOpen, on
       <div className="col-span-2 space-y-3">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo *</label>
-            <select value={work_center_id} onChange={(e) => { setWork_center_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
-              {filteredWorkCenters.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
-            </select>
-          </div>
-          <div>
             <label className="block text-xs font-bold text-app-text uppercase mb-1">Categoría *</label>
             <select value={category_id} onChange={(e) => { setCategory_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
               {filteredCategories.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-app-text uppercase mb-1">Centro de Trabajo *</label>
+            <select value={work_center_id} onChange={(e) => { setWork_center_id(e.target.value); saveDraft(); }} className="w-full px-3 py-2 border border-app-border rounded-xl bg-app-card text-sm">
+              {filteredWorkCenters.map((w) => (<option key={w.id} value={w.id}>{w.name}</option>))}
             </select>
           </div>
         </div>
